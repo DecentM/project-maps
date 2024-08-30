@@ -1,14 +1,7 @@
-import md from "unplugin-vue-markdown/vite";
-import vue from "@vitejs/plugin-vue";
-import { defineConfig } from "vite";
-import vike from "vike/plugin";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vike({}),
-    vue({
-      include: [/\.vue$/, /\.md$/],
-    }),
-    md({}),
-  ],
-});
+  plugins: [vue()],
+})
