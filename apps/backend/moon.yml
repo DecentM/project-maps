@@ -1,0 +1,14 @@
+id: backend
+language: typescript
+platform: bun
+type: application
+
+tasks:
+  dev:
+    command: bun
+    args:
+      - run
+      - --watch
+      - src/index.ts
+    options:
+      cache: false
