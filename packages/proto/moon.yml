@@ -1,0 +1,40 @@
+project:
+  name: 'proto'
+  description: 'Proto definitions for the project'
+
+tasks:
+  dev:
+    command:
+      - nodemon
+      - -q
+      - -x
+      - yarn moon
+      - -e
+      - proto
+      - --
+      - proto:build
+
+  build:
+    deps:
+      - generate
+    inputs:
+      - generated
+    outputs:
+      - dist
+    command:
+      - tsc
+
+  generate:
+    inputs:
+      - src/**/*.proto
+      - package.json
+    outputs:
+      - generated
+    options:
+      runFromWorkspaceRoot: true
+    command:
+      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
+      - --ts_out=packages/proto/generated
+      - --ts_opt=unary_rpc_promise=true
+      - -I=packages/proto/src
+      - packages/proto/src/**/*.proto
