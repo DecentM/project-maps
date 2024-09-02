@@ -8,6 +8,7 @@
     "@grpc/grpc-js": "^1.11.1",
     "@project-maps/proto": "workspace:*",
     "emittery": "^1.0.3",
+    "fast-xml-parser": "^4.4.1",
     "google-protobuf": "^3.21.4",
     "got": "^14.4.2",
     "tslib": "^2.7.0"

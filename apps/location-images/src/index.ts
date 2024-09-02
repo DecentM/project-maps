@@ -1,15 +1,29 @@
-import { LocationImages } from "@project-maps/proto/location-images";
-import { GeographUKImageSource } from "./image-sources/geograph-uk";
+import { Server, ServerCredentials } from '@grpc/grpc-js'
 
-const source = new GeographUKImageSource()
+import { LocationImagesService } from "./service";
+import { config } from './config';
 
-const events = source.getImages(LocationImages.GetLocationImagesRequest.fromObject({
-  coordinates: {
-    lat: "51.516656",
-    lng: "-0.112440",
-  },
-}))
+const startServer = (server: Server): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    server.bindAsync(
+      `${config.grpcServer.host}:${config.grpcServer.port}`,
+      ServerCredentials.createInsecure(),
+      (error, port) => {
+        if (error) return reject(error)
+        return resolve()
+      }
+    )
+  })
+}
 
-events.on('image', image => {
-  console.log(image.toObject())
-})
+const server = new Server()
+
+server.addService(LocationImagesService.definition, new LocationImagesService())
+
+startServer(server)
+  .then(() => {
+    console.log(`Server started on ${config.grpcServer.host}:${config.grpcServer.port}`)
+  })
+  .catch((error) => {
+    console.error('Failed to start server:', error)
+  })

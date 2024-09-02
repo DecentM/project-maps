@@ -1,4 +1,5 @@
 import got from 'got'
+import { XMLParser } from 'fast-xml-parser'
 
 /**
  * Geograph API client
@@ -15,38 +16,39 @@ export type SyndicatorRequest = {
 }
 
 export type SyndicatorResponse = {
-  "generator": "FeedCreator 1.7.12(BH)",
-  "title": string,
-  "description": string,
-  "link": string,
-  "syndicationURL": string,
-  "nextURL": string,
-  "icon": string,
-  "date": string,
-  "items": Array<
-    {
-      "title": string,
-      "link": string, // URL
-      "author": string,
-      "category": string,
-      "guid": string,
-      "source": string,
-      "date": number,
-      "imageTaken": string, // YYYY-MM-DD
-      "dateUpdated": number,
-      "lat": string,
-      "long": string,
-      "thumb": string, // URL
-      "thumbTag": string, // HTML
-      "licence": string, // URL
-    }
-  >
+  generator: 'FeedCreator 1.7.12(BH)'
+  title: string
+  description: string
+  link: string
+  syndicationURL: string
+  nextURL: string
+  icon: string
+  date: string
+  items: Array<{
+    title: string
+    link: string // URL
+    author: string
+    category?: string
+    guid: string
+    source: string
+    date: number
+    imageTaken: string // YYYY-MM-DD
+    dateUpdated: number
+    lat: string
+    long: string
+    thumb: string // URL
+    thumbTag: string // HTML
+    licence: string // URL
+  }>
 }
 
 const isSyndicationResponse = (response: unknown): response is SyndicatorResponse => {
-  return typeof response === 'object' &&
+  return (
+    typeof response === 'object' &&
     response !== null &&
     'generator' in response &&
+    typeof response.generator === 'string' &&
+    response.generator.startsWith('FeedCreator') &&
     'title' in response &&
     'description' in response &&
     'link' in response &&
@@ -56,63 +58,126 @@ const isSyndicationResponse = (response: unknown): response is SyndicatorRespons
     'date' in response &&
     'items' in response &&
     Array.isArray(response.items) &&
-    response.items.every(item =>
-      typeof item === 'object' &&
-      item !== null &&
-      'title' in item &&
-      'link' in item &&
-      'author' in item &&
-      'guid' in item &&
-      'source' in item &&
-      'date' in item &&
-      'imageTaken' in item &&
-      'dateUpdated' in item &&
-      'lat' in item &&
-      'long' in item &&
-      'thumb' in item &&
-      'thumbTag' in item &&
-      'licence' in item
+    response.items.every(
+      (item) =>
+        typeof item === 'object' &&
+        item !== null &&
+        'title' in item &&
+        'link' in item &&
+        'author' in item &&
+        'guid' in item &&
+        'source' in item &&
+        'date' in item &&
+        'imageTaken' in item &&
+        'dateUpdated' in item &&
+        'lat' in item &&
+        'long' in item &&
+        'thumb' in item &&
+        'thumbTag' in item &&
+        'licence' in item
     )
+  )
+}
+
+export type PhotoResponse = {
+  '?xml': { version: '1.0'; encoding: 'UTF-8' }
+  geograph: {
+    status: { state: string }
+    title: string
+    gridref: string
+    user: {
+      '#text': string
+      profile: string // URL
+    }
+    img: {
+      src: string // URL
+      crossorigin: string
+      width: string // int
+      height: string // int
+      style: string // css
+    }
+    thumbnail: string // URL
+    taken: string // YYYY-MM-DD
+    submitted: string // YYYY-MM-DD HH:MM:SS
+    category?: string
+    comment?: string
+  }
+}
+
+const isPhotoResponse = (response: unknown): response is PhotoResponse => {
+  return (
+    typeof response === 'object' &&
+    response !== null &&
+    '?xml' in response &&
+    typeof response['?xml'] === 'object' &&
+    response['?xml'] !== null &&
+    'version' in response['?xml'] &&
+    'encoding' in response['?xml'] &&
+    response['?xml'].version === '1.0' &&
+    response['?xml'].encoding === 'UTF-8' &&
+    'geograph' in response &&
+    typeof response.geograph === 'object' &&
+    response.geograph !== null &&
+    'status' in response.geograph &&
+    'title' in response.geograph &&
+    'gridref' in response.geograph &&
+    'user' in response.geograph &&
+    'img' in response.geograph &&
+    'thumbnail' in response.geograph &&
+    'taken' in response.geograph &&
+    'submitted' in response.geograph
+  )
 }
 
 export class GeographClient {
+  private xmlParser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: '',
+  })
+
   public constructor(
     private baseUrl: string,
     private apiKey: string
   ) { }
 
-  private fetch = async (
-    path: string,
-    query: Record<string, string | number>
-  ): Promise<unknown> => {
-    const response = got.get(`${this.baseUrl}${path}`, {
+  private fetch = (path: string, query: Record<string, string | number>) => {
+    return got.get(`${this.baseUrl}${path}`, {
       headers: {
         Accept: 'application/json',
       },
-      searchParams: {
-        ...query,
-        key: this.apiKey,
-        format: 'JSON',
-      }
+      searchParams: query,
     })
-
-    return await response.json()
   }
 
-  private get = async (
-    path: string,
-    query: Record<string, string | number> = {}
-  ): Promise<unknown> => {
+  private get = (path: string, query: Record<string, string | number> = {}) => {
     return this.fetch(path, query)
   }
 
   public syndicator = async (request: SyndicatorRequest): Promise<SyndicatorResponse> => {
-    const result = await this.get('/syndicator.php', request)
+    const result = this.get('/syndicator.php', {
+      ...request,
+      key: this.apiKey,
+      format: 'JSON',
+    })
 
-    if (!isSyndicationResponse(result)) {
+    const json = await result.json()
+
+    if (!isSyndicationResponse(json)) {
       throw new Error('Invalid response from Geograph API')
     }
 
-    return result
+    return json
+  }
+
+  public photo = async (guid: string): Promise<PhotoResponse> => {
+    const result = await this.get(`/api/photo/${guid}/${this.apiKey}`)
+
+    const json = this.xmlParser.parse(result.body)
+
+    if (!isPhotoResponse(json)) {
+      throw new Error('Invalid response from Geograph API')
+    }
+
+    return json
   }
 }

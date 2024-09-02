@@ -10,3 +10,4 @@ tasks:
       - src/index.ts
     options:
       cache: false
+      envFile: .env
