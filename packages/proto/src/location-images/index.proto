@@ -11,6 +11,7 @@ service LocationImages {
 message GetLocationImagesRequest {
   Coordinates coordinates = 1;
   int64 radiusMeters = 2;
+  string locationQuery = 3;
 }
 
 message Coordinates {

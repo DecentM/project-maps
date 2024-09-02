@@ -1,0 +1,12 @@
+id: location-images
+language: typescript
+platform: node
+type: application
+
+tasks:
+  dev:
+    command: tsx
+    args:
+      - src/index.ts
+    options:
+      cache: false
