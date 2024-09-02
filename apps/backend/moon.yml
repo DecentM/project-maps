@@ -1,14 +1,13 @@
 id: backend
 language: typescript
-platform: bun
+platform: node
 type: application
 
 tasks:
   dev:
-    command: bun
+    command: tsx
     args:
-      - run
-      - --watch
       - src/index.ts
     options:
       cache: false
+      envFile: .env

@@ -4,7 +4,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "importHelpers": true,
-    "lib": ["es2017"],
+    "lib": ["es2017", "dom"],
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
     "baseUrl": ".",

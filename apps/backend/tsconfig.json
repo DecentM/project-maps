@@ -1,27 +1,28 @@
 {
+  "extends": "tsconfig-moon/tsconfig.projects.json",
+  "compileOnSave": false,
   "compilerOptions": {
-    // Enable latest features
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-
-    // Best practices
+    "rootDir": ".",
+    "importHelpers": true,
+    "lib": ["es2017", "dom"],
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "checkJs": false,
+    "outDir": "dist",
     "strict": true,
+    "target": "ES6",
+    "module": "ESNext",
+    "sourceMap": true,
+    "typeRoots": ["types/"],
     "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
 
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
+  },
+  "exclude": ["node_modules", "tmp"]
 }
