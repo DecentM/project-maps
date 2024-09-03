@@ -8,5 +8,5 @@ export default fp(async (fastify, opts) => {
   })
 }, {
   name: 'status',
-  dependencies: ['root'],
+  dependencies: ['root', 'socketio'],
 })
