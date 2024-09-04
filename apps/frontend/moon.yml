@@ -1,0 +1,10 @@
+id: frontend
+language: typescript
+platform: node
+type: application
+
+tasks:
+  dev:
+    command: quasar
+    args:
+      - dev

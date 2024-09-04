@@ -1,0 +1,28 @@
+{
+  "name": "@project-maps/frontend",
+  "version": "0.0.1",
+  "description": "Maps based on open data",
+  "productName": "Project Maps",
+  "author": "DecentM",
+  "type": "module",
+  "dependencies": {
+    "pinia": "^2.0.11",
+    "@quasar/extras": "^1.16.4",
+    "quasar": "^2.16.0",
+    "vue": "^3.4.18",
+    "vue-router": "^4.0.12"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "vite-plugin-checker": "^0.7.2",
+    "vue-tsc": "2.0.29",
+    "@types/node": "^20.5.9",
+    "@intlify/unplugin-vue-i18n": "^2.0.0",
+    "@quasar/app-vite": "^2.0.0-beta.12",
+    "autoprefixer": "^10.4.2",
+    "typescript": "~5.5.3",
+    "@quasar/cli": "^2.4.1",
+    "@types/bun": "latest"
+  }
+}
