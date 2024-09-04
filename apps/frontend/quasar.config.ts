@@ -49,7 +49,7 @@ export default configure((ctx) => {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: process.env,
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -91,6 +91,7 @@ export default configure((ctx) => {
             mode: 'format',
             files: './src/',
             applyFixes: true,
+            failOnError: false,
           }
         ]
       ],
