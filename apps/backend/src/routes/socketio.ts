@@ -12,6 +12,10 @@ export default fp(async (fastify, opts) => {
         result.on('data', (data) => {
           console.log('data', data)
         })
+
+        result.on('end', () => {
+          console.log('end')
+        })
       })
     })
   })

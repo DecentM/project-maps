@@ -1,0 +1,12 @@
+services:
+  tilemaker:
+    image: ghcr.io/systemed/tilemaker:master
+    volumes:
+      - ./.ignored/pbfs:/data
+      - store:/store
+    ports:
+      - "8000:8000"
+    command: /data/greater-london-latest.osm.pbf --output /data/greater-london-latest.osm.pmtiles
+
+volumes:
+  store:
