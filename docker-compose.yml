@@ -6,7 +6,7 @@ services:
       - store:/store
     ports:
       - "8000:8000"
-    command: /data/greater-london-latest.osm.pbf --output /data/greater-london-latest.osm.pmtiles
+    command: /data/greater-london-latest.osm.pbf --output /data/
 
 volumes:
   store:
