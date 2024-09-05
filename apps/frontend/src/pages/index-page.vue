@@ -2,7 +2,7 @@
 import { type MglEvent, useMap, type MglMap, MglDefaults } from 'vue-maplibre-gl'
 //import { Protocol } from 'pmtiles'
 import { onBeforeMount, ref } from 'vue'
-import { LngLat } from 'maplibre-gl'
+import { LngLat, RequestParameters } from 'maplibre-gl'
 
 const { map } = useMap()
 const loaded = ref(0)
@@ -48,6 +48,12 @@ onBeforeMount(() => {
   MglDefaults.center = [-0.0077933345128258225, 51.49663562695136]
   MglDefaults.zoom = 13
 })
+
+const transformRequest = (url: string, resourceType: string): RequestParameters => {
+  return {
+    url: url.replace(/\{tileUrlBase\}/gu, `${window.location.origin}/pbfs`),
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -75,6 +81,8 @@ onBeforeMount(() => {
     <mgl-map
       ref="map"
       :attribution-control="true"
+      :max-zoom="19"
+      :transform-request="transformRequest"
       @map:load="handleLoad"
       @map:zoomstart="isZooming = true"
       @map:zoomend="isZooming = false"

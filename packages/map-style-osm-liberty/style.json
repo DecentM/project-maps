@@ -9,7 +9,7 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "http://localhost:9000/pbfs/metadata.json"
+      "url": "{tileUrlBase}/metadata.json"
     },
     "natural_earth_shaded_relief": {
       "maxzoom": 6,
