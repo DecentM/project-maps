@@ -1,0 +1,32 @@
+id: map-tiles
+language: typescript
+platform: node
+type: library
+
+tasks:
+  download_test_pbf:
+    command: sh
+    args:
+      - -c
+      - mkdir -p ./.ignored/pbfs && curl -L -o ./.ignored/pbfs/greater-london-latest.osm.pbf "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf"
+    outputs:
+      - ./.ignored/pbfs/greater-london-latest.osm.pbf
+    inputs: []
+    options:
+      cache: true
+
+  create_test_tiles:
+    deps:
+      - download_test_pbf
+    command: sh
+    args:
+      - -c
+      - mkdir -p .ignored/tiles && docker compose -f docker-compose.yml run --rm tilemaker
+    inputs:
+      - ./.ignored/pbfs/greater-london-latest.osm.pbf
+      - ./config.json
+      - ./docker-compose.yml
+    outputs:
+      - ./.ignored/tiles
+    options:
+      cache: true

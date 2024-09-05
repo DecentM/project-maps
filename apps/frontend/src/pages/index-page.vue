@@ -2,60 +2,84 @@
 import { type MglEvent, useMap, type MglMap, MglDefaults } from 'vue-maplibre-gl'
 //import { Protocol } from 'pmtiles'
 import { onBeforeMount, ref } from 'vue'
+import { LngLat } from 'maplibre-gl'
 
 const { map } = useMap()
 const loaded = ref(0)
 
 const handleLoad = (event: MglEvent) => {
-  console.log('handleLoad', event)
-
   loaded.value++
-
-  event.map.addLayer({
-    id: 'background',
-    type: 'background',
-    paint: {
-      'background-color': '#ee3333',
-    },
-  })
-
-  event.map.addSource('pmtiles', {
-    type: 'vector',
-    tiles: ['http://localhost:3000/pbfs/{z}/{x}/{y}.pbf'],
-    minzoom: 0,
-    maxzoom: 14,
-    attribution:
-      '© <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
-  })
-
-  event.map.addLayer({
-    id: 'pmtiles',
-    type: 'raster',
-    source: 'pmtiles',
-  })
 }
 
-const center = [10.288107, 49.405078]
+const center = ref<LngLat>(new LngLat(10.288107, 49.405078))
 
-const zoom = 3
+const sameMoves = ref(0)
+
+const handleMove = (event: MglEvent) => {
+  const newCenter = event.map.getCenter()
+
+  if (center.value.lng === newCenter.lng && center.value.lat === newCenter.lat) {
+    sameMoves.value++
+
+    if (sameMoves.value > 10) {
+      return
+    }
+  } else {
+    sameMoves.value = 0
+  }
+
+  center.value = newCenter
+}
+
+const zoom = ref(13)
+
+const handleZoom = (event: MglEvent) => {
+  if (zoom.value === event.map.getZoom()) {
+    return
+  }
+
+  zoom.value = event.map.getZoom()
+}
 
 const isZooming = ref(false)
 
 onBeforeMount(() => {
-  MglDefaults.style = '/map-styles/bright-v9.json'
+  MglDefaults.style = 'http://localhost:9000/map-styles/bright-v9.json'
+  MglDefaults.center = [-0.0077933345128258225, 51.49663562695136]
+  MglDefaults.zoom = 13
 })
 </script>
 
+<style lang="scss" scoped>
+.debug-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  overflow: auto;
+  width: 300px;
+  height: fit-content;
+}
+</style>
+
 <template>
   <q-page class="vh-100">
+    <q-card class="debug-overlay">
+      <q-card-section>
+        <div class="text-subitle1">Zoom: {{ zoom }}</div>
+        <div class="text-subitle1">Coords: {{ center }}</div>
+      </q-card-section>
+    </q-card>
     <mgl-map
       ref="map"
-      :center="center"
-      :zoom="zoom"
       :attribution-control="true"
       @map:load="handleLoad"
       @map:zoomstart="isZooming = true"
       @map:zoomend="isZooming = false"
+      @map:move="handleMove"
+      @map:zoom="handleZoom"
     >
       <mgl-frame-rate-control/>
       <mgl-fullscreen-control/>

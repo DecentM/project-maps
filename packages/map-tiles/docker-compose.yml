@@ -1,0 +1,13 @@
+services:
+  tilemaker:
+    image: ghcr.io/systemed/tilemaker:master
+    volumes:
+      - ./.ignored/tiles:/tiles
+      - ./.ignored/pbfs:/pbfs
+      - store:/store
+      - ./config.json:/config.json:ro
+    command: /pbfs/greater-london-latest.osm.pbf --output /tiles/ --config /config.json
+    user: "1000:1000"
+
+volumes:
+  store:
