@@ -1,0 +1,35 @@
+id: map-style-osm-liberty
+language: typescript
+platform: node
+type: library
+
+tasks:
+  validate:
+    command: gl-style-validate
+    args:
+      - style.json
+
+  diff:
+    command: sh
+    args:
+      - -c
+      - |
+        diff <(gl-style-format style.json) style.json
+
+  format:
+    command: sh
+    args:
+      - -c
+      - |
+        gl-style-format style.json > style.json.tmp && mv style.json.tmp style.json
+
+  build_sprites:
+    command: sh
+    args:
+      - -c
+      - ./build_sprites.sh
+
+  build:
+    deps:
+      - validate
+      - build_sprites
