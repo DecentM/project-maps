@@ -13,7 +13,7 @@
     }
   },
   "sprite": "{spritesUrlBase}/osm-liberty",
-  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
+  "glyphs": "{fontsUrlBase}/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "park",
@@ -3444,7 +3444,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Regular"
         ],
@@ -3469,7 +3469,7 @@
         "Point"
       ],
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Regular"
         ],
@@ -3524,7 +3524,7 @@
           ]
         ],
         "text-anchor": "top",
-        "text-field": "{name}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -3589,7 +3589,7 @@
           ]
         ],
         "text-anchor": "top",
-        "text-field": "{name}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -3654,7 +3654,7 @@
           ]
         ],
         "text-anchor": "top",
-        "text-field": "{name}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -3690,7 +3690,7 @@
       "layout": {
         "icon-image": "{class}",
         "text-anchor": "left",
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -3719,7 +3719,7 @@
       "layout": {
         "symbol-placement": "line",
         "text-anchor": "center",
-        "text-field": "{name}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Regular"
         ],
@@ -3810,7 +3810,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -3851,7 +3851,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Regular"
         ],
@@ -3904,7 +3904,7 @@
           ]
         },
         "text-anchor": "bottom",
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Regular"
         ],
@@ -3962,7 +3962,7 @@
           ]
         },
         "text-anchor": "bottom",
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Medium"
         ],
@@ -4008,7 +4008,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -4051,7 +4051,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -4096,7 +4096,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -4141,7 +4141,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],
@@ -4182,7 +4182,7 @@
         ]
       ],
       "layout": {
-        "text-field": "{name_en}",
+        "text-field": "{name:latin}",
         "text-font": [
           "Roboto Condensed Italic"
         ],

@@ -1,0 +1,8 @@
+id: map-fonts
+language: typescript
+platform: node
+type: library
+
+tasks:
+  build:
+    command: ./generate.sh

@@ -44,7 +44,7 @@ const handleZoom = (event: MglEvent) => {
 const isZooming = ref(false)
 
 onBeforeMount(() => {
-  MglDefaults.style = `${window.location.origin}/map-style/style.json`
+  MglDefaults.style = `${window.location.origin}/map-style/style/light.json`
   MglDefaults.center = [-0.1117343, 51.4876308]
   MglDefaults.zoom = 10.25
 })
@@ -53,8 +53,8 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
   return {
     url: url
       .replace(/\{tileUrlBase\}/gu, `${window.location.origin}/map-tiles`)
-      .replace(/\{styleUrlBase\}/gu, `${window.location.origin}/map-style`)
-      .replace(/\{spritesUrlBase\}/gu, `${window.location.origin}/map-style/sprites`),
+      .replace(/\{spritesUrlBase\}/gu, `${window.location.origin}/map-style/sprites`)
+      .replace(/\{fontsUrlBase\}/gu, `${window.location.origin}/map-fonts`),
   }
 }
 </script>

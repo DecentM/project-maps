@@ -1,0 +1,14 @@
+{
+  "name": "@project-maps/map-fonts",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "exports": {
+    ".": "./dist/"
+  },
+  "devDependencies": {
+    "fontnik": "^0.7.2"
+  }
+}

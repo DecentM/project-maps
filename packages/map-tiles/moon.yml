@@ -14,10 +14,19 @@ tasks:
     outputs:
       - ./.ignored/map-tiles-container-id
     options:
-      cache: true
+      cache: false
+
+  clean_dist:
+    command: sh
+    args:
+      - -c
+      - rm -rf dist/* || true
+    options:
+      cache: false
 
   copy_docker:
     deps:
+      - clean_dist
       - build_docker
     command: sh
     args:

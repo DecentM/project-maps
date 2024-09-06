@@ -6,6 +6,7 @@
   "author": "DecentM",
   "type": "module",
   "dependencies": {
+    "@project-maps/map-fonts": "workspace:*",
     "@project-maps/map-style": "workspace:*",
     "@project-maps/map-tiles": "workspace:*",
     "@quasar/extras": "^1.16.4",

@@ -5,3 +5,7 @@ dist/*
 !dist/sprites
 dist/sprites/*
 !dist/sprites/.gitkeep
+
+!dist/style
+dist/style/*
+!dist/style/.gitkeep
