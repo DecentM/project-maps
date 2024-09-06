@@ -7,12 +7,12 @@ if ! command -v spreet >/dev/null; then
   exit 1
 fi
 
-mkdir -p ./.ignored/temp/svgs
+mkdir -p /tmp/svgs
 
-cp -a ./svgs/svgs_not_in_iconset/. ./.ignored/temp/svgs/
-cp -a ./svgs/svgs_iconset/. ./.ignored/temp/svgs/
+cp -a ./src/svgs/svgs_not_in_iconset/. /tmp/svgs/
+cp -a ./src/svgs/svgs_iconset/. /tmp/svgs/
 
-spreet --unique --minify-index-file --recursive ./.ignored/temp/svgs/ ./sprites/osm-liberty
-spreet --unique --minify-index-file --recursive --retina ./.ignored/temp/svgs/ ./sprites/osm-liberty@2x
+spreet --unique --minify-index-file --recursive /tmp/svgs/ ./dist/sprites/osm-liberty
+spreet --unique --minify-index-file --recursive --retina /tmp/svgs/ ./dist/sprites/osm-liberty@2x
 
-rm -r ./.ignored/temp
+rm -r /tmp/svgs

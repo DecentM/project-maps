@@ -7,29 +7,69 @@ tasks:
   validate:
     command: gl-style-validate
     args:
-      - style.json
+      - src/style.json
+    inputs:
+      - src/style.json
+    options:
+      cache: true
 
   diff:
     command: sh
     args:
       - -c
-      - |
-        diff <(gl-style-format style.json) style.json
+      - diff <(gl-style-format src/style.json) src/style.json
+    inputs:
+      - src/style.json
+    options:
+      cache: true
 
   format:
     command: sh
     args:
       - -c
-      - |
-        gl-style-format style.json > style.json.tmp && mv style.json.tmp style.json
+      - gl-style-format src/style.json > /tmp/style.json && mv /tmp/style.json src/style.json
+    inputs:
+      - src/style.json
+    outputs:
+      - src/style.json
+    options:
+      cache: true
 
   build_sprites:
     command: sh
     args:
       - -c
       - ./build_sprites.sh
+    inputs:
+      - src/svgs
+    outputs:
+      - dist/sprites
+    options:
+      cache: true
 
   build:
     deps:
       - validate
       - build_sprites
+    command: sh
+    args:
+      - -c
+      - cp src/style.json dist/style.json && cp src/iconset.json dist/iconset.json
+    inputs:
+      - src/style.json
+      - src/iconset.json
+    outputs:
+      - dist/style.json
+      - dist/iconset.json
+    options:
+      cache: true
+
+  dev:
+    command: nodemon
+    args:
+      - -w
+      - src
+      - --exec
+      - moon map-style-osm-liberty:format && moon map-style-osm-liberty:build
+    options:
+      cache: false

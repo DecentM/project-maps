@@ -1,2 +1,7 @@
-sprites/*
-!sprites/.gitkeep
+!dist
+dist/*
+!dist/.gitkeep
+
+!dist/sprites
+dist/sprites/*
+!dist/sprites/.gitkeep
