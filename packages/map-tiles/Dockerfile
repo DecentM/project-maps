@@ -16,5 +16,4 @@ RUN mkdir -p dist && mkdir -p store && /usr/src/app/tilemaker ./planet.pbf \
   --config ./config.json \
   --store ./store \
   --process process-debug.lua \
-  --no-compress-nodes \
   --materialize-geometries
