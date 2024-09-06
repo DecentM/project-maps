@@ -8,3 +8,27 @@ tasks:
     command: quasar
     args:
       - dev
+    options:
+      cache: false
+
+  build:
+    deps:
+      - map-style:build
+      - map-tiles:build
+      - proto:build
+    command: quasar
+    args:
+      - build
+    inputs:
+      - src
+      - quasar.conf.ts
+      - postcss.config.mjs
+      - tsconfig.json
+      - tsconfig.vue-tsc.json
+      - index.html
+      - package.json
+      - public
+    outputs:
+      - dist
+    options:
+      cache: true

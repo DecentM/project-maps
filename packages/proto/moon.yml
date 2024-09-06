@@ -13,6 +13,24 @@ tasks:
       - proto
       - --
       - proto:build
+    options:
+      cache: false
+
+  generate:
+    inputs:
+      - src/**/*.proto
+      - package.json
+    outputs:
+      - generated
+    options:
+      runFromWorkspaceRoot: true
+      cache: true
+    command:
+      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
+      - --ts_out=packages/proto/generated
+      - --ts_opt=unary_rpc_promise=true
+      - -I=packages/proto/src
+      - packages/proto/src/**/*.proto
 
   build:
     deps:
@@ -23,18 +41,6 @@ tasks:
       - dist
     command:
       - tsc
-
-  generate:
-    inputs:
-      - src/**/*.proto
-      - package.json
-    outputs:
-      - generated
     options:
-      runFromWorkspaceRoot: true
-    command:
-      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-      - --ts_out=packages/proto/generated
-      - --ts_opt=unary_rpc_promise=true
-      - -I=packages/proto/src
-      - packages/proto/src/**/*.proto
+      cache: true
+

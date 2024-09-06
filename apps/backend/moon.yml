@@ -12,3 +12,14 @@ tasks:
     options:
       cache: false
       envFile: .env
+
+  build:
+    deps:
+      - proto:build
+    command: tsc
+    inputs:
+      - src
+      - tsconfig.json
+      - package.json
+    outputs:
+      - dist

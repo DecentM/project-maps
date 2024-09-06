@@ -11,3 +11,7 @@
 # Capacitor related directories and files
 /src-capacitor/www
 /src-capacitor/node_modules
+
+!dist
+dist/*
+!dist/.gitkeep
