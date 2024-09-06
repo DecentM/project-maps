@@ -10,30 +10,25 @@ tasks:
     command: sh
     args:
       - -c
-      - docker build --build-arg=PBF_URL=https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf -t map-tiles:latest .
+      - docker build --build-arg=PBF_URL=http://download.geofabrik.de/europe/great-britain-latest.osm.pbf -t map-tiles:latest . && docker create map-tiles:latest > ./.ignored/map-tiles-container-id
+    outputs:
+      - ./.ignored/map-tiles-container-id
     options:
-      # docker caches by itself
-      cache: false
+      cache: true
 
-  extract_docker:
+  copy_docker:
     deps:
       - build_docker
     command: sh
     args:
       - -c
-      - docker create map-tiles:latest > /tmp/map-tiles-container-id
+      - docker cp $(cat ./.ignored/map-tiles-container-id):/app/dist ./
+    inputs:
+      - ./.ignored/map-tiles-container-id
+    outputs:
+      - dist
     options:
-      cache: false
-
-  copy_docker:
-    deps:
-      - extract_docker
-    command: sh
-    args:
-      - -c
-      - docker cp $(cat /tmp/map-tiles-container-id):/app/dist ./
-    options:
-      cache: false
+      cache: true
 
   cleanup_docker:
     deps:
@@ -41,14 +36,15 @@ tasks:
     command: sh
     args:
       - -c
-      - docker rm $(cat /tmp/map-tiles-container-id) && rm /tmp/map-tiles-container-id && docker rmi map-tiles:latest
+      - docker rm -f $(cat ./.ignored/map-tiles-container-id) && rm ./.ignored/map-tiles-container-id && docker rmi -f map-tiles:latest
+    inputs:
+      - ./.ignored/map-tiles-container-id
     options:
-      cache: false
+      cache: true
 
   build:
     deps:
       - build_docker
-      - extract_docker
       - copy_docker
       - cleanup_docker
     options:
