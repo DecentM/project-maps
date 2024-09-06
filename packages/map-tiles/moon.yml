@@ -41,7 +41,7 @@ tasks:
     command: sh
     args:
       - -c
-      - docker rm $(cat /tmp/map-tiles-container-id) && rm /tmp/map-tiles-container-id
+      - docker rm $(cat /tmp/map-tiles-container-id) && rm /tmp/map-tiles-container-id && docker rmi map-tiles:latest
     options:
       cache: false
 
