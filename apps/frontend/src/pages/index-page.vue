@@ -44,14 +44,14 @@ const handleZoom = (event: MglEvent) => {
 const isZooming = ref(false)
 
 onBeforeMount(() => {
-  MglDefaults.style = 'http://localhost:9000/map-styles/bright-v9.json'
+  MglDefaults.style = `${window.location.origin}/map-style/style.json`
   MglDefaults.center = [-0.0077933345128258225, 51.49663562695136]
   MglDefaults.zoom = 13
 })
 
 const transformRequest = (url: string, resourceType: string): RequestParameters => {
   return {
-    url: url.replace(/\{tileUrlBase\}/gu, `${window.location.origin}/pbfs`),
+    url: url.replace(/\{tileUrlBase\}/gu, `${window.location.origin}/map-tiles`),
   }
 }
 </script>
@@ -74,8 +74,8 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
   <q-page class="vh-100">
     <q-card class="debug-overlay">
       <q-card-section>
-        <div class="text-subitle1">Zoom: {{ zoom }}</div>
-        <div class="text-subitle1">Coords: {{ center }}</div>
+        <div class="text-subitle1">Zoom: {{ zoom.toFixed(2) }}</div>
+        <div class="text-subitle1">Coords: {{ center.lat.toFixed(7) }}, {{ center.lng.toFixed(7) }}</div>
       </q-card-section>
     </q-card>
     <mgl-map

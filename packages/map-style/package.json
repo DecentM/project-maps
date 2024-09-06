@@ -1,10 +1,13 @@
 {
-  "name": "@project-maps/map-style-osm-liberty",
+  "name": "@project-maps/map-style",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "keywords": [],
   "author": "",
+  "exports": {
+    ".": "./dist/"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pnpm moon map-style-osm-liberty:validate && pnpm moon map-style-osm-liberty:format && git add style.json"

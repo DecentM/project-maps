@@ -1,4 +1,4 @@
-id: map-style-osm-liberty
+id: map-style
 language: typescript
 platform: node
 type: library
@@ -70,6 +70,6 @@ tasks:
       - -w
       - src
       - --exec
-      - moon map-style-osm-liberty:format && moon map-style-osm-liberty:build
+      - moon map-style:format && moon map-style:build
     options:
       cache: false
