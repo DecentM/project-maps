@@ -3,6 +3,7 @@
     "minzoom": 0,
     "maxzoom": 14,
     "basezoom": 14,
+    "combine_below": 14,
     "include_ids": false,
     "compress": "none",
     "name": "Tilemaker example",
@@ -19,468 +20,340 @@
     }
   },
   "layers": {
-    "background": {
-      "minzoom": 0,
-      "maxzoom": 14
-    },
-    "natural_earth": {
-      "minzoom": 0,
-      "maxzoom": 6
-    },
-    "park": {
-      "minzoom": 8,
-      "maxzoom": 14
-    },
     "park_outline": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landuse_residential": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landcover_wood": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landcover_grass": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landcover_ice": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landcover_wetland": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landuse_pitch": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landuse_track": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landuse_cemetery": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landuse_hospital": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landuse_school": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "waterway_tunnel": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "waterway_river": {
-      "minzoom": 11,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "waterway_other": {
-      "minzoom": 11,
-      "maxzoom": 14
-    },
-    "water": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "landcover_sand": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "aeroway_fill": {
-      "minzoom": 5,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "aeroway_runway": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "aeroway_taxiway": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_motorway_link_casing": {
-      "minzoom": 6,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_service_track_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_link_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_street_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_secondary_tertiary_casing": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_trunk_primary_casing": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_motorway_casing": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_path_pedestrian": {
-      "minzoom": 11,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_motorway_link": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_service_track": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_link": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_minor": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_secondary_tertiary": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_trunk_primary": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_motorway": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_major_rail": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_major_rail_hatching": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_transit_rail": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "tunnel_transit_rail_hatching": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_area_pattern": {
-      "minzoom": 6,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_motorway_link_casing": {
-      "minzoom": 6,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_service_track_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_link_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_minor_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_secondary_tertiary_casing": {
-      "minzoom": 8,
+      "minzoom": 11,
       "maxzoom": 14
     },
     "road_trunk_primary_casing": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_motorway_casing": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_path_pedestrian": {
-      "minzoom": 11,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_motorway_link": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_service_track": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_link": {
-      "minzoom": 8,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_minor": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_secondary_tertiary": {
-      "minzoom": 9,
+      "minzoom": 11,
       "maxzoom": 14
     },
     "road_trunk_primary": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_motorway": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_major_rail": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_major_rail_hatching": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_transit_rail": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_transit_rail_hatching": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_one_way_arrow": {
-      "minzoom": 11,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "road_one_way_arrow_opposite": {
-      "minzoom": 11,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_motorway_link_casing": {
-      "minzoom": 6,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_service_track_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_link_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_street_casing": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_path_pedestrian_casing": {
-      "minzoom": 11,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_secondary_tertiary_casing": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_trunk_primary_casing": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_motorway_casing": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_motorway_link": {
-      "minzoom": 6,
-      "maxzoom": 14
-    },
-    "bridge_service_track": {
-      "minzoom": 7,
-      "maxzoom": 14
-    },
-    "bridge_link": {
-      "minzoom": 7,
-      "maxzoom": 14
-    },
-    "bridge_minor": {
-      "minzoom": 9,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "bridge_path_pedestrian": {
-      "minzoom": 11,
-      "maxzoom": 14
-    },
-    "bridge_secondary_tertiary": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_trunk_primary": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_motorway": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_major_rail": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_major_rail_hatching": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_transit_rail": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "bridge_transit_rail_hatching": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "housenumber": {
       "minzoom": 14,
       "maxzoom": 14
     },
-    "building": {
+    "bridge_motorway_link": {
       "minzoom": 14,
       "maxzoom": 14
     },
-    "building_area": {
+    "bridge_service_track": {
       "minzoom": 14,
       "maxzoom": 14
     },
-    "building_trim": {
+    "bridge_link": {
       "minzoom": 14,
-      "maxzoom": 14
-    },
-    "highway_service_area": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "highway_area": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "highway_minor_area": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "highway_major_area": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "amenity": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "shop": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "building_shadow": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "admin_boundaries": {
-      "minzoom": 2,
-      "maxzoom": 14
-    },
-    "state_boundaries": {
-      "minzoom": 5,
-      "maxzoom": 14
-    },
-    "country_boundaries": {
-      "minzoom": 3,
-      "maxzoom": 14
-    },
-    "country_label": {
-      "minzoom": 3,
-      "maxzoom": 14
-    },
-    "state_label": {
-      "minzoom": 5,
-      "maxzoom": 14
-    },
-    "city_label": {
-      "minzoom": 8,
-      "maxzoom": 14
-    },
-    "place_label": {
-      "minzoom": 8,
-      "maxzoom": 14
-    },
-    "mountain_label": {
-      "minzoom": 8,
-      "maxzoom": 14
-    },
-    "water_label": {
-      "minzoom": 7,
-      "maxzoom": 14
-    },
-    "park_label": {
-      "minzoom": 8,
-      "maxzoom": 14
-    },
-    "landuse_label": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "building_label": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "housenumber_label": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "highway_label": {
-      "minzoom": 12,
-      "maxzoom": 14
-    },
-    "waterway_label": {
-      "minzoom": 11,
-      "maxzoom": 14
-    },
-    "road_label": {
-      "minzoom": 12,
       "maxzoom": 14
     },
     "bridge_street": {
-      "minzoom": 8,
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_secondary_tertiary": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_trunk_primary": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_motorway": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_major_rail": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_major_rail_hatching": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_transit_rail": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "bridge_transit_rail_hatching": {
+      "minzoom": 14,
       "maxzoom": 14
     },
     "boundary_3": {
-      "minzoom": 7,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "boundary_2_z0": {
-      "minzoom": 6,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "boundary_2_z5": {
-      "minzoom": 6,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "water_name_line": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "water_name_point": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "poi_z16": {
@@ -499,104 +372,189 @@
       "minzoom": 14,
       "maxzoom": 14
     },
+    "road_label": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
     "road_shield": {
-      "minzoom": 10,
+      "minzoom": 14,
       "maxzoom": 14
     },
     "place_other": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "place_village": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "place_town": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "place_city": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "state": {
-      "minzoom": 7,
-      "maxzoom": 14
-    },
-    "country_3": {
-      "minzoom": 6,
-      "maxzoom": 14
-    },
-    "country_2": {
-      "minzoom": 6,
-      "maxzoom": 14
-    },
-    "country_1": {
-      "minzoom": 6,
-      "maxzoom": 14
-    },
-    "continent": {
       "minzoom": 0,
       "maxzoom": 14
     },
-    "poi_detail": {
+    "place_village": {
+      "minzoom": 0,
+      "maxzoom": 14
+    },
+    "place_town": {
+      "minzoom": 0,
+      "maxzoom": 14
+    },
+    "place_city": {
+      "minzoom": 0,
+      "maxzoom": 14
+    },
+    "state": {
       "minzoom": 14,
       "maxzoom": 14
     },
-    "poi": {
+    "country_3": {
       "minzoom": 14,
       "maxzoom": 14
     },
-    "landuse": {
-      "minzoom": 9,
+    "country_2": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "country_1": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "continent": {
+      "minzoom": 14,
       "maxzoom": 14
     },
     "place": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "mountain_peak": {
-      "minzoom": 14,
-      "maxzoom": 14
-    },
-    "aerodrome_label": {
-      "minzoom": 9,
-      "maxzoom": 14
-    },
-    "water_name": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "transportation": {
-      "minzoom": 9,
-      "maxzoom": 14
-    },
-    "transportation_name": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "landcover": {
-      "minzoom": 9,
-      "maxzoom": 14
-    },
-    "waterway_detail": {
-      "minzoom": 13,
-      "maxzoom": 14
-    },
-    "water_name_detail": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "waterway": {
-      "minzoom": 10,
-      "maxzoom": 14
-    },
-    "aeroway": {
-      "minzoom": 5,
+      "minzoom": 0,
       "maxzoom": 14
     },
     "boundary": {
       "minzoom": 0,
+      "maxzoom": 14,
+      "simplify_below": 12,
+      "simplify_level": 0.0003,
+      "simplify_ratio": 2
+    },
+    "poi": {
+      "minzoom": 12,
+      "maxzoom": 14
+    },
+    "poi_detail": {
+      "minzoom": 14,
+      "maxzoom": 14,
+      "write_to": "poi"
+    },
+    "housenumber": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "waterway": {
+      "minzoom": 8,
+      "maxzoom": 14,
+      "simplify_below": 12,
+      "simplify_level": 0.0003,
+      "simplify_ratio": 2
+    },
+    "waterway_detail": {
+      "minzoom": 12,
+      "maxzoom": 14,
+      "write_to": "waterway"
+    },
+    "transportation": {
+      "minzoom": 4,
+      "maxzoom": 14,
+      "simplify_below": 13,
+      "simplify_level": 0.0003
+    },
+    "transportation_name": {
+      "minzoom": 8,
+      "maxzoom": 14
+    },
+    "building": {
+      "minzoom": 13,
+      "maxzoom": 14
+    },
+    "water": {
+      "minzoom": 6,
+      "maxzoom": 14,
+      "simplify_below": 12,
+      "simplify_level": 0.0003,
+      "simplify_ratio": 2
+    },
+    "ocean": {
+      "minzoom": 0,
+      "maxzoom": 14,
+      "source": "coastline/water_polygons.shp",
+      "filter_below": 12,
+      "filter_area": 0.5,
+      "simplify_below": 13,
+      "simplify_level": 0.0001,
+      "simplify_ratio": 2,
+      "write_to": "water"
+    },
+    "water_name": {
+      "minzoom": 14,
+      "maxzoom": 14
+    },
+    "water_name_detail": {
+      "minzoom": 14,
+      "maxzoom": 14,
+      "write_to": "water_name"
+    },
+    "aeroway": {
+      "minzoom": 11,
+      "maxzoom": 14
+    },
+    "aerodrome_label": {
+      "minzoom": 10,
+      "maxzoom": 14
+    },
+    "park": {
+      "minzoom": 11,
+      "maxzoom": 14
+    },
+    "landuse": {
+      "minzoom": 4,
+      "maxzoom": 14,
+      "simplify_below": 13,
+      "simplify_level": 0.0003,
+      "simplify_ratio": 2
+    },
+    "urban_areas": {
+      "minzoom": 4,
+      "maxzoom": 8,
+      "source": "landcover/ne_10m_urban_areas/ne_10m_urban_areas.shp",
+      "source_columns": [
+        "featurecla"
+      ],
+      "simplify_below": 7,
+      "simplify_level": 0.0003,
+      "simplify_ratio": 2,
+      "write_to": "landuse"
+    },
+    "landcover": {
+      "minzoom": 0,
+      "maxzoom": 14,
+      "simplify_below": 13,
+      "simplify_level": 0.0003,
+      "simplify_ratio": 2
+    },
+    "ice_shelf": {
+      "minzoom": 0,
+      "maxzoom": 9,
+      "source": "landcover/ne_10m_antarctic_ice_shelves_polys/ne_10m_antarctic_ice_shelves_polys.shp",
+      "source_columns": [
+        "featurecla"
+      ],
+      "simplify_below": 13,
+      "simplify_level": 0.0005,
+      "write_to": "landcover"
+    },
+    "glacier": {
+      "minzoom": 2,
+      "maxzoom": 9,
+      "source": "landcover/ne_10m_glaciated_areas/ne_10m_glaciated_areas.shp",
+      "source_columns": [
+        "featurecla"
+      ],
+      "simplify_below": 13,
+      "simplify_level": 0.0005,
+      "write_to": "landcover"
+    },
+    "mountain_peak": {
+      "minzoom": 11,
       "maxzoom": 14
     }
   }
