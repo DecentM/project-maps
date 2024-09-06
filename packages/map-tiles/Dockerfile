@@ -11,4 +11,10 @@ WORKDIR /app
 COPY --from=base /app/planet.pbf ./
 COPY ./src/ ./
 
-RUN mkdir -p dist && mkdir -p store && /usr/src/app/tilemaker ./planet.pbf --output ./dist/ --config ./config.json --store ./store --process process-debug.lua
+RUN mkdir -p dist && mkdir -p store && /usr/src/app/tilemaker ./planet.pbf \
+  --output ./dist/ \
+  --config ./config.json \
+  --store ./store \
+  --process process-debug.lua \
+  --no-compress-nodes \
+  --materialize-geometries
