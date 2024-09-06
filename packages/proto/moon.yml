@@ -8,7 +8,7 @@ tasks:
       - nodemon
       - -q
       - -x
-      - yarn moon
+      - pnpm moon
       - -e
       - proto
       - --

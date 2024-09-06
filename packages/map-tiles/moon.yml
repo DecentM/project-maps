@@ -20,7 +20,7 @@ tasks:
       - build_docker
     command: sh
     args:
-      - -cx
+      - -c
       - docker create map-tiles:latest > /tmp/map-tiles-container-id
     options:
       cache: false
@@ -30,7 +30,7 @@ tasks:
       - extract_docker
     command: sh
     args:
-      - -cx
+      - -c
       - docker cp $(cat /tmp/map-tiles-container-id):/app/dist ./
     options:
       cache: false
@@ -40,7 +40,7 @@ tasks:
       - copy_docker
     command: sh
     args:
-      - -cx
+      - -c
       - docker rm $(cat /tmp/map-tiles-container-id) && rm /tmp/map-tiles-container-id
     options:
       cache: false
@@ -51,5 +51,17 @@ tasks:
       - extract_docker
       - copy_docker
       - cleanup_docker
+    options:
+      cache: false
+
+  dev:
+    command: nodemon
+    args:
+      - -w
+      - src
+      - -w
+      - Dockerfile
+      - --exec
+      - moon map-tiles:build
     options:
       cache: false

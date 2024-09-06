@@ -7,5 +7,8 @@
   "author": "",
   "exports": {
     ".": "./dist/"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
   }
 }
