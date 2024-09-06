@@ -4,29 +4,52 @@ platform: node
 type: library
 
 tasks:
-  download_test_pbf:
+  build_docker:
+    env:
+      DOCKER_BUILDKIT: "1"
     command: sh
     args:
       - -c
-      - mkdir -p ./.ignored/pbfs && curl -L -o ./.ignored/pbfs/greater-london-latest.osm.pbf "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf"
-    outputs:
-      - ./.ignored/pbfs/greater-london-latest.osm.pbf
-    inputs: []
+      - docker build --build-arg=PBF_URL=https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf -t map-tiles:latest .
     options:
-      cache: true
+      # docker caches by itself
+      cache: false
 
-  create_test_tiles:
+  extract_docker:
     deps:
-      - download_test_pbf
+      - build_docker
     command: sh
     args:
-      - -c
-      - mkdir -p .ignored/tiles && docker compose -f docker-compose.yml run --rm tilemaker
-    inputs:
-      - ./.ignored/pbfs/greater-london-latest.osm.pbf
-      - ./config.json
-      - ./docker-compose.yml
-    outputs:
-      - ./.ignored/tiles
+      - -cx
+      - docker create map-tiles:latest > /tmp/map-tiles-container-id
     options:
-      cache: true
+      cache: false
+
+  copy_docker:
+    deps:
+      - extract_docker
+    command: sh
+    args:
+      - -cx
+      - docker cp $(cat /tmp/map-tiles-container-id):/app/dist ./
+    options:
+      cache: false
+
+  cleanup_docker:
+    deps:
+      - copy_docker
+    command: sh
+    args:
+      - -cx
+      - docker rm $(cat /tmp/map-tiles-container-id) && rm /tmp/map-tiles-container-id
+    options:
+      cache: false
+
+  build:
+    deps:
+      - build_docker
+      - extract_docker
+      - copy_docker
+      - cleanup_docker
+    options:
+      cache: false

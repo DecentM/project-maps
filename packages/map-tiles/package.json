@@ -4,5 +4,8 @@
   "description": "",
   "type": "module",
   "keywords": [],
-  "author": ""
+  "author": "",
+  "exports": {
+    ".": "./dist/"
+  }
 }

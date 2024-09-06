@@ -2,7 +2,7 @@
 import { type MglEvent, useMap, type MglMap, MglDefaults } from 'vue-maplibre-gl'
 //import { Protocol } from 'pmtiles'
 import { onBeforeMount, ref } from 'vue'
-import { LngLat, RequestParameters } from 'maplibre-gl'
+import { LngLat, type RequestParameters } from 'maplibre-gl'
 
 const { map } = useMap()
 const loaded = ref(0)
