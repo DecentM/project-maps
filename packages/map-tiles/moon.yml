@@ -20,7 +20,7 @@ tasks:
     command: sh
     args:
       - -c
-      - rm -rf dist/* || true
+      - rm -rf dist || true; mkdir dist; touch dist/.gitkeep
     options:
       cache: false
 

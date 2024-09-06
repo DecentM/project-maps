@@ -11,7 +11,7 @@ const handleLoad = (event: MglEvent) => {
   loaded.value++
 }
 
-const center = ref<LngLat>(new LngLat(10.288107, 49.405078))
+const center = ref<LngLat>(new LngLat(-0.1117343, 51.4876308))
 
 const sameMoves = ref(0)
 
@@ -44,17 +44,17 @@ const handleZoom = (event: MglEvent) => {
 const isZooming = ref(false)
 
 onBeforeMount(() => {
-  MglDefaults.style = `${window.location.origin}/map-style/style/light.json`
-  MglDefaults.center = [-0.1117343, 51.4876308]
-  MglDefaults.zoom = 10.25
+  MglDefaults.style = `http://${window.location.hostname}:3000/styles/style/light.json`
+  MglDefaults.center = [center.value.lng, center.value.lat]
+  MglDefaults.zoom = zoom.value
 })
 
 const transformRequest = (url: string, resourceType: string): RequestParameters => {
   return {
     url: url
-      .replace(/\{tileUrlBase\}/gu, `${window.location.origin}/map-tiles`)
-      .replace(/\{spritesUrlBase\}/gu, `${window.location.origin}/map-style/sprites`)
-      .replace(/\{fontsUrlBase\}/gu, `${window.location.origin}/map-fonts`),
+      .replace(/\{tileUrlBase\}/gu, `http://${window.location.hostname}:3000/tile`)
+      .replace(/\{spritesUrlBase\}/gu, `http://${window.location.hostname}:3000/styles/sprites`)
+      .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`),
   }
 }
 </script>
