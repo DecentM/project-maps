@@ -45,8 +45,8 @@ const isZooming = ref(false)
 
 onBeforeMount(() => {
   MglDefaults.style = `${window.location.origin}/map-style/style.json`
-  MglDefaults.center = [-0.0077933345128258225, 51.49663562695136]
-  MglDefaults.zoom = 13
+  MglDefaults.center = [-0.1117343, 51.4876308]
+  MglDefaults.zoom = 10.25
 })
 
 const transformRequest = (url: string, resourceType: string): RequestParameters => {

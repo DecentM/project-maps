@@ -10,7 +10,7 @@ tasks:
     command: sh
     args:
       - -c
-      - docker build --build-arg=PBF_URL=http://download.geofabrik.de/europe/great-britain-latest.osm.pbf -t map-tiles:latest . && docker create map-tiles:latest > ./.ignored/map-tiles-container-id
+      - docker build --build-arg=PBF_URL=https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf -t map-tiles:latest . && docker create map-tiles:latest > ./.ignored/map-tiles-container-id
     outputs:
       - ./.ignored/map-tiles-container-id
     options:
