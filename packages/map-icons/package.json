@@ -1,0 +1,11 @@
+{
+  "name": "@project-maps/map-icons",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "exports": {
+    ".": "./dist/"
+  }
+}

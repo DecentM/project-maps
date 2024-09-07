@@ -31,7 +31,7 @@ const handleMove = (event: MglEvent) => {
   center.value = newCenter
 }
 
-const zoom = ref(10.25)
+const zoom = ref(16.25)
 
 const handleZoom = (event: MglEvent) => {
   if (zoom.value === event.map.getZoom()) {
@@ -53,7 +53,7 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
   return {
     url: url
       .replace(/\{tileUrlBase\}/gu, `http://${window.location.hostname}:3000/tile`)
-      .replace(/\{spritesUrlBase\}/gu, `http://${window.location.hostname}:3000/styles/sprites`)
+      .replace(/\{spritesUrlBase\}/gu, `http://${window.location.hostname}:3000/icons/sprites`)
       .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`),
   }
 }

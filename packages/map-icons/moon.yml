@@ -1,0 +1,53 @@
+id: map-icons
+language: typescript
+platform: node
+type: library
+
+tasks:
+  build_1x:
+    command: spreet
+    args:
+      - --unique
+      - --minify-index-file
+      - ./src/svgs/
+      - ./dist/sprites/osm-liberty
+    inputs:
+      - src/svgs
+    outputs:
+      - ./dist/sprites/osm-liberty.json
+      - ./dist/sprites/osm-liberty.png
+    options:
+      cache: false
+
+  build_2x:
+    command: spreet
+    args:
+      - --unique
+      - --minify-index-file
+      - --retina
+      - ./src/svgs/
+      - ./dist/sprites/osm-liberty@2x
+    inputs:
+      - src/svgs
+    outputs:
+      - ./dist/sprites/osm-liberty@2x.json
+      - ./dist/sprites/osm-liberty@2x.png
+    options:
+      cache: false
+
+  build:
+    deps:
+      - map-icons:build_1x
+      - map-icons:build_2x
+    options:
+      cache: false
+
+  dev:
+    command: nodemon
+    args:
+      - -w
+      - src
+      - --exec
+      - moon map-icons:build
+    options:
+      cache: false

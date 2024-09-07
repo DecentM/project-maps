@@ -49,4 +49,20 @@ export default fp(async (fastify, opts) => {
       }
     },
   })
+
+  fastify.register(Static, {
+    root: path.resolve(import.meta.dirname, '..', 'static', 'map-icons'),
+    decorateReply: false,
+    prefix: '/icons',
+    allowedPath(pathName, root, request) {
+      return (pathName.endsWith('.json') || pathName.endsWith('.png')) && !pathName.includes('..')
+    },
+    setHeaders(res, pathName, stat) {
+      if (pathName.endsWith('.json')) {
+        res.setHeader('Content-Type', 'application/json')
+      } else {
+        res.setHeader('Content-Type', 'image/png')
+      }
+    },
+  })
 })

@@ -25,26 +25,13 @@ tasks:
     options:
       cache: true
 
-  build_sprites:
-    command: sh
-    args:
-      - -c
-      - ./build_sprites.sh
-    inputs:
-      - src/svgs
-    outputs:
-      - dist/sprites
-    options:
-      cache: true
-
   build:
     deps:
       - validate
-      - build_sprites
     command: sh
     args:
       - -c
-      - cp -a src/style dist/ && cp src/iconset.json dist/iconset.json
+      - cp -a src/style dist/
     inputs:
       - src/style
       - src/iconset.json

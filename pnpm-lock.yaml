@@ -43,6 +43,9 @@ importers:
       '@project-maps/map-fonts':
         specifier: workspace:*
         version: link:../../packages/map-fonts
+      '@project-maps/map-icons':
+        specifier: workspace:*
+        version: link:../../packages/map-icons
       '@project-maps/map-style':
         specifier: workspace:*
         version: link:../../packages/map-style
@@ -193,6 +196,8 @@ importers:
       fontnik:
         specifier: ^0.7.2
         version: 0.7.2
+
+  packages/map-icons: {}
 
   packages/map-style:
     devDependencies:
