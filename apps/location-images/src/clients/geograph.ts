@@ -21,7 +21,7 @@ export type SyndicatorResponse = {
   description: string
   link: string
   syndicationURL: string
-  nextURL: string
+  nextURL?: string
   icon: string
   date: string
   items: Array<{
@@ -53,7 +53,6 @@ const isSyndicationResponse = (response: unknown): response is SyndicatorRespons
     'description' in response &&
     'link' in response &&
     'syndicationURL' in response &&
-    'nextURL' in response &&
     'icon' in response &&
     'date' in response &&
     'items' in response &&
@@ -162,6 +161,7 @@ export class GeographClient {
     const json = await result.json()
 
     if (!isSyndicationResponse(json)) {
+      console.log(json)
       throw new Error('Invalid response from Geograph API: /syndicator.php')
     }
 

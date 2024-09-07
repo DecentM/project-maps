@@ -18,7 +18,7 @@ export class GeographUKImageSource extends ImageSource {
     this.client
       .syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: parameters.pagination?.pageSize ?? 1,
+        perpage: parameters.pagination?.limit ?? 1,
         distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
       })
       .then(async (response) => {
@@ -30,9 +30,12 @@ export class GeographUKImageSource extends ImageSource {
             LocationImages.LocationImage.fromObject({
               url: details.geograph.img.src,
               thumbnailUrl: details.geograph.thumbnail,
-              source: LocationImages.ImageSource.GeographUK,
-              attribution: details.geograph.user['#text'],
-              attributionUrl: details.geograph.user.profile,
+              attribution: {
+                name: details.geograph.user['#text'],
+                license: item.licence,
+                url: details.geograph.user.profile,
+                source: LocationImages.ImageSource.GeographUK,
+              },
               coordinates: {
                 lat: item.lat,
                 lng: item.long,

@@ -52,6 +52,8 @@ const emit = defineEmits<{
 const handleClick = (event: MglEvent) => {
   emit('click:location', event.event.lngLat)
 }
+
+const isDev = !!import.meta.env.DEV
 </script>
 
 <template>
@@ -67,11 +69,13 @@ const handleClick = (event: MglEvent) => {
     @map:zoom="handleZoom"
     @map:click="handleClick"
   >
-    <mgl-frame-rate-control/>
-    <mgl-fullscreen-control/>
-    <mgl-attribution-control/>
-    <mgl-navigation-control/>
-    <mgl-scale-control/>
-    <mgl-geolocation-control/>
+    <mgl-frame-rate-control v-if="isDev" />
+    <mgl-fullscreen-control />
+    <mgl-attribution-control />
+    <mgl-navigation-control />
+    <mgl-scale-control />
+    <mgl-geolocation-control />
+
+    <slot />
   </mgl-map>
 </template>

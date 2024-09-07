@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import type { LocationImages } from '@project-maps/proto/location-images'
 import type { LngLat } from 'maplibre-gl'
+import { computed, onMounted, ref, watch } from 'vue'
+
+import PatientImage from '../image/patient-image.vue'
+import ImageAttribution from '../image/image-attribution.vue'
+
 import { useSocket } from 'src/lib/socketio'
-import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
   location: LngLat | null
@@ -10,7 +14,9 @@ const props = defineProps<{
 
 const { socket } = useSocket()
 
-const images = ref<LocationImages.LocationImage[]>([])
+const images = ref<ReturnType<LocationImages.LocationImage['toObject']>[]>([])
+
+const firstImage = computed(() => images.value[0] ?? null)
 
 onMounted(() => {
   socket.on('LocationImages', (method, response) => {
@@ -35,10 +41,15 @@ watch(
     }
 
     socket.emit('LocationImages', 'GetLocationImages', {
+      pagination: {
+        limit: 1,
+        offset: 0,
+      },
       coordinates: {
         lat: String(newLocation.lat ?? 0),
         lng: String(newLocation.lng ?? 0),
       },
+      radiusMeters: 100,
     })
   }
 )
@@ -47,24 +58,36 @@ watch(
 <style lang="scss" scoped>
 .location-sidebar {
   width: 400px;
-  pointer-events: initial;
   overflow-y: auto;
-  max-height: 90vh;
+  max-height: calc(100vh - 32px);
 }
 </style>
 
 <template>
   <q-card class="location-sidebar">
-    <q-card-section>
-      <q-input
-        :model-value="''"
-        outlined
-        placeholder="Search..."
-        dense
-      />
-    </q-card-section>
-    <q-card-section v-if="images.length">
-      <q-img v-for="image in images" :key="image.url" :src="image.url" />
-    </q-card-section>
+    <transition name="fade" mode="out-in">
+      <div v-if="firstImage && firstImage.url">
+        <patient-image
+          height="250px"
+          :src="firstImage.url"
+          alt="Street Photo"
+          class="q-pa-md"
+        >
+          <q-input
+            class="bg-white rounded-borders all-pointer-events"
+            :model-value="''"
+            outlined
+            placeholder="Search..."
+            dense
+          />
+        </patient-image>
+
+        <image-attribution v-if="firstImage.attribution" :attribution="firstImage.attribution" />
+      </div>
+
+      <q-card-section v-else>
+        <q-input :model-value="''" outlined placeholder="Search..." dense />
+      </q-card-section>
+    </transition>
   </q-card>
 </template>

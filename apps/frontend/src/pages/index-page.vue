@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import type { LocationImages } from '@project-maps/proto/location-images'
 import type { LngLat } from 'maplibre-gl'
+
 import FullMap from 'src/components/full-map/full-map.vue'
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
-import { ref } from 'vue'
+import MapMarker from 'src/components/full-map/map-marker.vue'
 
 const selectedLocation = ref<LngLat | null>(null)
 
@@ -27,9 +29,7 @@ const resetImageLocations = () => {
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
   z-index: 1;
-  pointer-events: none;
 }
 </style>
 
@@ -42,6 +42,10 @@ const resetImageLocations = () => {
         @reset-images="resetImageLocations" />
     </div>
 
-    <full-map @click:location="handleLocationClick" />
+    <full-map @click:location="handleLocationClick">
+      <template v-for="location in imageLocations">
+        <map-marker :location="location.coordinates" />
+      </template>
+    </full-map>
   </q-page>
 </template>

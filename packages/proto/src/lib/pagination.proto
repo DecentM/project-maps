@@ -3,8 +3,8 @@ syntax = "proto3";
 package Pagination;
 
 message Request {
-  int32 page = 1;
-  int32 pageSize = 2;
+  int32 limit = 1;
+  int32 offset = 2;
 }
 
 message PageInfo {

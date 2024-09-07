@@ -28,13 +28,18 @@ enum ImageSource {
   GeographDE = 4;
 }
 
+message ImageAttribution {
+  string name = 1;
+  string license = 2;
+  string url = 3;
+  ImageSource source = 4;
+}
+
 message LocationImage {
   string url = 1;
   string thumbnailUrl = 2;
   bool downloadable = 3;
-  ImageSource source = 4;
-  string attribution = 5;
-  string attributionUrl = 6;
-  google.protobuf.Timestamp createdAt = 7;
-  Coordinates coordinates = 8;
+  ImageAttribution attribution = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  Coordinates coordinates = 6;
 }
