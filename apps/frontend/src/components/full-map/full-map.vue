@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { LngLat, type RequestParameters } from 'maplibre-gl'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { type MglEvent, useMap, MglDefaults } from 'vue-maplibre-gl'
 
 const { map } = useMap()
@@ -27,12 +27,14 @@ const handleZoom = (event: MglEvent) => {
   zoom.value = event.map.getZoom()
 }
 
-const isZooming = ref(false)
-
 onBeforeMount(() => {
   MglDefaults.style = `http://${window.location.hostname}:3000/styles/style/light.json`
   MglDefaults.center = [center.value.lng, center.value.lat]
   MglDefaults.zoom = zoom.value
+})
+
+onMounted(() => {
+  emit('zoom:end', zoom.value)
 })
 
 const transformRequest = (url: string, resourceType: string): RequestParameters => {
@@ -46,7 +48,8 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
 
 const emit = defineEmits<{
   (event: 'click:location', location: LngLat): void
-  (event: 'move-end', location: LngLat): void
+  (event: 'move:end', location: LngLat): void
+  (event: 'zoom:end', zoom: number): void
 }>()
 
 const handleClick = (event: MglEvent) => {
@@ -63,11 +66,11 @@ const isDev = !!import.meta.env.DEV
     :max-zoom="19"
     :transform-request="transformRequest"
     @map:load="handleLoad"
-    @map:zoomstart="isZooming = true"
-    @map:zoomend="isZooming = false"
     @map:move="handleMove"
     @map:zoom="handleZoom"
     @map:click="handleClick"
+    @map:moveend="() => emit('move:end', center)"
+    @map:zoomend="() => emit('zoom:end', zoom)"
   >
     <mgl-frame-rate-control v-if="isDev" />
     <mgl-fullscreen-control />

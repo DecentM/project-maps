@@ -22,6 +22,12 @@ const addImageLocation = (location: LocationImages.LocationImage) => {
 const resetImageLocations = () => {
   imageLocations.value = []
 }
+
+const zoom = ref(0)
+
+const handleZoomEnd = (newZoom: number) => {
+  zoom.value = newZoom
+}
 </script>
 
 <style lang="scss" scoped>
@@ -38,11 +44,13 @@ const resetImageLocations = () => {
     <div class="sidebar q-pa-md">
       <location-sidebar
         :location="selectedLocation"
+        :zoom-level="zoom"
+        :max-zoom-level="19"
         @show-image="addImageLocation"
         @reset-images="resetImageLocations" />
     </div>
 
-    <full-map @click:location="handleLocationClick">
+    <full-map @click:location="handleLocationClick" @zoom:end="handleZoomEnd">
       <template v-for="location in imageLocations">
         <map-marker :location="location.coordinates" />
       </template>

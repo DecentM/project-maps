@@ -10,6 +10,8 @@ import { useSocket } from 'src/lib/socketio'
 
 const props = defineProps<{
   location: LngLat | null
+  zoomLevel: number
+  maxZoomLevel: number
 }>()
 
 const { socket } = useSocket()
@@ -49,7 +51,7 @@ watch(
         lat: String(newLocation.lat ?? 0),
         lng: String(newLocation.lng ?? 0),
       },
-      radiusMeters: 100,
+      radiusMeters: Math.ceil(Math.log(props.maxZoomLevel / props.zoomLevel) * 250 + 10),
     })
   }
 )
