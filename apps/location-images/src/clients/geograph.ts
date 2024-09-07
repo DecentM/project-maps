@@ -163,6 +163,7 @@ export class GeographClient {
     const json = await result.json()
 
     if (!isSyndicationResponse(json)) {
+      console.log(json)
       throw new Error('Invalid response from Geograph API')
     }
 

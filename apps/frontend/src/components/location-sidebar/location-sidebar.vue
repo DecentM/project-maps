@@ -12,8 +12,7 @@ const { socket } = useSocket()
 const images = ref<string[]>([])
 
 onMounted(() => {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  socket.on('LocationImages', (method: 'LocationImages', response: any) => {
+  socket.on('LocationImages', (method, response) => {
     images.value = [...images.value, response.url]
   })
 })

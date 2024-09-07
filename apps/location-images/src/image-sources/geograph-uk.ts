@@ -18,7 +18,8 @@ export class GeographUKImageSource extends ImageSource {
     this.client
       .syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: 4,
+        perpage: parameters.pagination?.pageSize ?? 1,
+        distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
       })
       .then(async (response) => {
         for (const item of response.items) {
@@ -46,6 +47,7 @@ export class GeographUKImageSource extends ImageSource {
         }
       })
       .then(() => events.emit('end'))
+      .catch((error) => console.error(error))
 
     return events
   }
