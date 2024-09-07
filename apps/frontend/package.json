@@ -6,7 +6,6 @@
   "author": "DecentM",
   "type": "module",
   "dependencies": {
-    "@project-maps/backend": "workspace:*",
     "@project-maps/map-fonts": "workspace:*",
     "@project-maps/map-style": "workspace:*",
     "@project-maps/map-tiles": "workspace:*",

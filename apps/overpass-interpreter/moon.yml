@@ -1,0 +1,14 @@
+id: overpass-interpreter
+language: typescript
+platform: node
+type: application
+
+tasks:
+  dev:
+    command: tsx
+    args:
+      - --watch
+      - src/index.ts
+    options:
+      cache: false
+      envFile: .env

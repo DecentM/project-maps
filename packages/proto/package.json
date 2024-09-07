@@ -7,10 +7,14 @@
     "./location-images": {
       "import": "./dist/location-images/index.js",
       "types": "./dist/location-images/index.d.ts"
+    },
+    "./overpass-interpreter": {
+      "import": "./dist/overpass-interpreter/index.js",
+      "types": "./dist/overpass-interpreter/index.d.ts"
     }
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.11.1",
+    "@grpc/grpc-js": "^1.11.2",
     "google-protobuf": "^3.21.4",
     "grpc-tools": "^1.12.4"
   },

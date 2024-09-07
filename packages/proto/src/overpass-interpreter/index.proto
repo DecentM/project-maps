@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "lib/openstreetmap.proto";
+
+package OverpassInterpreter;
+
+service OverpassInterpreter {
+  rpc Query(QueryInput) returns (QueryResult);
+}
+
+message QueryInput {
+  string queryName = 1;
+}
+
+message QueryResult {
+  repeated QueryResultElement elements = 1;
+}
+
+message QueryResultElement {
+  oneof result {
+    OpenStreetMap.Node node = 1;
+    OpenStreetMap.Way way = 2;
+    OpenStreetMap.Relation relation = 3;
+  }
+}

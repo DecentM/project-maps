@@ -38,8 +38,8 @@ importers:
         specifier: ^7.0.4
         version: 7.0.4
       '@grpc/grpc-js':
-        specifier: ^1.11.1
-        version: 1.11.1
+        specifier: ^1.11.2
+        version: 1.11.2
       '@project-maps/map-fonts':
         specifier: workspace:*
         version: link:../../packages/map-fonts
@@ -86,9 +86,6 @@ importers:
 
   apps/frontend:
     dependencies:
-      '@project-maps/backend':
-        specifier: workspace:*
-        version: link:../backend
       '@project-maps/map-fonts':
         specifier: workspace:*
         version: link:../../packages/map-fonts
@@ -163,8 +160,8 @@ importers:
   apps/location-images:
     dependencies:
       '@grpc/grpc-js':
-        specifier: ^1.11.1
-        version: 1.11.1
+        specifier: ^1.11.2
+        version: 1.11.2
       '@project-maps/proto':
         specifier: workspace:*
         version: link:../../packages/proto
@@ -174,6 +171,40 @@ importers:
       fast-xml-parser:
         specifier: ^4.4.1
         version: 4.4.1
+      google-protobuf:
+        specifier: ^3.21.4
+        version: 3.21.4
+      got:
+        specifier: ^14.4.2
+        version: 14.4.2
+      tslib:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@types/got':
+        specifier: ^9.6.12
+        version: 9.6.12
+      '@types/node':
+        specifier: 20.16.3
+        version: 20.16.3
+      tsconfig-moon:
+        specifier: ^1.3.0
+        version: 1.3.0
+      tsx:
+        specifier: ^4.19.0
+        version: 4.19.0
+
+  apps/overpass-interpreter:
+    dependencies:
+      '@grpc/grpc-js':
+        specifier: ^1.11.2
+        version: 1.11.2
+      '@project-maps/proto':
+        specifier: workspace:*
+        version: link:../../packages/proto
+      emittery:
+        specifier: ^1.0.3
+        version: 1.0.3
       google-protobuf:
         specifier: ^3.21.4
         version: 3.21.4
@@ -223,8 +254,8 @@ importers:
   packages/proto:
     dependencies:
       '@grpc/grpc-js':
-        specifier: ^1.11.1
-        version: 1.11.1
+        specifier: ^1.11.2
+        version: 1.11.2
       google-protobuf:
         specifier: ^3.21.4
         version: 3.21.4
@@ -662,8 +693,8 @@ packages:
   '@fastify/static@7.0.4':
     resolution: {integrity: sha512-p2uKtaf8BMOZWLs6wu+Ihg7bWNBdjNgCwDza4MJtTqg+5ovKmcbgbR9Xs5/smZ1YISfzKOCNYmZV8LaCj+eJ1Q==}
 
-  '@grpc/grpc-js@1.11.1':
-    resolution: {integrity: sha512-gyt/WayZrVPH2w/UTLansS7F9Nwld472JxxaETamrM8HNlsa+jSLNyKAZmhxI2Me4c3mQHFiS1wWHDY1g1Kthw==}
+  '@grpc/grpc-js@1.11.2':
+    resolution: {integrity: sha512-DWp92gDD7/Qkj7r8kus6/HCINeo3yPZWZ3paKgDgsbKbSpoxKg1yvN8xe2Q8uE3zOsPe3bX8FQX2+XValq2yTw==}
     engines: {node: '>=12.10.0'}
 
   '@grpc/proto-loader@0.7.13':
@@ -4163,7 +4194,7 @@ snapshots:
       fastq: 1.17.1
       glob: 10.4.5
 
-  '@grpc/grpc-js@1.11.1':
+  '@grpc/grpc-js@1.11.2':
     dependencies:
       '@grpc/proto-loader': 0.7.13
       '@js-sdsl/ordered-map': 4.4.2
