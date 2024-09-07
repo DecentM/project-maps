@@ -18,7 +18,7 @@ export class GeographUKImageSource extends ImageSource {
     this.client
       .syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: 1,
+        perpage: 4,
       })
       .then(async (response) => {
         for (const item of response.items) {

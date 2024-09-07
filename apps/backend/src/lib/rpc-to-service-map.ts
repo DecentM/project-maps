@@ -18,3 +18,13 @@ export type MappedDataByMethod<
     ? D
     : never
   : never
+
+export type MappedReturnTypeByMethod<
+  T extends MappedService,
+  M extends MappedMethodNameByService<T>,
+> = M extends keyof (typeof rpcToServiceMap)[T][1]
+  // biome-ignore lint/suspicious/noExplicitAny: causes never
+  ? (typeof rpcToServiceMap)[T][1][M] extends (...args: any[]) => infer R
+    ? R
+    : never
+  : never

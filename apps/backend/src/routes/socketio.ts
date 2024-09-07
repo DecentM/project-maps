@@ -1,5 +1,6 @@
+import { LocationImages } from '@project-maps/proto/location-images'
 import fp from 'fastify-plugin'
-import { locationImagesClient } from 'src/grpc-clients/location-images'
+import { rpcToServiceMap } from 'src/lib/rpc-to-service-map'
 
 export default fp(async (fastify, opts) => {
   fastify.ready((err) => {
@@ -7,14 +8,11 @@ export default fp(async (fastify, opts) => {
 
     fastify.io.on('connection', (socket) => {
       socket.on('LocationImages', async (method, data) => {
-        const result = locationImagesClient[method](data)
+        const [, client] = rpcToServiceMap.LocationImages
+        const result = client[method](LocationImages.GetLocationImagesRequest.fromObject(data))
 
         result.on('data', (data) => {
-          console.log('data', data)
-        })
-
-        result.on('end', () => {
-          console.log('end')
+          socket.emit('LocationImages', method, data.toObject())
         })
       })
     })

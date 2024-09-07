@@ -3,6 +3,7 @@ import { type MglEvent, useMap, type MglMap, MglDefaults } from 'vue-maplibre-gl
 //import { Protocol } from 'pmtiles'
 import { onBeforeMount, ref } from 'vue'
 import { LngLat, type RequestParameters } from 'maplibre-gl'
+import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 
 const { map } = useMap()
 const loaded = ref(0)
@@ -57,30 +58,31 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
       .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`),
   }
 }
+
+const selectedLocation = ref<LngLat | null>(null)
+
+const handleClick = (event: MglEvent) => {
+  selectedLocation.value = event.event.lngLat
+}
 </script>
 
 <style lang="scss" scoped>
-.debug-overlay {
+.sidebar {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  overflow: auto;
-  width: 300px;
-  height: fit-content;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
 }
 </style>
 
 <template>
   <q-page class="vh-100">
-    <q-card class="debug-overlay">
-      <q-card-section>
-        <div class="text-subitle1">Zoom: {{ zoom.toFixed(2) }}</div>
-        <div class="text-subitle1">Coords: {{ center.lat.toFixed(7) }}, {{ center.lng.toFixed(7) }}</div>
-      </q-card-section>
-    </q-card>
+    <div class="sidebar q-pa-md">
+      <location-sidebar :location="selectedLocation" />
+    </div>
+
     <mgl-map
       ref="map"
       :attribution-control="true"
@@ -91,6 +93,7 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
       @map:zoomend="isZooming = false"
       @map:move="handleMove"
       @map:zoom="handleZoom"
+      @map:click="handleClick"
     >
       <mgl-frame-rate-control/>
       <mgl-fullscreen-control/>

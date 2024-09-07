@@ -8,7 +8,7 @@ tasks:
     command: tsx
     args:
       - --watch
-      - src/index.ts
+      - src/main.ts
     options:
       cache: false
       envFile: .env

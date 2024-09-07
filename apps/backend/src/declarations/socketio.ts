@@ -1,16 +1,26 @@
 import type {
   MappedDataByMethod,
   MappedMethodNameByService,
+  MappedReturnTypeByMethod,
   MappedService,
 } from 'src/lib/rpc-to-service-map'
 
 export type ServerToClientEvents = {
-  rpcResponse: (service: MappedService) => void
+  [key in MappedService]: (
+    method: MappedMethodNameByService<key>,
+    data: MappedReturnTypeByMethod<
+      MappedService,
+      key extends MappedService ? MappedMethodNameByService<key> : never
+    >
+  ) => void
 }
 
 export type ClientToServerEvents = {
   [key in MappedService]: (
     method: MappedMethodNameByService<key>,
-    data: MappedDataByMethod<MappedService, key extends MappedService ? MappedMethodNameByService<key> : never>
+    data: ReturnType<MappedDataByMethod<
+      MappedService,
+      key extends MappedService ? MappedMethodNameByService<key> : never
+    >['toObject']>
   ) => void
 }
