@@ -32,7 +32,7 @@ export type SyndicatorResponse = {
     guid: string
     source: string
     date: number
-    imageTaken: string // YYYY-MM-DD
+    imageTaken?: string // YYYY-MM-DD
     dateUpdated: number
     lat: string
     long: string
@@ -68,7 +68,6 @@ const isSyndicationResponse = (response: unknown): response is SyndicatorRespons
         'guid' in item &&
         'source' in item &&
         'date' in item &&
-        'imageTaken' in item &&
         'dateUpdated' in item &&
         'lat' in item &&
         'long' in item &&
@@ -163,8 +162,7 @@ export class GeographClient {
     const json = await result.json()
 
     if (!isSyndicationResponse(json)) {
-      console.log(json)
-      throw new Error('Invalid response from Geograph API')
+      throw new Error('Invalid response from Geograph API: /syndicator.php')
     }
 
     return json
@@ -176,7 +174,7 @@ export class GeographClient {
     const json = this.xmlParser.parse(result.body)
 
     if (!isPhotoResponse(json)) {
-      throw new Error('Invalid response from Geograph API')
+      throw new Error(`Invalid response from Geograph API: /api/photo/${guid}`)
     }
 
     return json

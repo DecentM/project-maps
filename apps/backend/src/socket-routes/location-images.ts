@@ -25,6 +25,10 @@ export const handleLocationImages =
         result.on('data', (data) => {
           socket.emit('LocationImages', method, data.toObject())
         })
+
+        result.on('error', (error) => {
+          console.error(error)
+        })
         break
       }
       default:
