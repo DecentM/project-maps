@@ -34,7 +34,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  emit('zoom:end', zoom.value)
+  emit('move:end', zoom.value, center.value)
 })
 
 const transformRequest = (url: string, resourceType: string): RequestParameters => {
@@ -48,8 +48,7 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
 
 const emit = defineEmits<{
   (event: 'click:location', location: LngLat): void
-  (event: 'move:end', location: LngLat): void
-  (event: 'zoom:end', zoom: number): void
+  (event: 'move:end', zoom: number, location: LngLat): void
 }>()
 
 const handleClick = (event: MglEvent) => {
@@ -69,8 +68,7 @@ const isDev = !!import.meta.env.DEV
     @map:move="handleMove"
     @map:zoom="handleZoom"
     @map:click="handleClick"
-    @map:moveend="() => emit('move:end', center)"
-    @map:zoomend="() => emit('zoom:end', zoom)"
+    @map:moveend="() => emit('move:end', zoom, center)"
   >
     <mgl-frame-rate-control v-if="isDev" />
     <mgl-fullscreen-control />

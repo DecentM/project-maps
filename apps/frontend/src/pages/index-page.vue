@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import type { LngLat } from 'maplibre-gl'
 
 import FullMap from 'src/components/full-map/full-map.vue'
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 import MapMarker from 'src/components/full-map/map-marker.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const selectedLocation = ref<LngLat | null>(null)
 
@@ -23,10 +24,22 @@ const resetImageLocations = () => {
   imageLocations.value = []
 }
 
-const zoom = ref(0)
+// TODO: This state isn't synced back to the map, only from map to url
+const route = useRoute()
+const router = useRouter()
 
-const handleZoomEnd = (newZoom: number) => {
-  zoom.value = newZoom
+const zoom = computed(() => {
+  return route.params.zoom ? Number.parseFloat(route.params.zoom as string) : 0
+})
+
+const handleMoveEnd = (newZoom: number, newCenter: LngLat) => {
+  router.push({
+    params: {
+      lng: newCenter.lng.toFixed(6),
+      lat: newCenter.lat.toFixed(6),
+      zoom: newZoom.toFixed(2),
+    },
+  })
 }
 </script>
 
@@ -50,7 +63,7 @@ const handleZoomEnd = (newZoom: number) => {
         @reset-images="resetImageLocations" />
     </div>
 
-    <full-map @click:location="handleLocationClick" @zoom:end="handleZoomEnd">
+    <full-map @click:location="handleLocationClick" @move:end="handleMoveEnd">
       <template v-for="location in imageLocations">
         <map-marker :location="location.coordinates" />
       </template>
