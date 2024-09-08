@@ -4,6 +4,7 @@ import type { LngLat } from 'maplibre-gl'
 import { watch } from 'vue'
 
 import LocationImage from './location-image.vue'
+import LocationMetadata from './location-metadata.vue'
 
 const props = defineProps<{
   location: LngLat | null
@@ -48,15 +49,7 @@ watch(
     <q-separator />
 
     <q-card-section>
-      <q-item clickable v-ripple>
-        <q-item-section>
-          <q-item-label>Photos</q-item-label>
-        </q-item-section>
-
-        <q-item-section side top>
-          <q-item-label caption>View all</q-item-label>
-        </q-item-section>
-      </q-item>
+      <location-metadata :location="location" :zoom-level="zoomLevel" :max-zoom-level="maxZoomLevel" />
     </q-card-section>
   </q-card>
 </template>

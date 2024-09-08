@@ -16,3 +16,7 @@ fastify.register(AutoLoad, {
 fastify.listen({ host: config.server.host, port: config.server.port })
   .then(() => console.log(`Server listening on ${config.server.host}:${config.server.port}`))
   .catch(console.error)
+
+process.on('unhandledRejection', (error) => {
+  console.error(error)
+})

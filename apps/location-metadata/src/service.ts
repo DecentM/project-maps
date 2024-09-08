@@ -1,20 +1,59 @@
+import Emittery from 'emittery'
 import type { sendUnaryData, ServerUnaryCall, ServerWritableStream } from '@grpc/grpc-js'
-import { LocationMetadata } from '@project-maps/proto/location-metadata'
-import { aggregateImageSources } from './lib/aggregate-image-sources'
-import { GeographUKImageSource } from './sources/geograph-uk'
-import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
-import { LocationMetadataOverpass } from '@project-maps/proto/location-metadata/overpass'
 
-const imageSources = [new GeographUKImageSource()]
+import { LocationMetadata } from '@project-maps/proto/location-metadata'
+import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
+import type { LocationMetadataOverpass } from '@project-maps/proto/location-metadata/overpass'
+
+import type { Events, ImageSource } from 'src/declarations/image-source'
+import { OverpassSource } from 'src/sources/overpass'
+import { GeographUKImageSource } from 'src/sources/geograph-uk'
 
 export class LocationMetadataService extends LocationMetadata.UnimplementedLocationMetadataService {
+  private static imageSources = [new GeographUKImageSource()]
+
+  private static metadataSources = [new OverpassSource()]
+
+  private static aggregateImageSources = (
+    imageSources: ImageSource[],
+    request: LocationMetadataImages.GetLocationImagesRequest
+  ): Emittery<Events> => {
+    const events = new Emittery<Events>()
+
+    const promises = imageSources.map((imageSource) => {
+      const emitter = imageSource.getImages(request)
+
+      const onImage = (image: LocationMetadataImages.LocationImage) => {
+        events.emit('image', image)
+      }
+
+      const onEnd = () => {
+        emitter.off('image', onImage)
+        emitter.off('end', onEnd)
+
+        const pending = promises.filter((promise) => promise !== emitter)
+
+        if (pending.length === 0) {
+          events.emit('end')
+        }
+      }
+
+      emitter.on('image', onImage)
+      emitter.on('end', onEnd)
+
+      return emitter
+    })
+
+    return events
+  }
+
   override GetLocationImages(
     call: ServerWritableStream<
       LocationMetadataImages.GetLocationImagesRequest,
       LocationMetadataImages.LocationImage
     >
   ): void {
-    const events = aggregateImageSources(imageSources, call.request)
+    const events = LocationMetadataService.aggregateImageSources(LocationMetadataService.imageSources, call.request)
 
     const onImage = (image: LocationMetadataImages.LocationImage) => {
       call.write(image)
@@ -31,25 +70,29 @@ export class LocationMetadataService extends LocationMetadata.UnimplementedLocat
     events.on('end', onEnd)
   }
 
-  override GetLocationMetadata(
+  override async GetLocationMetadata(
     call: ServerUnaryCall<
       LocationMetadataOverpass.GetLocationMetadataInput,
       LocationMetadataOverpass.GetLocationMetadataOutput
     >,
     callback: sendUnaryData<LocationMetadataOverpass.GetLocationMetadataOutput>
-  ): void {
-    // Implement the service method here
-    callback(null, LocationMetadataOverpass.GetLocationMetadataOutput.fromObject({
-      name: 'Test',
-      address: {
-        street: 'Test Street',
-        city: 'Test City',
-        country: 'Test Country',
-        postcode: '00000',
-        housenumber: '0'
-      },
-      phone: '0000000000',
-      website: 'https://example.com',
-    }))
+  ): Promise<void> {
+    try {
+      for (const source of LocationMetadataService.metadataSources) {
+        if (source.handlesLocation(call.request.coordinates)) {
+          const metadata = await source.getLocationMetadata(call.request)
+
+          callback(null, metadata)
+
+          return
+        }
+      }
+    } catch (error) {
+      console.error(error)
+
+      if (error instanceof Error) {
+        callback(new Error(`Cannot get location metadata: ${error.message}`))
+      }
+    }
   }
 }

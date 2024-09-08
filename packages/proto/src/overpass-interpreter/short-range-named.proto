@@ -1,9 +1,10 @@
 syntax = "proto3";
 
+import "lib/geospatial.proto";
+
 package OverpassInterpreter.ShortRangeNamed;
 
 message QueryParameters {
-  double lat = 1;
-  double lon = 2;
-  double range = 3;
+  Geospatial.Coordinates coordinates = 1;
+  double range = 2;
 }

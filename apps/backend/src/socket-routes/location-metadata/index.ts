@@ -7,6 +7,7 @@ import type {
 } from '../../declarations/socketio'
 import { rpcToServiceMap, type MappedMethodNameByService } from '../../lib/rpc-to-service-map'
 import type { Socket } from 'socket.io'
+import { LocationMetadataOverpass } from '@project-maps/proto/location-metadata/overpass'
 
 export const handleLocationMetadata =
   (socket: Socket<ClientToServerEvents, ServerToClientEvents>) =>
@@ -29,6 +30,14 @@ export const handleLocationMetadata =
         result.on('error', (error) => {
           console.error(error)
         })
+        break
+      }
+      case 'GetLocationMetadata': {
+        const result = await client.GetLocationMetadata(
+          LocationMetadataOverpass.GetLocationMetadataInput.fromObject(data)
+        )
+
+        socket.emit('LocationMetadata', method, result.toObject())
         break
       }
       default:

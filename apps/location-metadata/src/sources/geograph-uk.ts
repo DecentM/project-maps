@@ -1,11 +1,20 @@
+import type { Geospatial } from '@project-maps/proto/lib/geospatial'
 import { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import Emittery from 'emittery'
 
 import { GeographClient } from 'src/clients/geograph'
 import { config } from 'src/config'
-import { ImageSource, type Events } from 'src/declarations/image-source'
+import { ImageSource, type Events } from 'src/declarations/source'
 
 export class GeographUKImageSource extends ImageSource {
+  override handlesLocation(location: ReturnType<Geospatial.Coordinates['toObject']>): boolean {
+    if (!location.lat || !location.lng) return false
+
+    // Geograph UK only supports locations within the UK
+    // TODO: Proper bbox implementation (probably using a library)
+    return location.lat >= 49.86 && location.lat <= 60.86 && location.lng >= -8.65 && location.lng <= 1.77
+  }
+
   private client = new GeographClient(
     config.clients.geographUK.baseUrl,
     config.clients.geographUK.apiKey
@@ -37,8 +46,8 @@ export class GeographUKImageSource extends ImageSource {
                 source: LocationMetadataImages.ImageSource.GeographUK,
               },
               coordinates: {
-                lat: item.lat,
-                lng: item.long,
+                lat: Number.parseFloat(item.lat),
+                lng: Number.parseFloat(item.long),
               },
               createdAt: {
                 seconds: Math.floor(new Date(item.date).getTime() / 1000),

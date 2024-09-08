@@ -2,15 +2,15 @@
 
 (
   node
-  	(around:{{radius}}, {{lng}}, {{lat}})
+  	(around:{{range}}, {{coordinates.lat}}, {{coordinates.lng}})
     [name];
 
   way
-  	(around:{{radius}}, {{lng}}, {{lat}})
+  	(around:{{range}}, {{coordinates.lat}}, {{coordinates.lng}})
     [name];
 
   relation
-  	(around:{{radius}}, {{lng}}, {{lat}})
+  	(around:{{range}}, {{coordinates.lat}}, {{coordinates.lng}})
     [name];
 );
 

@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { flattenObject } from 'src/lib/keyed-flatten';
 
 type Query = {
   path: string,
@@ -10,9 +11,10 @@ export const query = <Params extends Record<string, unknown>>(query: Query) => {
 
   return (input: Params) => {
     let interpolatedQuery = contents;
+    const flatInput = flattenObject(input);
 
-    for (const key in input) {
-      interpolatedQuery = interpolatedQuery.replace(new RegExp(`{{${key}}`, 'g'), String(input[key]));
+    for (const key in flatInput) {
+      interpolatedQuery = interpolatedQuery.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), String(flatInput[key]));
     }
 
     return interpolatedQuery;

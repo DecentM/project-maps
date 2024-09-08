@@ -22,4 +22,5 @@ message Address {
   string country = 3;
   string postcode = 4;
   string housenumber = 5;
+  string state = 6;
 }

@@ -27,3 +27,7 @@ startServer(server)
   .catch((error) => {
     console.error('Failed to start server:', error)
   })
+
+process.on('unhandledRejection', (error) => {
+  console.error(error)
+})

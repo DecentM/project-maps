@@ -3,6 +3,6 @@ syntax = "proto3";
 package Geospatial;
 
 message Coordinates {
-  string lat = 1;
-  string lng = 2;
+  float lat = 1;
+  float lng = 2;
 }

@@ -3,7 +3,7 @@ import { credentials } from '@grpc/grpc-js'
 
 import { config } from '../config'
 
-export const locationMetadataClient = new OverpassInterpreter.OverpassInterpreterClient(
+export const overpassClient = new OverpassInterpreter.OverpassInterpreterClient(
   `${config.clients.overpassInterpreter.host}:${config.clients.overpassInterpreter.port}`,
   credentials.createInsecure()
 )

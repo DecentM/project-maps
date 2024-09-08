@@ -19,6 +19,18 @@
     "./overpass-interpreter": {
       "import": "./dist/overpass-interpreter/index.js",
       "types": "./dist/overpass-interpreter/index.d.ts"
+    },
+    "./lib/geospatial": {
+      "import": "./dist/lib/geospatial.js",
+      "types": "./dist/lib/geospatial.d.ts"
+    },
+    "./lib/openstreetmap": {
+      "import": "./dist/lib/openstreetmap.js",
+      "types": "./dist/lib/openstreetmap.d.ts"
+    },
+    "./lib/pagination": {
+      "import": "./dist/lib/pagination.js",
+      "types": "./dist/lib/pagination.d.ts"
     }
   },
   "dependencies": {
