@@ -40,7 +40,11 @@ export class OverpassSource extends Source {
     }))
 
     const response = overpassResponse.toObject()
-    const result = LocationMetadataOverpass.GetLocationMetadataOutput.fromObject({})
+    let result = LocationMetadataOverpass.GetLocationMetadataOutput.fromObject({})
+
+    const resetResult = () => {
+      result = LocationMetadataOverpass.GetLocationMetadataOutput.fromObject({})
+    }
 
     if (!response.elements) {
       return result
@@ -62,18 +66,20 @@ export class OverpassSource extends Source {
       // We'd prefer to show items with lots of metadata
       const score = calculateScore(item)
 
-      if (score <= highestScore) continue
+      if (score < highestScore) continue
 
       highestScore = score
 
+      resetResult()
+
       result.name = item.tags?.name || ''
       result.address = LocationMetadataOverpass.Address.fromObject({
-        city: item.tags?.city || '',
-        country: item.tags?.country || '',
-        housenumber: item.tags?.housenumber || '',
-        postcode: item.tags?.postcode || '',
-        state: item.tags?.state || '',
-        street: item.tags?.street || '',
+        city: item.tags?.['addr:city'] || '',
+        country: item.tags?.['addr:country'] || '',
+        housenumber: item.tags?.['addr:housenumber'] || '',
+        postcode: item.tags?.['addr:postcode'] || '',
+        state: item.tags?.['addr:state'] || '',
+        street: item.tags?.['addr:street'] || '',
       })
       result.phone = item.tags?.phone || ''
       result.website = item.tags?.website || ''

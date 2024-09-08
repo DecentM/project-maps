@@ -5,7 +5,7 @@ import { LocationMetadata } from '@project-maps/proto/location-metadata'
 import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import type { LocationMetadataOverpass } from '@project-maps/proto/location-metadata/overpass'
 
-import type { Events, ImageSource } from 'src/declarations/image-source'
+import type { Events, ImageSource } from 'src/declarations/source'
 import { OverpassSource } from 'src/sources/overpass'
 import { GeographUKImageSource } from 'src/sources/geograph-uk'
 

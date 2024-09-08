@@ -48,8 +48,6 @@ watch(
 
     <q-separator />
 
-    <q-card-section>
-      <location-metadata :location="location" :zoom-level="zoomLevel" :max-zoom-level="maxZoomLevel" />
-    </q-card-section>
+    <location-metadata :location="location" :zoom-level="zoomLevel" :max-zoom-level="maxZoomLevel" />
   </q-card>
 </template>
