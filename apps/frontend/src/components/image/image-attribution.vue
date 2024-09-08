@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { LocationImages } from '@project-maps/proto/location-images'
+import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 
 import { imageSourceString } from 'src/lib/image-source-string'
 import { licenseUrlToString } from 'src/lib/license-url-to-string'
@@ -9,7 +9,7 @@ defineProps<{
     name?: string
     license?: string
     url?: string
-    source?: LocationImages.ImageSource
+    source?: LocationMetadataImages.ImageSource
   }
 }>()
 </script>

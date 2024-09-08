@@ -2,6 +2,8 @@ syntax = "proto3";
 
 import "lib/openstreetmap.proto";
 
+import "overpass-interpreter/short-range-named.proto";
+
 package OverpassInterpreter;
 
 service OverpassInterpreter {
@@ -10,14 +12,8 @@ service OverpassInterpreter {
 
 message QueryInput {
   oneof query {
-    ShortRangeNamedQueryParameters shortRangeNamedQueryParameters = 3;
+    ShortRangeNamed.QueryParameters shortRangeNamedQueryParameters = 3;
   }
-}
-
-message ShortRangeNamedQueryParameters {
-  double lat = 1;
-  double lon = 2;
-  double range = 3;
 }
 
 message QueryResult {

@@ -2,22 +2,14 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "lib/pagination.proto";
+import "lib/geospatial.proto";
 
-package LocationImages;
-
-service LocationImages {
-  rpc GetLocationImages(GetLocationImagesRequest) returns (stream LocationImage);
-}
+package LocationMetadataImages;
 
 message GetLocationImagesRequest {
-  Coordinates coordinates = 1;
+  Geospatial.Coordinates coordinates = 1;
   int64 radiusMeters = 2;
   Pagination.Request pagination = 3;
-}
-
-message Coordinates {
-  string lat = 1;
-  string lng = 2;
 }
 
 enum ImageSource {
@@ -41,5 +33,5 @@ message LocationImage {
   bool downloadable = 3;
   ImageAttribution attribution = 4;
   google.protobuf.Timestamp createdAt = 5;
-  Coordinates coordinates = 6;
+  Geospatial.Coordinates coordinates = 6;
 }

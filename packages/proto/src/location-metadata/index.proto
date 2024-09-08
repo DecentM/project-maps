@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "location-metadata/images.proto";
+import "location-metadata/overpass.proto";
+
+package LocationMetadata;
+
+service LocationMetadata {
+  rpc GetLocationImages(LocationMetadataImages.GetLocationImagesRequest) returns (stream LocationMetadataImages.LocationImage);
+  rpc GetLocationMetadata(LocationMetadataOverpass.GetLocationMetadataInput) returns (LocationMetadataOverpass.GetLocationMetadataOutput);
+}

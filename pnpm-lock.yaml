@@ -157,7 +157,7 @@ importers:
         specifier: 2.1.6
         version: 2.1.6(typescript@5.5.4)
 
-  apps/location-images:
+  apps/location-metadata:
     dependencies:
       '@grpc/grpc-js':
         specifier: ^1.11.2

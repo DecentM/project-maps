@@ -4,9 +4,17 @@
   "author": "DecentM <decentm@decentm.com>",
   "type": "module",
   "exports": {
-    "./location-images": {
-      "import": "./dist/location-images/index.js",
-      "types": "./dist/location-images/index.d.ts"
+    "./location-metadata": {
+      "import": "./dist/location-metadata/index.js",
+      "types": "./dist/location-metadata/index.d.ts"
+    },
+    "./location-metadata/images": {
+      "import": "./dist/location-metadata/images.js",
+      "types": "./dist/location-metadata/images.d.ts"
+    },
+    "./location-metadata/overpass": {
+      "import": "./dist/location-metadata/overpass.js",
+      "types": "./dist/location-metadata/overpass.d.ts"
     },
     "./overpass-interpreter": {
       "import": "./dist/overpass-interpreter/index.js",

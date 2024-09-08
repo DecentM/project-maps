@@ -1,4 +1,4 @@
-import { LocationImages } from '@project-maps/proto/location-images'
+import { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import Emittery from 'emittery'
 
 import { GeographClient } from 'src/clients/geograph'
@@ -11,7 +11,7 @@ export class GeographUKImageSource extends ImageSource {
     config.imageSources.geographUK.apiKey
   )
 
-  getImages(request: LocationImages.GetLocationImagesRequest): Emittery<Events> {
+  getImages(request: LocationMetadataImages.GetLocationImagesRequest): Emittery<Events> {
     const events = new Emittery<Events>()
     const parameters = request.toObject()
 
@@ -27,14 +27,14 @@ export class GeographUKImageSource extends ImageSource {
 
           events.emit(
             'image',
-            LocationImages.LocationImage.fromObject({
+            LocationMetadataImages.LocationImage.fromObject({
               url: details.geograph.img.src,
               thumbnailUrl: details.geograph.thumbnail,
               attribution: {
                 name: details.geograph.user['#text'],
                 license: item.licence,
                 url: details.geograph.user.profile,
-                source: LocationImages.ImageSource.GeographUK,
+                source: LocationMetadataImages.ImageSource.GeographUK,
               },
               coordinates: {
                 lat: item.lat,

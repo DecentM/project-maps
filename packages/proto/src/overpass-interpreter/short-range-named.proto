@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package OverpassInterpreter.ShortRangeNamed;
+
+message QueryParameters {
+  double lat = 1;
+  double lon = 2;
+  double range = 3;
+}

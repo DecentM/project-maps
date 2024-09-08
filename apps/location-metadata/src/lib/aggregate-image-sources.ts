@@ -1,6 +1,6 @@
-import type { LocationImages } from "@project-maps/proto/location-images"
-import Emittery from "emittery"
-import type { Events, ImageSource } from "src/declarations/image-source"
+import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
+import Emittery from 'emittery'
+import type { Events, ImageSource } from 'src/declarations/image-source'
 
 /**
  * Runs the getImages method on each image source and emits the images as they are received
@@ -9,16 +9,18 @@ import type { Events, ImageSource } from "src/declarations/image-source"
  * @param {GetLocationImagesRequest} request The request to pass to each image source
  * @returns {Emittery<Events>} An emitter that emits the images as they are received
  */
-export const aggregateImageSources = (imageSources: ImageSource[], request: LocationImages.GetLocationImagesRequest): Emittery<Events> => {
+export const aggregateImageSources = (
+  imageSources: ImageSource[],
+  request: LocationMetadataImages.GetLocationImagesRequest
+): Emittery<Events> => {
   const events = new Emittery<Events>()
 
   const promises = imageSources.map((imageSource) => {
     const emitter = imageSource.getImages(request)
 
-    const onImage = (image: LocationImages.LocationImage) => {
+    const onImage = (image: LocationMetadataImages.LocationImage) => {
       events.emit('image', image)
     }
-
 
     const onEnd = () => {
       emitter.off('image', onImage)

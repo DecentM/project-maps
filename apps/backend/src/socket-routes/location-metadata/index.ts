@@ -1,29 +1,29 @@
-import { LocationImages } from '@project-maps/proto/location-images'
+import { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 
 import type {
   ClientToServerData,
   ClientToServerEvents,
   ServerToClientEvents,
-} from '../declarations/socketio'
-import { rpcToServiceMap, type MappedMethodNameByService } from '../lib/rpc-to-service-map'
+} from '../../declarations/socketio'
+import { rpcToServiceMap, type MappedMethodNameByService } from '../../lib/rpc-to-service-map'
 import type { Socket } from 'socket.io'
 
-export const handleLocationImages =
+export const handleLocationMetadata =
   (socket: Socket<ClientToServerEvents, ServerToClientEvents>) =>
   async (
-    method: MappedMethodNameByService<'LocationImages'>,
-    data: ClientToServerData<'LocationImages'>
+    method: MappedMethodNameByService<'LocationMetadata'>,
+    data: ClientToServerData<'LocationMetadata'>
   ) => {
-    const [, client] = rpcToServiceMap.LocationImages
+    const [, client] = rpcToServiceMap.LocationMetadata
 
     switch (method) {
       case 'GetLocationImages': {
         const result = client.GetLocationImages(
-          LocationImages.GetLocationImagesRequest.fromObject(data)
+          LocationMetadataImages.GetLocationImagesRequest.fromObject(data)
         )
 
         result.on('data', (data) => {
-          socket.emit('LocationImages', method, data.toObject())
+          socket.emit('LocationMetadata', method, data.toObject())
         })
 
         result.on('error', (error) => {

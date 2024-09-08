@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { LocationImages } from '@project-maps/proto/location-images'
+import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import type { LngLat } from 'maplibre-gl'
 import { computed, onMounted, ref, watch } from 'vue'
 
@@ -16,19 +16,21 @@ const props = defineProps<{
 
 const { socket } = useSocket()
 
-const images = ref<ReturnType<LocationImages.LocationImage['toObject']>[]>([])
+const images = ref<ReturnType<LocationMetadataImages.LocationImage['toObject']>[]>([])
 
 const firstImage = computed(() => images.value[0] ?? null)
 
 onMounted(() => {
-  socket.on('LocationImages', (method, response) => {
+  socket.on('LocationMetadata', (method, response) => {
+    if (method !== 'GetLocationImages') return
+
     images.value = [...images.value, response]
     emit('show-image', response)
   })
 })
 
 const emit = defineEmits<{
-  (event: 'show-image', image: LocationImages.LocationImage): void
+  (event: 'show-image', image: LocationMetadataImages.LocationImage): void
   (event: 'reset-images'): void
 }>()
 
@@ -42,7 +44,7 @@ watch(
       return
     }
 
-    socket.emit('LocationImages', 'GetLocationImages', {
+    socket.emit('LocationMetadata', 'GetLocationImages', {
       pagination: {
         limit: 1,
         offset: 0,

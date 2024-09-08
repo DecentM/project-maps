@@ -1,9 +1,8 @@
-import { LocationImages } from '@project-maps/proto/location-images'
-
-import { locationImagesClient } from '../grpc-clients/location-images'
+import { locationMetadataClient } from '../grpc-clients/location-metadata'
+import { LocationMetadata } from '@project-maps/proto/location-metadata'
 
 export const rpcToServiceMap = {
-  LocationImages: [LocationImages.UnimplementedLocationImagesService, locationImagesClient],
+  LocationMetadata: [LocationMetadata.UnimplementedLocationMetadataService, locationMetadataClient],
 } as const
 
 export type MappedService = keyof typeof rpcToServiceMap
