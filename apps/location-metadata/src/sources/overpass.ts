@@ -6,6 +6,24 @@ import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
 import { overpassClient } from 'src/clients/overpass-interpreter'
 import { Source } from 'src/declarations/source'
 
+const calculateScore = (item: ReturnType<OpenStreetMap.Node['toObject']> | ReturnType<OpenStreetMap.Way['toObject']> | ReturnType<OpenStreetMap.Relation['toObject']> | undefined): number => {
+  let score = 0
+
+  if (!item) return -1
+
+  if (item.tags?.name) score += 1
+  if (item.tags?.city) score += 1
+  if (item.tags?.country) score += 1
+  if (item.tags?.housenumber) score += 1
+  if (item.tags?.postcode) score += 1
+  if (item.tags?.state) score += 1
+  if (item.tags?.street) score += 1
+  if (item.tags?.phone) score += 1
+  if (item.tags?.website) score += 1
+
+  return score
+}
+
 export class OverpassSource extends Source {
   override handlesLocation(coordinates: Geospatial.Coordinates): boolean {
     return true // Handles all locations
@@ -28,6 +46,8 @@ export class OverpassSource extends Source {
       return result
     }
 
+    let highestScore = -1
+
     for (const element of response.elements) {
       let item: ReturnType<OpenStreetMap.Node['toObject']> | ReturnType<OpenStreetMap.Way['toObject']> | ReturnType<OpenStreetMap.Relation['toObject']> | undefined
 
@@ -38,6 +58,13 @@ export class OverpassSource extends Source {
       if (!item) {
         continue
       }
+
+      // We'd prefer to show items with lots of metadata
+      const score = calculateScore(item)
+
+      if (score <= highestScore) continue
+
+      highestScore = score
 
       result.name = item.tags?.name || ''
       result.address = LocationMetadataOverpass.Address.fromObject({
