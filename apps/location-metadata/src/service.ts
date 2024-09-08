@@ -1,7 +1,7 @@
 import type { sendUnaryData, ServerUnaryCall, ServerWritableStream } from '@grpc/grpc-js'
 import { LocationMetadata } from '@project-maps/proto/location-metadata'
 import { aggregateImageSources } from './lib/aggregate-image-sources'
-import { GeographUKImageSource } from './image-sources/geograph-uk'
+import { GeographUKImageSource } from './sources/geograph-uk'
 import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import { LocationMetadataOverpass } from '@project-maps/proto/location-metadata/overpass'
 

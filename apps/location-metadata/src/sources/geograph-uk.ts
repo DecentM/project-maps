@@ -7,8 +7,8 @@ import { ImageSource, type Events } from 'src/declarations/image-source'
 
 export class GeographUKImageSource extends ImageSource {
   private client = new GeographClient(
-    config.imageSources.geographUK.baseUrl,
-    config.imageSources.geographUK.apiKey
+    config.clients.geographUK.baseUrl,
+    config.clients.geographUK.apiKey
   )
 
   getImages(request: LocationMetadataImages.GetLocationImagesRequest): Emittery<Events> {
