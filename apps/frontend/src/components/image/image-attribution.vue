@@ -15,7 +15,7 @@ defineProps<{
 </script>
 
 <template>
-  <q-list bordered separator v-if="attribution.name">
+  <q-list v-if="attribution.name">
     <q-item clickable v-ripple :href="attribution.url" target="_blank" noopener>
       <q-item-section>
         <q-item-label>{{ attribution.name }}</q-item-label>

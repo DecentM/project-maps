@@ -9,7 +9,15 @@ service OverpassInterpreter {
 }
 
 message QueryInput {
-  string queryName = 1;
+  oneof query {
+    ShortRangeNamedQueryParameters shortRangeNamedQueryParameters = 3;
+  }
+}
+
+message ShortRangeNamedQueryParameters {
+  double lat = 1;
+  double lon = 2;
+  double range = 3;
 }
 
 message QueryResult {

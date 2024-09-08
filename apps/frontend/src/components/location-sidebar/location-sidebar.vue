@@ -3,7 +3,7 @@ import type { LocationImages } from '@project-maps/proto/location-images'
 import type { LngLat } from 'maplibre-gl'
 import { computed, onMounted, ref, watch } from 'vue'
 
-import PatientImage from '../image/patient-image.vue'
+import HeroImage from '../image/hero-image.vue'
 import ImageAttribution from '../image/image-attribution.vue'
 
 import { useSocket } from 'src/lib/socketio'
@@ -68,9 +68,9 @@ watch(
 <template>
   <q-card class="location-sidebar">
     <transition name="fade" mode="out-in">
-      <div v-if="firstImage && firstImage.url">
-        <patient-image
-          height="250px"
+      <div v-if="firstImage && firstImage.url" class="relative-position">
+        <hero-image
+          :height="250"
           :src="firstImage.url"
           alt="Street Photo"
           class="q-pa-md"
@@ -82,7 +82,7 @@ watch(
             placeholder="Search..."
             dense
           />
-        </patient-image>
+        </hero-image>
 
         <image-attribution v-if="firstImage.attribution" :attribution="firstImage.attribution" />
       </div>
@@ -91,5 +91,19 @@ watch(
         <q-input :model-value="''" outlined placeholder="Search..." dense />
       </q-card-section>
     </transition>
+
+    <q-separator />
+
+    <q-card-section>
+      <q-item clickable v-ripple>
+        <q-item-section>
+          <q-item-label>Photos</q-item-label>
+        </q-item-section>
+
+        <q-item-section side top>
+          <q-item-label caption>View all</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-card-section>
   </q-card>
 </template>

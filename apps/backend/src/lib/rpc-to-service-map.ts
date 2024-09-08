@@ -1,4 +1,5 @@
 import { LocationImages } from '@project-maps/proto/location-images'
+
 import { locationImagesClient } from '../grpc-clients/location-images'
 
 export const rpcToServiceMap = {
