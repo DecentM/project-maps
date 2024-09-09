@@ -11,7 +11,12 @@ defineProps<{
 
 <template>
   <q-list v-if="attribution.name">
-    <q-item clickable v-ripple :href="attribution.url" target="_blank" noopener>
+    <q-item
+      :clickable="!!attribution.url"
+      :href="attribution.url ? attribution.url : undefined"
+      :target="attribution.url ? '_blank' : undefined"
+      :noopener="!!attribution.url"
+    >
       <q-item-section>
         <q-item-label>{{ attribution.name }}</q-item-label>
         <q-item-label v-if="typeof attribution.source === 'number'" caption>{{ imageSourceString(attribution.source) }}</q-item-label>

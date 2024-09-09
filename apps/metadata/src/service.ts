@@ -8,9 +8,15 @@ import type { Events, MetadataSource } from 'src/declarations/metadata-source'
 import { OverpassSource } from 'src/sources/overpass'
 import { GeographUKImageSource } from 'src/sources/geograph-uk'
 import { WikimapiaSource } from 'src/sources/wikimapia'
+import { MapillarySource } from './sources/mapillary'
 
 export class MetadataService extends Metadata.UnimplementedMetadataService {
-  private static sources: MetadataSource[] = [new GeographUKImageSource(), new OverpassSource(), new WikimapiaSource()]
+  private static sources: MetadataSource[] = [
+    new GeographUKImageSource(),
+    new OverpassSource(),
+    new WikimapiaSource(),
+    new MapillarySource(),
+  ]
 
   private static aggregateEvents = (
     imageSources: MetadataSource[],
@@ -45,7 +51,9 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
     return events
   }
 
-  override GetAreaMetadata(call: ServerWritableStream<Metadata.GetAreaMetadataInput, Metadata.AreaMetadataItem>): void {
+  override GetAreaMetadata(
+    call: ServerWritableStream<Metadata.GetAreaMetadataInput, Metadata.AreaMetadataItem>
+  ): void {
     const events = MetadataService.aggregateEvents(MetadataService.sources, call.request)
 
     const onItem = (item: Metadata.AreaMetadataItem) => {

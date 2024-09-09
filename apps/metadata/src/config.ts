@@ -14,6 +14,11 @@ export const config = {
       baseUrl: 'http://api.wikimapia.org',
       apiKey: process.env.WIKIMAPIA_API_KEY ?? 'fixme',
     },
+
+    mapillary: {
+      baseUrl: 'https://graph.mapillary.com',
+      apiKey: process.env.MAPILLARY_CLIENT_TOKEN ?? 'fixme',
+    },
   },
 
   grpcServer: {

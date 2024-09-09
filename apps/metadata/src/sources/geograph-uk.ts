@@ -33,7 +33,7 @@ export class GeographUKImageSource extends MetadataSource {
     this.client
       .syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: 4,
+        perpage: 1,
         distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
       })
       .then(async (response) => {
