@@ -26,6 +26,7 @@ message Attribution {
     GeographDE = 5;
     Wikimapia = 6;
     Wikidata = 7;
+    OpenStreetMap = 8;
   }
 
   string name = 1;

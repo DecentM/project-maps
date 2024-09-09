@@ -17,6 +17,8 @@ export const imageSourceString = (source: Metadata.Attribution.Source): string =
       return 'Wikimapia'
     case 7:
       return 'Wikidata'
+    case 8:
+      return 'OpenStreetMap'
     default:
       return 'Unknown'
   }

@@ -3,7 +3,6 @@ import type { Metadata } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 
 import HeroImage from '../image/hero-image.vue'
-import AttributionNotice from '../attribution-notice/attribution-notice.vue'
 
 const props = defineProps<{
   metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
@@ -29,8 +28,6 @@ const firstItem = computed(() => {
       >
         <slot />
       </hero-image>
-
-      <attribution-notice v-if="firstItem.attribution" :attribution="firstItem.attribution" />
     </div>
 
     <q-card-section v-else>

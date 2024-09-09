@@ -31,10 +31,6 @@ const textMetadata = computed(() => {
 
 <template>
   <div class="relative-position" v-if="textMetadata">
-    <q-separator />
-
-    <q-item-label v-if="textMetadata.name" header>{{ textMetadata.name }}</q-item-label>
-
     <q-item
       v-if="textMetadata.website"
       clickable
@@ -106,5 +102,7 @@ const textMetadata = computed(() => {
         <q-item-label caption>Phone</q-item-label>
       </q-item-section>
     </q-item>
+
+    <q-separator spaced />
   </div>
 </template>

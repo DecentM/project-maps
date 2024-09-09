@@ -2,8 +2,6 @@
 import type { Metadata } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 
-import AttributionNotice from '../attribution-notice/attribution-notice.vue'
-
 const props = defineProps<{
   metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
 }>()
@@ -14,9 +12,9 @@ const commentItems = computed(() => {
 </script>
 
 <template>
-  <q-separator v-if="commentItems.length > 0" />
-
   <div v-if="commentItems.length > 0" class="relative-position">
+    <q-separator />
+
     <q-item-label header>Comments</q-item-label>
 
     <q-expansion-item
@@ -44,11 +42,6 @@ const commentItems = computed(() => {
       <q-card-section>
         {{ item.comment?.text }}
       </q-card-section>
-
-      <template v-if="item.attribution">
-        <attribution-notice :attribution="item.attribution" />
-        <q-separator />
-      </template>
     </q-expansion-item>
   </div>
 </template>

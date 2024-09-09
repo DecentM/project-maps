@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { LngLat } from 'maplibre-gl'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import type { Metadata } from '@project-maps/proto/metadata'
 import { useSocket } from 'src/lib/socketio'
@@ -9,6 +9,8 @@ import LocationImage from './location-image.vue'
 import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
 import LocationDescription from './location-description.vue'
+import LocationAttributions from './location-attributions.vue'
+import LocationName from './location-name.vue'
 
 const props = defineProps<{
   location: LngLat | null
@@ -46,6 +48,10 @@ watch(
     })
   }
 )
+
+const hasNameOrDescription = computed(() => {
+  return metadata.value.some((item) => 'metadata' in item && item.metadata?.name)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -66,8 +72,14 @@ watch(
       </q-card>
     </location-image>
 
-    <location-description :metadata="metadata" />
+    <q-card-section v-if="hasNameOrDescription">
+      <location-name class="text-h6" :metadata="metadata" />
+      <br />
+      <location-description class="text-body2" :metadata="metadata" />
+    </q-card-section>
+
     <location-metadata :metadata="metadata" />
     <location-comments :metadata="metadata" />
+    <location-attributions :metadata="metadata" />
   </q-card>
 </template>

@@ -1,0 +1,29 @@
+<script lang="ts" setup>
+import type { Metadata } from '@project-maps/proto/metadata'
+import { computed } from 'vue'
+
+import AttributionNotice from 'src/components/attribution-notice/attribution-notice.vue'
+
+const props = defineProps<{
+  metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
+}>()
+
+const items = computed(() => {
+  return props.metadata.filter((item) => 'attribution' in item && item.attribution)
+})
+</script>
+
+<template>
+  <div v-if="items.length > 0">
+    <q-item>
+      <q-item-section>
+        <q-item-label overline>Attributions</q-item-label>
+        <q-item-label caption>
+          We've derived this info card from these sources
+        </q-item-label>
+      </q-item-section>
+    </q-item>
+
+    <attribution-notice v-for="(item, index) in items" :key="index" :attribution="item.attribution!" />
+  </div>
+</template>
