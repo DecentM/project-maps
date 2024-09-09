@@ -9,6 +9,11 @@ export const config = {
       host: process.env.OVERPASS_INTERPRETER_HOST ?? '127.0.0.1',
       port: Number.parseFloat(process.env.OVERPASS_INTERPRETER_PORT ?? '50052'),
     },
+
+    wikimapia: {
+      baseUrl: 'http://api.wikimapia.org',
+      apiKey: process.env.WIKIMAPIA_API_KEY ?? 'fixme',
+    },
   },
 
   grpcServer: {
