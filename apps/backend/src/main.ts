@@ -20,3 +20,7 @@ fastify.listen({ host: config.server.host, port: config.server.port })
 process.on('unhandledRejection', (error) => {
   console.error(error)
 })
+
+process.on('uncaughtException', (error) => {
+  console.error(error)
+})

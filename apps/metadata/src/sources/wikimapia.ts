@@ -28,6 +28,11 @@ export class WikimapiaSource extends MetadataSource {
         count: 1,
       })
 
+      if (!nearest.places || nearest.places.length === 0) {
+        events.emit('end')
+        return
+      }
+
       const place = await this.client.Place_Getbyid({
         id: nearest.places[0].id,
         data_blocks: 'location,photos,comments',
@@ -66,7 +71,7 @@ export class WikimapiaSource extends MetadataSource {
           comment: {
             author: {
               name: comment.name,
-              avatarUrl: comment.user_photo,
+              avatarUrl: comment.user_photo ? `https://wikimapia.org/${comment.user_photo}` : 'https://wikimapia.org/img/nofoto_50.png',
               profileUrl: `https://wikimapia.org/user/${comment.user_id}`,
             },
             text: comment.message,

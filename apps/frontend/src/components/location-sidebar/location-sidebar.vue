@@ -2,10 +2,12 @@
 import type { LngLat } from 'maplibre-gl'
 import { onMounted, ref, watch } from 'vue'
 
-import LocationImage from './location-image.vue'
-import LocationMetadata from './location-metadata.vue'
 import type { Metadata } from '@project-maps/proto/metadata'
 import { useSocket } from 'src/lib/socketio'
+
+import LocationImage from './location-image.vue'
+import LocationMetadata from './location-metadata.vue'
+import LocationComments from './location-comments.vue'
 
 const props = defineProps<{
   location: LngLat | null
@@ -63,8 +65,8 @@ watch(
       </q-card>
     </location-image>
 
-    <q-separator />
-
     <location-metadata :metadata="metadata" />
+
+    <location-comments :metadata="metadata" />
   </q-card>
 </template>
