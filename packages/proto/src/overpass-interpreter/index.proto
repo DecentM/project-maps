@@ -1,25 +1,28 @@
 syntax = "proto3";
 
 import "lib/openstreetmap.proto";
-
-import "overpass-interpreter/short-range-named.proto";
+import "lib/geospatial.proto";
 
 package OverpassInterpreter;
 
 service OverpassInterpreter {
-  rpc Query(QueryInput) returns (stream QueryResult);
+  rpc ShortRangeNamed(QueryParameters) returns (stream ShortRangeNamedResult);
+  rpc WikidataIdsInRange(QueryParameters) returns (stream WikidataId);
 }
 
-message QueryInput {
-  oneof query {
-    ShortRangeNamed.QueryParameters shortRangeNamedQueryParameters = 3;
-  }
+message QueryParameters {
+  Geospatial.Coordinates coordinates = 1;
+  double range = 2;
 }
 
-message QueryResult {
+message ShortRangeNamedResult {
   oneof result {
     OpenStreetMap.Node node = 1;
     OpenStreetMap.Way way = 2;
     OpenStreetMap.Relation relation = 3;
   }
+}
+
+message WikidataId {
+  string id = 1;
 }

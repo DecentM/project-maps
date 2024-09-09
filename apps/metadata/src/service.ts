@@ -9,6 +9,7 @@ import { OverpassSource } from 'src/sources/overpass'
 import { GeographUKImageSource } from 'src/sources/geograph-uk'
 import { WikimapiaSource } from 'src/sources/wikimapia'
 import { MapillarySource } from './sources/mapillary'
+import { WikidataSource } from './sources/wikidata'
 
 export class MetadataService extends Metadata.UnimplementedMetadataService {
   private static sources: MetadataSource[] = [
@@ -16,6 +17,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
     new OverpassSource(),
     new WikimapiaSource(),
     new MapillarySource(),
+    new WikidataSource(),
   ]
 
   private static mergeEmitters = (emitters: Emittery<Events>[]): Emittery<Events> => {

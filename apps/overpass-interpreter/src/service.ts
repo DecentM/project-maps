@@ -7,21 +7,18 @@ import { config } from './config'
 const client = new OverpassClient(config.overpassApi.baseUrl)
 
 export class OverpassInterpreterService extends OverpassInterpreter.UnimplementedOverpassInterpreterService {
-  override Query(
-    call: ServerWritableStream<OverpassInterpreter.QueryInput, OverpassInterpreter.QueryResult>
+  override ShortRangeNamed(
+    call: ServerWritableStream<OverpassInterpreter.QueryParameters, OverpassInterpreter.ShortRangeNamedResult>
   ): void {
-    let stream: NodeJS.ReadableStream | null = null
+    const params = call.request.toObject()
 
-    if (call.request.has_shortRangeNamedQueryParameters) {
-      stream = client.shortRangeNamedStreaming(
-        call.request.shortRangeNamedQueryParameters.toObject()
-      )
-    }
-
-    if (!stream) {
-      call.end()
-      return
-    }
+    const stream = client.shortRangeNamedStreaming({
+      range: params.range ?? 0,
+      coordinates: {
+        lat: params.coordinates?.lat ?? 0,
+        lng: params.coordinates?.lng ?? 0,
+      },
+    })
 
     let response = ''
     const lines: string[] = []
@@ -52,7 +49,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
         if (type === 'way') {
           call.write(
-            OverpassInterpreter.QueryResult.fromObject({
+            OverpassInterpreter.ShortRangeNamedResult.fromObject({
               way: {
                 id: Number.parseInt(id, 10),
                 tags: {
@@ -76,7 +73,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
         if (type === 'node') {
           call.write(
-            OverpassInterpreter.QueryResult.fromObject({
+            OverpassInterpreter.ShortRangeNamedResult.fromObject({
               node: {
                 id: Number.parseInt(id, 10),
                 lat: Number.parseFloat(lat),
@@ -102,7 +99,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
         if (type === 'relation') {
           call.write(
-            OverpassInterpreter.QueryResult.fromObject({
+            OverpassInterpreter.ShortRangeNamedResult.fromObject({
               relation: {
                 id: Number.parseInt(id, 10),
                 tags: {
@@ -122,6 +119,58 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
             })
           )
         }
+      }
+    }
+
+    let partialLine = ''
+
+    stream.on('data', (chunk: Buffer) => {
+      response += chunk.toString('utf-8')
+      const responseLines = response.split('\n')
+      const firstResponseLine = responseLines.shift()
+      const lastResponseLine = responseLines.pop()
+
+      partialLine += firstResponseLine
+      lines.push(partialLine, ...responseLines)
+      partialLine = lastResponseLine || ''
+
+      processLines()
+    })
+
+    stream.on('end', () => {
+      call.end()
+    })
+  }
+
+  override WikidataIdsInRange(
+    call: ServerWritableStream<OverpassInterpreter.QueryParameters, OverpassInterpreter.WikidataId>
+  ): void {
+    const params = call.request.toObject()
+
+    const stream = client.wikidataIdsInRangeStreaming({
+      range: params.range ?? 0,
+      coordinates: {
+        lat: params.coordinates?.lat ?? 0,
+        lng: params.coordinates?.lng ?? 0,
+      },
+    })
+
+    let response = ''
+    const lines: string[] = []
+
+    const processLines = () => {
+      while (lines.length > 0) {
+        // Leave the last line in the buffer as it may be incomplete
+        const line = lines.shift()
+        if (!line) continue
+
+        const [wikidata, brand_wikidata] = line.split(';')
+
+        call.write(
+          OverpassInterpreter.WikidataId.fromObject({
+            id: wikidata || brand_wikidata,
+          })
+        )
       }
     }
 

@@ -7,7 +7,6 @@ import { MapillaryClient } from 'src/clients/mapillary'
 import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { createBBox } from 'src/lib/bbox'
-
 export class MapillarySource extends MetadataSource {
   override handlesLocation(location: ReturnType<Geospatial.Coordinates['toObject']>): boolean {
     return true // Handles all locations

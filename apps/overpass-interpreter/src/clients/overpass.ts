@@ -1,7 +1,6 @@
 import got from 'got'
 
 import * as Query from '../queries'
-import type { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
 
 type Element<T extends string> = {
   type: T
@@ -47,11 +46,17 @@ export class OverpassClient {
     })
   }
 
-  public shortRangeNamedStreaming(
-    params: ReturnType<(typeof OverpassInterpreter.QueryInput)['toObject']>
-  ): NodeJS.ReadableStream {
+  public shortRangeNamedStreaming(params: Query.ShortRangeNamed.Params): NodeJS.ReadableStream {
     return this.post('/interpreter', {
       data: Query.ShortRangeNamed.create(params),
+    })
+  }
+
+  public wikidataIdsInRangeStreaming(
+    params: Query.WikidataIdsInRange.Params
+  ): NodeJS.ReadableStream {
+    return this.post('/interpreter', {
+      data: Query.WikidataIdsInRange.create(params),
     })
   }
 }

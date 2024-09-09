@@ -180,6 +180,9 @@ importers:
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
+      wikibase-sdk:
+        specifier: ^10.1.0
+        version: 10.1.0
     devDependencies:
       '@types/got':
         specifier: ^9.6.12
@@ -3837,6 +3840,10 @@ packages:
   widest-line@4.0.1:
     resolution: {integrity: sha512-o0cyEG0e8GPzT4iGHphIOh0cJOV8fivsXxddQasHPHfoZf1ZexrfeA21w2NaEN1RHE+fXlfISmOE8R9N3u3Qig==}
     engines: {node: '>=12'}
+
+  wikibase-sdk@10.1.0:
+    resolution: {integrity: sha512-vB0WH8a4SZwzQQ0+Rb82wyFvhRmVf4Aln9qvL4xCQ0knmcE5aXv8XzmQefw0pReJd5uJDf38V1/Clm6LRFM3aw==}
+    engines: {node: '>= 12.0.0'}
 
   wildcard@2.0.1:
     resolution: {integrity: sha512-CC1bOL87PIWSBhDcTrdeLo6eGT7mCFtrg0uIJtqJUFyK+eJnzl8A1niH56uu7KMa5XFrtiV+AQuHO3n7DsHnLQ==}
@@ -7575,6 +7582,8 @@ snapshots:
   widest-line@4.0.1:
     dependencies:
       string-width: 5.1.2
+
+  wikibase-sdk@10.1.0: {}
 
   wildcard@2.0.1: {}
 

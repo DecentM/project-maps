@@ -87,16 +87,14 @@ export class OverpassSource extends MetadataSource {
   }
 
   public async getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
-    const overpassResponse = overpassClient.Query(
-      OverpassInterpreter.QueryInput.fromObject({
-        shortRangeNamedQueryParameters: {
-          coordinates: request.coordinates.toObject(),
-          range: request.radiusMeters,
-        },
+    const overpassResponse = overpassClient.ShortRangeNamed(
+      OverpassInterpreter.QueryParameters.fromObject({
+        coordinates: request.coordinates.toObject(),
+        range: request.radiusMeters,
       })
     )
 
-    const elements: ReturnType<OverpassInterpreter.QueryResult['toObject']>[] = []
+    const elements: ReturnType<OverpassInterpreter.ShortRangeNamedResult['toObject']>[] = []
     let highestScore = -1
 
     let result = Metadata.AreaMetadataItem.fromObject({})
@@ -105,7 +103,7 @@ export class OverpassSource extends MetadataSource {
       result = Metadata.AreaMetadataItem.fromObject({})
     }
 
-    overpassResponse.on('data', (response: OverpassInterpreter.QueryResult) => {
+    overpassResponse.on('data', (response: OverpassInterpreter.ShortRangeNamedResult) => {
       const element = response.toObject()
       elements.push(element)
 

@@ -8,6 +8,7 @@ import { useSocket } from 'src/lib/socketio'
 import LocationImage from './location-image.vue'
 import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
+import LocationDescription from './location-description.vue'
 
 const props = defineProps<{
   location: LngLat | null
@@ -65,8 +66,8 @@ watch(
       </q-card>
     </location-image>
 
+    <location-description :metadata="metadata" />
     <location-metadata :metadata="metadata" />
-
     <location-comments :metadata="metadata" />
   </q-card>
 </template>
