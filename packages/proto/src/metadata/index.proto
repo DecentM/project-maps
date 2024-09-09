@@ -82,6 +82,35 @@ message Description {
   string text = 1;
 }
 
+message Employment {
+  enum Title {
+    Other = 0;
+    Founder = 1;
+  }
+
+  Title title = 1;
+  string name = 2;
+}
+
+message SocialMedia {
+  enum Type {
+    YouTube = 0;
+  }
+
+  Type type = 1;
+  string url = 2;
+}
+
+message Company {
+  string name = 1;
+  repeated Employment employments = 2;
+  string country = 3;
+  ImageUrl logo = 4;
+  repeated SocialMedia socialMedia = 5;
+  string contactUrl = 6;
+  string websiteUrl = 7;
+}
+
 message AreaMetadataItem {
   Attribution attribution = 1;
 
@@ -91,5 +120,6 @@ message AreaMetadataItem {
     Comment comment = 4;
     Description description = 5;
     Geospatial.Coordinates coordinates = 6;
+    Company company = 7;
   }
 }

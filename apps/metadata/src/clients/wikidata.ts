@@ -26,4 +26,8 @@ export class WikidataClient {
     const entities = await this.fetch<Entities>(this.wbk.getEntities(params))
     return this.wbk.simplify.entities(entities)
   }
+
+  public getP18Url (filename: string): string | undefined {
+    return this.wbk.getImageUrl(filename)
+  }
 }

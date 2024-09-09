@@ -47,7 +47,7 @@ export class GeographUKImageSource extends MetadataSource {
           attribution: {
             name: details.geograph.user['#text'],
             license: item.licence,
-            url: details.geograph.user.profile,
+            url: `${config.clients.geographUK.baseUrl}/photo/${item.guid}`,
             source: Metadata.Attribution.Source.GeographUK,
           },
           image: {

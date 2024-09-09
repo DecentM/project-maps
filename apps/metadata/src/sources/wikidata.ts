@@ -8,6 +8,7 @@ import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
 import { WikidataClient } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { overpassClient } from 'src/clients/overpass-interpreter'
+import { ClaimId, getClaim } from 'src/lib/wikidata-claim'
 
 export class WikidataSource extends MetadataSource {
   private client = new WikidataClient()
@@ -47,7 +48,7 @@ export class WikidataSource extends MetadataSource {
           continue
         }
 
-        const item = Metadata.AreaMetadataItem.fromObject({
+        events.emit('item', Metadata.AreaMetadataItem.fromObject({
           attribution: {
             source: Metadata.Attribution.Source.Wikidata,
             license: 'CC0',
@@ -57,9 +58,25 @@ export class WikidataSource extends MetadataSource {
           description: {
             text: entity.descriptions?.en, // TODO: i18n
           }
-        })
+        }))
 
-        events.emit('item', item)
+        const image = getClaim(entity, ClaimId.Image)
+
+        if (image) {
+          events.emit('item', Metadata.AreaMetadataItem.fromObject({
+            attribution: {
+              source: Metadata.Attribution.Source.Wikidata,
+              license: 'CC0',
+              name: entity.id,
+              url: `https://www.wikidata.org/wiki/${requestedId}`,
+            },
+            image: {
+              url: {
+                canonical: this.client.getP18Url(String(image[0])),
+              }
+            }
+          }))
+        }
       }
 
       events.emit('end')

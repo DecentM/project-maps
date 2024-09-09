@@ -49,6 +49,7 @@ export class MapillarySource extends MetadataSource {
             license: 'CC BY-SA',
             source: Metadata.Attribution.Source.Mapillary,
             name: imageData.creator?.username,
+            url: `https://mapillary.com/app/user/${imageData.creator?.username}?pKey=${imageData.id}&focus=photo`,
           },
           image: {
             coordinates: {
