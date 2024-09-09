@@ -1,18 +1,24 @@
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
-import { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import Emittery from 'emittery'
+
+import { Metadata } from '@project-maps/proto/metadata'
+import type { Geospatial } from '@project-maps/proto/lib/geospatial'
 
 import { GeographClient } from 'src/clients/geograph'
 import { config } from 'src/config'
-import { ImageSource, type Events } from 'src/declarations/source'
+import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
-export class GeographUKImageSource extends ImageSource {
+export class GeographUKImageSource extends MetadataSource {
   override handlesLocation(location: ReturnType<Geospatial.Coordinates['toObject']>): boolean {
     if (!location.lat || !location.lng) return false
 
     // Geograph UK only supports locations within the UK
     // TODO: Proper bbox implementation (probably using a library)
-    return location.lat >= 49.86 && location.lat <= 60.86 && location.lng >= -8.65 && location.lng <= 1.77
+    return (
+      location.lat >= 49.86 &&
+      location.lat <= 60.86 &&
+      location.lng >= -8.65 &&
+      location.lng <= 1.77
+    )
   }
 
   private client = new GeographClient(
@@ -20,14 +26,14 @@ export class GeographUKImageSource extends ImageSource {
     config.clients.geographUK.apiKey
   )
 
-  getImages(request: LocationMetadataImages.GetLocationImagesRequest): Emittery<Events> {
+  getAreaMetadata(request: Metadata.GetAreaMetadataInput): Emittery<Events> {
     const events = new Emittery<Events>()
     const parameters = request.toObject()
 
     this.client
       .syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: parameters.pagination?.limit ?? 1,
+        perpage: 4,
         distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
       })
       .then(async (response) => {
@@ -35,25 +41,28 @@ export class GeographUKImageSource extends ImageSource {
           const details = await this.client.photo(item.guid)
 
           events.emit(
-            'image',
-            LocationMetadataImages.LocationImage.fromObject({
-              url: details.geograph.img.src,
-              thumbnailUrl: details.geograph.thumbnail,
+            'item',
+            Metadata.AreaMetadataItem.fromObject({
               attribution: {
                 name: details.geograph.user['#text'],
                 license: item.licence,
                 url: details.geograph.user.profile,
-                source: LocationMetadataImages.ImageSource.GeographUK,
+                source: Metadata.Attribution.Source.GeographUK,
               },
-              coordinates: {
-                lat: Number.parseFloat(item.lat),
-                lng: Number.parseFloat(item.long),
+              image: {
+                url: {
+                  canonical: details.geograph.img.src,
+                  small: details.geograph.thumbnail,
+                },
+                coordinates: {
+                  lat: Number.parseFloat(item.lat),
+                  lng: Number.parseFloat(item.long),
+                },
+                createdAt: {
+                  seconds: Math.floor(new Date(item.date).getTime() / 1000),
+                  nanos: 0,
+                },
               },
-              createdAt: {
-                seconds: Math.floor(new Date(item.date).getTime() / 1000),
-                nanos: 0,
-              },
-              downloadable: true,
             })
           )
         }

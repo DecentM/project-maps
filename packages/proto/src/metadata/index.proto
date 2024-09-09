@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+import "lib/geospatial.proto";
+
+package Metadata;
+
+message GetAreaMetadataInput {
+  Geospatial.Coordinates coordinates = 1;
+  int64 radiusMeters = 2;
+}
+
+service Metadata {
+  rpc GetAreaMetadata(GetAreaMetadataInput) returns (stream AreaMetadataItem);
+}
+
+message Attribution {
+  enum Source {
+    Unknown = 0;
+    GeographUK = 1;
+    Mapillary = 2;
+    Flickr = 3;
+    WikimediaCommons = 4;
+    GeographDE = 5;
+    Wikimapia = 6;
+  }
+
+  string name = 1;
+  string license = 2;
+  string url = 3;
+  Source source = 4;
+}
+
+message ImageUrl {
+  string canonical = 1;
+  string small = 2;
+  string medium = 3;
+  string large = 4;
+}
+
+message Image {
+  ImageUrl url = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  Geospatial.Coordinates coordinates = 3;
+}
+
+message Address {
+  string street = 1;
+  string city = 2;
+  string country = 3;
+  string postcode = 4;
+  string housenumber = 5;
+  string state = 6;
+}
+
+message TextMetadata {
+  string name = 1;
+  Address address = 2;
+  string phone = 3;
+  string website = 4;
+}
+
+message CommentAuthor {
+  string name = 1;
+  string avatarUrl = 2;
+  string profileUrl = 3;
+}
+
+message Comment {
+  string text = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  CommentAuthor author = 3;
+  repeated Comment replies = 4;
+}
+
+message Description {
+  string text = 1;
+}
+
+message AreaMetadataItem {
+  Attribution attribution = 1;
+
+  oneof item {
+    Image image = 2;
+    TextMetadata metadata = 3;
+    Comment comment = 4;
+    Description description = 5;
+    Geospatial.Coordinates coordinates = 6;
+  }
+}

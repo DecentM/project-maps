@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
+import type { Metadata } from '@project-maps/proto/metadata'
 import type { LngLat } from 'maplibre-gl'
 
 import FullMap from 'src/components/full-map/full-map.vue'
@@ -14,9 +14,9 @@ const handleLocationClick = (location: LngLat) => {
   selectedLocation.value = location
 }
 
-const imageLocations = ref<LocationMetadataImages.LocationImage[]>([])
+const imageLocations = ref<Metadata.Image[]>([])
 
-const addImageLocation = (location: LocationMetadataImages.LocationImage) => {
+const addImageLocation = (location: Metadata.Image) => {
   imageLocations.value = [...imageLocations.value, location]
 }
 

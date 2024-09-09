@@ -1,16 +1,11 @@
 <script lang="ts" setup>
-import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
+import type { Metadata } from '@project-maps/proto/metadata'
 
 import { imageSourceString } from 'src/lib/image-source-string'
 import { licenseUrlToString } from 'src/lib/license-url-to-string'
 
 defineProps<{
-  attribution: {
-    name?: string
-    license?: string
-    url?: string
-    source?: LocationMetadataImages.ImageSource
-  }
+  attribution: ReturnType<Metadata.Attribution['toObject']>
 }>()
 </script>
 

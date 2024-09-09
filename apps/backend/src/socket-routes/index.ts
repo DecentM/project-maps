@@ -1,9 +1,7 @@
 import type { Socket } from "socket.io"
 
-import type { ClientToServerEvents, ServerToClientEvents } from "../declarations/socketio"
+import { handleMetadata } from "./metadata"
 
-import { handleLocationMetadata } from "./location-metadata"
-
-export const attachSocketRoutes = (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
-  socket.on('LocationMetadata', handleLocationMetadata(socket))
+export const attachSocketRoutes = (socket: Socket) => {
+  socket.on('Metadata', handleMetadata(socket))
 }

@@ -6,9 +6,9 @@ export const config = {
 
   rpc: {
     clients: {
-      locationImages: {
-        host: process.env.GRPC_LOCATION_IMAGES_HOST || '127.0.0.1',
-        port: Number.parseFloat(process.env.GRPC_LOCATION_IMAGES_PORT || '50051'),
+      metadata: {
+        host: process.env.GRPC_METADATA_HOST || '127.0.0.1',
+        port: Number.parseFloat(process.env.GRPC_METADATA_PORT || '50051'),
       },
     },
   }

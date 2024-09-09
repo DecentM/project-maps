@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import type { LocationMetadataImages } from '@project-maps/proto/location-metadata/images'
 import type { LngLat } from 'maplibre-gl'
-import { watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import LocationImage from './location-image.vue'
 import LocationMetadata from './location-metadata.vue'
+import type { Metadata } from '@project-maps/proto/metadata'
+import { useSocket } from 'src/lib/socketio'
 
 const props = defineProps<{
   location: LngLat | null
@@ -12,15 +13,34 @@ const props = defineProps<{
   maxZoomLevel: number
 }>()
 
-const emit = defineEmits<{
-  (event: 'show-image', image: LocationMetadataImages.LocationImage): void
-  (event: 'reset-images'): void
-}>()
+const { socket } = useSocket()
+
+const metadata = ref<ReturnType<Metadata.AreaMetadataItem['toObject']>[]>([])
+
+onMounted(() => {
+  socket.on('Metadata', (method, response) => {
+    if (method !== 'GetAreaMetadata') return
+
+    metadata.value = [...metadata.value, response]
+  })
+})
 
 watch(
   () => props.location,
-  () => {
-    emit('reset-images')
+  (newLocation) => {
+    metadata.value = []
+
+    if (!newLocation) {
+      return
+    }
+
+    socket.emit('Metadata', 'GetAreaMetadata', {
+      coordinates: {
+        lat: String(newLocation.lat ?? 0),
+        lng: String(newLocation.lng ?? 0),
+      },
+      radiusMeters: Math.ceil(Math.log(props.maxZoomLevel / props.zoomLevel) * 250 + 10),
+    })
   }
 )
 </script>
@@ -36,10 +56,7 @@ watch(
 <template>
   <q-card class="location-sidebar">
     <location-image
-      :location="location"
-      :zoom-level="zoomLevel"
-      :max-zoom-level="maxZoomLevel"
-      @show-image="(image) => emit('show-image', image)"
+      :metadata="metadata"
     >
       <q-card>
         <q-input :model-value="''" outlined placeholder="Search..." dense />
@@ -48,6 +65,6 @@ watch(
 
     <q-separator />
 
-    <location-metadata :location="location" :zoom-level="zoomLevel" :max-zoom-level="maxZoomLevel" />
+    <location-metadata :metadata="metadata" />
   </q-card>
 </template>

@@ -1,48 +1,10 @@
 <script lang="ts" setup>
-import type { LocationMetadataOverpass } from '@project-maps/proto/location-metadata/overpass'
-import type { LngLat } from 'maplibre-gl'
-import { onMounted, ref, watch } from 'vue'
-
-import { useSocket } from 'src/lib/socketio'
+import type { Metadata } from '@project-maps/proto/metadata'
+import { computed } from 'vue'
 
 const props = defineProps<{
-  location: LngLat | null
-  zoomLevel: number
-  maxZoomLevel: number
+  metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
 }>()
-
-const { socket } = useSocket()
-
-const metadata = ref<ReturnType<
-  LocationMetadataOverpass.GetLocationMetadataOutput['toObject']
-> | null>(null)
-
-onMounted(() => {
-  socket.on('LocationMetadata', (method, response) => {
-    if (method !== 'GetLocationMetadata') return
-
-    metadata.value = response
-  })
-})
-
-watch(
-  () => props.location,
-  (newLocation) => {
-    metadata.value = null
-
-    if (!newLocation) {
-      return
-    }
-
-    socket.emit('LocationMetadata', 'GetLocationMetadata', {
-      coordinates: {
-        lat: String(newLocation.lat ?? 0),
-        lng: String(newLocation.lng ?? 0),
-      },
-      radiusMeters: Math.ceil(Math.log(props.maxZoomLevel / props.zoomLevel) * 250 + 10),
-    })
-  }
-)
 
 const renderUrl = (url: string) => {
   try {
@@ -54,20 +16,28 @@ const renderUrl = (url: string) => {
   }
 }
 
-const addressCount = (address: ReturnType<LocationMetadataOverpass.Address['toObject']>) => {
+const addressCount = (address: ReturnType<Metadata.Address['toObject']>) => {
   return Object.values(address).filter((value) => value).length
 }
+
+const textMetadata = computed(() => {
+  const item = props.metadata.find((item) => 'metadata' in item)
+
+  if (!item || !item.metadata) return null
+
+  return item.metadata
+})
 </script>
 
 <template>
   <transition name="fade" mode="out-in">
-    <div class="relative-position" v-if="metadata">
-      <q-item-label v-if="metadata.name" header>{{ metadata.name }}</q-item-label>
+    <div class="relative-position" v-if="textMetadata">
+      <q-item-label v-if="textMetadata.name" header>{{ textMetadata.name }}</q-item-label>
 
       <q-item
-        v-if="metadata.website"
+        v-if="textMetadata.website"
         clickable
-        :href="metadata.website"
+        :href="textMetadata.website"
         target="_blank"
         noopener
       >
@@ -76,47 +46,47 @@ const addressCount = (address: ReturnType<LocationMetadataOverpass.Address['toOb
         </q-item-section>
 
         <q-item-section>
-          <q-item-label lines="1">{{ renderUrl(metadata.website) }}</q-item-label>
+          <q-item-label lines="1">{{ renderUrl(textMetadata.website) }}</q-item-label>
           <q-item-label caption>Website</q-item-label>
         </q-item-section>
       </q-item>
 
-      <template v-if="metadata.address && addressCount(metadata.address) > 0">
+      <template v-if="textMetadata.address && addressCount(textMetadata.address) > 0">
         <q-item>
           <q-item-section side>
             <q-icon name="mdi-map-marker" color="primary" size="md" />
           </q-item-section>
 
           <q-item-section>
-            <q-item-label :lines="addressCount(metadata.address)">
-              <template v-if="metadata.address.country">
-                <span>{{ metadata.address.country }}</span>
+            <q-item-label :lines="addressCount(textMetadata.address)">
+              <template v-if="textMetadata.address.country">
+                <span>{{ textMetadata.address.country }}</span>
                 <br />
               </template>
 
-              <template v-if="metadata.address.state">
-                <span>{{ metadata.address.state }}</span>
+              <template v-if="textMetadata.address.state">
+                <span>{{ textMetadata.address.state }}</span>
                 <br />
               </template>
 
-              <template v-if="metadata.address.city">
-                <span>{{ metadata.address.city }}</span>
+              <template v-if="textMetadata.address.city">
+                <span>{{ textMetadata.address.city }}</span>
                 <br />
               </template>
 
-              <template v-if="metadata.address.street">
-                <span>{{ metadata.address.street }}</span>
-                <br v-if="!metadata.address.housenumber" />
+              <template v-if="textMetadata.address.street">
+                <span>{{ textMetadata.address.street }}</span>
+                <br v-if="!textMetadata.address.housenumber" />
                 <span v-else>&nbsp;</span>
               </template>
 
-              <template v-if="metadata.address.housenumber">
-                <span>{{ metadata.address.housenumber }}</span>
+              <template v-if="textMetadata.address.housenumber">
+                <span>{{ textMetadata.address.housenumber }}</span>
                 <br />
               </template>
 
-              <template v-if="metadata.address.postcode">
-                <span>{{ metadata.address.postcode }}</span>
+              <template v-if="textMetadata.address.postcode">
+                <span>{{ textMetadata.address.postcode }}</span>
                 <br />
               </template>
             </q-item-label>
@@ -125,13 +95,13 @@ const addressCount = (address: ReturnType<LocationMetadataOverpass.Address['toOb
         </q-item>
       </template>
 
-      <q-item v-if="metadata.phone" clickable :href="`tel:${metadata.phone}`">
+      <q-item v-if="textMetadata.phone" clickable :href="`tel:${textMetadata.phone}`">
         <q-item-section side>
           <q-icon name="mdi-phone" color="primary" size="md" />
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{ metadata.phone }}</q-item-label>
+          <q-item-label>{{ textMetadata.phone }}</q-item-label>
           <q-item-label caption>Phone</q-item-label>
         </q-item-section>
       </q-item>
