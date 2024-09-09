@@ -9,6 +9,8 @@ import { overpassClient } from 'src/clients/overpass-interpreter'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
 const calculateScore = (
+  coordinates: Geospatial.Coordinates,
+  nodes: ReturnType<OpenStreetMap.Node['toObject']>[],
   item:
     | ReturnType<OpenStreetMap.Node['toObject']>
     | ReturnType<OpenStreetMap.Way['toObject']>
@@ -19,15 +21,44 @@ const calculateScore = (
 
   if (!item) return -1
 
-  if (item.tags?.name) score += 1
-  if (item.tags?.city) score += 1
-  if (item.tags?.country) score += 1
-  if (item.tags?.housenumber) score += 1
-  if (item.tags?.postcode) score += 1
-  if (item.tags?.state) score += 1
-  if (item.tags?.street) score += 1
-  if (item.tags?.phone) score += 1
-  if (item.tags?.website) score += 1
+  // Score based on distance
+  let distance = Number.MAX_SAFE_INTEGER
+
+  if ('lat' in item && 'lon' in item && item.lat && item.lon) {
+    distance = Math.sqrt(
+      (coordinates.lat - item.lat) ** 2 + (coordinates.lng - item.lon) ** 2
+    )
+  }
+
+  if ('nodes' in item && item.nodes) {
+    for (const nodeId of item.nodes) {
+      const node = nodes.find((node) => node.id === nodeId)
+
+      if (!node) continue
+
+      if ('lat' in node && 'lon' in node && node.lat && node.lon) {
+        const nodeDistance = Math.sqrt(
+          (coordinates.lat - node.lat) ** 2 + (coordinates.lng - node.lon) ** 2
+        )
+
+        if (nodeDistance < distance) {
+          distance = nodeDistance
+        }
+      }
+    }
+  }
+
+  score += (1 / distance) / 800
+
+  if (item.tags) {
+    // Score based on metadata
+    score += Object.keys(item.tags).length / 3
+
+    // Score based on name
+    if (!item.tags.name) {
+      score -= 2
+    }
+  }
 
   return score
 }
@@ -80,7 +111,7 @@ export class OverpassSource extends MetadataSource {
         }
 
         // We'd prefer to show items with lots of metadata
-        const score = calculateScore(item)
+        const score = calculateScore(request.coordinates, response.elements.map(e => e.node ?? null).filter(e => e !== null), item)
 
         if (score < highestScore) continue
 
