@@ -105,8 +105,4 @@ const textMetadata = computed(() => {
       </q-item-section>
     </q-item>
   </div>
-
-  <q-card-section v-else>
-    <slot />
-  </q-card-section>
 </template>
