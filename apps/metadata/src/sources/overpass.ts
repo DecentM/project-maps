@@ -133,8 +133,8 @@ export class OverpassSource extends MetadataSource {
       result.attribution = Metadata.Attribution.fromObject({
         source: Metadata.Attribution.Source.OpenStreetMap,
         license: 'ODbL',
-        url: 'https://www.openstreetmap.org/',
-        name: 'OpenStreetMap',
+        url: item.id ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}` : 'https://www.openstreetmap.org/',
+        name: String(item.id ?? 'OpenStreetMap'),
       })
 
       result.metadata = Metadata.TextMetadata.fromObject({})

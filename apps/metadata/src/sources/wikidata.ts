@@ -51,7 +51,7 @@ export class WikidataSource extends MetadataSource {
           attribution: {
             source: Metadata.Attribution.Source.Wikidata,
             license: 'CC0',
-            name: 'Wikidata',
+            name: entity.id,
             url: `https://www.wikidata.org/wiki/${requestedId}`,
           },
           description: {
