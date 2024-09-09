@@ -10,5 +10,5 @@ export type Events = {
 export abstract class MetadataSource {
   abstract handlesLocation(location: ReturnType<typeof Geospatial.Coordinates['toObject']>): boolean
 
-  abstract getAreaMetadata(request: Metadata.GetAreaMetadataInput): Emittery<Events>
+  abstract getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): void | Promise<void>
 }

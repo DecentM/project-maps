@@ -1,4 +1,4 @@
-import Emittery from 'emittery'
+import type Emittery from 'emittery'
 
 import type { Geospatial } from '@project-maps/proto/lib/geospatial'
 import type { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
@@ -68,77 +68,69 @@ export class OverpassSource extends MetadataSource {
     return true // Handles all locations
   }
 
-  public getAreaMetadata(request: Metadata.GetAreaMetadataInput): Emittery<Events> {
-    const events = new Emittery<Events>();
+  public async getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
+    const overpassResponse = await overpassClient.Query(
+      OverpassInterpreter.QueryInput.fromObject({
+        shortRangeNamedQueryParameters: {
+          coordinates: request.coordinates.toObject(),
+          range: request.radiusMeters,
+        },
+      })
+    )
 
-    (async () => {
-      const overpassResponse = await overpassClient.Query(
-        OverpassInterpreter.QueryInput.fromObject({
-          shortRangeNamedQueryParameters: {
-            coordinates: request.coordinates.toObject(),
-            range: request.radiusMeters,
-          },
-        })
-      )
+    const response = overpassResponse.toObject()
+    let result = Metadata.AreaMetadataItem.fromObject({})
 
-      const response = overpassResponse.toObject()
-      let result = Metadata.AreaMetadataItem.fromObject({})
+    const resetResult = () => {
+      result = Metadata.AreaMetadataItem.fromObject({})
+    }
 
-      const resetResult = () => {
-        result = Metadata.AreaMetadataItem.fromObject({})
-      }
-
-      if (!response.elements) {
-        events.emit('end')
-        return
-      }
-
-      let highestScore = -1
-
-      for (const element of response.elements) {
-        let item:
-          | ReturnType<OpenStreetMap.Node['toObject']>
-          | ReturnType<OpenStreetMap.Way['toObject']>
-          | ReturnType<OpenStreetMap.Relation['toObject']>
-          | undefined
-
-        if (element.way) item = element.way
-        if (element.node) item = element.node
-        if (element.relation) item = element.relation
-
-        if (!item) {
-          continue
-        }
-
-        // We'd prefer to show items with lots of metadata
-        const score = calculateScore(request.coordinates, response.elements.map(e => e.node ?? null).filter(e => e !== null), item)
-
-        if (score < highestScore) continue
-
-        highestScore = score
-
-        resetResult()
-
-        result.metadata = Metadata.TextMetadata.fromObject({})
-        result.metadata.name = item.tags?.name || ''
-        result.metadata.address = Metadata.Address.fromObject({
-          city: item.tags?.['addr:city'] || '',
-          country: item.tags?.['addr:country'] || '',
-          housenumber: item.tags?.['addr:housenumber'] || '',
-          postcode: item.tags?.['addr:postcode'] || '',
-          state: item.tags?.['addr:state'] || '',
-          street: item.tags?.['addr:street'] || '',
-        })
-        result.metadata.phone = item.tags?.phone || ''
-        result.metadata.website = item.tags?.website || ''
-      }
-
-      events.emit('item', result)
-
+    if (!response.elements) {
+      events.emit('end')
       return
-    })()
-    .catch((error) => console.error(error))
+    }
 
-    return events
+    let highestScore = -1
+
+    for (const element of response.elements) {
+      let item:
+        | ReturnType<OpenStreetMap.Node['toObject']>
+        | ReturnType<OpenStreetMap.Way['toObject']>
+        | ReturnType<OpenStreetMap.Relation['toObject']>
+        | undefined
+
+      if (element.way) item = element.way
+      if (element.node) item = element.node
+      if (element.relation) item = element.relation
+
+      if (!item) {
+        continue
+      }
+
+      // We'd prefer to show items with lots of metadata
+      const score = calculateScore(request.coordinates, response.elements.map(e => e.node ?? null).filter(e => e !== null), item)
+
+      if (score < highestScore) continue
+
+      highestScore = score
+
+      resetResult()
+
+      result.metadata = Metadata.TextMetadata.fromObject({})
+      result.metadata.name = item.tags?.name || ''
+      result.metadata.address = Metadata.Address.fromObject({
+        city: item.tags?.['addr:city'] || '',
+        country: item.tags?.['addr:country'] || '',
+        housenumber: item.tags?.['addr:housenumber'] || '',
+        postcode: item.tags?.['addr:postcode'] || '',
+        state: item.tags?.['addr:state'] || '',
+        street: item.tags?.['addr:street'] || '',
+      })
+      result.metadata.phone = item.tags?.phone || ''
+      result.metadata.website = item.tags?.website || ''
+    }
+
+    events.emit('item', result)
+    events.emit('end')
   }
 }

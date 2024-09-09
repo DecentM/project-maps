@@ -1,4 +1,4 @@
-import Emittery from 'emittery'
+import type Emittery from 'emittery'
 
 import { Metadata } from '@project-maps/proto/metadata'
 import type { Geospatial } from '@project-maps/proto/lib/geospatial'
@@ -17,9 +17,7 @@ export class WikimapiaSource extends MetadataSource {
     return true // Handles all locations
   }
 
-  public getAreaMetadata(params: Metadata.GetAreaMetadataInput): Emittery<Events> {
-    const events = new Emittery<Events>();
-
+  public getAreaMetadata(params: Metadata.GetAreaMetadataInput, events: Emittery<Events>): void {
     (async () => {
       const nearest = await this.client.Place_Getnearest({
         lat: params.coordinates.lat,
@@ -86,7 +84,5 @@ export class WikimapiaSource extends MetadataSource {
       events.emit('end')
     })()
     .catch((error) => console.error(error))
-
-    return events
   }
 }

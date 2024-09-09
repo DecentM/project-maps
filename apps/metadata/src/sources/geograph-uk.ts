@@ -1,4 +1,4 @@
-import Emittery from 'emittery'
+import type Emittery from 'emittery'
 
 import { Metadata } from '@project-maps/proto/metadata'
 import type { Geospatial } from '@project-maps/proto/lib/geospatial'
@@ -26,50 +26,48 @@ export class GeographUKImageSource extends MetadataSource {
     config.clients.geographUK.apiKey
   )
 
-  getAreaMetadata(request: Metadata.GetAreaMetadataInput): Emittery<Events> {
-    const events = new Emittery<Events>()
+  public async getAreaMetadata(
+    request: Metadata.GetAreaMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     const parameters = request.toObject()
 
-    this.client
-      .syndicator({
-        q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: 1,
-        distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
-      })
-      .then(async (response) => {
-        for (const item of response.items) {
-          const details = await this.client.photo(item.guid)
+    const response = await this.client.syndicator({
+      q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
+      perpage: 1,
+      distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
+    })
 
-          events.emit(
-            'item',
-            Metadata.AreaMetadataItem.fromObject({
-              attribution: {
-                name: details.geograph.user['#text'],
-                license: item.licence,
-                url: details.geograph.user.profile,
-                source: Metadata.Attribution.Source.GeographUK,
-              },
-              image: {
-                url: {
-                  canonical: details.geograph.img.src,
-                  small: details.geograph.thumbnail,
-                },
-                coordinates: {
-                  lat: Number.parseFloat(item.lat),
-                  lng: Number.parseFloat(item.long),
-                },
-                createdAt: {
-                  seconds: Math.floor(new Date(item.date).getTime() / 1000),
-                  nanos: 0,
-                },
-              },
-            })
-          )
-        }
-      })
-      .then(() => events.emit('end'))
-      .catch((error) => console.error(error))
+    for (const item of response.items) {
+      const details = await this.client.photo(item.guid)
 
-    return events
+      events.emit(
+        'item',
+        Metadata.AreaMetadataItem.fromObject({
+          attribution: {
+            name: details.geograph.user['#text'],
+            license: item.licence,
+            url: details.geograph.user.profile,
+            source: Metadata.Attribution.Source.GeographUK,
+          },
+          image: {
+            url: {
+              canonical: details.geograph.img.src,
+              small: details.geograph.thumbnail,
+            },
+            coordinates: {
+              lat: Number.parseFloat(item.lat),
+              lng: Number.parseFloat(item.long),
+            },
+            createdAt: {
+              seconds: Math.floor(new Date(item.date).getTime() / 1000),
+              nanos: 0,
+            },
+          },
+        })
+      )
+    }
+
+    events.emit('end')
   }
 }

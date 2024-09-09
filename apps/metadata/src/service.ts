@@ -19,13 +19,13 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
   ]
 
   private static aggregateEvents = (
-    imageSources: MetadataSource[],
+    sources: MetadataSource[],
     request: Metadata.GetAreaMetadataInput
   ): Emittery<Events> => {
     const events = new Emittery<Events>()
 
-    const promises = imageSources.map((imageSource) => {
-      const emitter = imageSource.getAreaMetadata(request)
+    const emitters = sources.map((imageSource) => {
+      const emitter = new Emittery<Events>()
 
       const onItem = (item: Metadata.AreaMetadataItem) => {
         events.emit('item', item)
@@ -35,7 +35,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
         emitter.off('item', onItem)
         emitter.off('end', onEnd)
 
-        const pending = promises.filter((promise) => promise !== emitter)
+        const pending = emitters.filter((thatEmitter) => thatEmitter !== emitter)
 
         if (pending.length === 0) {
           events.emit('end')
@@ -44,6 +44,14 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
 
       emitter.on('item', onItem)
       emitter.on('end', onEnd)
+
+      const promise = imageSource.getAreaMetadata(request, emitter)
+
+      if (promise instanceof Promise) {
+        promise.catch((error) => {
+          console.error(error)
+        })
+      }
 
       return emitter
     })
