@@ -21,7 +21,7 @@ const addressCount = (address: ReturnType<Metadata.Address['toObject']>) => {
 }
 
 const textMetadata = computed(() => {
-  const item = props.metadata.find((item) => 'metadata' in item)
+  const item = props.metadata.findLast((item) => 'metadata' in item)
 
   if (!item || !item.metadata) return null
 

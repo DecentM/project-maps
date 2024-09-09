@@ -7,7 +7,7 @@ import "overpass-interpreter/short-range-named.proto";
 package OverpassInterpreter;
 
 service OverpassInterpreter {
-  rpc Query(QueryInput) returns (QueryResult);
+  rpc Query(QueryInput) returns (stream QueryResult);
 }
 
 message QueryInput {
@@ -17,10 +17,6 @@ message QueryInput {
 }
 
 message QueryResult {
-  repeated QueryResultElement elements = 1;
-}
-
-message QueryResultElement {
   oneof result {
     OpenStreetMap.Node node = 1;
     OpenStreetMap.Way way = 2;

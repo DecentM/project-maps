@@ -41,7 +41,7 @@ watch(
         lat: String(newLocation.lat ?? 0),
         lng: String(newLocation.lng ?? 0),
       },
-      radiusMeters: Math.ceil(Math.log(props.maxZoomLevel / props.zoomLevel) * 250 + 10),
+      radiusMeters: Math.ceil(Math.log(props.maxZoomLevel / props.zoomLevel) * 150 + 10),
     })
   }
 )

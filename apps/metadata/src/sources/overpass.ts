@@ -56,11 +56,29 @@ const calculateScore = (
 
     // Score based on name
     if (!item.tags.name) {
-      score -= 2
+      score = -1
     }
   }
 
+  if (item.tags?.amenity) {
+    score += 1
+  }
+
   return score
+}
+
+const processHousenumber = (housenumber: string): string => {
+  let result = housenumber
+
+  if (result.includes(',')) {
+    result = result.split(',').join('-')
+  }
+
+  if (result.startsWith('"') && result.endsWith('"')) {
+    result = result.slice(1, -1)
+  }
+
+  return result
 }
 
 export class OverpassSource extends MetadataSource {
@@ -69,7 +87,7 @@ export class OverpassSource extends MetadataSource {
   }
 
   public async getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
-    const overpassResponse = await overpassClient.Query(
+    const overpassResponse = overpassClient.Query(
       OverpassInterpreter.QueryInput.fromObject({
         shortRangeNamedQueryParameters: {
           coordinates: request.coordinates.toObject(),
@@ -78,21 +96,19 @@ export class OverpassSource extends MetadataSource {
       })
     )
 
-    const response = overpassResponse.toObject()
+    const elements: ReturnType<OverpassInterpreter.QueryResult['toObject']>[] = []
+    let highestScore = -1
+
     let result = Metadata.AreaMetadataItem.fromObject({})
 
     const resetResult = () => {
       result = Metadata.AreaMetadataItem.fromObject({})
     }
 
-    if (!response.elements) {
-      events.emit('end')
-      return
-    }
+    overpassResponse.on('data', (response: OverpassInterpreter.QueryResult) => {
+      const element = response.toObject()
+      elements.push(element)
 
-    let highestScore = -1
-
-    for (const element of response.elements) {
       let item:
         | ReturnType<OpenStreetMap.Node['toObject']>
         | ReturnType<OpenStreetMap.Way['toObject']>
@@ -104,13 +120,13 @@ export class OverpassSource extends MetadataSource {
       if (element.relation) item = element.relation
 
       if (!item) {
-        continue
+        return
       }
 
       // We'd prefer to show items with lots of metadata
-      const score = calculateScore(request.coordinates, response.elements.map(e => e.node ?? null).filter(e => e !== null), item)
+      const score = calculateScore(request.coordinates, elements.map(e => e.node ?? null).filter(e => e !== null), item)
 
-      if (score < highestScore) continue
+      if (score < highestScore) return
 
       highestScore = score
 
@@ -121,16 +137,17 @@ export class OverpassSource extends MetadataSource {
       result.metadata.address = Metadata.Address.fromObject({
         city: item.tags?.['addr:city'] || '',
         country: item.tags?.['addr:country'] || '',
-        housenumber: item.tags?.['addr:housenumber'] || '',
+        housenumber: processHousenumber(item.tags?.['addr:housenumber'] || ''),
         postcode: item.tags?.['addr:postcode'] || '',
         state: item.tags?.['addr:state'] || '',
         street: item.tags?.['addr:street'] || '',
       })
       result.metadata.phone = item.tags?.phone || ''
       result.metadata.website = item.tags?.website || ''
-    }
 
-    events.emit('item', result)
+      events.emit('item', result)
+    })
+
     events.emit('end')
   }
 }

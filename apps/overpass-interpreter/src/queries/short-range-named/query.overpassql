@@ -1,4 +1,24 @@
-[out:json];
+[out:csv(
+  ::id,
+  ::type,
+  ::lat,
+  ::lon,
+  'addr:city',
+  'addr:housenumber',
+  'addr:postcode',
+  'addr:state',
+  'addr:street',
+  'name',
+  'name:latin',
+  'name:en',
+  'amenity',
+  'phone',
+  'website'
+  ; // columns
+  false; // headers
+  ";" // separator
+)]
+[timeout:30];
 
 (
   node
@@ -13,7 +33,8 @@
   	(around:{{range}}, {{coordinates.lat}}, {{coordinates.lng}})
     [name];
 );
+out body 10;
 
+// Recurse into the relations and add nodes from it into the result
 (._; >;);
-
-out body;
+out body 25;

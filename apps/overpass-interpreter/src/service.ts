@@ -1,106 +1,147 @@
-import type { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js'
+import type { ServerWritableStream } from '@grpc/grpc-js'
 import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
 
-import { OverpassClient, type InterpreterResponse } from './clients/overpass'
+import { OverpassClient } from './clients/overpass'
 import { config } from './config'
-import { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
 
 const client = new OverpassClient(config.overpassApi.baseUrl)
 
 export class OverpassInterpreterService extends OverpassInterpreter.UnimplementedOverpassInterpreterService {
   override Query(
-    call: ServerUnaryCall<OverpassInterpreter.QueryInput, OverpassInterpreter.QueryResult>,
-    callback: sendUnaryData<OverpassInterpreter.QueryResult>
+    call: ServerWritableStream<OverpassInterpreter.QueryInput, OverpassInterpreter.QueryResult>
   ): void {
-    let promise: Promise<InterpreterResponse> | null = null
+    let stream: NodeJS.ReadableStream | null = null
 
     if (call.request.has_shortRangeNamedQueryParameters) {
-      promise = client.shortRangeNamed(call.request.shortRangeNamedQueryParameters.toObject())
+      stream = client.shortRangeNamedStreaming(
+        call.request.shortRangeNamedQueryParameters.toObject()
+      )
     }
 
-    if (!promise) {
-      callback(new Error('Invalid query input'))
+    if (!stream) {
+      call.end()
       return
     }
 
-    promise
-      .then((response) => {
-        callback(
-          null,
-          OverpassInterpreter.QueryResult.fromObject({
-            elements: response.elements
-              .map((element) => {
-                if (element.type === 'way') {
-                  return {
-                    way: {
-                      type: OpenStreetMap.Member.Type.WAY,
-                      id: element.id,
-                      nodes: element.nodes,
-                      tags: element.tags,
-                    },
-                  }
-                }
+    let response = ''
+    const lines: string[] = []
 
-                if (element.type === 'node') {
-                  return {
-                    node: {
-                      type: OpenStreetMap.Member.Type.NODE,
-                      id: element.id,
-                      tags: element.tags,
-                      lat: element.lat,
-                      lon: element.lon,
-                    },
-                  }
-                }
+    const processLines = () => {
+      while (lines.length > 0) {
+        // Leave the last line in the buffer as it may be incomplete
+        const line = lines.shift()
+        if (!line) continue
 
-                if (element.type === 'relation') {
-                  return {
-                    relation: {
-                      type: OpenStreetMap.Member.Type.RELATION,
-                      id: element.id,
-                      members: element.members
-                        .map((member) => {
-                          if (member.type === 'node') {
-                            return {
-                              type: OpenStreetMap.Member.Type.NODE,
-                              id: member.ref,
-                              role: member.role,
-                            }
-                          }
+        const [
+          id,
+          type,
+          lat,
+          lon,
+          addr_city,
+          addr_housenumber,
+          addr_postcode,
+          addr_state,
+          addr_street,
+          name,
+          name_latin,
+          name_en,
+          amenity,
+          phone,
+          website,
+        ] = line.split(';')
 
-                          if (member.type === 'way') {
-                            return {
-                              type: OpenStreetMap.Member.Type.WAY,
-                              id: member.ref,
-                              role: member.role,
-                            }
-                          }
+        if (type === 'way') {
+          call.write(
+            OverpassInterpreter.QueryResult.fromObject({
+              way: {
+                id: Number.parseInt(id, 10),
+                tags: {
+                  'addr:city': addr_city,
+                  'addr:housenumber': addr_housenumber,
+                  'addr:postcode': addr_postcode,
+                  'addr:state': addr_state,
+                  'addr:street': addr_street,
+                  name: name,
+                  'name:en': name_en,
+                  'name:latin': name_latin,
+                  amenity: amenity,
+                  phone: phone,
+                  website: website,
+                },
+              },
+            })
+          )
+          continue
+        }
 
-                          if (member.type === 'relation') {
-                            return {
-                              type: OpenStreetMap.Member.Type.RELATION,
-                              id: member.ref,
-                              role: member.role,
-                            }
-                          }
+        if (type === 'node') {
+          call.write(
+            OverpassInterpreter.QueryResult.fromObject({
+              node: {
+                id: Number.parseInt(id, 10),
+                lat: Number.parseFloat(lat),
+                lon: Number.parseFloat(lon),
+                tags: {
+                  'addr:city': addr_city,
+                  'addr:housenumber': addr_housenumber,
+                  'addr:postcode': addr_postcode,
+                  'addr:state': addr_state,
+                  'addr:street': addr_street,
+                  name: name,
+                  'name:en': name_en,
+                  'name:latin': name_latin,
+                  amenity: amenity,
+                  phone: phone,
+                  website: website,
+                },
+              },
+            })
+          )
+          continue
+        }
 
-                          return null
-                        })
-                        .filter((element) => element !== null),
-                      tags: element.tags,
-                    },
-                  }
-                }
+        if (type === 'relation') {
+          call.write(
+            OverpassInterpreter.QueryResult.fromObject({
+              relation: {
+                id: Number.parseInt(id, 10),
+                tags: {
+                  'addr:city': addr_city,
+                  'addr:housenumber': addr_housenumber,
+                  'addr:postcode': addr_postcode,
+                  'addr:state': addr_state,
+                  'addr:street': addr_street,
+                  name: name,
+                  'name:en': name_en,
+                  'name:latin': name_latin,
+                  amenity: amenity,
+                  phone: phone,
+                  website: website,
+                },
+              },
+            })
+          )
+        }
+      }
+    }
 
-                return null
-              })
-              .filter((element) => element !== null),
-          })
-        )
-      })
-      .catch((error) => {
-        console.error(error)
-        callback(error)
-      })
+    let partialLine = ''
+
+    stream.on('data', (chunk: Buffer) => {
+      response += chunk.toString('utf-8')
+      const responseLines = response.split('\n')
+      const firstResponseLine = responseLines.shift()
+      const lastResponseLine = responseLines.pop()
+
+      partialLine += firstResponseLine
+      lines.push(partialLine, ...responseLines)
+      partialLine = lastResponseLine || ''
+
+      processLines()
+    })
+
+    stream.on('end', () => {
+      call.end()
+    })
   }
 }

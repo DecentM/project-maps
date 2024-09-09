@@ -18,51 +18,41 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
     new MapillarySource(),
   ]
 
-  private static aggregateEvents = (
-    sources: MetadataSource[],
-    request: Metadata.GetAreaMetadataInput
-  ): Emittery<Events> => {
-    const events = new Emittery<Events>()
+  private static mergeEmitters = (emitters: Emittery<Events>[]): Emittery<Events> => {
+    const emitter = new Emittery<Events>()
+    let ended = 0
 
-    const emitters = sources.map((imageSource) => {
-      const emitter = new Emittery<Events>()
-
-      const onItem = (item: Metadata.AreaMetadataItem) => {
-        events.emit('item', item)
-      }
-
-      const onEnd = () => {
-        emitter.off('item', onItem)
-        emitter.off('end', onEnd)
-
-        const pending = emitters.filter((thatEmitter) => thatEmitter !== emitter)
-
-        if (pending.length === 0) {
-          events.emit('end')
+    for (const source of emitters) {
+      source.on('item', (item) => emitter.emit('item', item))
+      source.on('end', () => {
+        ended += 1
+        if (ended === emitters.length) {
+          emitter.emit('end')
         }
-      }
+      })
+    }
 
-      emitter.on('item', onItem)
-      emitter.on('end', onEnd)
-
-      const promise = imageSource.getAreaMetadata(request, emitter)
-
-      if (promise instanceof Promise) {
-        promise.catch((error) => {
-          console.error(error)
-        })
-      }
-
-      return emitter
-    })
-
-    return events
+    return emitter
   }
 
   override GetAreaMetadata(
     call: ServerWritableStream<Metadata.GetAreaMetadataInput, Metadata.AreaMetadataItem>
   ): void {
-    const events = MetadataService.aggregateEvents(MetadataService.sources, call.request)
+    const events = MetadataService.mergeEmitters(
+      MetadataService.sources.map((source) => {
+        const emitter = new Emittery<Events>()
+        const promise = source.getAreaMetadata(call.request, emitter)
+
+        if (promise instanceof Promise) {
+          promise.catch((error) => {
+            console.error(error)
+            emitter.emit('end')
+          })
+        }
+
+        return emitter
+      })
+    )
 
     const onItem = (item: Metadata.AreaMetadataItem) => {
       call.write(item)
