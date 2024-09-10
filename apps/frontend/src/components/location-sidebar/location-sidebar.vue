@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const { socket } = useSocket()
 
-const metadata = ref<ReturnType<Metadata.AreaMetadataItem['toObject']>[]>([])
+const metadata = ref<ReturnType<Metadata.MetadataItem['toObject']>[]>([])
 
 onMounted(() => {
   socket.on('Metadata', (method, response) => {

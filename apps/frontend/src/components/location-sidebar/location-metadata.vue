@@ -3,7 +3,7 @@ import type { Metadata } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
+  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
 }>()
 
 const renderUrl = (url: string) => {

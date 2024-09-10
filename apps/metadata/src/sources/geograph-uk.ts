@@ -43,7 +43,7 @@ export class GeographUKImageSource extends MetadataSource {
 
       events.emit(
         'item',
-        Metadata.AreaMetadataItem.fromObject({
+        Metadata.MetadataItem.fromObject({
           attribution: {
             name: details.geograph.user['#text'],
             license: item.licence,

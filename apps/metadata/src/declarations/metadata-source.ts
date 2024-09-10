@@ -3,7 +3,7 @@ import type { Metadata } from '@project-maps/proto/metadata'
 import type { Geospatial } from '@project-maps/proto/lib/geospatial'
 
 export type Events = {
-  item: Metadata.AreaMetadataItem
+  item: Metadata.MetadataItem
   end: undefined
 }
 

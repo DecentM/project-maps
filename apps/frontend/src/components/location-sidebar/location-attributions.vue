@@ -5,7 +5,7 @@ import { computed } from 'vue'
 import AttributionNotice from 'src/components/attribution-notice/attribution-notice.vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
+  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
 }>()
 
 const items = computed(() => {

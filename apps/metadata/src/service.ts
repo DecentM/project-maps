@@ -38,7 +38,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
   }
 
   override GetAreaMetadata(
-    call: ServerWritableStream<Metadata.GetAreaMetadataInput, Metadata.AreaMetadataItem>
+    call: ServerWritableStream<Metadata.GetAreaMetadataInput, Metadata.MetadataItem>
   ): void {
     const events = MetadataService.mergeEmitters(
       MetadataService.sources.map((source) => {
@@ -56,7 +56,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
       })
     )
 
-    const onItem = (item: Metadata.AreaMetadataItem) => {
+    const onItem = (item: Metadata.MetadataItem) => {
       call.write(item)
     }
 
@@ -72,7 +72,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
   }
 
   override GetPoiMetadata(
-    call: ServerWritableStream<Metadata.GetPoiMetadataInput, Metadata.AreaMetadataItem>
+    call: ServerWritableStream<Metadata.GetPoiMetadataInput, Metadata.MetadataItem>
   ): void {
     const events = MetadataService.mergeEmitters(
       MetadataService.sources.map((source) => {
@@ -90,7 +90,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
       })
     )
 
-    const onItem = (item: Metadata.AreaMetadataItem) => {
+    const onItem = (item: Metadata.MetadataItem) => {
       call.write(item)
     }
 

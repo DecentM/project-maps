@@ -5,7 +5,7 @@ import { computed } from 'vue'
 import HeroImage from '../image/hero-image.vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.AreaMetadataItem['toObject']>[]
+  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
 }>()
 
 const firstItem = computed(() => {

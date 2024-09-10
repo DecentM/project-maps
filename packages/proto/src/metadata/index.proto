@@ -19,8 +19,8 @@ message GetPoiMetadataInput {
 }
 
 service Metadata {
-  rpc GetAreaMetadata(GetAreaMetadataInput) returns (stream AreaMetadataItem);
-  rpc GetPoiMetadata(GetPoiMetadataInput) returns (stream AreaMetadataItem);
+  rpc GetAreaMetadata(GetAreaMetadataInput) returns (stream MetadataItem);
+  rpc GetPoiMetadata(GetPoiMetadataInput) returns (stream MetadataItem);
 }
 
 message Attribution {
@@ -118,7 +118,7 @@ message Company {
   string websiteUrl = 7;
 }
 
-message AreaMetadataItem {
+message MetadataItem {
   Attribution attribution = 1;
 
   oneof item {

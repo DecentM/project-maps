@@ -36,7 +36,7 @@ export class WikimapiaSource extends MetadataSource {
     })
 
     for (const photo of place.photos) {
-      events.emit('item', Metadata.AreaMetadataItem.fromObject({
+      events.emit('item', Metadata.MetadataItem.fromObject({
         attribution: {
           source: Metadata.Attribution.Source.Wikimapia,
           license: 'CC-BY SA',
@@ -58,7 +58,7 @@ export class WikimapiaSource extends MetadataSource {
     }
 
     for (const comment of place.comments) {
-      events.emit('item', Metadata.AreaMetadataItem.fromObject({
+      events.emit('item', Metadata.MetadataItem.fromObject({
         attribution: {
           source: Metadata.Attribution.Source.Wikimapia,
           license: 'CC-BY SA',

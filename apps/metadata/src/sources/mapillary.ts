@@ -47,7 +47,7 @@ export class MapillarySource extends MetadataSource {
 
       events.emit(
         'item',
-        Metadata.AreaMetadataItem.fromObject({
+        Metadata.MetadataItem.fromObject({
           attribution: {
             license: 'CC BY-SA',
             source: Metadata.Attribution.Source.Mapillary,

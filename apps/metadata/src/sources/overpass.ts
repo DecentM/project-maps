@@ -97,10 +97,10 @@ export class OverpassSource extends MetadataSource {
     const elements: ReturnType<OverpassInterpreter.ShortRangeNamedResult['toObject']>[] = []
     let highestScore = -1
 
-    let result = Metadata.AreaMetadataItem.fromObject({})
+    let result = Metadata.MetadataItem.fromObject({})
 
     const resetResult = () => {
-      result = Metadata.AreaMetadataItem.fromObject({})
+      result = Metadata.MetadataItem.fromObject({})
     }
 
     overpassResponse.on('data', (response: OverpassInterpreter.ShortRangeNamedResult) => {
@@ -183,7 +183,7 @@ export class OverpassSource extends MetadataSource {
         return
       }
 
-      const result = Metadata.AreaMetadataItem.fromObject({
+      const result = Metadata.MetadataItem.fromObject({
         attribution: Metadata.Attribution.fromObject({
           source: Metadata.Attribution.Source.OpenStreetMap,
           license: 'ODbL',

@@ -11,12 +11,12 @@ import { overpassClient } from 'src/clients/overpass-interpreter'
 import { ClaimId, getClaim } from 'src/lib/wikidata-claim'
 
 export class WikidataSource extends MetadataSource {
-  private processEntity(entity: SimplifiedEntity, onItem: (item: Metadata.AreaMetadataItem) => void) {
+  private processEntity(entity: SimplifiedEntity, onItem: (item: Metadata.MetadataItem) => void) {
     if (!entity || entity.type !== 'item') {
       return
     }
 
-    onItem(Metadata.AreaMetadataItem.fromObject({
+    onItem(Metadata.MetadataItem.fromObject({
       attribution: {
         source: Metadata.Attribution.Source.Wikidata,
         license: 'CC0',
@@ -31,7 +31,7 @@ export class WikidataSource extends MetadataSource {
     const image = getClaim(entity, ClaimId.Image)
 
     if (image) {
-      onItem(Metadata.AreaMetadataItem.fromObject({
+      onItem(Metadata.MetadataItem.fromObject({
         attribution: {
           source: Metadata.Attribution.Source.Wikidata,
           license: 'CC0',
