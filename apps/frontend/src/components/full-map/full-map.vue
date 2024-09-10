@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { center } from '@turf/turf'
 import {
   LngLat,
   type Map as MglMap,
@@ -6,6 +7,7 @@ import {
   type RequestParameters,
   type MapMouseEvent,
 } from 'maplibre-gl'
+import type { Poi } from 'src/lib/poi'
 import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { type MglEvent, MglDefaults } from 'vue-maplibre-gl'
 
@@ -31,7 +33,17 @@ const handlePoiClick = (
   if (!id) id = 0
   if (typeof id === 'string') id = Number.parseInt(id, 10)
 
-  emit('click:poi', id)
+  const featureCenter = center(event.features![0]).geometry.coordinates
+
+  emit('click:poi', {
+    id,
+    coordinates: {
+      lng: featureCenter[0],
+      lat: featureCenter[1],
+    },
+    name:
+      event.features![0].properties?.name || event.features![0].properties?.['name:latin'] || '',
+  })
 }
 
 const handleLoad = (event: MglEvent) => {
@@ -123,7 +135,7 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
 
 const emit = defineEmits<{
   (event: 'click:location', location: LngLat): void
-  (event: 'click:poi', id: number): void
+  (event: 'click:poi', poi: Poi): void
   (event: 'move:end', zoom: number, location: LngLat): void
 }>()
 

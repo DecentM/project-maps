@@ -14,6 +14,8 @@ message GetAreaMetadataInput {
 
 message GetPoiMetadataInput {
   int64 id = 1;
+  Geospatial.Coordinates coordinates = 2;
+  string name = 3;
 }
 
 service Metadata {

@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import type { Metadata } from '@project-maps/proto/metadata'
 import { useSocket } from 'src/lib/socketio'
+import type { Poi } from 'src/lib/poi'
 
 import LocationImage from './location-image.vue'
 import LocationMetadata from './location-metadata.vue'
@@ -12,7 +13,7 @@ import LocationAttributions from './location-attributions.vue'
 import LocationName from './location-name.vue'
 
 const props = defineProps<{
-  poi: number | null
+  poi: Poi | null
   zoomLevel: number
   maxZoomLevel: number
 }>()
@@ -36,9 +37,7 @@ watch(
 
     if (!newPoi) return
 
-    socket.emit('Metadata', 'GetPoiMetadata', {
-      id: newPoi,
-    })
+    socket.emit('Metadata', 'GetPoiMetadata', newPoi)
   }
 )
 

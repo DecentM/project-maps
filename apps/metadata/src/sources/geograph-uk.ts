@@ -75,7 +75,9 @@ export class GeographUKImageSource extends MetadataSource {
     request: Metadata.GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
-    // Geograph UK does not support POI metadata
-    events.emit('end')
+    await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
+      coordinates: request.coordinates,
+      radiusMeters: 7,
+    }), events)
   }
 }

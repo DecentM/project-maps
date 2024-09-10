@@ -3,15 +3,16 @@ import { computed, ref } from 'vue'
 import type { Metadata } from '@project-maps/proto/metadata'
 import type { LngLat } from 'maplibre-gl'
 
+import type { Poi } from 'src/lib/poi'
 import FullMap from 'src/components/full-map/full-map.vue'
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 import MapMarker from 'src/components/full-map/map-marker.vue'
 import { useRoute, useRouter } from 'vue-router'
 
-const selectedPoi = ref<number | null>(null)
+const selectedPoi = ref<Poi | null>(null)
 
-const handlePoiClick = (id: number) => {
-  selectedPoi.value = id
+const handlePoiClick = (poi: Poi) => {
+  selectedPoi.value = poi
 }
 
 const imageLocations = ref<Metadata.Image[]>([])
