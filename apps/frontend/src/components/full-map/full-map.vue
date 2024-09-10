@@ -97,7 +97,7 @@ const handleLoad = (event: MglEvent) => {
   })
 }
 
-const mapCenter = ref<LngLat>(new LngLat(-0.1117343, 51.4876308))
+const mapCenter = ref<LngLat>(new LngLat(-0.156388, 51.524759))
 
 const handleMove = (event: MglEvent) => {
   const newCenter = event.map.getCenter()
@@ -134,7 +134,6 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
 }
 
 const emit = defineEmits<{
-  (event: 'click:location', location: LngLat): void
   (event: 'click:poi', poi: Poi): void
   (event: 'move:end', zoom: number, location: LngLat): void
 }>()
