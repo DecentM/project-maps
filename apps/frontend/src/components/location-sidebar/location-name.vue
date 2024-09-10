@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 const textMetadata = computed(() => {
-  const item = props.metadata.findLast((item) => 'metadata' in item)
+  const item = props.metadata.findLast((item) => 'metadata' in item && item.metadata?.name)
 
   if (!item || !item.metadata) return null
 
