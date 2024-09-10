@@ -65,4 +65,10 @@ export class OverpassClient {
       data: Query.PoiMetadata.create(params),
     })
   }
+
+  public poiWikidataIdStreaming(params: Query.PoiWikidataId.Params): NodeJS.ReadableStream {
+    return this.post('/interpreter', {
+      data: Query.PoiWikidataId.create(params),
+    })
+  }
 }

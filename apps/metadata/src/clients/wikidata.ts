@@ -1,5 +1,5 @@
 import { got } from 'got'
-import {WBK, type Entities, type EntityId, type SimplifiedEntity} from 'wikibase-sdk'
+import { WBK, type Entities, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
 
 type GetEntitiesParams = {
   ids: EntityId[]
@@ -13,7 +13,7 @@ export class WikidataClient {
     sparqlEndpoint: 'https://query.wikidata.org/sparql',
   })
 
-  private fetch<T> (url: string) {
+  private fetch<T>(url: string) {
     return got(url, {
       method: 'GET',
       headers: {
@@ -27,7 +27,7 @@ export class WikidataClient {
     return this.wbk.simplify.entities(entities)
   }
 
-  public getP18Url (filename: string): string | undefined {
+  public getP18Url(filename: string): string | undefined {
     return this.wbk.getImageUrl(filename)
   }
 }

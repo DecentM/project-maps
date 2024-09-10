@@ -235,4 +235,55 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
       call.end()
     })
   }
+
+  override PoiWikidataId(call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OverpassInterpreter.WikidataId>): void {
+    const parameters = call.request.toObject()
+
+    if (!parameters.id) {
+      call.end()
+      return
+    }
+
+    const stream = client.poiWikidataIdStreaming({
+      id: parameters.id,
+    })
+
+    let response = ''
+    const lines: string[] = []
+
+    const processLines = () => {
+      while (lines.length > 0) {
+        // Leave the last line in the buffer as it may be incomplete
+        const line = lines.shift()
+        if (!line) continue
+
+        const [wikidata, brand_wikidata] = line.split(';')
+
+        call.write(
+          OverpassInterpreter.WikidataId.fromObject({
+            id: wikidata || brand_wikidata,
+          })
+        )
+      }
+    }
+
+    let partialLine = ''
+
+    stream.on('data', (chunk: Buffer) => {
+      response += chunk.toString('utf-8')
+      const responseLines = response.split('\n')
+      const firstResponseLine = responseLines.shift()
+      const lastResponseLine = responseLines.pop()
+
+      partialLine += firstResponseLine
+      lines.push(partialLine, ...responseLines)
+      partialLine = lastResponseLine || ''
+
+      processLines()
+    })
+
+    stream.on('end', () => {
+      call.end()
+    })
+  }
 }
