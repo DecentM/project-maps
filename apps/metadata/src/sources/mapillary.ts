@@ -82,7 +82,7 @@ export class MapillarySource extends MetadataSource {
   ): Promise<void> {
     await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
       coordinates: request.coordinates,
-      radiusMeters: 7,
+      radiusMeters: 6,
     }), events)
   }
 }
