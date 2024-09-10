@@ -82,4 +82,9 @@ export class WikimapiaSource extends MetadataSource {
 
     events.emit('end')
   }
+
+  override getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): void | Promise<void> {
+    // WikiMapia does not provide POI metadata
+    events.emit('end')
+  }
 }

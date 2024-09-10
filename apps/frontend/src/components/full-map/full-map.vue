@@ -1,20 +1,95 @@
 <script lang="ts" setup>
-import { LngLat, type RequestParameters } from 'maplibre-gl'
-import { onBeforeMount, onMounted, ref } from 'vue'
-import { type MglEvent, useMap, MglDefaults } from 'vue-maplibre-gl'
+import {
+  LngLat,
+  type Map as MglMap,
+  type MapGeoJSONFeature,
+  type RequestParameters,
+  type MapMouseEvent,
+} from 'maplibre-gl'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { type MglEvent, MglDefaults } from 'vue-maplibre-gl'
 
-const { map } = useMap()
+const map = ref<MglMap>()
 const loaded = ref(0)
+
+const hoveringPoi = ref<MapGeoJSONFeature | null>(null)
+
+const updateCanvasStyle = () => {
+  const canvas = map.value?.getCanvas()
+  if (!canvas) return
+
+  canvas.style.cursor = hoveringPoi.value ? 'pointer' : 'grab'
+}
+
+const handlePoiClick = (
+  event: MapMouseEvent & {
+    features?: MapGeoJSONFeature[]
+  }
+) => {
+  let id = event.features?.[0]?.id
+
+  if (!id) id = 0
+  if (typeof id === 'string') id = Number.parseInt(id, 10)
+
+  emit('click:poi', id)
+}
 
 const handleLoad = (event: MglEvent) => {
   loaded.value++
+
+  map.value = event.map
+
+  map.value.on('mouseenter', 'poi_z16', (mouseoverEvent) => {
+    if (!mouseoverEvent.features?.[0]) return
+    hoveringPoi.value = mouseoverEvent.features[0]
+    updateCanvasStyle()
+  })
+
+  map.value.on('mouseleave', 'poi_z16', () => {
+    hoveringPoi.value = null
+    updateCanvasStyle()
+  })
+
+  map.value.on('click', 'poi_z16', (clickEvent) => {
+    handlePoiClick(clickEvent)
+  })
+
+  map.value.on('mouseenter', 'poi_z15', (mouseoverEvent) => {
+    if (!mouseoverEvent.features?.[0]) return
+    hoveringPoi.value = mouseoverEvent.features[0]
+    updateCanvasStyle()
+  })
+
+  map.value.on('mouseleave', 'poi_z15', () => {
+    hoveringPoi.value = null
+    updateCanvasStyle()
+  })
+
+  map.value.on('click', 'poi_z15', (clickEvent) => {
+    handlePoiClick(clickEvent)
+  })
+
+  map.value.on('mouseenter', 'poi_z14', (mouseoverEvent) => {
+    if (!mouseoverEvent.features?.[0]) return
+    hoveringPoi.value = mouseoverEvent.features[0]
+    updateCanvasStyle()
+  })
+
+  map.value.on('mouseleave', 'poi_z14', () => {
+    hoveringPoi.value = null
+    updateCanvasStyle()
+  })
+
+  map.value.on('click', 'poi_z14', (clickEvent) => {
+    handlePoiClick(clickEvent)
+  })
 }
 
-const center = ref<LngLat>(new LngLat(-0.1117343, 51.4876308))
+const mapCenter = ref<LngLat>(new LngLat(-0.1117343, 51.4876308))
 
 const handleMove = (event: MglEvent) => {
   const newCenter = event.map.getCenter()
-  center.value = newCenter
+  mapCenter.value = newCenter
 }
 
 const zoom = ref(16.25)
@@ -29,12 +104,12 @@ const handleZoom = (event: MglEvent) => {
 
 onBeforeMount(() => {
   MglDefaults.style = `http://${window.location.hostname}:3000/styles/style/light.json`
-  MglDefaults.center = [center.value.lng, center.value.lat]
+  MglDefaults.center = [mapCenter.value.lng, mapCenter.value.lat]
   MglDefaults.zoom = zoom.value
 })
 
 onMounted(() => {
-  emit('move:end', zoom.value, center.value)
+  emit('move:end', zoom.value, mapCenter.value)
 })
 
 const transformRequest = (url: string, resourceType: string): RequestParameters => {
@@ -48,27 +123,30 @@ const transformRequest = (url: string, resourceType: string): RequestParameters 
 
 const emit = defineEmits<{
   (event: 'click:location', location: LngLat): void
+  (event: 'click:poi', id: number): void
   (event: 'move:end', zoom: number, location: LngLat): void
 }>()
 
-const handleClick = (event: MglEvent) => {
-  emit('click:location', event.event.lngLat)
-}
-
 const isDev = !!import.meta.env.DEV
+
+const mapStyle = computed(() => {
+  return {
+    cursor: hoveringPoi.value ? 'pointer' : 'grab',
+  }
+})
 </script>
 
 <template>
   <mgl-map
-    ref="map"
     :attribution-control="true"
     :max-zoom="19"
     :transform-request="transformRequest"
+    :style="mapStyle"
+    :fade-duration="300"
     @map:load="handleLoad"
     @map:move="handleMove"
     @map:zoom="handleZoom"
-    @map:click="handleClick"
-    @map:moveend="() => emit('move:end', zoom, center)"
+    @map:moveend="() => emit('move:end', zoom, mapCenter)"
   >
     <mgl-frame-rate-control v-if="isDev" />
     <mgl-fullscreen-control />

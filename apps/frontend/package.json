@@ -10,6 +10,7 @@
     "@project-maps/map-style": "workspace:*",
     "@project-maps/map-tiles": "workspace:*",
     "@quasar/extras": "^1.16.12",
+    "@turf/turf": "^7.1.0",
     "maplibre-gl": "^4.6.0",
     "mitt": "^3.0.1",
     "pinia": "^2.2.2",

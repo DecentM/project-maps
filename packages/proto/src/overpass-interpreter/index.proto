@@ -8,11 +8,16 @@ package OverpassInterpreter;
 service OverpassInterpreter {
   rpc ShortRangeNamed(QueryParameters) returns (stream ShortRangeNamedResult);
   rpc WikidataIdsInRange(QueryParameters) returns (stream WikidataId);
+  rpc PoiMetadata(PoiMetadataParameters) returns (stream ShortRangeNamedResult);
 }
 
 message QueryParameters {
   Geospatial.Coordinates coordinates = 1;
   double range = 2;
+}
+
+message PoiMetadataParameters {
+  int64 id = 1;
 }
 
 message ShortRangeNamedResult {

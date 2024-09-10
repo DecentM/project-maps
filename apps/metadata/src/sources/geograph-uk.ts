@@ -70,4 +70,12 @@ export class GeographUKImageSource extends MetadataSource {
 
     events.emit('end')
   }
+
+  public async getPoiMetadata(
+    request: Metadata.GetPoiMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
+    // Geograph UK does not support POI metadata
+    events.emit('end')
+  }
 }

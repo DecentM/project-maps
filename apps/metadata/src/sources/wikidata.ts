@@ -87,4 +87,9 @@ export class WikidataSource extends MetadataSource {
       events.emit('end')
     })
   }
+
+  override getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): void | Promise<void> {
+    // Wikidata does not support POI metadata
+    events.emit('end')
+  }
 }

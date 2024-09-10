@@ -8,10 +8,10 @@ import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vu
 import MapMarker from 'src/components/full-map/map-marker.vue'
 import { useRoute, useRouter } from 'vue-router'
 
-const selectedLocation = ref<LngLat | null>(null)
+const selectedPoi = ref<number | null>(null)
 
-const handleLocationClick = (location: LngLat) => {
-  selectedLocation.value = location
+const handlePoiClick = (id: number) => {
+  selectedPoi.value = id
 }
 
 const imageLocations = ref<Metadata.Image[]>([])
@@ -56,14 +56,14 @@ const handleMoveEnd = (newZoom: number, newCenter: LngLat) => {
   <q-page class="vh-100">
     <div class="sidebar q-pa-md">
       <location-sidebar
-        :location="selectedLocation"
+        :poi="selectedPoi"
         :zoom-level="zoom"
         :max-zoom-level="19"
         @show-image="addImageLocation"
         @reset-images="resetImageLocations" />
     </div>
 
-    <full-map @click:location="handleLocationClick" @move:end="handleMoveEnd">
+    <full-map @click:poi="handlePoiClick" @move:end="handleMoveEnd">
       <template v-for="location in imageLocations">
         <map-marker :location="location.coordinates" />
       </template>

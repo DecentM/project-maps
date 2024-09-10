@@ -17,7 +17,10 @@ export class MapillarySource extends MetadataSource {
     config.clients.mapillary.apiKey
   )
 
-  public async getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
+  public async getAreaMetadata(
+    request: Metadata.GetAreaMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     const parameters = request.toObject()
 
     if (!parameters.coordinates?.lat || !parameters.coordinates?.lng || !parameters.radiusMeters) {
@@ -70,6 +73,14 @@ export class MapillarySource extends MetadataSource {
       )
     }
 
+    events.emit('end')
+  }
+
+  public async getPoiMetadata(
+    request: Metadata.GetPoiMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
+    // Mapillary does not support POI metadata
     events.emit('end')
   }
 }

@@ -8,7 +8,7 @@
     "basezoom": 16,
     "combine_below": 12,
     "compress": "gzip",
-    "include_ids": false,
+    "include_ids": true,
     "filemetadata": {
       "format": "pbf",
       "scheme": "xyz",

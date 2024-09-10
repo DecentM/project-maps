@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { LngLat } from 'maplibre-gl'
 import { computed, onMounted, ref, watch } from 'vue'
 
 import type { Metadata } from '@project-maps/proto/metadata'
@@ -13,7 +12,7 @@ import LocationAttributions from './location-attributions.vue'
 import LocationName from './location-name.vue'
 
 const props = defineProps<{
-  location: LngLat | null
+  poi: number | null
   zoomLevel: number
   maxZoomLevel: number
 }>()
@@ -24,27 +23,21 @@ const metadata = ref<ReturnType<Metadata.AreaMetadataItem['toObject']>[]>([])
 
 onMounted(() => {
   socket.on('Metadata', (method, response) => {
-    if (method !== 'GetAreaMetadata') return
+    if (method !== 'GetPoiMetadata') return
 
     metadata.value = [...metadata.value, response]
   })
 })
 
 watch(
-  () => props.location,
-  (newLocation) => {
+  () => props.poi,
+  (newPoi) => {
     metadata.value = []
 
-    if (!newLocation) {
-      return
-    }
+    if (!newPoi) return
 
-    socket.emit('Metadata', 'GetAreaMetadata', {
-      coordinates: {
-        lat: String(newLocation.lat ?? 0),
-        lng: String(newLocation.lng ?? 0),
-      },
-      radiusMeters: Math.ceil(Math.log(props.maxZoomLevel / props.zoomLevel) * 150 + 10),
+    socket.emit('Metadata', 'GetPoiMetadata', {
+      id: newPoi,
     })
   }
 )

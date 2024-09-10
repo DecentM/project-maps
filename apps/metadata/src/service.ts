@@ -70,4 +70,38 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
     events.on('item', onItem)
     events.on('end', onEnd)
   }
+
+  override GetPoiMetadata(
+    call: ServerWritableStream<Metadata.GetPoiMetadataInput, Metadata.AreaMetadataItem>
+  ): void {
+    const events = MetadataService.mergeEmitters(
+      MetadataService.sources.map((source) => {
+        const emitter = new Emittery<Events>()
+        const promise = source.getPoiMetadata(call.request, emitter)
+
+        if (promise instanceof Promise) {
+          promise.catch((error) => {
+            console.error(error)
+            emitter.emit('end')
+          })
+        }
+
+        return emitter
+      })
+    )
+
+    const onItem = (item: Metadata.AreaMetadataItem) => {
+      call.write(item)
+    }
+
+    const onEnd = () => {
+      events.off('item', onItem)
+      events.off('end', onEnd)
+
+      call.end()
+    }
+
+    events.on('item', onItem)
+    events.on('end', onEnd)
+  }
 }

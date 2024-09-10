@@ -12,8 +12,13 @@ message GetAreaMetadataInput {
   int64 radiusMeters = 2;
 }
 
+message GetPoiMetadataInput {
+  int64 id = 1;
+}
+
 service Metadata {
   rpc GetAreaMetadata(GetAreaMetadataInput) returns (stream AreaMetadataItem);
+  rpc GetPoiMetadata(GetPoiMetadataInput) returns (stream AreaMetadataItem);
 }
 
 message Attribution {

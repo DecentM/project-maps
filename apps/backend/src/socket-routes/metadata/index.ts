@@ -1,11 +1,10 @@
 import { Metadata } from '@project-maps/proto/metadata'
 
-import type { ClientToServerData } from '../../declarations/socketio'
 import type { Socket } from 'socket.io'
 import { metadataClient } from 'src/grpc-clients/metadata'
 
 export const handleMetadata =
-  (socket: Socket) => async (method: string, data: ClientToServerData<'LocationMetadata'>) => {
+  (socket: Socket) => async (method: string, data: object) => {
     switch (method) {
       case 'GetAreaMetadata': {
         const result = metadataClient.GetAreaMetadata(
@@ -14,6 +13,17 @@ export const handleMetadata =
 
         result.on('data', (metadata) => {
           socket.emit('Metadata', 'GetAreaMetadata', metadata.toObject())
+        })
+
+        break
+      }
+      case 'GetPoiMetadata': {
+        const result = metadataClient.GetPoiMetadata(
+          Metadata.GetPoiMetadataInput.fromObject(data)
+        )
+
+        result.on('data', (metadata) => {
+          socket.emit('Metadata', 'GetPoiMetadata', metadata.toObject())
         })
 
         break

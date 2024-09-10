@@ -155,4 +155,49 @@ export class OverpassSource extends MetadataSource {
 
     events.emit('end')
   }
+
+  public async getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
+    const overpassResponse = overpassClient.PoiMetadata(
+      OverpassInterpreter.PoiMetadataParameters.fromObject({
+        id: request.id,
+      })
+    )
+
+    const elements: ReturnType<OverpassInterpreter.ShortRangeNamedResult['toObject']>[] = []
+
+    overpassResponse.on('data', (response: OverpassInterpreter.ShortRangeNamedResult) => {
+      const element = response.toObject()
+      elements.push(element)
+
+      let item:
+        | ReturnType<OpenStreetMap.Node['toObject']>
+        | ReturnType<OpenStreetMap.Way['toObject']>
+        | ReturnType<OpenStreetMap.Relation['toObject']>
+        | undefined
+
+      if (element.way) item = element.way
+      if (element.node) item = element.node
+      if (element.relation) item = element.relation
+
+      if (!item) {
+        return
+      }
+
+      const result = Metadata.AreaMetadataItem.fromObject({
+        attribution: Metadata.Attribution.fromObject({
+          source: Metadata.Attribution.Source.OpenStreetMap,
+          license: 'ODbL',
+          url: item.id ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}` : 'https://www.openstreetmap.org/',
+          name: String(item.id ?? 'OpenStreetMap'),
+        }),
+        metadata: Metadata.TextMetadata.fromObject({
+          name: item.tags?.name || '',
+        }),
+      })
+
+      events.emit('item', result)
+    })
+
+    events.emit('end')
+  }
 }
