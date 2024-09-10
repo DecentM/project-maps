@@ -6,9 +6,9 @@ import "lib/geospatial.proto";
 package OverpassInterpreter;
 
 service OverpassInterpreter {
-  rpc ShortRangeNamed(QueryParameters) returns (stream ShortRangeNamedResult);
+  rpc ShortRangeNamed(QueryParameters) returns (stream OpenStreetMap.Element);
   rpc WikidataIdsInRange(QueryParameters) returns (stream WikidataId);
-  rpc PoiMetadata(PoiMetadataParameters) returns (stream ShortRangeNamedResult);
+  rpc PoiMetadata(PoiMetadataParameters) returns (stream OpenStreetMap.Element);
   rpc PoiWikidataId(PoiMetadataParameters) returns (stream WikidataId);
 }
 
@@ -19,14 +19,6 @@ message QueryParameters {
 
 message PoiMetadataParameters {
   int64 id = 1;
-}
-
-message ShortRangeNamedResult {
-  oneof result {
-    OpenStreetMap.Node node = 1;
-    OpenStreetMap.Way way = 2;
-    OpenStreetMap.Relation relation = 3;
-  }
 }
 
 message WikidataId {

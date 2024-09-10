@@ -94,7 +94,7 @@ export class OverpassSource extends MetadataSource {
       })
     )
 
-    const elements: ReturnType<OverpassInterpreter.ShortRangeNamedResult['toObject']>[] = []
+    const elements: ReturnType<OpenStreetMap.Element['toObject']>[] = []
     let highestScore = -1
 
     let result = Metadata.MetadataItem.fromObject({})
@@ -103,7 +103,7 @@ export class OverpassSource extends MetadataSource {
       result = Metadata.MetadataItem.fromObject({})
     }
 
-    overpassResponse.on('data', (response: OverpassInterpreter.ShortRangeNamedResult) => {
+    overpassResponse.on('data', (response: OpenStreetMap.Element) => {
       const element = response.toObject()
       elements.push(element)
 
@@ -163,9 +163,9 @@ export class OverpassSource extends MetadataSource {
       })
     )
 
-    const elements: ReturnType<OverpassInterpreter.ShortRangeNamedResult['toObject']>[] = []
+    const elements: ReturnType<OpenStreetMap.Element['toObject']>[] = []
 
-    overpassResponse.on('data', (response: OverpassInterpreter.ShortRangeNamedResult) => {
+    overpassResponse.on('data', (response: OpenStreetMap.Element) => {
       const element = response.toObject()
       elements.push(element)
 

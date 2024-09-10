@@ -1,5 +1,6 @@
 import type { ServerWritableStream } from '@grpc/grpc-js'
 import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
+import { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
 
 import { OverpassClient } from './clients/overpass'
 import { config } from './config'
@@ -9,7 +10,7 @@ const client = new OverpassClient(config.overpassApi.baseUrl)
 export class OverpassInterpreterService extends OverpassInterpreter.UnimplementedOverpassInterpreterService {
   private static processLines(
     lines: string[],
-    onResult: (result: OverpassInterpreter.ShortRangeNamedResult) => void
+    onResult: (result: OpenStreetMap.Element) => void
   ) {
     while (lines.length > 0) {
       // Leave the last line in the buffer as it may be incomplete
@@ -36,7 +37,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
       if (type === 'way') {
         onResult(
-          OverpassInterpreter.ShortRangeNamedResult.fromObject({
+          OpenStreetMap.Element.fromObject({
             way: {
               id: Number.parseInt(id, 10),
               tags: {
@@ -60,7 +61,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
       if (type === 'node') {
         onResult(
-          OverpassInterpreter.ShortRangeNamedResult.fromObject({
+          OpenStreetMap.Element.fromObject({
             node: {
               id: Number.parseInt(id, 10),
               lat: Number.parseFloat(lat),
@@ -86,7 +87,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
       if (type === 'relation') {
         onResult(
-          OverpassInterpreter.ShortRangeNamedResult.fromObject({
+          OpenStreetMap.Element.fromObject({
             relation: {
               id: Number.parseInt(id, 10),
               tags: {
@@ -110,7 +111,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
   }
 
   override ShortRangeNamed(
-    call: ServerWritableStream<OverpassInterpreter.QueryParameters, OverpassInterpreter.ShortRangeNamedResult>
+    call: ServerWritableStream<OverpassInterpreter.QueryParameters, OpenStreetMap.Element>
   ): void {
     const params = call.request.toObject()
 
@@ -199,7 +200,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
     })
   }
 
-  override PoiMetadata(call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OverpassInterpreter.ShortRangeNamedResult>): void {
+  override PoiMetadata(call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OpenStreetMap.Element>): void {
     const parameters = call.request.toObject()
 
     if (!parameters.id) {

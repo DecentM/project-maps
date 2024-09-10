@@ -33,6 +33,14 @@ message Relation {
   map<string, string> tags = 3;
 }
 
+message Element {
+  oneof result {
+    Node node = 1;
+    Way way = 2;
+    Relation relation = 3;
+  }
+}
+
 // Top 3 pages of https://taginfo.openstreetmap.org/keys/amenity#values
 enum Amenity {
   unknown = 0;
