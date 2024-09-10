@@ -14,13 +14,13 @@ import { type MglEvent, MglDefaults } from 'vue-maplibre-gl'
 const map = ref<MglMap>()
 const loaded = ref(0)
 
-const hoveringPoi = ref<MapGeoJSONFeature | null>(null)
+const hoveringPois = ref<unknown[]>([])
 
 const updateCanvasStyle = () => {
   const canvas = map.value?.getCanvas()
   if (!canvas) return
 
-  canvas.style.cursor = hoveringPoi.value ? 'pointer' : 'grab'
+  canvas.style.cursor = hoveringPois.value.length ? 'pointer' : 'grab'
 }
 
 const handlePoiClick = (
@@ -53,12 +53,12 @@ const handleLoad = (event: MglEvent) => {
 
   map.value.on('mouseenter', 'poi_z16', (mouseoverEvent) => {
     if (!mouseoverEvent.features?.[0]) return
-    hoveringPoi.value = mouseoverEvent.features[0]
+    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
     updateCanvasStyle()
   })
 
   map.value.on('mouseleave', 'poi_z16', () => {
-    hoveringPoi.value = null
+    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
     updateCanvasStyle()
   })
 
@@ -68,12 +68,12 @@ const handleLoad = (event: MglEvent) => {
 
   map.value.on('mouseenter', 'poi_z15', (mouseoverEvent) => {
     if (!mouseoverEvent.features?.[0]) return
-    hoveringPoi.value = mouseoverEvent.features[0]
+    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
     updateCanvasStyle()
   })
 
   map.value.on('mouseleave', 'poi_z15', () => {
-    hoveringPoi.value = null
+    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
     updateCanvasStyle()
   })
 
@@ -83,12 +83,12 @@ const handleLoad = (event: MglEvent) => {
 
   map.value.on('mouseenter', 'poi_z14', (mouseoverEvent) => {
     if (!mouseoverEvent.features?.[0]) return
-    hoveringPoi.value = mouseoverEvent.features[0]
+    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
     updateCanvasStyle()
   })
 
   map.value.on('mouseleave', 'poi_z14', () => {
-    hoveringPoi.value = null
+    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
     updateCanvasStyle()
   })
 
@@ -141,9 +141,11 @@ const emit = defineEmits<{
 const isDev = !!import.meta.env.DEV
 
 const mapStyle = computed(() => {
-  return {
-    cursor: hoveringPoi.value ? 'pointer' : 'grab',
-  }
+  return hoveringPois.value.length
+    ? {
+        cursor: 'pointer',
+      }
+    : {}
 })
 </script>
 
