@@ -86,7 +86,6 @@ export class WikimapiaSource extends MetadataSource {
   override async getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
     await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
       coordinates: request.coordinates,
-      radiusMeters: 6,
     }), events)
   }
 }
