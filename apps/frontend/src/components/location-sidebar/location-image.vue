@@ -3,6 +3,7 @@ import type { Metadata } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 
 import HeroImage from '../image/hero-image.vue'
+import { getImageUrl } from 'src/lib/get-image-url'
 
 const props = defineProps<{
   metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
@@ -15,14 +16,20 @@ const firstItem = computed(() => {
 
   return item
 })
+
+const firstImageUrl = computed(() => {
+  if (!firstItem.value?.image?.url) return null
+
+  return getImageUrl(firstItem.value.image.url, 'medium')
+})
 </script>
 
 <template>
   <transition name="fade" mode="out-in">
-    <div class="relative-position" v-if="firstItem && firstItem.image?.url?.canonical">
+    <div class="relative-position" v-if="firstImageUrl">
       <hero-image
         :height="250"
-        :src="firstItem.image.url.canonical"
+        :src="firstImageUrl"
         alt="Street Photo"
         class="q-pa-md"
       >

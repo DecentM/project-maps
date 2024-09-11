@@ -97,7 +97,7 @@ const handleLoad = (event: MglEvent) => {
   })
 }
 
-const mapCenter = ref<LngLat>(new LngLat(-0.156388, 51.524759))
+const mapCenter = ref<LngLat>(new LngLat(-0.159481, 51.522132))
 
 const handleMove = (event: MglEvent) => {
   const newCenter = event.map.getCenter()
@@ -138,7 +138,7 @@ const emit = defineEmits<{
   (event: 'move:end', zoom: number, location: LngLat): void
 }>()
 
-const isDev = !!import.meta.env.DEV
+const isDev = process.env.NODE_ENV === 'development'
 
 const mapStyle = computed(() => {
   return hoveringPois.value.length

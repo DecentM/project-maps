@@ -11,6 +11,7 @@ import LocationComments from './location-comments.vue'
 import LocationDescription from './location-description.vue'
 import LocationAttributions from './location-attributions.vue'
 import LocationName from './location-name.vue'
+import { sortMetadataItems } from 'src/lib/score-metadata-item'
 
 const props = defineProps<{
   poi: Poi | null
@@ -20,7 +21,7 @@ const props = defineProps<{
 
 const { socket } = useSocket()
 
-const metadata = ref<ReturnType<Metadata.MetadataItem['toObject']>[]>([])
+const metadata = ref<Metadata.MetadataItem[]>([])
 
 onMounted(() => {
   socket.on('Metadata', (method, response) => {
@@ -44,6 +45,10 @@ watch(
 const hasNameOrDescription = computed(() => {
   return metadata.value.some((item) => 'metadata' in item && item.metadata?.name)
 })
+
+const sortedMetadata = computed(() => {
+  return sortMetadataItems(metadata.value as Metadata.MetadataItem[])
+})
 </script>
 
 <style lang="scss" scoped>
@@ -57,7 +62,7 @@ const hasNameOrDescription = computed(() => {
 <template>
   <q-card class="location-sidebar">
     <location-image
-      :metadata="metadata"
+      :metadata="sortedMetadata"
     >
       <q-card>
         <q-input :model-value="''" outlined placeholder="Search..." dense />
@@ -65,13 +70,13 @@ const hasNameOrDescription = computed(() => {
     </location-image>
 
     <q-card-section v-if="hasNameOrDescription">
-      <location-name class="text-h6" :metadata="metadata" />
+      <location-name class="text-h6" :metadata="sortedMetadata" />
       <br />
-      <location-description class="text-body2" :metadata="metadata" />
+      <location-description class="text-body2" :metadata="sortedMetadata" />
     </q-card-section>
 
-    <location-metadata :metadata="metadata" />
-    <location-comments :metadata="metadata" />
-    <location-attributions :metadata="metadata" />
+    <location-metadata :metadata="sortedMetadata" />
+    <location-comments :metadata="sortedMetadata" />
+    <location-attributions :metadata="sortedMetadata" />
   </q-card>
 </template>
