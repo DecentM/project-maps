@@ -6,3 +6,5 @@ type: library
 tasks:
   build:
     command: ./generate.sh
+    options:
+      persistent: false

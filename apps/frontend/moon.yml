@@ -4,12 +4,13 @@ platform: node
 type: application
 
 tasks:
-  dev:
+  up:
     command: quasar
     args:
       - dev
     options:
       cache: false
+      persistent: true
 
   build:
     deps:
@@ -32,3 +33,4 @@ tasks:
       - dist
     options:
       cache: true
+      persistent: false

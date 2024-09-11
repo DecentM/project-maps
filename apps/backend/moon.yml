@@ -4,7 +4,7 @@ platform: node
 type: application
 
 tasks:
-  dev:
+  up:
     command: tsx
     args:
       - --watch
@@ -12,6 +12,7 @@ tasks:
     options:
       cache: false
       envFile: .env
+      persistent: true
 
   build:
     deps:
@@ -23,3 +24,6 @@ tasks:
       - package.json
     outputs:
       - dist
+    options:
+      cache: true
+      persistent: false

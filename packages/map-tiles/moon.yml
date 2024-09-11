@@ -15,6 +15,7 @@ tasks:
       - ./.ignored/map-tiles-container-id
     options:
       cache: false
+      persistent: false
 
   clean_dist:
     command: sh
@@ -23,6 +24,7 @@ tasks:
       - rm -rf dist || true; mkdir dist; touch dist/.gitkeep
     options:
       cache: false
+      persistent: false
 
   copy_docker:
     deps:
@@ -38,6 +40,7 @@ tasks:
       - dist
     options:
       cache: true
+      persistent: false
 
   cleanup_docker:
     deps:
@@ -50,6 +53,7 @@ tasks:
       - ./.ignored/map-tiles-container-id
     options:
       cache: true
+      persistent: false
 
   build:
     deps:
@@ -58,8 +62,9 @@ tasks:
       - cleanup_docker
     options:
       cache: false
+      persistent: false
 
-  dev:
+  up:
     command: nodemon
     args:
       - -w
@@ -70,3 +75,4 @@ tasks:
       - moon map-tiles:build
     options:
       cache: false
+      persistent: true

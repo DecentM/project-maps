@@ -18,6 +18,7 @@ tasks:
       - ./dist/sprites/osm-liberty.png
     options:
       cache: false
+      persistent: false
 
   build_2x:
     command: spreet
@@ -34,6 +35,7 @@ tasks:
       - ./dist/sprites/osm-liberty@2x.png
     options:
       cache: false
+      persistent: false
 
   build:
     deps:
@@ -41,8 +43,9 @@ tasks:
       - map-icons:build_2x
     options:
       cache: false
+      persistent: false
 
-  dev:
+  up:
     command: nodemon
     args:
       - -w
@@ -51,3 +54,4 @@ tasks:
       - moon map-icons:build
     options:
       cache: false
+      persistent: true

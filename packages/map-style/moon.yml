@@ -12,6 +12,7 @@ tasks:
       - src/style
     options:
       cache: true
+      persistent: false
 
   format:
     command: sh
@@ -24,6 +25,7 @@ tasks:
       - src/style
     options:
       cache: true
+      persistent: false
 
   build:
     deps:
@@ -38,8 +40,9 @@ tasks:
       - dist/style
     options:
       cache: true
+      persistent: false
 
-  dev:
+  up:
     command: nodemon
     args:
       - -w
@@ -48,3 +51,4 @@ tasks:
       - moon map-style:build
     options:
       cache: false
+      persistent: true

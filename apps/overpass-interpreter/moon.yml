@@ -4,11 +4,41 @@ platform: node
 type: application
 
 tasks:
+  docker_up:
+    command: docker compose
+    args:
+      - up
+    options:
+      cache: false
+      persistent: true
+
+  docker_down:
+    command: docker compose
+    args:
+      - down
+    options:
+      cache: false
+      persistent: false
+
   dev:
     command: tsx
     args:
       - --watch
       - src/index.ts
     options:
+      persistent: true
       cache: false
       envFile: .env
+
+  up:
+    deps:
+      - docker_up
+      - dev
+    options:
+      persistent: true
+
+  down:
+    deps:
+      - docker_down
+    options:
+      persistent: false

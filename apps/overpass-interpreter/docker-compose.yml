@@ -1,0 +1,18 @@
+services:
+  overpass:
+    image: wiktorn/overpass-api
+    environment:
+      - OVERPASS_MODE=init
+      - OVERPASS_META=yes
+      - OVERPASS_PLANET_URL=https://download.geofabrik.de/europe/great-britain/england/greater-london-latest.osm.bz2
+      - OVERPASS_RULES_LOAD=10
+      - OVERPASS_COMPRESSION=gz
+      - OVERPASS_STOP_AFTER_INIT=false
+      - OVERPASS_USE_AREAS=false # Disable area updates if not required
+      - OVERPASS_MAX_TIMEOUT=30 # Set a reasonable max timeout for queries
+      - OVERPASS_UPDATE_SLEEP=600 # Delay between updates, in seconds
+      - OVERPASS_ALLOW_DUPLICATE_QUERIES=yes
+    volumes:
+      - ./.ignored/overpass_db:/db
+    ports:
+      - "8080:80"
