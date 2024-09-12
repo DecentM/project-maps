@@ -15,10 +15,12 @@ service OverpassInterpreter {
 message QueryParameters {
   Geospatial.Coordinates coordinates = 1;
   double range = 2;
+  repeated string tags = 3;
 }
 
 message PoiMetadataParameters {
   int64 id = 1;
+  repeated string tags = 2;
 }
 
 message WikidataId {

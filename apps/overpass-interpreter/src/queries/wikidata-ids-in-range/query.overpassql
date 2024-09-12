@@ -1,10 +1,11 @@
-[out:csv(
-  'wikidata',
-  'brand:wikidata'
-  ; // columns
-  false; // headers
-  ";" // separator
-)]
+// [out:csv(
+//   'wikidata',
+//   'brand:wikidata'
+//   ; // columns
+//   false; // headers
+//   ";" // separator
+// )]
+[out:csv(::id, ::type, ::lat, ::lon, {{tags}}; false; ";")]
 [timeout:30];
 
 (

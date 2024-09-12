@@ -10,6 +10,8 @@ export const query = <Params extends Record<string, unknown>>(query: Query) => {
   const contents = file.toString()
 
   return (input: Params) => {
+    if (!input.tags || !Array.isArray(input.tags) || input.tags.length === 0) throw new Error('No tags provided')
+
     let interpolatedQuery = contents
     const flatInput = flattenObject(input)
 

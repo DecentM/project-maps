@@ -10,6 +10,7 @@ const client = new OverpassClient(config.overpassApi.baseUrl)
 export class OverpassInterpreterService extends OverpassInterpreter.UnimplementedOverpassInterpreterService {
   private static processLines(
     lines: string[],
+    requestedTags: string[],
     onResult: (result: OpenStreetMap.Element) => void
   ) {
     while (lines.length > 0) {
@@ -17,42 +18,26 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
       const line = lines.shift()
       if (!line) continue
 
-      const [
-        id,
-        type,
-        lat,
-        lon,
-        addr_city,
-        addr_housenumber,
-        addr_postcode,
-        addr_state,
-        addr_street,
-        name,
-        name_latin,
-        name_en,
-        amenity,
-        phone,
-        website,
-      ] = line.split(';')
+      const [id, type, lat, lon, ...columns] = line.split(';')
+
+      if (columns.length < requestedTags.length) {
+        throw new Error('Not enough columns in the response')
+      }
+
+      const tags = columns.reduce(
+        (acc, column, index) => {
+          acc[requestedTags[index]] = column
+          return acc
+        },
+        {} as Record<string, string>
+      )
 
       if (type === 'way') {
         onResult(
           OpenStreetMap.Element.fromObject({
             way: {
               id: Number.parseInt(id, 10),
-              tags: {
-                'addr:city': addr_city,
-                'addr:housenumber': addr_housenumber,
-                'addr:postcode': addr_postcode,
-                'addr:state': addr_state,
-                'addr:street': addr_street,
-                name: name,
-                'name:en': name_en,
-                'name:latin': name_latin,
-                amenity: amenity,
-                phone: phone,
-                website: website,
-              },
+              tags,
             },
           })
         )
@@ -66,19 +51,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
               id: Number.parseInt(id, 10),
               lat: Number.parseFloat(lat),
               lon: Number.parseFloat(lon),
-              tags: {
-                'addr:city': addr_city,
-                'addr:housenumber': addr_housenumber,
-                'addr:postcode': addr_postcode,
-                'addr:state': addr_state,
-                'addr:street': addr_street,
-                name: name,
-                'name:en': name_en,
-                'name:latin': name_latin,
-                amenity: amenity,
-                phone: phone,
-                website: website,
-              },
+              tags,
             },
           })
         )
@@ -90,19 +63,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
           OpenStreetMap.Element.fromObject({
             relation: {
               id: Number.parseInt(id, 10),
-              tags: {
-                'addr:city': addr_city,
-                'addr:housenumber': addr_housenumber,
-                'addr:postcode': addr_postcode,
-                'addr:state': addr_state,
-                'addr:street': addr_street,
-                name: name,
-                'name:en': name_en,
-                'name:latin': name_latin,
-                amenity: amenity,
-                phone: phone,
-                website: website,
-              },
+              tags,
             },
           })
         )
@@ -121,6 +82,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
         lat: params.coordinates?.lat ?? 0,
         lng: params.coordinates?.lng ?? 0,
       },
+      tags: params.tags ?? [],
     })
 
     let response = ''
@@ -138,7 +100,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
       lines.push(partialLine, ...responseLines)
       partialLine = lastResponseLine || ''
 
-      OverpassInterpreterService.processLines(lines, (result) => {
+      OverpassInterpreterService.processLines(lines, params.tags ?? [], (result) => {
         call.write(result)
       })
     })
@@ -159,10 +121,12 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
         lat: params.coordinates?.lat ?? 0,
         lng: params.coordinates?.lng ?? 0,
       },
+      tags: params.tags ?? [],
     })
 
     let response = ''
     const lines: string[] = []
+    const requestedTags = params.tags ?? []
 
     const processLines = () => {
       while (lines.length > 0) {
@@ -170,11 +134,23 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
         const line = lines.shift()
         if (!line) continue
 
-        const [wikidata, brand_wikidata] = line.split(';')
+        const [, , , , ...columns] = line.split(';')
+
+        if (columns.length < requestedTags.length) {
+          throw new Error('Not enough columns in the response')
+        }
+
+        const tags = columns.reduce(
+          (acc, column, index) => {
+            acc[requestedTags[index]] = column
+            return acc
+          },
+          {} as Record<string, string>
+        )
 
         call.write(
           OverpassInterpreter.WikidataId.fromObject({
-            id: wikidata || brand_wikidata,
+            id: tags.wikidata || tags['brand:wikidata'],
           })
         )
       }
@@ -200,7 +176,9 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
     })
   }
 
-  override PoiMetadata(call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OpenStreetMap.Element>): void {
+  override PoiMetadata(
+    call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OpenStreetMap.Element>
+  ): void {
     const parameters = call.request.toObject()
 
     if (!parameters.id) {
@@ -210,6 +188,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
     const stream = client.poiMetadataStreaming({
       id: parameters.id,
+      tags: parameters.tags ?? [],
     })
 
     let response = ''
@@ -227,7 +206,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
       lines.push(partialLine, ...responseLines)
       partialLine = lastResponseLine || ''
 
-      OverpassInterpreterService.processLines(lines, (result) => {
+      OverpassInterpreterService.processLines(lines, parameters.tags ?? [], (result) => {
         call.write(result)
       })
     })
@@ -237,7 +216,12 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
     })
   }
 
-  override PoiWikidataId(call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OverpassInterpreter.WikidataId>): void {
+  override PoiWikidataId(
+    call: ServerWritableStream<
+      OverpassInterpreter.PoiMetadataParameters,
+      OverpassInterpreter.WikidataId
+    >
+  ): void {
     const parameters = call.request.toObject()
 
     if (!parameters.id) {
@@ -247,10 +231,12 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
     const stream = client.poiWikidataIdStreaming({
       id: parameters.id,
+      tags: parameters.tags ?? [],
     })
 
     let response = ''
     const lines: string[] = []
+    const requestedTags = parameters.tags ?? []
 
     const processLines = () => {
       while (lines.length > 0) {
@@ -258,11 +244,23 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
         const line = lines.shift()
         if (!line) continue
 
-        const [wikidata, brand_wikidata] = line.split(';')
+        const [, , , , ...columns] = line.split(';')
+
+        if (columns.length < requestedTags.length) {
+          throw new Error('Not enough columns in the response')
+        }
+
+        const tags = columns.reduce(
+          (acc, column, index) => {
+            acc[requestedTags[index]] = column
+            return acc
+          },
+          {} as Record<string, string>
+        )
 
         call.write(
           OverpassInterpreter.WikidataId.fromObject({
-            id: wikidata || brand_wikidata,
+            id: tags.wikidata || tags['brand:wikidata'],
           })
         )
       }

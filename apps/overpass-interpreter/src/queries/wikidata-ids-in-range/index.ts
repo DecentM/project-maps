@@ -4,6 +4,7 @@ import { query } from "src/declarations/query";
 export type Params = {
   range: number;
   coordinates: { lng: number; lat: number };
+  tags: string[];
 };
 
 export const create = query<Params>({

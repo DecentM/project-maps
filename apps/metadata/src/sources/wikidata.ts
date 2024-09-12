@@ -8,7 +8,7 @@ import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
 import { WikidataClient } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { overpassClient } from 'src/clients/overpass-interpreter'
-import { ClaimId, getClaim } from 'src/lib/wikidata-claim'
+import { ClaimId, getClaims } from 'src/lib/wikidata-claim'
 
 export class WikidataSource extends MetadataSource {
   private processEntity(entity: SimplifiedEntity, onItem: (item: Metadata.MetadataItem) => void) {
@@ -30,7 +30,7 @@ export class WikidataSource extends MetadataSource {
       })
     )
 
-    const image = getClaim(entity, ClaimId.Image)
+    const image = getClaims(entity, [ClaimId.Image])
 
     if (image) {
       onItem(
@@ -50,69 +50,185 @@ export class WikidataSource extends MetadataSource {
       )
     }
 
-    const logo = getClaim(entity, ClaimId.Logo)
-    const smallLogo = getClaim(entity, ClaimId.SmallLogo)
-    const website = getClaim(entity, ClaimId.OfficialWebsite)
-    const instagram = getClaim(entity, ClaimId.InstagramUsername)
-    const linkedin = getClaim(entity, ClaimId.LinkedinCompanyPage)
-    const pinterest = getClaim(entity, ClaimId.PinterestUsername)
-    const x = getClaim(entity, ClaimId.XUsername)
-    const facebook = getClaim(entity, ClaimId.FacebookUsername)
-    const bbcNewsTopicId = getClaim(entity, ClaimId.BBCNewsTopicId)
+    const instagram = getClaims(entity, [ClaimId.InstagramUsername])
 
-    onItem(
-      Metadata.MetadataItem.fromObject({
-        attribution: {
-          source: Metadata.Attribution.Source.Wikidata,
-          license: 'CC0',
-          name: entity.id,
-          url: `https://www.wikidata.org/wiki/${entity.id}`,
-        },
-        company: {
-          name: entity.labels?.en, // TODO: i18n
+    if (instagram?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          links: {
+            list: instagram?.length
+              ? instagram!
+                  .map((item) => ({
+                    type: Metadata.Link.Type.Instagram,
+                    url: `https://instagram.com/${item}`,
+                  }))
+                  .filter((link) => link !== null)
+              : undefined,
+          },
+        })
+      )
+
+    const linkedin = getClaims(entity, [ClaimId.LinkedinCompanyPage])
+
+    if (linkedin?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          links: {
+            list: linkedin?.length
+              ? linkedin
+                  .map((item) => ({
+                    type: Metadata.Link.Type.LinkedIn,
+                    url: `https://linkedin.com/company/${item}`,
+                  }))
+                  .filter((link) => link !== null)
+              : undefined,
+          },
+        })
+      )
+
+    const pinterest = getClaims(entity, [ClaimId.PinterestUsername])
+
+    if (pinterest?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          links: {
+            list: pinterest?.length
+              ? pinterest
+                  .map((item) => ({
+                    type: Metadata.Link.Type.Pinterest,
+                    url: `https://pinterest.com/${item}`,
+                  }))
+                  .filter((link) => link !== null)
+              : undefined,
+          },
+        })
+      )
+
+    const x = getClaims(entity, [ClaimId.XUsername])
+
+    if (x?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          links: {
+            list: x?.length
+              ? x
+                  .map((item) => ({
+                    type: Metadata.Link.Type.X,
+                    url: `https://x.com/${item}`,
+                  }))
+                  .filter((link) => link !== null)
+              : undefined,
+          },
+        })
+      )
+
+    const facebook = getClaims(entity, [ClaimId.FacebookUsername])
+
+    if (facebook?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          links: {
+            list: facebook?.length
+              ? facebook
+                  .map((item) => ({
+                    type: Metadata.Link.Type.Facebook,
+                    url: `https://facebook.com/${item}`,
+                  }))
+                  .filter((link) => link !== null)
+              : undefined,
+          },
+        })
+      )
+
+    const bbcNewsTopicId = getClaims(entity, [ClaimId.BBCNewsTopicId])
+
+    if (bbcNewsTopicId?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          links: {
+            list: bbcNewsTopicId?.length
+              ? bbcNewsTopicId
+                  .map((item) => ({
+                    type: Metadata.Link.Type.BBCNewsTopic,
+                    url: `https://www.bbc.co.uk/news/topics/${item}`,
+                  }))
+                  .filter((link) => link !== null)
+              : undefined,
+          },
+        })
+      )
+
+    const logo = getClaims(entity, [ClaimId.Logo])
+    const smallLogo = getClaims(entity, [ClaimId.SmallLogo])
+
+    if (logo?.length || smallLogo?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
           logo: {
             canonical: logo ? this.client.getImageUrl(String(logo[0])) : undefined,
             small: smallLogo ? this.client.getImageUrl(String(smallLogo[0])) : undefined,
           },
-          contactUrl: entity.sitelinks?.enwiki,
-          websiteUrl: website ? String(website[0]) : undefined,
-          links: [
-            instagram
-              ? instagram!.map((item) => ({
-                  type: Metadata.Link.Type.Instagram,
-                  url: `https://instagram.com/${item}`,
-                }))
-              : null,
-            linkedin
-              ? linkedin.map((item) => ({
-                  type: Metadata.Link.Type.LinkedIn,
-                  url: `https://linkedin.com/company/${item}`,
-                }))
-              : null,
-            pinterest
-              ? pinterest.map((item) => ({
-                  type: Metadata.Link.Type.Pinterest,
-                  url: `https://pinterest.com/${item}`,
-                }))
-              : null,
-            x
-              ? x.map((item) => ({ type: Metadata.Link.Type.X, url: `https://x.com/${item}` }))
-              : null,
-            facebook
-              ? facebook.map((item) => ({ type: Metadata.Link.Type.Facebook, url: `https://facebook.com/${item}` }))
-              : null,
-            bbcNewsTopicId
-              ? bbcNewsTopicId.map((item) => ({
-                  type: Metadata.Link.Type.BBCNewsTopic,
-                  url: `https://www.bbc.co.uk/news/topics/${item}`,
-                }))
-              : null,
-          ]
-            .flat(1)
-            .filter((link) => link !== null),
-        },
-      })
-    )
+        })
+      )
+
+    const website = getClaims(entity, [ClaimId.OfficialWebsite])
+
+    if (website?.length)
+      onItem(
+        Metadata.MetadataItem.fromObject({
+          attribution: {
+            source: Metadata.Attribution.Source.Wikidata,
+            license: 'CC0',
+            name: entity.id,
+            url: `https://www.wikidata.org/wiki/${entity.id}`,
+          },
+          website: {
+            url: String(website[0]),
+          },
+        })
+      )
   }
 
   private client = new WikidataClient()
@@ -129,6 +245,7 @@ export class WikidataSource extends MetadataSource {
       OverpassInterpreter.QueryParameters.fromObject({
         range: params.radiusMeters,
         coordinates: params.coordinates,
+        tags: ['wikidata', 'brand:wikidata'],
       })
     )
 
@@ -172,7 +289,7 @@ export class WikidataSource extends MetadataSource {
     events: Emittery<Events>
   ): Promise<void> {
     const wikidataIdStream = overpassClient.PoiWikidataId(
-      OverpassInterpreter.PoiMetadataParameters.fromObject({ id: request.id })
+      OverpassInterpreter.PoiMetadataParameters.fromObject({ id: request.id, tags: ['wikidata', 'brand:wikidata'] })
     )
 
     wikidataIdStream.on('data', async (data: OverpassInterpreter.WikidataId) => {

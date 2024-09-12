@@ -3,6 +3,7 @@ import { query } from 'src/declarations/query'
 
 export type Params = {
   id: number
+  tags: string[]
 }
 
 export const create = query<Params>({

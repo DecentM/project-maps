@@ -9,7 +9,31 @@ import { overpassClient } from 'src/clients/overpass-interpreter'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
 export class OverpassSource extends MetadataSource {
-  private static processElement(response: OpenStreetMap.Element, onItem: (item: Metadata.MetadataItem) => void): Metadata.MetadataItem {
+  private static requestedTags = [
+      'addr:city',
+      'addr:housenumber',
+      'addr:postcode',
+      'addr:state',
+      'addr:street',
+      'name',
+      'name:latin',
+      'name:en',
+      'amenity',
+      'phone',
+      'website',
+      'leisure',
+      'shop',
+      'barrier',
+      'wheelchair',
+      'tourism',
+      'artwork_type',
+      'landuse',
+  ]
+
+  private static processElement(
+    response: OpenStreetMap.Element,
+    onItem: (item: Metadata.MetadataItem) => void
+  ): Metadata.MetadataItem {
     const element = response.toObject()
     let item:
       | ReturnType<OpenStreetMap.Node['toObject']>
@@ -30,7 +54,9 @@ export class OverpassSource extends MetadataSource {
     result.attribution = Metadata.Attribution.fromObject({
       source: Metadata.Attribution.Source.OpenStreetMap,
       license: 'ODbL',
-      url: item.id ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}` : 'https://www.openstreetmap.org/',
+      url: item.id
+        ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+        : 'https://www.openstreetmap.org/',
       name: String(item.id ?? 'OpenStreetMap'),
     })
 
@@ -57,11 +83,15 @@ export class OverpassSource extends MetadataSource {
     return true // Handles all locations
   }
 
-  public async getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
+  public async getAreaMetadata(
+    request: Metadata.GetAreaMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     const overpassResponse = overpassClient.ShortRangeNamed(
       OverpassInterpreter.QueryParameters.fromObject({
         coordinates: request.coordinates.toObject(),
         range: request.radiusMeters,
+        tags: OverpassSource.requestedTags,
       })
     )
 
@@ -74,10 +104,14 @@ export class OverpassSource extends MetadataSource {
     events.emit('end')
   }
 
-  public async getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
+  public async getPoiMetadata(
+    request: Metadata.GetPoiMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     const overpassResponse = overpassClient.PoiMetadata(
       OverpassInterpreter.PoiMetadataParameters.fromObject({
         id: request.id,
+        tags: OverpassSource.requestedTags,
       })
     )
 

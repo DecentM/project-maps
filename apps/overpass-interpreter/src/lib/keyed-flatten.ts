@@ -26,6 +26,9 @@ export const flattenObject = <Input extends object>(obj: Input, parentKey = ''):
       ) {
         // Recursively flatten the nested object
         Object.assign(result, flattenObject(obj[key], newKey));
+      } else if (Array.isArray(obj[key]) && obj[key].every((item) => typeof item === 'string')) {
+        // If the value is an array of strings, join them with a comma
+        result[newKey] = obj[key].map(item => `'${item}'`).join(',');
       } else {
         // Assign the value to the new key
         result[newKey] = obj[key];

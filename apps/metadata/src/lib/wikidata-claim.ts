@@ -1,10 +1,16 @@
 import type { SimplifiedEntity, SimplifiedPropertyClaims } from "wikibase-sdk"
 
-export const getClaim = (entity: SimplifiedEntity, claim: ClaimId): SimplifiedPropertyClaims | null => {
-  const value = entity.claims?.[claim]
+export const getClaims = (entity: SimplifiedEntity, claims: ClaimId[]): SimplifiedPropertyClaims | null => {
+  let value: SimplifiedPropertyClaims | null = null
 
-  if (!value || value.length <= 0) {
-    return null
+  for (const claim of claims) {
+    if (!entity.claims || !entity.claims[claim]) continue
+
+    value = entity.claims?.[claim]
+
+    if (value && value.length > 0) {
+      return value
+    }
   }
 
   return value

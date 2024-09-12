@@ -114,15 +114,12 @@ message Link {
   string url = 2;
 }
 
-message Company {
-  string name = 1;
-  repeated Employment employments = 2;
-  string country = 3;
-  ImageUrl logo = 4;
-  repeated Link links = 5;
-  string contactUrl = 6;
-  string websiteUrl = 7;
-  Company parent = 8;
+message Links {
+  repeated Link list = 1;
+}
+
+message Website {
+  string url = 1;
 }
 
 message MetadataItem {
@@ -134,6 +131,8 @@ message MetadataItem {
     Comment comment = 4;
     Description description = 5;
     Geospatial.Coordinates coordinates = 6;
-    Company company = 7;
+    ImageUrl logo = 7;
+    Links links = 8;
+    Website website = 9;
   }
 }
