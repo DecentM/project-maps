@@ -2,7 +2,7 @@
 import type { Metadata } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 
-import HeroImage from '../image/hero-image.vue'
+import HeroImage from 'src/components/image/hero-image.vue'
 import { getImageUrl } from 'src/lib/get-image-url'
 
 const props = defineProps<{
@@ -25,20 +25,18 @@ const firstImageUrl = computed(() => {
 </script>
 
 <template>
-  <transition name="fade" mode="out-in">
-    <div class="relative-position" v-if="firstImageUrl">
-      <hero-image
-        :height="250"
-        :src="firstImageUrl"
-        alt="Street Photo"
-        class="q-pa-md"
-      >
-        <slot />
-      </hero-image>
-    </div>
-
-    <q-card-section v-else>
+  <div class="relative-position" v-if="firstImageUrl">
+    <hero-image
+      :height="250"
+      :src="firstImageUrl"
+      alt="Street Photo"
+      class="q-pa-md"
+    >
       <slot />
-    </q-card-section>
-  </transition>
+    </hero-image>
+  </div>
+
+  <div v-else class="q-pa-md">
+    <slot />
+  </div>
 </template>

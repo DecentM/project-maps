@@ -22,16 +22,6 @@ const getRawScore = (item: ReturnType<Metadata.MetadataItem['toObject']>): numbe
   return points
 }
 
-const getMetadataType = (item: ReturnType<Metadata.MetadataItem['toObject']>): string => {
-  if ('image' in item) return 'image'
-  if ('metadata' in item) return 'metadata'
-  if ('company' in item) return 'company'
-  if ('description' in item) return 'description'
-  if ('coordinates' in item) return 'coordinates'
-
-  return 'unknown'
-}
-
 export const sortMetadataItems = (
   items: Array<ReturnType<Metadata.MetadataItem['toObject']>>
 ): Array<ReturnType<Metadata.MetadataItem['toObject']>> => {
@@ -54,16 +44,8 @@ export const sortMetadataItems = (
     result.push((rawScore - minPoints) / (maxPoints - minPoints || 0.001)) // Avoid division by zero
   }
 
-  const seen = new Set<string>()
-
   return items
     .map((item, index) => ({ item, score: result[index] }))
     .sort((a, b) => a.score - b.score)
-    .filter((item) => {
-      const type = getMetadataType(item.item)
-      if (seen.has(type)) return false
-      seen.add(type)
-      return true
-    })
     .map((item) => item.item)
 }
