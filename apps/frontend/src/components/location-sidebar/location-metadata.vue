@@ -102,7 +102,5 @@ const textMetadata = computed(() => {
         <q-item-label caption>Phone</q-item-label>
       </q-item-section>
     </q-item>
-
-    <q-separator spaced />
   </div>
 </template>

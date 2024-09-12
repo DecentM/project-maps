@@ -8,20 +8,6 @@ import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
 import { overpassClient } from 'src/clients/overpass-interpreter'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
-const processHousenumber = (housenumber: string): string => {
-  let result = housenumber
-
-  if (result.includes(',')) {
-    result = result.split(',').join('-')
-  }
-
-  if (result.startsWith('"') && result.endsWith('"')) {
-    result = result.slice(1, -1)
-  }
-
-  return result
-}
-
 export class OverpassSource extends MetadataSource {
   private static processElement(response: OpenStreetMap.Element, onItem: (item: Metadata.MetadataItem) => void): Metadata.MetadataItem {
     const element = response.toObject()
@@ -53,13 +39,14 @@ export class OverpassSource extends MetadataSource {
     result.metadata.address = Metadata.Address.fromObject({
       city: item.tags?.['addr:city'] || '',
       country: item.tags?.['addr:country'] || '',
-      housenumber: processHousenumber(item.tags?.['addr:housenumber'] || ''),
+      housenumber: item.tags?.['addr:housenumber'] || '',
       postcode: item.tags?.['addr:postcode'] || '',
       state: item.tags?.['addr:state'] || '',
       street: item.tags?.['addr:street'] || '',
     })
     result.metadata.phone = item.tags?.phone || ''
     result.metadata.website = item.tags?.website || ''
+    result.metadata.amenity = item.tags?.amenity || ''
 
     onItem(result)
 

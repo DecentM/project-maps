@@ -13,7 +13,11 @@
   'name:en',
   'amenity',
   'phone',
-  'website'
+  'website',
+  'leisure',
+  'shop',
+  'barrier'
+  'wheelchair'
   ; // columns
   false; // headers
   ";" // separator

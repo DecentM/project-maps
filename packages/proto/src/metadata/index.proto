@@ -69,7 +69,7 @@ message TextMetadata {
   Address address = 2;
   string phone = 3;
   string website = 4;
-  OpenStreetMap.Amenity amenity = 5;
+  string amenity = 5;
 }
 
 message CommentAuthor {

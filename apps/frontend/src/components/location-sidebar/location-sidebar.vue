@@ -11,6 +11,8 @@ import LocationComments from './location-comments.vue'
 import LocationDescription from './location-description.vue'
 import LocationAttributions from './location-attributions.vue'
 import LocationName from './location-name.vue'
+import LocationAmenity from './location-amenity.vue'
+
 import { sortMetadataItems } from 'src/lib/score-metadata-item'
 
 const props = defineProps<{
@@ -46,6 +48,10 @@ const hasNameOrDescription = computed(() => {
   return metadata.value.some((item) => 'metadata' in item && item.metadata?.name)
 })
 
+const hasAmenity = computed(() => {
+  return metadata.value.some((item) => 'metadata' in item && item.metadata?.amenity)
+})
+
 const sortedMetadata = computed(() => {
   return sortMetadataItems(metadata.value as Metadata.MetadataItem[])
 })
@@ -74,6 +80,12 @@ const sortedMetadata = computed(() => {
       <br />
       <location-description class="text-body2" :metadata="sortedMetadata" />
     </q-card-section>
+
+    <q-separator v-if="hasNameOrDescription" />
+
+    <location-amenity v-if="hasAmenity" :metadata="sortedMetadata" />
+
+    <q-separator v-if="hasAmenity" />
 
     <location-metadata :metadata="sortedMetadata" />
     <location-comments :metadata="sortedMetadata" />

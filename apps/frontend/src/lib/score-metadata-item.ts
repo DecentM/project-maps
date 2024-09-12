@@ -56,7 +56,7 @@ export const sortMetadataItems = (
 
   const seen = new Set<string>()
 
-  const mapped = items
+  return items
     .map((item, index) => ({ item, score: result[index] }))
     .sort((a, b) => a.score - b.score)
     .filter((item) => {
@@ -66,6 +66,4 @@ export const sortMetadataItems = (
       return true
     })
     .map((item) => item.item)
-
-  return mapped
 }
