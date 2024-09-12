@@ -31,7 +31,7 @@ const prettifyUrl = (url: string) => {
   try {
     const parsedUrl = new URL(url)
 
-    return `${parsedUrl.hostname}${parsedUrl.pathname === '/' ? '' : parsedUrl.pathname}`
+    return `${parsedUrl.hostname.replace(/^www\./gu, '')}${parsedUrl.pathname === '/' ? '' : parsedUrl.pathname}`
   } catch {
     return url
   }
