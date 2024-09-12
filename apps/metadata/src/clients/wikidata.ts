@@ -27,7 +27,7 @@ export class WikidataClient {
     return this.wbk.simplify.entities(entities)
   }
 
-  public getP18Url(filename: string): string | undefined {
+  public getImageUrl(filename: string): string | undefined {
     return this.wbk.getImageUrl(filename)
   }
 }

@@ -16,7 +16,7 @@
   'website',
   'leisure',
   'shop',
-  'barrier'
+  'barrier',
   'wheelchair'
   ; // columns
   false; // headers

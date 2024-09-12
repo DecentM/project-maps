@@ -99,9 +99,15 @@ message Employment {
   string name = 2;
 }
 
-message SocialMedia {
+message Link {
   enum Type {
     YouTube = 0;
+    Instagram = 1;
+    LinkedIn = 2;
+    Pinterest = 3;
+    X = 4;
+    Facebook = 5;
+    BBCNewsTopic = 6;
   }
 
   Type type = 1;
@@ -113,9 +119,10 @@ message Company {
   repeated Employment employments = 2;
   string country = 3;
   ImageUrl logo = 4;
-  repeated SocialMedia socialMedia = 5;
+  repeated Link links = 5;
   string contactUrl = 6;
   string websiteUrl = 7;
+  Company parent = 8;
 }
 
 message MetadataItem {
