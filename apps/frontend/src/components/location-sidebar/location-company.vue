@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import type { Metadata } from '@project-maps/proto/metadata'
 import { getImageUrl } from 'src/lib/get-image-url'
+import { prettifyUrl, sameUrls } from 'src/lib/urls'
 import { computed } from 'vue'
+import WebUrl from 'src/components/web-url/web-url.vue'
 
 const props = defineProps<{
   metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
@@ -26,29 +28,6 @@ const textMetadata = computed(() => {
 const companyLogo = computed(() => {
   return company.value?.logo ? getImageUrl(company.value.logo, 'small') : null
 })
-
-const prettifyUrl = (url: string) => {
-  try {
-    const parsedUrl = new URL(url)
-
-    return `${parsedUrl.hostname.replace(/^www\./gu, '')}${parsedUrl.pathname === '/' ? '' : parsedUrl.pathname}`
-  } catch {
-    return url
-  }
-}
-
-const sameUrls = (url1?: string, url2?: string) => {
-  if (!url1 || !url2) return false
-
-  try {
-    const parsedUrl1 = new URL(url1)
-    const parsedUrl2 = new URL(url2)
-
-    return parsedUrl1.hostname === parsedUrl2.hostname
-  } catch {
-    return url1 === url2
-  }
-}
 </script>
 
 <template>
@@ -83,14 +62,14 @@ const sameUrls = (url1?: string, url2?: string) => {
       </q-item-section>
     </q-item>
 
-    <q-item v-for="link in company.links?.filter(Boolean)" :key="link.type" :href="link.url" target="_blank" rel="noopener">
+    <q-item v-for="link in company.links?.filter((item) => item.url)" :key="link.type" :href="link.url" target="_blank" rel="noopener">
       <q-item-section side>
         <q-icon name="mdi-link" color="primary" size="md" />
       </q-item-section>
 
       <q-item-section>
         <q-item-label>
-          {{ prettifyUrl(link.url!) }}
+          <web-url :url="link.url!" />
         </q-item-label>
       </q-item-section>
     </q-item>

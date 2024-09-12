@@ -1,20 +1,11 @@
 <script lang="ts" setup>
 import type { Metadata } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
+import WebUrl from '../web-url/web-url.vue'
 
 const props = defineProps<{
   metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
 }>()
-
-const renderUrl = (url: string) => {
-  try {
-    const parsedUrl = new URL(url)
-
-    return `${parsedUrl.hostname}${parsedUrl.pathname === '/' ? '' : parsedUrl.pathname}`
-  } catch {
-    return url
-  }
-}
 
 const addressCount = (address: ReturnType<Metadata.Address['toObject']>) => {
   return Object.values(address).filter((value) => value).length
@@ -43,7 +34,9 @@ const textMetadata = computed(() => {
       </q-item-section>
 
       <q-item-section>
-        <q-item-label lines="1">{{ renderUrl(textMetadata.website) }}</q-item-label>
+        <q-item-label lines="1">
+          <web-url :url="textMetadata.website" />
+        </q-item-label>
         <q-item-label caption>Website</q-item-label>
       </q-item-section>
     </q-item>
