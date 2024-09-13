@@ -4,35 +4,63 @@ platform: node
 type: library
 
 tasks:
+  map_svgs:
+    command: bin/map_svgs.sh
+    inputs:
+      - node_modules/@mdi/svg/svg
+      - src/mapping.json
+      - bin/map_svgs.sh
+    outputs:
+      - .ignored/svgs
+    options:
+      cache: true
+      persistent: false
+
   build_1x:
+    deps:
+      - map_svgs
     command: spreet
     args:
       - --unique
       - --minify-index-file
-      - ./src/svgs/
-      - ./dist/sprites/osm-liberty
+      - .ignored/svgs
+      - dist/sprites/mdi
     inputs:
-      - src/svgs
+      - .ignored/svgs
     outputs:
-      - ./dist/sprites/osm-liberty.json
-      - ./dist/sprites/osm-liberty.png
+      - dist/sprites/mdi.json
+      - dist/sprites/mdi.png
     options:
       cache: false
       persistent: false
 
   build_2x:
+    deps:
+      - map_svgs
     command: spreet
     args:
       - --unique
       - --minify-index-file
       - --retina
-      - ./src/svgs/
-      - ./dist/sprites/osm-liberty@2x
+      - .ignored/svgs
+      - dist/sprites/mdi@2x
     inputs:
       - src/svgs
     outputs:
-      - ./dist/sprites/osm-liberty@2x.json
-      - ./dist/sprites/osm-liberty@2x.png
+      - dist/sprites/mdi@2x.json
+      - dist/sprites/mdi@2x.png
+    options:
+      cache: false
+      persistent: false
+
+  clean:
+    deps:
+      - build_1x
+      - build_2x
+    command: rm
+    args:
+      - -rf
+      - .ignored/svgs
     options:
       cache: false
       persistent: false
@@ -41,6 +69,12 @@ tasks:
     deps:
       - map-icons:build_1x
       - map-icons:build_2x
+      - map-icons:map_svgs
+      - map-icons:clean
+    command: sh
+    args:
+      - -c
+      - 'cp src/mapping.json dist/mapping.json'
     options:
       cache: false
       persistent: false

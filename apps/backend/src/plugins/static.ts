@@ -55,13 +55,19 @@ export default fp(async (fastify, opts) => {
     decorateReply: false,
     prefix: '/icons',
     allowedPath(pathName, root, request) {
-      return (pathName.endsWith('.json') || pathName.endsWith('.png')) && !pathName.includes('..')
+      return (pathName.endsWith('.svg') || pathName.endsWith('.png') || pathName.endsWith('.json')) && !pathName.includes('..')
     },
     setHeaders(res, pathName, stat) {
+      if (pathName.endsWith('.svg')) {
+        res.setHeader('Content-Type', 'image/svg+xml')
+      }
+
+      if (pathName.endsWith('.png')) {
+        res.setHeader('Content-Type', 'image/png')
+      }
+
       if (pathName.endsWith('.json')) {
         res.setHeader('Content-Type', 'application/json')
-      } else {
-        res.setHeader('Content-Type', 'image/png')
       }
     },
   })

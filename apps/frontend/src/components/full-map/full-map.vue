@@ -8,16 +8,91 @@ import {
   type MapMouseEvent,
 } from 'maplibre-gl'
 import type { Poi } from 'src/lib/poi'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref, watch } from 'vue'
 import { type MglEvent, MglDefaults } from 'vue-maplibre-gl'
 
-const map = ref<MglMap>()
+const map = ref<{ map: MglMap }>()
 const loaded = ref(0)
+
+watch(map, (newMap) => {
+  if (!newMap || !newMap.map) return
+
+  const { map } = newMap
+
+  map.on('mouseenter', 'poi_z16', (mouseoverEvent) => {
+    if (!mouseoverEvent.features?.[0]) return
+    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
+    updateCanvasStyle()
+  })
+
+  map.on('mouseleave', 'poi_z16', () => {
+    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
+    updateCanvasStyle()
+  })
+
+  map.on('click', 'poi_z16', (clickEvent) => {
+    handlePoiClick(clickEvent)
+  })
+
+  map.on('mouseenter', 'poi_z15', (mouseoverEvent) => {
+    if (!mouseoverEvent.features?.[0]) return
+    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
+    updateCanvasStyle()
+  })
+
+  map.on('mouseleave', 'poi_z15', () => {
+    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
+    updateCanvasStyle()
+  })
+
+  map.on('click', 'poi_z15', (clickEvent) => {
+    handlePoiClick(clickEvent)
+  })
+
+  map.on('mouseenter', 'poi_z14', (mouseoverEvent) => {
+    if (!mouseoverEvent.features?.[0]) return
+    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
+    updateCanvasStyle()
+  })
+
+  map.on('mouseleave', 'poi_z14', () => {
+    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
+    updateCanvasStyle()
+  })
+
+  map.on('click', 'poi_z14', (clickEvent) => {
+    handlePoiClick(clickEvent)
+  })
+
+  map.on('styleimagemissing', async (missingImageEvent) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Missing image:', missingImageEvent.id)
+    }
+
+    const width = 8
+    const bytesPerPixel = 4
+    const data = new Uint8Array(width * width * bytesPerPixel)
+
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < width; y++) {
+        const offset = (y * width + x) * bytesPerPixel
+        data[offset + 0] = (y / width) * 0 // red
+        data[offset + 1] = (x / width) * 0 // green
+        data[offset + 2] = 0 // blue
+        data[offset + 3] = 255 // alpha
+      }
+    }
+
+    map.addImage(missingImageEvent.id, { width, height: width, data })
+  })
+
+  map.on('error', console.error)
+})
 
 const hoveringPois = ref<unknown[]>([])
 
 const updateCanvasStyle = () => {
-  const canvas = map.value?.getCanvas()
+  const canvas = map.value?.map.getCanvas()
   if (!canvas) return
 
   canvas.style.cursor = hoveringPois.value.length ? 'pointer' : 'grab'
@@ -48,53 +123,6 @@ const handlePoiClick = (
 
 const handleLoad = (event: MglEvent) => {
   loaded.value++
-
-  map.value = event.map
-
-  map.value.on('mouseenter', 'poi_z16', (mouseoverEvent) => {
-    if (!mouseoverEvent.features?.[0]) return
-    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
-    updateCanvasStyle()
-  })
-
-  map.value.on('mouseleave', 'poi_z16', () => {
-    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
-    updateCanvasStyle()
-  })
-
-  map.value.on('click', 'poi_z16', (clickEvent) => {
-    handlePoiClick(clickEvent)
-  })
-
-  map.value.on('mouseenter', 'poi_z15', (mouseoverEvent) => {
-    if (!mouseoverEvent.features?.[0]) return
-    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
-    updateCanvasStyle()
-  })
-
-  map.value.on('mouseleave', 'poi_z15', () => {
-    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
-    updateCanvasStyle()
-  })
-
-  map.value.on('click', 'poi_z15', (clickEvent) => {
-    handlePoiClick(clickEvent)
-  })
-
-  map.value.on('mouseenter', 'poi_z14', (mouseoverEvent) => {
-    if (!mouseoverEvent.features?.[0]) return
-    hoveringPois.value = [...hoveringPois.value, mouseoverEvent.features[0]]
-    updateCanvasStyle()
-  })
-
-  map.value.on('mouseleave', 'poi_z14', () => {
-    hoveringPois.value = (hoveringPois.value as MapGeoJSONFeature[]).slice(0, -1)
-    updateCanvasStyle()
-  })
-
-  map.value.on('click', 'poi_z14', (clickEvent) => {
-    handlePoiClick(clickEvent)
-  })
 }
 
 const mapCenter = ref<LngLat>(new LngLat(0.016327, 51.572836))
@@ -151,7 +179,7 @@ const mapStyle = computed(() => {
 
 <template>
   <mgl-map
-    :attribution-control="true"
+    ref="map"
     :max-zoom="19"
     :transform-request="transformRequest"
     :style="mapStyle"

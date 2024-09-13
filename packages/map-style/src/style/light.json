@@ -12,7 +12,7 @@
       "url": "{tileUrlBase}/metadata.json"
     }
   },
-  "sprite": "{spritesUrlBase}/osm-liberty",
+  "sprite": "{spritesUrlBase}/mdi",
   "glyphs": "{fontsUrlBase}/{fontstack}/{range}.pbf",
   "layers": [
     {
