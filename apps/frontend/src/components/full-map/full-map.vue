@@ -125,7 +125,7 @@ const handleLoad = (event: MglEvent) => {
   loaded.value++
 }
 
-const mapCenter = ref<LngLat>(new LngLat(0.016327, 51.572836))
+const mapCenter = ref<LngLat>(new LngLat(-1.422504, 53.235409))
 
 const handleMove = (event: MglEvent) => {
   const newCenter = event.map.getCenter()

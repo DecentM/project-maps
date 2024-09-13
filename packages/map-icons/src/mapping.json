@@ -116,5 +116,13 @@
   "athletics": "mdi-run",
   "motorcycle": "mdi-motorbike",
   "cinema": "mdi-movie",
-  "multi": "mdi-soccer"
+  "multi": "mdi-soccer",
+  "bus": "mdi-bus",
+  "music": "mdi-music",
+  "lift_gate": "mdi-boom-gate",
+  "hearing_aids": "mdi-ear-hearing-loop",
+  "tailor": "mdi-needle",
+  "video_games": "mdi-gamepad",
+  "antiques": "mdi-chandelier",
+  "museum": "mdi-bank"
 }
