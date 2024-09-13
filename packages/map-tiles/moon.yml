@@ -4,18 +4,7 @@ platform: node
 type: library
 
 tasks:
-  clean_dist:
-    command: sh
-    args:
-      - -c
-      - rm -rf dist || true; mkdir dist; touch dist/.gitkeep
-    options:
-      cache: false
-      persistent: false
-
   build:
-    deps:
-      - clean_dist
     env:
       DOCKER_BUILDKIT: "1"
     command: sh

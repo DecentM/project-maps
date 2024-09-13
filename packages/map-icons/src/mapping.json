@@ -78,7 +78,7 @@
   "interior_decoration": "mdi-sofa",
   "playground": "mdi-seesaw",
   "park": "mdi-tree",
-  "bollard": "mdi-post",
+  "bollard": "mdi-sign-caution",
   "erotic": "mdi-heart",
   "ticket": "mdi-ticket",
   "perfumery": "mdi-flask-round-bottom-empty",
@@ -124,5 +124,15 @@
   "tailor": "mdi-needle",
   "video_games": "mdi-gamepad",
   "antiques": "mdi-chandelier",
-  "museum": "mdi-bank"
+  "museum": "mdi-bank",
+  "general": "mdi-circle-medium",
+  "monument": "mdi-circle-medium",
+  "bmx": "mdi-bicycle",
+  "theme_park": "mdi-ferris-wheel",
+  "hardware": "mdi-hammer",
+  "ferry_terminal": "mdi-ferry",
+  "harbor": "mdi-anchor",
+  "second_hand": "mdi-hand-heart",
+  "castle": "mdi-castle",
+  "hackerspace": "mdi-code-array"
 }
