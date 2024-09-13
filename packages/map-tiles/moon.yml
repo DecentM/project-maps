@@ -4,19 +4,6 @@ platform: node
 type: library
 
 tasks:
-  build_docker:
-    env:
-      DOCKER_BUILDKIT: "1"
-    command: sh
-    args:
-      - -c
-      - docker build --build-arg=PBF_URL=https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf -t map-tiles:latest . && docker create map-tiles:latest > ./.ignored/map-tiles-container-id
-    outputs:
-      - ./.ignored/map-tiles-container-id
-    options:
-      cache: false
-      persistent: false
-
   clean_dist:
     command: sh
     args:
@@ -26,42 +13,22 @@ tasks:
       cache: false
       persistent: false
 
-  copy_docker:
-    deps:
-      - clean_dist
-      - build_docker
-    command: sh
-    args:
-      - -c
-      - docker cp $(cat ./.ignored/map-tiles-container-id):/app/dist ./
-    inputs:
-      - ./.ignored/map-tiles-container-id
-    outputs:
-      - dist
-    options:
-      cache: true
-      persistent: false
-
-  cleanup_docker:
-    deps:
-      - copy_docker
-    command: sh
-    args:
-      - -c
-      - docker rm -f $(cat ./.ignored/map-tiles-container-id) && rm ./.ignored/map-tiles-container-id && docker rmi -f map-tiles:latest
-    inputs:
-      - ./.ignored/map-tiles-container-id
-    options:
-      cache: true
-      persistent: false
-
   build:
     deps:
-      - build_docker
-      - copy_docker
-      - cleanup_docker
+      - clean_dist
+    env:
+      DOCKER_BUILDKIT: "1"
+    command: sh
+    args:
+      - -c
+      - docker build --build-arg=PBF_URL=https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf -t map-tiles:latest . && docker create map-tiles:latest > ./.ignored/map-tiles-container-id && docker cp $(cat ./.ignored/map-tiles-container-id):/app/dist ./ && docker rm -f $(cat ./.ignored/map-tiles-container-id) && rm ./.ignored/map-tiles-container-id && docker rmi -f map-tiles:latest
+    inputs:
+      - ./src
+      - ./Dockerfile
+    outputs:
+      - ./dist
     options:
-      cache: false
+      cache: true
       persistent: false
 
   up:
