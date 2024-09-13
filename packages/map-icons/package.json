@@ -9,7 +9,6 @@
     ".": "./dist/"
   },
   "devDependencies": {
-    "@mdi/svg": "^7.4.47",
-    "svg2png": "^4.1.1"
+    "@mdi/svg": "^7.4.47"
   }
 }
