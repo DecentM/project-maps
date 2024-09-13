@@ -1,8 +1,8 @@
-import { locationMetadataClient } from '../grpc-clients/metadata'
+import { metadataClient } from '../grpc-clients/metadata'
 import { Metadata } from '@project-maps/proto/metadata'
 
 export const rpcToServiceMap = {
-  LocationMetadata: [Metadata.UnimplementedMetadataService, locationMetadataClient],
+  LocationMetadata: [Metadata.UnimplementedMetadataService, metadataClient],
 } as const
 
 export type MappedService = keyof typeof rpcToServiceMap
