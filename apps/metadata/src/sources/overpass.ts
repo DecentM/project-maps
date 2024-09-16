@@ -3,9 +3,9 @@ import type Emittery from 'emittery'
 import type { Geospatial } from '@project-maps/proto/lib/geospatial'
 import type { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
 import { Metadata } from '@project-maps/proto/metadata'
-import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
+import { Overpass } from '@project-maps/proto/overpass'
 
-import { overpassClient } from 'src/clients/overpass-interpreter'
+import { overpassClient } from 'src/clients/overpass'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
 export class OverpassSource extends MetadataSource {
@@ -88,7 +88,7 @@ export class OverpassSource extends MetadataSource {
     events: Emittery<Events>
   ): Promise<void> {
     const overpassResponse = overpassClient.ShortRangeNamed(
-      OverpassInterpreter.QueryParameters.fromObject({
+      Overpass.QueryParameters.fromObject({
         coordinates: request.coordinates.toObject(),
         range: request.radiusMeters,
         tags: OverpassSource.requestedTags,
@@ -109,7 +109,7 @@ export class OverpassSource extends MetadataSource {
     events: Emittery<Events>
   ): Promise<void> {
     const overpassResponse = overpassClient.PoiMetadata(
-      OverpassInterpreter.PoiMetadataParameters.fromObject({
+      Overpass.PoiMetadataParameters.fromObject({
         id: request.id,
         tags: OverpassSource.requestedTags,
       })

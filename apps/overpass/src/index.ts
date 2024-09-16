@@ -1,7 +1,7 @@
 import { Server, ServerCredentials } from '@grpc/grpc-js'
 
 import { config } from './config';
-import { OverpassInterpreterService } from './service';
+import { OverpassService } from './service';
 
 const startServer = (server: Server): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ const startServer = (server: Server): Promise<void> => {
 
 const server = new Server()
 
-server.addService(OverpassInterpreterService.definition, new OverpassInterpreterService())
+server.addService(OverpassService.definition, new OverpassService())
 
 startServer(server)
   .then(() => {

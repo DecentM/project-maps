@@ -1,5 +1,5 @@
 import type { ServerWritableStream } from '@grpc/grpc-js'
-import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
+import { Overpass } from '@project-maps/proto/overpass'
 import { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
 
 import { OverpassClient } from './clients/overpass'
@@ -7,7 +7,7 @@ import { config } from './config'
 
 const client = new OverpassClient(config.overpassApi.baseUrl)
 
-export class OverpassInterpreterService extends OverpassInterpreter.UnimplementedOverpassInterpreterService {
+export class OverpassService extends Overpass.UnimplementedOverpassService {
   private static processLines(
     lines: string[],
     requestedTags: string[],
@@ -72,7 +72,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
   }
 
   override ShortRangeNamed(
-    call: ServerWritableStream<OverpassInterpreter.QueryParameters, OpenStreetMap.Element>
+    call: ServerWritableStream<Overpass.QueryParameters, OpenStreetMap.Element>
   ): void {
     const params = call.request.toObject()
 
@@ -100,7 +100,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
       lines.push(partialLine, ...responseLines)
       partialLine = lastResponseLine || ''
 
-      OverpassInterpreterService.processLines(lines, params.tags ?? [], (result) => {
+      OverpassService.processLines(lines, params.tags ?? [], (result) => {
         call.write(result)
       })
     })
@@ -111,7 +111,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
   }
 
   override WikidataIdsInRange(
-    call: ServerWritableStream<OverpassInterpreter.QueryParameters, OverpassInterpreter.WikidataId>
+    call: ServerWritableStream<Overpass.QueryParameters, Overpass.WikidataId>
   ): void {
     const params = call.request.toObject()
 
@@ -149,7 +149,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
         )
 
         call.write(
-          OverpassInterpreter.WikidataId.fromObject({
+          Overpass.WikidataId.fromObject({
             id: tags.wikidata || tags['brand:wikidata'],
           })
         )
@@ -177,7 +177,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
   }
 
   override PoiMetadata(
-    call: ServerWritableStream<OverpassInterpreter.PoiMetadataParameters, OpenStreetMap.Element>
+    call: ServerWritableStream<Overpass.PoiMetadataParameters, OpenStreetMap.Element>
   ): void {
     const parameters = call.request.toObject()
 
@@ -206,7 +206,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
       lines.push(partialLine, ...responseLines)
       partialLine = lastResponseLine || ''
 
-      OverpassInterpreterService.processLines(lines, parameters.tags ?? [], (result) => {
+      OverpassService.processLines(lines, parameters.tags ?? [], (result) => {
         call.write(result)
       })
     })
@@ -218,8 +218,8 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
 
   override PoiWikidataId(
     call: ServerWritableStream<
-      OverpassInterpreter.PoiMetadataParameters,
-      OverpassInterpreter.WikidataId
+      Overpass.PoiMetadataParameters,
+      Overpass.WikidataId
     >
   ): void {
     const parameters = call.request.toObject()
@@ -259,7 +259,7 @@ export class OverpassInterpreterService extends OverpassInterpreter.Unimplemente
         )
 
         call.write(
-          OverpassInterpreter.WikidataId.fromObject({
+          Overpass.WikidataId.fromObject({
             id: tags.wikidata || tags['brand:wikidata'],
           })
         )

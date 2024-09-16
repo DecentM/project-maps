@@ -1,4 +1,4 @@
-id: overpass-interpreter
+id: overpass
 language: typescript
 platform: node
 type: application

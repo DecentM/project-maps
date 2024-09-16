@@ -3,11 +3,11 @@ import { isEntityId, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
 
 import { Metadata } from '@project-maps/proto/metadata'
 import type { Geospatial } from '@project-maps/proto/lib/geospatial'
-import { OverpassInterpreter } from '@project-maps/proto/overpass-interpreter'
+import { Overpass } from '@project-maps/proto/overpass'
 
 import { WikidataClient } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
-import { overpassClient } from 'src/clients/overpass-interpreter'
+import { overpassClient } from 'src/clients/overpass'
 import { ClaimId, getClaims } from 'src/lib/wikidata-claim'
 
 export class WikidataSource extends MetadataSource {
@@ -242,7 +242,7 @@ export class WikidataSource extends MetadataSource {
     events: Emittery<Events>
   ): Promise<void> {
     const ids = overpassClient.WikidataIdsInRange(
-      OverpassInterpreter.QueryParameters.fromObject({
+      Overpass.QueryParameters.fromObject({
         range: params.radiusMeters,
         coordinates: params.coordinates,
         tags: ['wikidata', 'brand:wikidata'],
@@ -251,7 +251,7 @@ export class WikidataSource extends MetadataSource {
 
     const requestedIds: EntityId[] = []
 
-    ids.on('data', async (data: OverpassInterpreter.WikidataId) => {
+    ids.on('data', async (data: Overpass.WikidataId) => {
       if (isEntityId(data.id)) {
         requestedIds.push(data.id)
       }
@@ -289,10 +289,10 @@ export class WikidataSource extends MetadataSource {
     events: Emittery<Events>
   ): Promise<void> {
     const wikidataIdStream = overpassClient.PoiWikidataId(
-      OverpassInterpreter.PoiMetadataParameters.fromObject({ id: request.id, tags: ['wikidata', 'brand:wikidata'] })
+      Overpass.PoiMetadataParameters.fromObject({ id: request.id, tags: ['wikidata', 'brand:wikidata'] })
     )
 
-    wikidataIdStream.on('data', async (data: OverpassInterpreter.WikidataId) => {
+    wikidataIdStream.on('data', async (data: Overpass.WikidataId) => {
       if (isEntityId(data.id)) {
         const entities = await this.client.getEntities({ ids: [data.id] })
 

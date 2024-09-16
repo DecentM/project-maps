@@ -3,9 +3,9 @@ syntax = "proto3";
 import "lib/openstreetmap.proto";
 import "lib/geospatial.proto";
 
-package OverpassInterpreter;
+package Overpass;
 
-service OverpassInterpreter {
+service Overpass {
   rpc ShortRangeNamed(QueryParameters) returns (stream OpenStreetMap.Element);
   rpc WikidataIdsInRange(QueryParameters) returns (stream WikidataId);
   rpc PoiMetadata(PoiMetadataParameters) returns (stream OpenStreetMap.Element);

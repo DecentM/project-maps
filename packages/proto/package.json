@@ -8,8 +8,8 @@
       "import": "./dist/metadata/index.js",
       "types": "./dist/metadata/index.d.ts"
     },
-    "./overpass-interpreter": {
-      "import": "./dist/overpass-interpreter/index.js",
+    "./overpass": {
+      "import": "./dist/overpass/index.js",
       "types": "./dist/overpass-interpreter/index.d.ts"
     },
     "./lib/geospatial": {
