@@ -10,6 +10,8 @@ import { GeographUKImageSource } from 'src/sources/geograph-uk'
 import { WikimapiaSource } from 'src/sources/wikimapia'
 import { MapillarySource } from './sources/mapillary'
 import { WikidataSource } from './sources/wikidata'
+import { log } from '@project-maps/logging'
+import VError from 'verror'
 
 export class MetadataService extends Metadata.UnimplementedMetadataService {
   private static sources: MetadataSource[] = [
@@ -47,7 +49,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
 
         if (promise instanceof Promise) {
           promise.catch((error) => {
-            console.error(error)
+            log.error(new VError(error, 'MetadataService.GetAreaMetadata'))
             emitter.emit('end')
           })
         }
@@ -81,7 +83,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
 
         if (promise instanceof Promise) {
           promise.catch((error) => {
-            console.error(error)
+            log.error(new VError(error, 'MetadataService.GetPoiMetadata'))
             emitter.emit('end')
           })
         }

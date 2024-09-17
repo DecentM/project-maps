@@ -1,5 +1,8 @@
+import VError from 'verror'
 import got, { type Method } from 'got'
+
 import type { StringArrayCombinations } from 'src/declarations/tuple-union'
+import { log } from '@project-maps/logging'
 
 type Pagination = {
   page: number
@@ -197,6 +200,8 @@ export class WikimapiaClient {
   ) { }
 
   private fetch (method: Method, path: string, query: Record<string, string | number | undefined>) {
+    log.trace({ method, path, query }, 'WikimapiaClient.fetch')
+
     return got(`${this.baseUrl}${path}`, {
       method,
       headers: {
@@ -224,10 +229,26 @@ export class WikimapiaClient {
   }
 
   public async Place_Getnearest (params: Place_GetnearestParams) {
-    return this.runFunction<Place_GetnearestResponse>('place.getnearest', params)
+    try {
+      return this.runFunction<Place_GetnearestResponse>('place.getnearest', params)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'WikimapiaClient.Place_Getnearest')
+      }
+
+      throw new Error('WikimapiaClient.Place_Getnearest')
+    }
   }
 
   public async Place_Getbyid (params: Place_GetbyidParams) {
-    return this.runFunction<Place_GetbyidResponse>('place.getbyid', params)
+    try {
+      return this.runFunction<Place_GetbyidResponse>('place.getbyid', params)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'WikimapiaClient.Place_Getbyid')
+      }
+
+      throw new Error('WikimapiaClient.Place_Getbyid')
+    }
   }
 }

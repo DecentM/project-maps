@@ -1,0 +1,13 @@
+project:
+  name: logging
+  description: 'Logging package'
+
+tasks:
+  build:
+    outputs:
+      - dist
+    command:
+      - tsc
+    options:
+      cache: true
+      persistent: false

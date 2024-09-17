@@ -1,4 +1,6 @@
+import { log } from '@project-maps/logging'
 import { got } from 'got'
+import VError from 'verror'
 import { WBK, type Entities, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
 
 type GetEntitiesParams = {
@@ -14,6 +16,8 @@ export class WikidataClient {
   })
 
   private fetch<T>(url: string) {
+    log.trace({ url }, 'WikidataClient.fetch')
+
     return got(url, {
       method: 'GET',
       headers: {
@@ -23,11 +27,28 @@ export class WikidataClient {
   }
 
   public async getEntities(params: GetEntitiesParams): Promise<GetEntitiesResponse> {
-    const entities = await this.fetch<Entities>(this.wbk.getEntities(params))
-    return this.wbk.simplify.entities(entities)
+    try {
+      const entities = await this.fetch<Entities>(this.wbk.getEntities(params))
+
+      return this.wbk.simplify.entities(entities)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'WikidataClient.getEntities')
+      }
+
+      throw new Error('WikidataClient.getEntities')
+    }
   }
 
   public getImageUrl(filename: string): string | undefined {
-    return this.wbk.getImageUrl(filename)
+    try {
+      return this.wbk.getImageUrl(filename)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'WikidataClient.getImageUrl')
+      }
+
+      throw new Error('WikidataClient.getImageUrl')
+    }
   }
 }

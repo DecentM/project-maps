@@ -1,5 +1,7 @@
 import got from 'got'
 import { XMLParser } from 'fast-xml-parser'
+import VError from 'verror'
+import { log } from '@project-maps/logging'
 
 /**
  * Geograph API client
@@ -139,6 +141,8 @@ export class GeographClient {
   ) { }
 
   private fetch = (path: string, query: Record<string, string | number>) => {
+    log.trace({ path, query }, 'GeographClient.fetch')
+
     return got.get(`${this.baseUrl}${path}`, {
       headers: {
         Accept: 'application/json',
@@ -152,30 +156,46 @@ export class GeographClient {
   }
 
   public syndicator = async (request: SyndicatorRequest): Promise<SyndicatorResponse> => {
-    const result = this.get('/syndicator.php', {
-      ...request,
-      key: this.apiKey,
-      format: 'JSON',
-    })
+    try {
+      const result = this.get('/syndicator.php', {
+        ...request,
+        key: this.apiKey,
+        format: 'JSON',
+      })
 
-    const json = await result.json()
+      const json = await result.json()
 
-    if (!isSyndicationResponse(json)) {
-      throw new Error('Invalid response from Geograph API: /syndicator.php')
+      if (!isSyndicationResponse(json)) {
+        throw new Error('Invalid response from Geograph API: /syndicator.php')
+      }
+
+      return json
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'GeographClient.syndicator')
+      }
+
+      throw new Error('GeographClient.syndicator')
     }
-
-    return json
   }
 
   public photo = async (guid: string): Promise<PhotoResponse> => {
-    const result = await this.get(`/api/photo/${guid}/${this.apiKey}`)
+    try {
+      const result = await this.get(`/api/photo/${guid}/${this.apiKey}`)
 
-    const json = this.xmlParser.parse(result.body)
+      const json = this.xmlParser.parse(result.body)
 
-    if (!isPhotoResponse(json)) {
-      throw new Error(`Invalid response from Geograph API: /api/photo/${guid}`)
+      if (!isPhotoResponse(json)) {
+        throw new Error(`Invalid response from Geograph API: /api/photo/${guid}`)
+      }
+
+      return json
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'GeographClient.photo')
+      }
+
+      throw new Error('GeographClient.photo')
     }
-
-    return json
   }
 }

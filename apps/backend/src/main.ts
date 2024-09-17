@@ -1,6 +1,10 @@
 import path from 'node:path'
 import AutoLoad from '@fastify/autoload'
 import Fastify from 'fastify'
+import VError from 'verror'
+
+import {log} from '@project-maps/logging'
+
 import { config } from './config'
 
 const fastify = Fastify()
@@ -14,13 +18,17 @@ fastify.register(AutoLoad, {
 })
 
 fastify.listen({ host: config.server.host, port: config.server.port })
-  .then(() => console.log(`Server listening on ${config.server.host}:${config.server.port}`))
-  .catch(console.error)
+  .then(() => log.info(config.server, 'Server listening'))
+  .catch((error) => log.error(new VError(error, 'Starting server')))
 
 process.on('unhandledRejection', (error) => {
-  console.error(error)
+  if (error instanceof Error) {
+    log.error(new VError(error, 'Unhandled rejection'))
+  }
 })
 
 process.on('uncaughtException', (error) => {
-  console.error(error)
+  if (error instanceof Error) {
+    log.error(new VError(error, 'Uncaught exception'))
+  }
 })

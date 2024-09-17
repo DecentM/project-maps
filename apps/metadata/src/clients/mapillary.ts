@@ -1,5 +1,8 @@
+import VError from 'verror'
 import got, { type Method } from 'got'
+
 import type { StringArrayCombinations } from 'src/declarations/tuple-union'
+import { log } from '@project-maps/logging'
 
 type ImagesFilter = {
   bbox?: string
@@ -83,6 +86,8 @@ export class MapillaryClient {
     path: string,
     query: Record<string, string | number | boolean | undefined>
   ) {
+    log.trace({ method, path, query }, 'MapillaryClient.fetch')
+
     return got(`${this.baseUrl}${path}`, {
       method,
       headers: {
@@ -96,10 +101,26 @@ export class MapillaryClient {
   }
 
   public async images(params: ImagesParams) {
-    return this.fetch<ImagesResponse>('GET', '/images', params)
+    try {
+      return await this.fetch<ImagesResponse>('GET', '/images', params)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'MapillaryClient.images')
+      }
+
+      throw new Error('MapillaryClient.images')
+    }
   }
 
   public async image({ id, ...params }: ImageParams) {
-    return this.fetch<ImageResponse>('GET', `/${id}`, params)
+    try {
+      return await this.fetch<ImageResponse>('GET', `/${id}`, params)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new VError(error, 'MapillaryClient.image')
+      }
+
+      throw new Error('MapillaryClient.image')
+    }
   }
 }

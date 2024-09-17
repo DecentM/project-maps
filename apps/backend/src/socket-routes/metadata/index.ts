@@ -1,34 +1,37 @@
+import VError from 'verror'
+import type { Socket } from 'socket.io'
+import type { ClientReadableStream } from '@grpc/grpc-js'
+import { log } from '@project-maps/logging'
 import { Metadata } from '@project-maps/proto/metadata'
 
-import type { Socket } from 'socket.io'
 import { metadataClient } from 'src/grpc-clients/metadata'
 
 export const handleMetadata =
   (socket: Socket) => async (method: string, data: object) => {
-    switch (method) {
-      case 'GetAreaMetadata': {
-        const result = metadataClient.GetAreaMetadata(
-          Metadata.GetAreaMetadataInput.fromObject(data)
-        )
+    try {
+      let result: ClientReadableStream<unknown>
 
-        result.on('data', (metadata) => {
-          socket.emit('Metadata', 'GetAreaMetadata', metadata.toObject())
-        })
-
-        break
+      switch (method) {
+        case 'GetAreaMetadata':
+          result = metadataClient.GetAreaMetadata(
+            Metadata.GetAreaMetadataInput.fromObject(data)
+          )
+          break
+        case 'GetPoiMetadata':
+          result = metadataClient.GetPoiMetadata(
+            Metadata.GetPoiMetadataInput.fromObject(data)
+          )
+          break
+        default:
+          throw new Error(`Method ${method} not implemented`)
       }
-      case 'GetPoiMetadata': {
-        const result = metadataClient.GetPoiMetadata(
-          Metadata.GetPoiMetadataInput.fromObject(data)
-        )
 
-        result.on('data', (metadata) => {
-          socket.emit('Metadata', 'GetPoiMetadata', metadata.toObject())
-        })
-
-        break
+      result.on('data', (metadata) => {
+        socket.emit('Metadata', method, metadata.toObject())
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        log.error(new VError(error, 'Handling metadata'))
       }
-      default:
-        throw new Error(`Method ${method} not implemented`)
     }
   }
