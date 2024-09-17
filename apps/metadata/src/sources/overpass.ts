@@ -103,7 +103,9 @@ export class OverpassSource extends MetadataSource {
       })
     })
 
-    events.emit('end')
+    overpassResponse.on('end', () => {
+      events.emit('end')
+    })
   }
 
   public async getPoiMetadata(
@@ -123,6 +125,8 @@ export class OverpassSource extends MetadataSource {
       })
     })
 
-    events.emit('end')
+    overpassResponse.on('end', () => {
+      events.emit('end')
+    })
   }
 }

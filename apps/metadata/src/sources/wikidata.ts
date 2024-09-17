@@ -300,7 +300,6 @@ export class WikidataSource extends MetadataSource {
 
     ids.on('error', (error: Error) => {
       log.error(new VError(error, 'WikidataSource.getAreaMetadata'))
-      events.emit('end')
     })
   }
 
@@ -312,11 +311,30 @@ export class WikidataSource extends MetadataSource {
       Overpass.PoiMetadataParameters.fromObject({ id: request.id, tags: ['wikidata', 'brand:wikidata'] })
     )
 
+    const requestedIds: EntityId[] = []
+
     wikidataIdStream.on('data', async (data: Overpass.WikidataId) => {
       try {
         if (!isEntityId(data.id)) return
 
-        const entities = await this.client.getEntities({ ids: [data.id] })
+        requestedIds.push(data.id)
+      } catch (error) {
+        if (error instanceof Error) {
+          log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
+        }
+
+        log.error(error, 'WikidataSource.getPoiMetadata')
+      }
+    })
+
+    wikidataIdStream.on('end', async () => {
+      if (requestedIds.length === 0) {
+        events.emit('end')
+        return
+      }
+
+      try {
+        const entities = await this.client.getEntities({ ids: requestedIds })
 
         if (!entities || Object.keys(entities).length === 0) return
 
@@ -332,9 +350,7 @@ export class WikidataSource extends MetadataSource {
 
         log.error(error, 'WikidataSource.getPoiMetadata')
       }
-    })
 
-    wikidataIdStream.on('end', () => {
       events.emit('end')
     })
 

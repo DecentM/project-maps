@@ -28,9 +28,16 @@ const { socket } = useSocket()
 
 const metadata = ref<Metadata.MetadataItem[]>([])
 
+const loading = ref(false)
+
 onMounted(() => {
-  socket.on('Metadata', (method, response) => {
+  socket.on('Metadata', (method, response, end: boolean) => {
     if (method !== 'GetPoiMetadata') return
+
+    if (end) {
+      loading.value = false
+      return
+    }
 
     metadata.value = [...metadata.value, response]
   })
@@ -43,6 +50,7 @@ watch(
 
     if (!newPoi) return
 
+    loading.value = true
     socket.emit('Metadata', 'GetPoiMetadata', newPoi)
   }
 )
@@ -119,5 +127,7 @@ const sortedMetadata = computed(() => {
     <q-separator v-if="hasComments" />
 
     <location-attributions :metadata="sortedMetadata" />
+
+    <q-linear-progress v-if="loading" indeterminate />
   </q-card>
 </template>

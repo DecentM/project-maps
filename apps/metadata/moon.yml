@@ -13,3 +13,4 @@ tasks:
       cache: false
       envFile: .env
       persistent: true
+      outputStyle: stream

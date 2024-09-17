@@ -27,11 +27,17 @@ export const handleMetadata =
       }
 
       result.on('data', (metadata) => {
-        socket.emit('Metadata', method, metadata.toObject())
+        socket.emit('Metadata', method, metadata.toObject(), false)
+      })
+
+      result.on('end', () => {
+        socket.emit('Metadata', method, null, true)
       })
     } catch (error) {
       if (error instanceof Error) {
         log.error(new VError(error, 'Handling metadata'))
       }
+
+      log.error(error, 'Handling metadata')
     }
   }

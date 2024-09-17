@@ -28,7 +28,11 @@ export class WikidataClient {
 
   public async getEntities(params: GetEntitiesParams): Promise<GetEntitiesResponse> {
     try {
-      const entities = await this.fetch<Entities>(this.wbk.getEntities(params))
+      const { entities, success } = await this.fetch<{entities: Entities, success: number}>(this.wbk.getEntities(params))
+
+      if (success !== 1) {
+        throw new Error(`success: ${success}`)
+      }
 
       return this.wbk.simplify.entities(entities)
     } catch (error) {
