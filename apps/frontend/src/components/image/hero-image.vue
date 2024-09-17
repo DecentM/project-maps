@@ -43,7 +43,6 @@ const height = computed(() => {
 <template>
   <div class="hero-image">
     <q-img
-      no-spinner
       class="content"
       :src="props.src"
       :alt="props.alt" />

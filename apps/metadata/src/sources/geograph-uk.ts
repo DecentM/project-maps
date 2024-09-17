@@ -87,7 +87,7 @@ export class GeographUKImageSource extends MetadataSource {
     try {
       await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
         coordinates: request.coordinates,
-        radiusMeters: 6,
+        radiusMeters: 8,
       }), events)
     } catch (error) {
       if (error instanceof Error) {
