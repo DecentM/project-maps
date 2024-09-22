@@ -16,5 +16,7 @@ export const state: LayerSpecification = {
         [6, 15],
       ],
     },
+    'text-transform': 'uppercase',
   },
+  paint: { 'text-color': '#633', 'text-halo-color': 'rgba(255,255,255,0.7)', 'text-halo-width': 1 },
 } as unknown as LayerSpecification

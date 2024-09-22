@@ -1,5 +1,7 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
+import * as Consts from '../consts'
+
 export const boundary_3: LayerSpecification = {
   id: 'boundary_3',
   type: 'line',
@@ -7,7 +9,17 @@ export const boundary_3: LayerSpecification = {
   'source-layer': 'boundary',
   minzoom: 8,
   filter: ['all', ['in', 'admin_level', 3, 4]],
-  layout: {
-    'line-join': 'round',
+  layout: { 'line-join': 'round' },
+  paint: {
+    'line-color': Consts.Colours.boundary3Outline,
+    'line-dasharray': [5, 1],
+    'line-width': {
+      base: 1,
+      stops: [
+        [4, 0.4],
+        [5, 1],
+        [12, 1.8],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

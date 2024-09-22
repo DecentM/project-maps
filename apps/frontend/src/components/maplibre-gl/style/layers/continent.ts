@@ -14,4 +14,5 @@ export const continent: LayerSpecification = {
     'text-transform': 'uppercase',
     'text-justify': 'center',
   },
-} as LayerSpecification
+  paint: { 'text-color': '#633', 'text-halo-color': 'rgba(255,255,255,0.7)', 'text-halo-width': 1 },
+} as unknown as LayerSpecification

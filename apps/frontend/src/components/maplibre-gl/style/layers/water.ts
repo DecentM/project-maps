@@ -6,7 +6,5 @@ export const water: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'water',
   filter: ['all', ['!=', 'brunnel', 'tunnel']],
-  paint: {
-    'fill-color': 'rgb(158,189,255)',
-  },
-} as LayerSpecification
+  paint: { 'fill-color': 'rgb(158,189,255)' },
+} as unknown as LayerSpecification

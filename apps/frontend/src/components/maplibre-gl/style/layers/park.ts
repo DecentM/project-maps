@@ -10,4 +10,4 @@ export const park: LayerSpecification = {
     'fill-opacity': 0.7,
     'fill-outline-color': 'rgba(95, 208, 100, 1)',
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

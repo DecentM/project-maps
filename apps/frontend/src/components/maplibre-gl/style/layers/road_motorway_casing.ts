@@ -12,8 +12,17 @@ export const road_motorway_casing: LayerSpecification = {
     ['==', 'class', 'motorway'],
     ['!=', 'ramp', 1],
   ],
-  layout: {
-    'line-cap': 'round',
-    'line-join': 'round',
+  layout: { 'line-cap': 'round', 'line-join': 'round' },
+  paint: {
+    'line-color': '#e9ac77',
+    'line-width': {
+      base: 1.2,
+      stops: [
+        [5, 0.4],
+        [6, 0.7],
+        [7, 1.75],
+        [20, 22],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

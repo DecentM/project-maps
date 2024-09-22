@@ -8,9 +8,8 @@ export const building_3d: LayerSpecification = {
   minzoom: 14,
   paint: {
     'fill-extrusion-color': 'hsl(35, 8%, 85%)',
-    'fill-extrusion-height': {
-      property: 'render_height',
-      type: 'identity',
-    },
+    'fill-extrusion-height': { property: 'render_height', type: 'identity' },
+    'fill-extrusion-base': { property: 'render_min_height', type: 'identity' },
+    'fill-extrusion-opacity': 0.8,
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

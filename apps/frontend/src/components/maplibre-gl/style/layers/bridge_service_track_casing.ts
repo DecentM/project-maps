@@ -6,7 +6,16 @@ export const bridge_service_track_casing: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'transportation',
   filter: ['all', ['==', 'brunnel', 'bridge'], ['in', 'class', 'service', 'track']],
-  layout: {
-    'line-join': 'round',
+  layout: { 'line-join': 'round' },
+  paint: {
+    'line-color': '#cfcdca',
+    'line-width': {
+      base: 1.2,
+      stops: [
+        [15, 1],
+        [16, 4],
+        [20, 11],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

@@ -12,7 +12,16 @@ export const road_path_pedestrian: LayerSpecification = {
     ['!in', 'brunnel', 'bridge', 'tunnel'],
     ['in', 'class', 'path', 'pedestrian'],
   ],
-  layout: {
-    'line-join': 'round',
+  layout: { 'line-join': 'round' },
+  paint: {
+    'line-color': 'hsl(0, 0%, 100%)',
+    'line-dasharray': [1, 0.7],
+    'line-width': {
+      base: 1.2,
+      stops: [
+        [14, 1],
+        [20, 10],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

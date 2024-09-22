@@ -21,4 +21,4 @@ export const poi_transit: LayerSpecification = {
     'text-halo-color': '#ffffff',
     'text-halo-width': 1,
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

@@ -42,14 +42,14 @@ const handleZoom = () => emit('zoom')
 
 onMounted(() => {
   map.value?.on('load', handleLoad)
-  map.value?.on('move', handleMove)
-  map.value?.on('zoom', handleZoom)
+  map.value?.on('moveend', handleMove)
+  map.value?.on('zoomend', handleZoom)
 })
 
 onBeforeUnmount(() => {
   map.value?.off('load', handleLoad)
-  map.value?.off('move', handleMove)
-  map.value?.off('zoom', handleZoom)
+  map.value?.off('moveend', handleMove)
+  map.value?.off('zoomend', handleZoom)
 })
 
 watch(

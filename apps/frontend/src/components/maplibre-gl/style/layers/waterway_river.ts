@@ -6,7 +6,15 @@ export const waterway_river: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'waterway',
   filter: ['all', ['==', 'class', 'river'], ['!=', 'brunnel', 'tunnel']],
-  layout: {
-    'line-cap': 'round',
+  layout: { 'line-cap': 'round' },
+  paint: {
+    'line-color': '#a0c8f0',
+    'line-width': {
+      base: 1.2,
+      stops: [
+        [11, 0.5],
+        [20, 6],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

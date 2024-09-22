@@ -6,7 +6,5 @@ export const road_area_pattern: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'transportation',
   filter: ['all', ['==', '$type', 'Polygon']],
-  paint: {
-    'fill-pattern': 'pedestrian_polygon',
-  },
-} as LayerSpecification
+  paint: { 'fill-pattern': 'pedestrian_polygon' },
+} as unknown as LayerSpecification

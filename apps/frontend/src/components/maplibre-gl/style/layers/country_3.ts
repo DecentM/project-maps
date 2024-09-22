@@ -16,5 +16,12 @@ export const country_3: LayerSpecification = {
         [7, 17],
       ],
     },
+    'text-transform': 'none',
+  },
+  paint: {
+    'text-color': '#334',
+    'text-halo-blur': 1,
+    'text-halo-color': 'rgba(255,255,255,0.8)',
+    'text-halo-width': 1,
   },
 } as unknown as LayerSpecification

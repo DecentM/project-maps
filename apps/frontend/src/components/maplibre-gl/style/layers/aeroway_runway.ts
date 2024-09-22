@@ -1,5 +1,7 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
+import * as Consts from '../consts'
+
 export const aeroway_runway: LayerSpecification = {
   id: 'aeroway_runway',
   type: 'line',
@@ -8,7 +10,7 @@ export const aeroway_runway: LayerSpecification = {
   minzoom: 11,
   filter: ['all', ['==', '$type', 'LineString'], ['==', 'class', 'runway']],
   paint: {
-    'line-color': '#f0ede9',
+    'line-color': Consts.Colours.aerowayRunway,
     'line-width': {
       base: 1.2,
       stops: [

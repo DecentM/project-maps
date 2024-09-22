@@ -22,4 +22,10 @@ export const poi_z15: LayerSpecification = {
     'text-offset': [0, 0.6],
     'text-size': 12,
   },
-} as LayerSpecification
+  paint: {
+    'text-color': '#666',
+    'text-halo-blur': 0.5,
+    'text-halo-color': '#ffffff',
+    'text-halo-width': 1,
+  },
+} as unknown as LayerSpecification

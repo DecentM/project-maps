@@ -7,9 +7,5 @@ export const road_one_way_arrow_opposite: LayerSpecification = {
   'source-layer': 'transportation',
   minzoom: 16,
   filter: ['==', 'oneway', -1],
-  layout: {
-    'icon-image': 'arrow',
-    'symbol-placement': 'line',
-    'icon-rotate': 180,
-  },
-} as LayerSpecification
+  layout: { 'icon-image': 'arrow', 'symbol-placement': 'line', 'icon-rotate': 180 },
+} as unknown as LayerSpecification

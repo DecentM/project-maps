@@ -18,4 +18,9 @@ export const place_village: LayerSpecification = {
       ],
     },
   },
+  paint: {
+    'text-color': '#333',
+    'text-halo-color': 'rgba(255,255,255,0.8)',
+    'text-halo-width': 1.2,
+  },
 } as unknown as LayerSpecification

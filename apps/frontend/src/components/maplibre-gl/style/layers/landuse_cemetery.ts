@@ -6,7 +6,5 @@ export const landuse_cemetery: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'landuse',
   filter: ['==', 'class', 'cemetery'],
-  paint: {
-    'fill-color': 'hsl(75, 37%, 81%)',
-  },
-} as LayerSpecification
+  paint: { 'fill-color': 'hsl(75, 37%, 81%)' },
+} as unknown as LayerSpecification

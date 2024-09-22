@@ -15,5 +15,13 @@ export const waterway_tunnel: LayerSpecification = {
         [20, 6],
       ],
     },
+    'line-opacity': 1,
+    'line-width': {
+      base: 1.4,
+      stops: [
+        [8, 1],
+        [20, 2],
+      ],
+    },
   },
 } as unknown as LayerSpecification

@@ -12,4 +12,9 @@ export const water_name_point: LayerSpecification = {
     'text-max-width': 5,
     'text-size': 12,
   },
-} as LayerSpecification
+  paint: {
+    'text-color': '#5d60be',
+    'text-halo-color': 'rgba(255,255,255,0.7)',
+    'text-halo-width': 1,
+  },
+} as unknown as LayerSpecification

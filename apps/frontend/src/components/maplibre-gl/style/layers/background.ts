@@ -1,9 +1,9 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
+import * as Consts from '../consts'
+
 export const background: LayerSpecification = {
   id: 'background',
   type: 'background',
-  paint: {
-    'background-color': 'rgb(239,239,239)',
-  },
-} as LayerSpecification
+  paint: { 'background-color': Consts.Colours.background },
+} as unknown as LayerSpecification

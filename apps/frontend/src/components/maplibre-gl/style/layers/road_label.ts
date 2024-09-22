@@ -20,4 +20,5 @@ export const road_label: LayerSpecification = {
       ],
     },
   },
+  paint: { 'text-color': '#765', 'text-halo-blur': 0.5, 'text-halo-width': 1 },
 } as unknown as LayerSpecification

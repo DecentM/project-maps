@@ -4,7 +4,7 @@ import type { StyleSpecification } from 'maplibre-gl'
 import { config } from './config'
 import { sources } from './sources'
 
-import * as layers from './layers'
+import { layers } from './layers'
 
 export type StyleDefaults = {
   center: [number, number]
@@ -17,7 +17,7 @@ export const useStyle = (defaults: StyleDefaults) => {
       ...config,
       ...defaults,
       sources,
-      layers: Object.values(layers),
+      layers,
     } as const
   })
 

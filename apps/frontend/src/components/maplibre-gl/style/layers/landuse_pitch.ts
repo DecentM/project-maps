@@ -6,7 +6,5 @@ export const landuse_pitch: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'landuse',
   filter: ['==', 'class', 'pitch'],
-  paint: {
-    'fill-color': '#DEE3CD',
-  },
-} as LayerSpecification
+  paint: { 'fill-color': '#DEE3CD' },
+} as unknown as LayerSpecification

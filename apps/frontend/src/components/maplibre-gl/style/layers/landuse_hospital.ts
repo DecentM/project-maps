@@ -6,7 +6,5 @@ export const landuse_hospital: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'landuse',
   filter: ['==', 'class', 'hospital'],
-  paint: {
-    'fill-color': '#fde',
-  },
-} as LayerSpecification
+  paint: { 'fill-color': '#fde' },
+} as unknown as LayerSpecification

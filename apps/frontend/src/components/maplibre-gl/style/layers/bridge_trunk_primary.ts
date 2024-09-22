@@ -6,7 +6,16 @@ export const bridge_trunk_primary: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'transportation',
   filter: ['all', ['==', 'brunnel', 'bridge'], ['in', 'class', 'primary', 'trunk']],
-  layout: {
-    'line-join': 'round',
+  layout: { 'line-join': 'round' },
+  paint: {
+    'line-color': '#fea',
+    'line-width': {
+      base: 1.2,
+      stops: [
+        [5, 0],
+        [7, 1],
+        [20, 18],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

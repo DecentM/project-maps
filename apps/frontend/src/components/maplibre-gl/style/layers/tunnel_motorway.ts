@@ -6,7 +6,16 @@ export const tunnel_motorway: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'transportation',
   filter: ['all', ['==', 'class', 'motorway'], ['!=', 'ramp', 1], ['==', 'brunnel', 'tunnel']],
-  layout: {
-    'line-join': 'round',
+  layout: { 'line-join': 'round' },
+  paint: {
+    'line-color': '#ffdaa6',
+    'line-width': {
+      base: 1.2,
+      stops: [
+        [5, 0],
+        [7, 1],
+        [20, 18],
+      ],
+    },
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

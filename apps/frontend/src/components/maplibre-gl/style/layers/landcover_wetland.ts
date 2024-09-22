@@ -13,4 +13,4 @@ export const landcover_wetland: LayerSpecification = {
     'fill-pattern': 'wetland_bg_11',
     'fill-translate-anchor': 'map',
   },
-} as LayerSpecification
+} as unknown as LayerSpecification

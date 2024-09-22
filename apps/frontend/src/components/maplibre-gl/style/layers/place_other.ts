@@ -21,5 +21,11 @@ export const place_other: LayerSpecification = {
         [15, 14],
       ],
     },
+    'text-transform': 'uppercase',
+  },
+  paint: {
+    'text-color': '#633',
+    'text-halo-color': 'rgba(255,255,255,0.8)',
+    'text-halo-width': 1.2,
   },
 } as unknown as LayerSpecification

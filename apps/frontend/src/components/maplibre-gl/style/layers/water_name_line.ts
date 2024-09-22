@@ -13,4 +13,9 @@ export const water_name_line: LayerSpecification = {
     'text-size': 12,
     'symbol-placement': 'line',
   },
-} as LayerSpecification
+  paint: {
+    'text-color': '#5d60be',
+    'text-halo-color': 'rgba(255,255,255,0.7)',
+    'text-halo-width': 1,
+  },
+} as unknown as LayerSpecification

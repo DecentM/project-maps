@@ -6,7 +6,5 @@ export const landcover_sand: LayerSpecification = {
   source: 'openmaptiles',
   'source-layer': 'landcover',
   filter: ['all', ['==', 'class', 'sand']],
-  paint: {
-    'fill-color': 'rgba(247, 239, 195, 1)',
-  },
-} as LayerSpecification
+  paint: { 'fill-color': 'rgba(247, 239, 195, 1)' },
+} as unknown as LayerSpecification
