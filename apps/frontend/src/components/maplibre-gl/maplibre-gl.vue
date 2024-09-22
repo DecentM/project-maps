@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, shallowRef, watch } from 'vue'
+import type { LngLat, MapLibreEvent } from 'maplibre-gl'
 
 import { useMap } from './use-map'
 
@@ -16,8 +17,8 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (event: 'load'): void
-  (event: 'move'): void
-  (event: 'zoom'): void
+  (event: 'move', lngLat: LngLat): void
+  (event: 'zoom', zoomLevel: number): void
 }>()
 
 const container = shallowRef<HTMLDivElement>()
@@ -28,6 +29,7 @@ const { map } = useMap(container, {
 })
 
 watch(map, (newMap, oldMap) => {
+  // Runs if the map is created for the first time
   if (!newMap || oldMap) return
 
   newMap.once('load', (event) => {
@@ -37,8 +39,8 @@ watch(map, (newMap, oldMap) => {
 })
 
 const handleLoad = () => emit('load')
-const handleMove = () => emit('move')
-const handleZoom = () => emit('zoom')
+const handleMove = (event: MapLibreEvent) => emit('move', event.target.getCenter())
+const handleZoom = (event: MapLibreEvent) => emit('zoom', event.target.getZoom())
 
 onMounted(() => {
   map.value?.on('load', handleLoad)
@@ -64,8 +66,10 @@ watch(
 </script>
 
 <template>
-  <div>
-    <div ref="container" class="fit"></div>
-    <slot></slot>
+  <div class="position-relative">
+    <div ref="container" class="fit absolute-top-left"></div>
+    <div v-if="$slots.default" class="fit absolute-top-left">
+      <slot></slot>
+    </div>
   </div>
 </template>

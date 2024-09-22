@@ -4,7 +4,7 @@ services:
     environment:
       - OVERPASS_MODE=init
       - OVERPASS_META=yes
-      - OVERPASS_PLANET_URL=http://download.geofabrik.de/europe/united-kingdom-latest.osm.bz2
+      - OVERPASS_PLANET_URL=http://download.geofabrik.de/europe/united-kingdom/england/derbyshire-latest.osm.pbf
       - OVERPASS_RULES_LOAD=10
       - OVERPASS_COMPRESSION=gz
       - OVERPASS_STOP_AFTER_INIT=false
