@@ -14,9 +14,7 @@ export default configure((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: [
-      'maplibre-gl'
-    ],
+    boot: [],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -94,8 +92,8 @@ export default configure((ctx) => {
             files: './src/',
             applyFixes: true,
             failOnError: false,
-          }
-        ]
+          },
+        ],
       ],
     },
 

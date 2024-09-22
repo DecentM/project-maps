@@ -15,4 +15,11 @@ const routes: RouteRecordRaw[] = [
   },
 ]
 
+if (process.env.NODE_ENV === 'development') {
+  routes.push({
+    path: '/dev',
+    component: () => import('pages/dev.vue'),
+  })
+}
+
 export default routes

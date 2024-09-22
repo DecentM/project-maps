@@ -8,11 +8,9 @@ import {
   type MapMouseEvent,
 } from 'maplibre-gl'
 import type { Poi } from 'src/lib/poi'
-import { computed, onBeforeMount, onMounted, ref, watch } from 'vue'
-import { type MglEvent, MglDefaults } from 'vue-maplibre-gl'
+import { computed, onMounted, ref, watch } from 'vue'
 
 const map = ref<{ map: MglMap }>()
-const loaded = ref(0)
 
 watch(map, (newMap) => {
   if (!newMap || !newMap.map) return
@@ -121,32 +119,36 @@ const handlePoiClick = (
   })
 }
 
-const handleLoad = (event: MglEvent) => {
-  loaded.value++
-}
+// const handleLoad = (event: MglEvent) => {
+//   loaded.value++
+// }
 
 const mapCenter = ref<LngLat>(new LngLat(-1.422504, 53.235409))
 
-const handleMove = (event: MglEvent) => {
-  const newCenter = event.map.getCenter()
-  mapCenter.value = newCenter
+// const handleMove = (event: MglEvent) => {
+//   const newCenter = event.map.getCenter()
+//   mapCenter.value = newCenter
+// }
+
+const handleMoveEnd = () => {
+  emit('move:end', zoom.value, mapCenter.value)
 }
 
 const zoom = ref(16.25)
 
-const handleZoom = (event: MglEvent) => {
-  if (zoom.value === event.map.getZoom()) {
-    return
-  }
+// const handleZoom = (event: MglEvent) => {
+//   if (zoom.value === event.map.getZoom()) {
+//     return
+//   }
 
-  zoom.value = event.map.getZoom()
-}
+//   zoom.value = event.map.getZoom()
+// }
 
-onBeforeMount(() => {
-  MglDefaults.style = `http://${window.location.hostname}:3000/styles/style/light.json`
-  MglDefaults.center = [mapCenter.value.lng, mapCenter.value.lat]
-  MglDefaults.zoom = zoom.value
-})
+// onBeforeMount(() => {
+//   MglDefaults.style = `http://${window.location.hostname}:3000/styles/style/light.json`
+//   MglDefaults.center = [mapCenter.value.lng, mapCenter.value.lat]
+//   MglDefaults.zoom = zoom.value
+// })
 
 onMounted(() => {
   emit('move:end', zoom.value, mapCenter.value)
@@ -184,10 +186,7 @@ const mapStyle = computed(() => {
     :transform-request="transformRequest"
     :style="mapStyle"
     :fade-duration="300"
-    @map:load="handleLoad"
-    @map:move="handleMove"
-    @map:zoom="handleZoom"
-    @map:moveend="() => emit('move:end', zoom, mapCenter)"
+    @map:moveend="handleMoveEnd"
   >
     <mgl-frame-rate-control v-if="isDev" />
     <mgl-fullscreen-control />
