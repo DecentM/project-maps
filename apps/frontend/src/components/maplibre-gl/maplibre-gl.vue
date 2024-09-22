@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, shallowRef, watch } from 'vue'
+import { onBeforeUnmount, onMounted, provide, shallowRef, watch } from 'vue'
 import type { LngLat, MapLibreEvent } from 'maplibre-gl'
 
 import { useMap } from './use-map'
+import { MapSymbol } from './map-symbol'
 
 const props = withDefaults(
   defineProps<{
@@ -28,9 +29,8 @@ const { map } = useMap(container, {
   zoom: props.zoom,
 })
 
-watch(map, (newMap, oldMap) => {
-  // Runs if the map is created for the first time
-  if (!newMap || oldMap) return
+watch(map, (newMap) => {
+  if (!newMap) return
 
   newMap.once('load', (event) => {
     event.target.setCenter(props.center)
@@ -63,13 +63,15 @@ watch(
   () => props.zoom,
   (zoom) => map.value?.setZoom(zoom)
 )
+
+provide(MapSymbol, map)
 </script>
 
 <template>
   <div class="position-relative">
     <div ref="container" class="fit absolute-top-left"></div>
-    <div v-if="$slots.default" class="fit absolute-top-left">
-      <slot></slot>
+    <div v-if="$slots.default" class="fit absolute-top-left no-pointer-events">
+      <slot :map="map"></slot>
     </div>
   </div>
 </template>

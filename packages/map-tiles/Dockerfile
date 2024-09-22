@@ -15,5 +15,5 @@ RUN mkdir -p dist && mkdir -p store && /usr/src/app/tilemaker ./planet.pbf \
   --output ./dist/ \
   --config ./config.json \
   --store ./store \
-  --process process-debug.lua \
+  --process process-openmaptiles.lua \
   --materialize-geometries

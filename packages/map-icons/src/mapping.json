@@ -134,5 +134,13 @@
   "harbor": "mdi-anchor",
   "second_hand": "mdi-hand-heart",
   "castle": "mdi-castle",
-  "hackerspace": "mdi-code-array"
+  "hackerspace": "mdi-code-array",
+  "tennis": "mdi-tennis",
+  "railway": "mdi-train",
+  "sport": "mdi-soccer",
+  "leisure": "mdi-walk",
+  "barrier": "mdi-gate",
+  "amenity": "mdi-circle-medium",
+  "tourism": "mdi-circle-medium",
+  "landuse": "mdi-circle-medium"
 }

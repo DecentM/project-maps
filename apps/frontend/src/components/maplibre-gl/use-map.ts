@@ -43,6 +43,7 @@ export const useMap = (
     map.value = markRaw(
       new MaplibreMap({
         container: container.value,
+        antialias: true,
       })
     )
 
