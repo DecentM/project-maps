@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 import MapMarker from 'src/components/maplibre-gl/map-marker.vue'
+import MapPoiLayer from 'src/components/maplibre-gl/map-poi-layer.vue'
 </script>
 
 <template>
@@ -27,5 +28,7 @@ import MapMarker from 'src/components/maplibre-gl/map-marker.vue'
         </q-btn>
       </template>
     </map-marker>
+
+    <map-poi-layer />
   </maplibre-gl>
 </template>

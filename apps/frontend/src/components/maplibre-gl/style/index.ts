@@ -6,6 +6,8 @@ import { sources } from './sources'
 
 import { layers } from './layers'
 
+export * as Consts from './consts'
+
 export type StyleDefaults = {
   center: [number, number]
   zoom: number
