@@ -3,7 +3,6 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import type { Metadata } from '@project-maps/proto/metadata'
 import { useSocket } from 'src/lib/socketio'
-import type { Poi } from 'src/lib/poi'
 
 import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
@@ -19,7 +18,7 @@ import LogoRenderer from './metadata-renderers/logo-renderer.vue'
 import { sortMetadataItems } from 'src/lib/score-metadata-item'
 
 const props = defineProps<{
-  poi: Poi | null
+  poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
   zoomLevel: number
   maxZoomLevel: number
 }>()

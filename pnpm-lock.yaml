@@ -95,6 +95,33 @@ importers:
 
   apps/frontend:
     dependencies:
+      '@fontsource-variable/noto-sans-arabic':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-bengali':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-display':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-hk':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-jp':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-kr':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-sc':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-tc':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource-variable/noto-sans-thai':
+        specifier: ^5.1.0
+        version: 5.1.0
       '@project-maps/map-fonts':
         specifier: workspace:*
         version: link:../../packages/map-fonts
@@ -744,6 +771,33 @@ packages:
 
   '@fastify/static@7.0.4':
     resolution: {integrity: sha512-p2uKtaf8BMOZWLs6wu+Ihg7bWNBdjNgCwDza4MJtTqg+5ovKmcbgbR9Xs5/smZ1YISfzKOCNYmZV8LaCj+eJ1Q==}
+
+  '@fontsource-variable/noto-sans-arabic@5.1.0':
+    resolution: {integrity: sha512-642dtzRgkf0G6r0G96/jsbIkoF6t//MPU0gL7m4wChQ06DrQomuTMkIftr3S3m1J7ZvFRCBImJMb06gjIaPPDQ==}
+
+  '@fontsource-variable/noto-sans-bengali@5.1.0':
+    resolution: {integrity: sha512-GpanMNDGiRTHIoYrM5SRGfaimX+j9qJB04AIgd3/OEUjFBav2h5HYvbq3zO8QXfUzE1SB/fIZuXioTMBvVpX7Q==}
+
+  '@fontsource-variable/noto-sans-display@5.1.0':
+    resolution: {integrity: sha512-YM0t8bNS7TN+LfU+q9WWBsi4mzT0BnSVrwXgNmJLmeTqTWhl8+nFq6VnIb6YV+39son0nTzLumw30jiO1sGb1A==}
+
+  '@fontsource-variable/noto-sans-hk@5.1.0':
+    resolution: {integrity: sha512-reW/cQ6NumiGx3psv12GpPHPYlDCjB0VWEvXgr/oyT7h8C1Q7+vxIayBd3DdxFY9oh9kYe5GleqBLAY+yY+Wwg==}
+
+  '@fontsource-variable/noto-sans-jp@5.1.0':
+    resolution: {integrity: sha512-VmEW0dlHsC0tQOlZlzcrUj+9HL73pANKneMrsZD8X6Jg3XhysOYY6R2VRGO4cTYwp5iVznt1crzGUEWM+/xQuA==}
+
+  '@fontsource-variable/noto-sans-kr@5.1.0':
+    resolution: {integrity: sha512-rnvGJ2d/0Z+G9SbxVWvt2IMW1dEW+iyqg9seJ+DueAmh3u5AjFbLQVzC1al/KOE684NKqFkSMEc9T9Vo/vjwmQ==}
+
+  '@fontsource-variable/noto-sans-sc@5.1.0':
+    resolution: {integrity: sha512-PnnGFWTVyoSdiZU/QvH3w8NroJkBazLWEzrrfqdGX/S6txq6iDoNMG+bolTsAQ4dXbdvfKBTyX6kw/xg5bmdcg==}
+
+  '@fontsource-variable/noto-sans-tc@5.1.0':
+    resolution: {integrity: sha512-V401yVdXAQkZeo2lPYtzdV+u+DBtUk7xPgsORxFinzpm3h7+Wg/PcMeMjrIIK6dKsOc54SdZhKYceXHXcjnfPA==}
+
+  '@fontsource-variable/noto-sans-thai@5.1.0':
+    resolution: {integrity: sha512-96Q8rYdzCoLacUgsCc5sw+eHVqBatL8nLMrth4+fTnXU7kIsBX0ETseLxwR5P35YFOVx/k2UZpMyibgr4E5amA==}
 
   '@grpc/grpc-js@1.11.2':
     resolution: {integrity: sha512-DWp92gDD7/Qkj7r8kus6/HCINeo3yPZWZ3paKgDgsbKbSpoxKg1yvN8xe2Q8uE3zOsPe3bX8FQX2+XValq2yTw==}
@@ -4709,6 +4763,24 @@ snapshots:
       fastify-plugin: 4.5.1
       fastq: 1.17.1
       glob: 10.4.5
+
+  '@fontsource-variable/noto-sans-arabic@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-bengali@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-display@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-hk@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-jp@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-kr@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-sc@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-tc@5.1.0': {}
+
+  '@fontsource-variable/noto-sans-thai@5.1.0': {}
 
   '@grpc/grpc-js@1.11.2':
     dependencies:

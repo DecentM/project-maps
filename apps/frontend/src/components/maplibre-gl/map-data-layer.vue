@@ -5,6 +5,16 @@ import { inject, ref, shallowRef, watch, type ShallowRef, computed, nextTick } f
 import { MapSymbol } from './map-symbol'
 import MapMarker from './map-marker.vue'
 
+const props = withDefaults(
+  defineProps<{
+    layers: string[]
+    limit?: number
+  }>(),
+  {
+    limit: Number.MAX_SAFE_INTEGER,
+  }
+)
+
 const map = inject<ShallowRef<MaplibreMap>>(MapSymbol)
 const pois: ShallowRef<GeoJSON.Feature[]> = shallowRef([])
 
@@ -38,7 +48,7 @@ const recalculatePoisImmediate = () => {
   if (!map?.value) return
 
   pois.value = map.value.queryRenderedFeatures(undefined, {
-    layers: ['data_z14', 'data_z15', 'data_z16'],
+    layers: props.layers,
   })
 }
 
@@ -50,18 +60,50 @@ if (map)
 
     newMap.on('move', recalculatePois)
     newMap.on('zoom', recalculatePois)
+    newMap.on('moveend', recalculatePois)
+    newMap.on('zoomend', recalculatePois)
   })
 
-const points = computed<GeoJSON.Feature<GeoJSON.Point>[]>(
-  () =>
+// Apply a limit to a Point array by removing points that are close to each
+// other. This prevents cluttering the map too
+const removeTooClose = (pois: GeoJSON.Feature<GeoJSON.Point>[], limit: number) => {
+  if (pois.length <= limit) return pois
+
+  const result: GeoJSON.Feature<GeoJSON.Point>[] = []
+
+  for (const poi of pois) {
+    let tooClose = false
+
+    for (const other of result) {
+      const dx = poi.geometry.coordinates[0] - other.geometry.coordinates[0]
+      const dy = poi.geometry.coordinates[1] - other.geometry.coordinates[1]
+
+      if (dx * dx + dy * dy < 0.0000001) {
+        tooClose = true
+        break
+      }
+    }
+
+    if (!tooClose) result.push(poi)
+
+    if (result.length >= limit) break
+  }
+
+  return result
+}
+
+const points = computed<GeoJSON.Feature<GeoJSON.Point>[]>(() =>
+  removeTooClose(
     pois.value.filter(
       (poi) => poi?.geometry?.type === 'Point' && poi.geometry.coordinates
-    ) as GeoJSON.Feature<GeoJSON.Point>[]
+    ) as GeoJSON.Feature<GeoJSON.Point>[],
+    props.limit
+  )
 )
 </script>
 
 <template>
-  <transition-group name="poi" tag="div">
+  <keep-alive :max="Math.min(props.limit * 2, Number.MAX_SAFE_INTEGER)">
     <map-marker
       v-for="poi in points"
       :key="poi.id"
@@ -70,5 +112,5 @@ const points = computed<GeoJSON.Feature<GeoJSON.Point>[]>(
     >
       <slot name="poi" :poi="poi" />
     </map-marker>
-  </transition-group>
+  </keep-alive>
 </template>

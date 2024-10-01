@@ -18,8 +18,8 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (event: 'load'): void
-  (event: 'move', lngLat: LngLat): void
-  (event: 'zoom', zoomLevel: number): void
+  (event: 'moveend', lngLat: LngLat): void
+  (event: 'zoomend', zoomLevel: number): void
 }>()
 
 const container = shallowRef<HTMLDivElement>()
@@ -39,19 +39,19 @@ watch(map, (newMap) => {
 })
 
 const handleLoad = () => emit('load')
-const handleMove = (event: MapLibreEvent) => emit('move', event.target.getCenter())
-const handleZoom = (event: MapLibreEvent) => emit('zoom', event.target.getZoom())
+const handleMoveEnd = (event: MapLibreEvent) => emit('moveend', event.target.getCenter())
+const handleZoomEnd = (event: MapLibreEvent) => emit('zoomend', event.target.getZoom())
 
 onMounted(() => {
   map.value?.on('load', handleLoad)
-  map.value?.on('moveend', handleMove)
-  map.value?.on('zoomend', handleZoom)
+  map.value?.on('moveend', handleMoveEnd)
+  map.value?.on('zoomend', handleZoomEnd)
 })
 
 onBeforeUnmount(() => {
   map.value?.off('load', handleLoad)
-  map.value?.off('moveend', handleMove)
-  map.value?.off('zoomend', handleZoom)
+  map.value?.off('moveend', handleMoveEnd)
+  map.value?.off('zoomend', handleZoomEnd)
 })
 
 watch(

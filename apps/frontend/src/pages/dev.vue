@@ -1,14 +1,19 @@
 <script lang="ts" setup>
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 import MapMarker from 'src/components/maplibre-gl/map-marker.vue'
-import MapPoiLayer from 'src/components/maplibre-gl/map-poi-layer.vue'
+import MapDataLayer from 'src/components/maplibre-gl/map-data-layer.vue'
 
 import { classToIcon } from 'src/components/maplibre-gl/style/icon-mapping'
 </script>
 
 <style lanng="scss" scoped>
-.poi-card {
+.poi {
   transform-origin: top center;
+  max-width: 128px;
+}
+
+.poi-avatar {
+  outline: 1px solid lightgrey;
 }
 </style>
 
@@ -25,39 +30,39 @@ import { classToIcon } from 'src/components/maplibre-gl/style/icon-mapping'
       </template>
     </map-marker>
 
-    <map-poi-layer>
+    <map-data-layer :layers="['data_z14', 'data_z15', 'data_z16']" :limit="50">
       <template #poi="{ poi }">
-        <q-card
-          v-if="poi.properties && poi.properties.class in classToIcon"
-          flat
-          class="column bg-transparent items-center text-center poi-card"
-        >
+        <div class="poi column items-center text-center cursor-pointer">
           <q-avatar
+            v-if="poi.properties && poi.properties.class in classToIcon"
             :icon="classToIcon[poi.properties.class]"
             text-color="primary"
             size="sm"
             font-size="large"
+            color="white"
+            class="poi-avatar"
           />
 
-          {{ poi.properties["name_int"] || poi.properties["name:latin"] }}
-        </q-card>
-
-        <q-card
-          v-else
-          flat
-          class="column bg-transparent items-center text-center poi-card"
-        >
           <q-avatar
-            icon="mdi-circle"
-            text-color="red"
+            v-else
+            icon="mdi-alert"
+            text-color="white"
             size="sm"
+            color="red"
+            class="poi-avatar"
           />
 
-          {{ poi.properties?.["name_int"] || poi.properties?.["name:latin"] }}
-          <br/>
-          {{ poi.properties?.class ? `Unmapped class! (${poi.properties.class})` : '' }}
-        </q-card>
+          <span
+            class="text-grey-9 font-noto-sans-display text-italic text-caption text-outline-white"
+          >
+            {{
+              poi.properties?.["name_int"] ||
+              poi.properties?.["name:latin"] ||
+              poi.properties?.["name"]
+            }}
+          </span>
+        </div>
       </template>
-    </map-poi-layer>
+    </map-data-layer>
   </maplibre-gl>
 </template>
