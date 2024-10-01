@@ -9,6 +9,7 @@
     ".": "./dist/"
   },
   "devDependencies": {
-    "fontnik": "^0.7.2"
+    "fontnik": "^0.7.2",
+    "nodemon": "^3.1.3"
   }
 }

@@ -8,7 +8,7 @@ export const place_village: LayerSpecification = {
   filter: ['all', ['==', 'class', 'village']],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Regular'],
+    'text-font': ['Roboto-Regular'],
     'text-max-width': 8,
     'text-size': {
       base: 1.2,

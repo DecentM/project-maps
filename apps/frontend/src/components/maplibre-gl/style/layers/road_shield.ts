@@ -19,7 +19,7 @@ export const road_shield: LayerSpecification = {
     },
     'symbol-spacing': 500,
     'text-field': '{ref}',
-    'text-font': ['Roboto Regular'],
+    'text-font': ['Roboto-Regular'],
     'text-offset': [0, 0.1],
     'text-rotation-alignment': 'viewport',
     'text-size': 10,

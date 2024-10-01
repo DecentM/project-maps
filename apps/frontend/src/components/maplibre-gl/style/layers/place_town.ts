@@ -16,7 +16,7 @@ export const place_town: LayerSpecification = {
     },
     'text-anchor': 'bottom',
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Regular'],
+    'text-font': ['Roboto-Regular'],
     'text-max-width': 8,
     'text-offset': [0, 0],
     'text-size': {

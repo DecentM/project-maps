@@ -4,21 +4,42 @@ platform: node
 type: library
 
 tasks:
+  download_pbf:
+    command: curl
+    args:
+      - -L
+      - -o
+      - ./dist/planet.osm.pbf
+      - http://download.geofabrik.de/europe/united-kingdom/england/derbyshire-latest.osm.pbf
+    outputs:
+      - ./dist/planet.osm.pbf
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
   build:
-    env:
-      DOCKER_BUILDKIT: "1"
+    deps:
+      - download_pbf
     command: sh
     args:
       - -c
-      - docker build --build-arg=PBF_URL=http://download.geofabrik.de/europe/united-kingdom/england/derbyshire-latest.osm.pbf -t map-tiles:latest . && docker create map-tiles:latest > ./.ignored/map-tiles-container-id && docker cp $(cat ./.ignored/map-tiles-container-id):/app/dist ./ && docker rm -f $(cat ./.ignored/map-tiles-container-id) && rm -f ./.ignored/map-tiles-container-id && docker rmi -f map-tiles:latest
+      - |
+        mkdir -p dist/store && bin/tilemaker-ubuntu-22.04/tilemaker ./dist/planet.osm.pbf \
+          --output ./dist/ \
+          --config ./src/config.json \
+          --store ./dist/store \
+          --process src/process-openmaptiles.lua \
+          --materialize-geometries; rm -rf ./dist/store
     inputs:
       - ./src
-      - ./Dockerfile
+      - ./dist/planet.osm.pbf
     outputs:
       - ./dist
     options:
       cache: true
       persistent: false
+      outputStyle: stream
 
   up:
     command: nodemon

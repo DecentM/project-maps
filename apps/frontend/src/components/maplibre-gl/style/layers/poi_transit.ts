@@ -10,7 +10,7 @@ export const poi_transit: LayerSpecification = {
     'icon-image': '{class}',
     'text-anchor': 'left',
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Condensed Italic'],
+    'text-font': ['RobotoCondensed-Italic'],
     'text-max-width': 9,
     'text-offset': [0.9, 0],
     'text-size': 12,

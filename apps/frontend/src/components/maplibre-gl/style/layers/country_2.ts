@@ -8,7 +8,7 @@ export const country_2: LayerSpecification = {
   filter: ['all', ['==', 'rank', 2], ['==', 'class', 'country']],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Condensed Italic'],
+    'text-font': ['RobotoCondensed-Italic'],
     'text-max-width': 6.25,
     'text-size': {
       stops: [

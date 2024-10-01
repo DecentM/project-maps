@@ -19,7 +19,7 @@ tasks:
   build_1x:
     deps:
       - map_svgs
-    command: spreet
+    command: bin/spreet-x86_64-unknown-linux-musl/spreet
     args:
       - --unique
       - --minify-index-file
@@ -31,13 +31,14 @@ tasks:
       - dist/sprites/mdi.json
       - dist/sprites/mdi.png
     options:
-      cache: false
+      cache: true
       persistent: false
+      outputStyle: stream
 
   build_2x:
     deps:
       - map_svgs
-    command: spreet
+    command: bin/spreet-x86_64-unknown-linux-musl/spreet
     args:
       - --unique
       - --minify-index-file
@@ -45,13 +46,14 @@ tasks:
       - .ignored/svgs
       - dist/sprites/mdi@2x
     inputs:
-      - src/svgs
+      - .ignored/svgs
     outputs:
       - dist/sprites/mdi@2x.json
       - dist/sprites/mdi@2x.png
     options:
-      cache: false
+      cache: true
       persistent: false
+      outputStyle: stream
 
   clean:
     deps:
@@ -74,12 +76,14 @@ tasks:
     command: sh
     args:
       - -c
-      - 'cp src/mapping.json dist/mapping.json'
+      - "cp src/mapping.json dist/mapping.json"
     options:
       cache: false
       persistent: false
 
   up:
+    deps:
+      - map-icons:build
     command: nodemon
     args:
       - -w

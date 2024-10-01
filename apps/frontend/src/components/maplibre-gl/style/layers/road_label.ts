@@ -10,7 +10,7 @@ export const road_label: LayerSpecification = {
     'symbol-placement': 'line',
     'text-anchor': 'center',
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Regular'],
+    'text-font': ['Roboto-Regular'],
     'text-offset': [0, 0.15],
     'text-size': {
       base: 1,

@@ -9,7 +9,7 @@ export const continent: LayerSpecification = {
   filter: ['all', ['==', 'class', 'continent']],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Condensed Italic'],
+    'text-font': ['RobotoCondensed-Italic'],
     'text-size': 13,
     'text-transform': 'uppercase',
     'text-justify': 'center',

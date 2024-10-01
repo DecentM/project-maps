@@ -11,7 +11,7 @@ export const place_other: LayerSpecification = {
   ],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Condensed Italic'],
+    'text-font': ['RobotoCondensed-Italic'],
     'text-letter-spacing': 0.1,
     'text-max-width': 9,
     'text-size': {

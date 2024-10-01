@@ -5,6 +5,24 @@ type: library
 
 tasks:
   build:
-    command: ./generate.sh
+    command: bin/generate.sh
+    inputs:
+      - src
+    outputs:
+      - dist
     options:
+      cache: true
       persistent: false
+      outputStyle: stream
+
+  up:
+    deps:
+      - build
+    command: nodemon
+    args:
+      - --w
+      - src
+      - --exec
+      - moon map-fonts:build
+    options:
+      persistent: true

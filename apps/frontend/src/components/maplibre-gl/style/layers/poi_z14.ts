@@ -9,6 +9,6 @@ export const poi_z14: LayerSpecification = {
   filter: ['all', ['==', '$type', 'Point'], ['>=', 'rank', 1], ['<', 'rank', 7]],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Condensed Italic'],
+    'text-font': ['RobotoCondensed-Italic'],
   },
 }

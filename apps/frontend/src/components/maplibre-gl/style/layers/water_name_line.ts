@@ -8,7 +8,7 @@ export const water_name_line: LayerSpecification = {
   filter: ['all', ['==', '$type', 'LineString']],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Regular'],
+    'text-font': ['Roboto-Regular'],
     'text-max-width': 5,
     'text-size': 12,
     'symbol-placement': 'line',

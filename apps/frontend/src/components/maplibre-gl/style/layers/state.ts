@@ -9,7 +9,7 @@ export const state: LayerSpecification = {
   filter: ['all', ['==', 'class', 'state']],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Condensed Italic'],
+    'text-font': ['RobotoCondensed-Italic'],
     'text-size': {
       stops: [
         [4, 11],

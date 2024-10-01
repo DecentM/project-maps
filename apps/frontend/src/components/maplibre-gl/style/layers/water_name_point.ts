@@ -8,7 +8,7 @@ export const water_name_point: LayerSpecification = {
   filter: ['==', '$type', 'Point'],
   layout: {
     'text-field': ['coalesce', ['get', 'name_int'], ['get', 'name:latin']],
-    'text-font': ['Roboto Regular'],
+    'text-font': ['Roboto-Regular'],
     'text-max-width': 5,
     'text-size': 12,
   },

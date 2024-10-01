@@ -6,6 +6,7 @@
   "author": "",
   "dependencies": {
     "@grpc/grpc-js": "^1.11.2",
+    "@project-maps/logging": "workspace:*",
     "@project-maps/proto": "workspace:*",
     "emittery": "^1.0.3",
     "google-protobuf": "^3.21.4",

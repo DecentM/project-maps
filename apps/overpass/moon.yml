@@ -5,17 +5,19 @@ type: application
 
 tasks:
   docker_up:
-    command: docker compose
+    command: sh
     args:
-      - up
+      - -c
+      - docker compose up || true
     options:
       cache: false
       persistent: true
 
   docker_down:
-    command: docker compose
+    command: sh
     args:
-      - down
+      - -c
+      - docker compose down
     options:
       cache: false
       persistent: false
