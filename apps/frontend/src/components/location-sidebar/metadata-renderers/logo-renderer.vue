@@ -16,6 +16,13 @@ const logo = computed(() => {
 })
 </script>
 
+<style lang="scss" scoped>
+.logo {
+  max-width: 48px;
+  max-height: 48px;
+}
+</style>
+
 <template>
   <q-img
     v-if="logo"
@@ -23,5 +30,6 @@ const logo = computed(() => {
     :src="logo"
     fit="contain"
     position="center center"
+    class="logo q-ma-xs"
   />
 </template>

@@ -31,7 +31,7 @@ const commentItems = computed(() => {
           </q-avatar>
         </q-item-section>
 
-        <q-item-section>
+        <q-item-section class="font-noto-sans-display">
           <q-item-label>{{ item.comment?.author?.name }}</q-item-label>
           <q-item-label caption lines="1">{{ item.comment?.createdAt?.seconds }}</q-item-label>
         </q-item-section>
@@ -39,7 +39,7 @@ const commentItems = computed(() => {
 
       <q-separator />
 
-      <q-card-section>
+      <q-card-section class="font-noto-sans-display">
         {{ item.comment?.text }}
       </q-card-section>
     </q-expansion-item>

@@ -20,7 +20,7 @@ tasks:
       - build
     command: nodemon
     args:
-      - --w
+      - -w
       - src
       - --exec
       - moon map-fonts:build

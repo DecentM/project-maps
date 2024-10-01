@@ -87,9 +87,9 @@ export class WikimapiaSource extends MetadataSource {
       }
 
       throw new Error('WikimapiaSource.getAreaMetadata')
+    } finally {
+      events.emit('end')
     }
-
-    events.emit('end')
   }
 
   override async getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
@@ -103,6 +103,8 @@ export class WikimapiaSource extends MetadataSource {
       }
 
       throw new Error('WikimapiaSource.getPoiMetadata')
+    } finally {
+      events.emit('end')
     }
   }
 }

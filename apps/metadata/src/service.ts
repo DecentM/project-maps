@@ -28,7 +28,8 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
 
     for (const source of emitters) {
       source.on('item', (item) => emitter.emit('item', item))
-      source.on('end', () => {
+
+      source.once('end').then(() => {
         ended += 1
         if (ended === emitters.length) {
           emitter.emit('end')

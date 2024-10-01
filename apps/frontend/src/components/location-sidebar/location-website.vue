@@ -36,7 +36,7 @@ const url = computed(() => {
         <q-icon name="mdi-web" color="primary" size="md" />
       </q-item-section>
 
-      <q-item-section>
+      <q-item-section class="font-noto-sans-display">
         <q-item-label>
           <web-url :url="url" />
         </q-item-label>

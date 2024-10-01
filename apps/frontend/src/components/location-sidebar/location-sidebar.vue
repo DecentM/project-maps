@@ -50,7 +50,16 @@ watch(
     if (!newPoi) return
 
     loading.value = true
-    socket.emit('Metadata', 'GetPoiMetadata', newPoi)
+
+    socket.emit('Metadata', 'GetPoiMetadata', {
+      id: newPoi.id,
+      coordinates: {
+        lat: newPoi.geometry.coordinates[1],
+        lng: newPoi.geometry.coordinates[0],
+      },
+      name:
+        newPoi.properties?.name_int || newPoi.properties?.['name:latin'] || newPoi.properties?.name,
+    })
   }
 )
 
@@ -91,7 +100,7 @@ const sortedMetadata = computed(() => {
   <q-card class="location-sidebar">
     <image-renderer :metadata="sortedMetadata">
       <div class="fit col">
-        <q-card>
+        <q-card class="font-noto-sans-display">
           <q-input :model-value="''" outlined placeholder="Search..." dense />
         </q-card>
       </div>

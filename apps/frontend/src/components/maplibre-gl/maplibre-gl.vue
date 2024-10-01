@@ -20,6 +20,7 @@ const emit = defineEmits<{
   (event: 'load'): void
   (event: 'moveend', lngLat: LngLat): void
   (event: 'zoomend', zoomLevel: number): void
+  (event: 'click'): void
 }>()
 
 const container = shallowRef<HTMLDivElement>()
@@ -41,17 +42,20 @@ watch(map, (newMap) => {
 const handleLoad = () => emit('load')
 const handleMoveEnd = (event: MapLibreEvent) => emit('moveend', event.target.getCenter())
 const handleZoomEnd = (event: MapLibreEvent) => emit('zoomend', event.target.getZoom())
+const handleClick = () => emit('click')
 
 onMounted(() => {
   map.value?.on('load', handleLoad)
   map.value?.on('moveend', handleMoveEnd)
   map.value?.on('zoomend', handleZoomEnd)
+  map.value?.on('click', handleClick)
 })
 
 onBeforeUnmount(() => {
   map.value?.off('load', handleLoad)
   map.value?.off('moveend', handleMoveEnd)
   map.value?.off('zoomend', handleZoomEnd)
+  map.value?.off('click', handleClick)
 })
 
 watch(

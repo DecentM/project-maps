@@ -16,5 +16,5 @@ const textMetadata = computed(() => {
 </script>
 
 <template>
-  <span v-if="textMetadata?.name">{{ textMetadata.name }}</span>
+  <span v-if="textMetadata?.name" class="font-noto-sans-display">{{ textMetadata.name }}</span>
 </template>

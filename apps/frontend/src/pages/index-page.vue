@@ -42,6 +42,10 @@ const handleMoveEnd = (newCenter: LngLat) => {
     },
   })
 }
+
+const handleMapClick = () => {
+  selectedPoi.value = null
+}
 </script>
 
 <style lang="scss" scoped>
@@ -73,26 +77,16 @@ const handleMoveEnd = (newCenter: LngLat) => {
         @reset-images="resetImageLocations" />
     </div>
 
-    <maplibre-gl class="vh-100" @moveend="handleMoveEnd">
+    <maplibre-gl class="vh-100" @moveend="handleMoveEnd" @click="handleMapClick">
       <map-data-layer :layers="['data_z14', 'data_z15', 'data_z16']" :limit="50">
         <template #poi="{ poi }">
           <div class="poi column items-center text-center cursor-pointer" @click="handlePoiClick(poi)">
             <q-avatar
-              v-if="poi.properties && poi.properties.class in classToIcon"
-              :icon="classToIcon[poi.properties.class]"
+              :icon="classToIcon[poi.properties?.class] ?? 'mdi-circle-medium'"
               text-color="primary"
               size="sm"
               font-size="large"
               color="white"
-              class="poi-avatar"
-            />
-
-            <q-avatar
-              v-else
-              icon="mdi-alert"
-              text-color="white"
-              size="sm"
-              color="red"
               class="poi-avatar"
             />
 

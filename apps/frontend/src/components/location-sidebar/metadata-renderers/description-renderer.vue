@@ -12,7 +12,7 @@ const descriptionItem = computed(() => {
 </script>
 
 <template>
-  <span>
+  <span class="font-noto-sans-display">
     {{ descriptionItem?.description?.text?.slice(0, 1).toLocaleUpperCase() }}{{ descriptionItem?.description?.text?.slice(1) }}
   </span>
 </template>

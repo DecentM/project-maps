@@ -293,9 +293,9 @@ export class WikidataSource extends MetadataSource {
         }
 
         log.error(error, 'WikidataSource.getAreaMetadata')
+      } finally {
+        events.emit('end')
       }
-
-      events.emit('end')
     })
 
     ids.on('error', (error: Error) => {
@@ -349,9 +349,9 @@ export class WikidataSource extends MetadataSource {
         }
 
         log.error(error, 'WikidataSource.getPoiMetadata')
+      } finally {
+        events.emit('end')
       }
-
-      events.emit('end')
     })
 
     wikidataIdStream.on('error', (error: Error) => {
