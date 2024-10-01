@@ -94,9 +94,6 @@ import { boundary_2_z0_4 } from './layers/boundary_2_z0_4'
 import { boundary_2_z5_ } from './layers/boundary_2_z5_'
 import { water_name_line } from './layers/water_name_line'
 import { water_name_point } from './layers/water_name_point'
-import { poi_z16 } from './layers/poi_z16'
-import { poi_z15 } from './layers/poi_z15'
-import { poi_z14 } from './layers/poi_z14'
 import { poi_transit } from './layers/poi_transit'
 import { road_label } from './layers/road_label'
 import { road_shield } from './layers/road_shield'
@@ -109,6 +106,9 @@ import { country_3 } from './layers/country_3'
 import { country_2 } from './layers/country_2'
 import { country_1 } from './layers/country_1'
 import { continent } from './layers/continent'
+import { data_z14 } from './layers/data_z14'
+import { data_z15 } from './layers/data_z15'
+import { data_z16 } from './layers/data_z16'
 
 export const layers: LayerSpecification[] = [
   background,
@@ -200,9 +200,6 @@ export const layers: LayerSpecification[] = [
   boundary_2_z5_,
   water_name_line,
   water_name_point,
-  poi_z16,
-  poi_z15,
-  poi_z14,
   poi_transit,
   road_label,
   road_shield,
@@ -215,4 +212,7 @@ export const layers: LayerSpecification[] = [
   country_2,
   country_1,
   continent,
+  data_z14,
+  data_z15,
+  data_z16,
 ]

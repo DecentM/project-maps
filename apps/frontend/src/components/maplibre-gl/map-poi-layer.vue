@@ -5,7 +5,6 @@ import { throttle } from 'quasar'
 
 import { MapSymbol } from './map-symbol'
 import MapMarker from './map-marker.vue'
-import { classToIcon } from './style/icon-mapping'
 
 const map = inject<ShallowRef<MaplibreMap>>(MapSymbol)
 const pois: ShallowRef<GeoJSON.Feature[]> = shallowRef([])
@@ -42,7 +41,7 @@ const recalculatePois = throttle(
       if (!map?.value) return
 
       pois.value = map.value.queryRenderedFeatures(undefined, {
-        layers: ['poi_z14', 'poi_z15', 'poi_z16'],
+        layers: ['data_z14', 'data_z15', 'data_z16'],
       })
     }),
   100
@@ -72,8 +71,7 @@ const points = computed<GeoJSON.Feature<GeoJSON.Point>[]>(
       :coordinates="[poi.geometry.coordinates[0], poi.geometry.coordinates[1]]"
       :options="{ offset: [0, 0] }"
     >
-      <q-icon v-if="poi.properties" :name="classToIcon[poi.properties.class]" color="primary" size="sm" />
-      <q-icon v-else name="mdi-circle-medium" color="red" size="sm" />
+      <slot name="poi" :poi="poi" />
     </map-marker>
   </transition-group>
 </template>
