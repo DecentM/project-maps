@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Map as MaplibreMap } from 'maplibre-gl'
-import { inject, ref, shallowRef, watch, type ShallowRef } from 'vue'
+import { inject, ref, shallowRef, watch, type ShallowRef, computed, nextTick } from 'vue'
 import { throttle } from 'quasar'
 
 import { MapSymbol } from './map-symbol'
@@ -18,15 +18,21 @@ const requestIdleCallback = (callback: (...args: unknown[]) => void) => {
   if (typeof window === 'undefined') return callback()
 
   if ('requestIdleCallback' in window) {
-    idleCallback.value = window.requestIdleCallback(() => {
-      idleCallback.value = null
-      callback()
-    })
+    idleCallback.value = window.requestIdleCallback(() =>
+      nextTick(() => {
+        idleCallback.value = null
+        callback()
+      })
+    )
   } else {
-    idleCallback.value = setTimeout(() => {
-      idleCallback.value = null
-      callback()
-    }, 250)
+    idleCallback.value = setTimeout(
+      () =>
+        nextTick(() => {
+          idleCallback.value = null
+          callback()
+        }),
+      250
+    )
   }
 }
 
@@ -49,16 +55,25 @@ if (map)
     newMap.on('move', recalculatePois)
     newMap.on('zoom', recalculatePois)
   })
+
+const points = computed<GeoJSON.Feature<GeoJSON.Point>[]>(
+  () =>
+    pois.value.filter(
+      (poi) => poi?.geometry?.type === 'Point' && poi.geometry.coordinates
+    ) as GeoJSON.Feature<GeoJSON.Point>[]
+)
 </script>
 
 <template>
-  <template v-for="poi in pois" :key="poi.id">
+  <transition-group name="poi" tag="div">
     <map-marker
-      v-if="poi.geometry.type === 'Point' && poi.geometry.coordinates"
+      v-for="poi in points"
+      :key="poi.id"
       :coordinates="[poi.geometry.coordinates[0], poi.geometry.coordinates[1]]"
       :options="{ offset: [0, 0] }"
     >
       <q-icon v-if="poi.properties" :name="classToIcon[poi.properties.class]" color="primary" size="sm" />
+      <q-icon v-else name="mdi-circle-medium" color="red" size="sm" />
     </map-marker>
-  </template>
+  </transition-group>
 </template>
