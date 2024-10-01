@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { Map as MaplibreMap } from 'maplibre-gl'
 import { inject, ref, shallowRef, watch, type ShallowRef, computed, nextTick } from 'vue'
-import { throttle } from 'quasar'
 
 import { MapSymbol } from './map-symbol'
 import MapMarker from './map-marker.vue'
@@ -35,17 +34,15 @@ const requestIdleCallback = (callback: (...args: unknown[]) => void) => {
   }
 }
 
-const recalculatePois = throttle(
-  () =>
-    requestIdleCallback(() => {
-      if (!map?.value) return
+const recalculatePoisImmediate = () => {
+  if (!map?.value) return
 
-      pois.value = map.value.queryRenderedFeatures(undefined, {
-        layers: ['data_z14', 'data_z15', 'data_z16'],
-      })
-    }),
-  100
-)
+  pois.value = map.value.queryRenderedFeatures(undefined, {
+    layers: ['data_z14', 'data_z15', 'data_z16'],
+  })
+}
+
+const recalculatePois = () => requestIdleCallback(recalculatePoisImmediate)
 
 if (map)
   watch(map, (newMap) => {

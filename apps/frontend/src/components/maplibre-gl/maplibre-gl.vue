@@ -70,7 +70,7 @@ provide(MapSymbol, map)
 <template>
   <div class="position-relative">
     <div ref="container" class="fit absolute-top-left"></div>
-    <div v-if="$slots.default" class="fit absolute-top-left no-pointer-events">
+    <div v-if="$slots.default" class="fit absolute-top-left no-pointer-events overflow-hidden">
       <slot :map="map"></slot>
     </div>
   </div>
