@@ -9,15 +9,13 @@ export const parse = (openingHours: string, interval: Interval, zone: Zone) => {
   const oh = new OpeningHours(openingHours)
   const result = oh.getOpenIntervals(interval.start.toJSDate(), interval.end.toJSDate())
 
-  console.log(zone)
-
   return result
     .map(([start, end, unknown, detail]) => {
       if (!start || !end) return null
 
       return {
-        start: DateTime.fromJSDate(start, { zone }),
-        end: DateTime.fromJSDate(end, { zone }),
+        start: DateTime.fromJSDate(start),
+        end: DateTime.fromJSDate(end),
         unknown,
         detail,
       }

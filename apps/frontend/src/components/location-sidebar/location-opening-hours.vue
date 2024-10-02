@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import type { Metadata } from '@project-maps/proto/metadata'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { DateTime } from 'luxon'
-import * as Timezone from 'browser-geo-tz/dist/geotz'
 
 const props = defineProps<{
   metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
@@ -20,12 +19,6 @@ const ranges = computed(() => {
 })
 
 const tz = ref('Etc/UTC')
-
-onMounted(async () => {
-  const tzs = await Timezone.find(props.coordinates[1], props.coordinates[0])
-
-  tz.value = tzs[0]
-})
 </script>
 
 <template>

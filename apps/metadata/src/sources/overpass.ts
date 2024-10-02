@@ -86,8 +86,6 @@ export class OverpassSource extends MetadataSource {
       zone
     )
 
-    console.log(intervals)
-
     onItem(
       Metadata.MetadataItem.fromObject({
         attribution: {
