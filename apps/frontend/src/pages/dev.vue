@@ -18,7 +18,7 @@ import { classToIcon } from 'src/components/maplibre-gl/style/icon-mapping'
 </style>
 
 <template>
-  <maplibre-gl class="vh-100">
+  <maplibre-gl class="vh-100" :center="[-2.001740, 53.364973]">
     <map-marker
       :coordinates="[-1.422504, 53.235409]"
       :options="{ offset: [0, 0] }"

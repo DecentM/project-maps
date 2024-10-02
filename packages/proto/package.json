@@ -23,6 +23,10 @@
     "./lib/pagination": {
       "import": "./dist/lib/pagination.js",
       "types": "./dist/lib/pagination.d.ts"
+    },
+    "./lib/datetime": {
+      "import": "./dist/lib/datetime.js",
+      "types": "./dist/lib/datetime.d.ts"
     }
   },
   "dependencies": {

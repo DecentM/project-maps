@@ -63,7 +63,6 @@ export class GeographUKImageSource extends MetadataSource {
               },
               createdAt: {
                 seconds: Math.floor(new Date(item.date).getTime() / 1000),
-                nanos: 0,
               },
             },
           })

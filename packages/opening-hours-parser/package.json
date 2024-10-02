@@ -1,0 +1,41 @@
+{
+  "name": "@project-maps/opening-hours-parser",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--import=tsimp"
+    ],
+    "environmentVariables": {
+      "TSIMP_DIAG": "ignore"
+    },
+    "timeout": "15s",
+    "concurrency": 2
+  },
+  "keywords": [],
+  "author": "DecentM",
+  "license": "MIT",
+  "dependencies": {
+    "luxon": "^3.5.0",
+    "opening_hours": "^3.8.0",
+    "verror": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^20.16.3",
+    "@types/verror": "^1.10.10",
+    "ava": "^6.1.3",
+    "tsconfig-moon": "^1.3.0",
+    "tsimp": "^2.0.11"
+  },
+  "peerDependencies": {
+    "@types/luxon": "^3.4.2"
+  }
+}

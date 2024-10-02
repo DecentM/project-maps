@@ -1,0 +1,63 @@
+<script lang="ts" setup>
+import type { Metadata } from '@project-maps/proto/metadata'
+import { computed, onMounted, ref } from 'vue'
+import { DateTime } from 'luxon'
+import * as Timezone from 'browser-geo-tz/dist/geotz'
+
+const props = defineProps<{
+  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
+  coordinates: GeoJSON.Position
+}>()
+
+const openingHours = computed(() => {
+  return props.metadata.findLast((item) => 'openingHours' in item)
+})
+
+const ranges = computed(() => {
+  return openingHours.value?.openingHours?.ranges?.filter(
+    (range) => range.start?.millis && range.end?.millis
+  )
+})
+
+const tz = ref('Etc/UTC')
+
+onMounted(async () => {
+  const tzs = await Timezone.find(props.coordinates[1], props.coordinates[0])
+
+  tz.value = tzs[0]
+})
+</script>
+
+<template>
+  <div class="relative-position" v-if="openingHours && openingHours.openingHours?.ranges">
+    <q-item>
+      <q-item-section side top>
+        <q-icon name="mdi-clock" color="primary" size="md" />
+      </q-item-section>
+
+      <q-item-section>
+        <q-list>
+          <q-item-label caption>
+            Opening hours
+          </q-item-label>
+
+          <q-item v-for="(interval, index) of ranges" :key="index" dense class="q-px-none">
+            <q-item-section>
+              <q-item-label>
+                {{ DateTime.fromMillis(interval.start!.millis!).setZone(tz).toLocaleString(DateTime.TIME_24_SIMPLE) }}
+                -
+                {{ DateTime.fromMillis(interval.end!.millis!).setZone(tz).toLocaleString(DateTime.TIME_24_SIMPLE) }}
+              </q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-item-label>
+                {{ DateTime.fromMillis(interval.start!.millis!).setZone(tz).toFormat('EEEE') }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-item-section>
+    </q-item>
+  </div>
+</template>

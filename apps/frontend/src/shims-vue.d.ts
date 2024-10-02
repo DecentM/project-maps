@@ -8,3 +8,5 @@ declare module '*.vue' {
   const component: DefineComponent<unknown, unknown, unknown>
   export default component
 }
+
+declare module 'browser-geo-tz/dist/geotz'

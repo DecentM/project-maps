@@ -7,17 +7,21 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.11.2",
     "@project-maps/logging": "workspace:*",
+    "@project-maps/opening-hours-parser": "workspace:^",
     "@project-maps/proto": "workspace:*",
     "emittery": "^1.0.3",
     "fast-xml-parser": "^4.4.1",
+    "geo-tz": "^8.1.1",
     "google-protobuf": "^3.21.4",
     "got": "^14.4.2",
+    "luxon": "^3.5.0",
     "tslib": "^2.7.0",
     "verror": "^1.10.1",
     "wikibase-sdk": "^10.1.0"
   },
   "devDependencies": {
     "@types/got": "^9.6.12",
+    "@types/luxon": "^3.4.2",
     "@types/node": "20.16.3",
     "@types/verror": "^1.10.10",
     "tsconfig-moon": "^1.3.0",

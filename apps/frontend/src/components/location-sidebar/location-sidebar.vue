@@ -9,6 +9,7 @@ import LocationComments from './location-comments.vue'
 import LocationAttributions from './location-attributions.vue'
 import LocationAmenity from './location-amenity.vue'
 import LocationWebsite from './location-website.vue'
+import LocationOpeningHours from './location-opening-hours.vue'
 
 import ImageRenderer from './metadata-renderers/image-renderer.vue'
 import DescriptionRenderer from './metadata-renderers/description-renderer.vue'
@@ -83,6 +84,10 @@ const hasMetadata = computed(() => {
   return metadata.value.some((item) => 'metadata' in item && item.metadata)
 })
 
+const hasOpeningHours = computed(() => {
+  return metadata.value.some((item) => 'openingHours' in item && item.openingHours)
+})
+
 const sortedMetadata = computed(() => {
   return sortMetadataItems(metadata.value as Metadata.MetadataItem[])
 })
@@ -133,6 +138,9 @@ const sortedMetadata = computed(() => {
 
     <location-comments :metadata="sortedMetadata" />
     <q-separator v-if="hasComments" />
+
+    <location-opening-hours v-if="poi" :metadata="sortedMetadata" :coordinates="poi.geometry.coordinates" />
+    <q-separator v-if="hasOpeningHours" />
 
     <location-attributions :metadata="sortedMetadata" />
 

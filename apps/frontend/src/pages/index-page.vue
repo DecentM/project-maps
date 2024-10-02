@@ -74,13 +74,25 @@ const handleMapClick = () => {
         :zoom-level="zoom"
         :max-zoom-level="19"
         @show-image="addImageLocation"
-        @reset-images="resetImageLocations" />
+        @reset-images="resetImageLocations"
+      />
     </div>
 
-    <maplibre-gl class="vh-100" @moveend="handleMoveEnd" @click="handleMapClick">
-      <map-data-layer :layers="['data_z14', 'data_z15', 'data_z16']" :limit="50">
+    <maplibre-gl
+      class="vh-100"
+      @moveend="handleMoveEnd"
+      @click="handleMapClick"
+      :center="[-2.00174, 53.364973]"
+    >
+      <map-data-layer
+        :layers="['data_z14', 'data_z15', 'data_z16']"
+        :limit="50"
+      >
         <template #poi="{ poi }">
-          <div class="poi column items-center text-center cursor-pointer" @click="handlePoiClick(poi)">
+          <div
+            class="poi column items-center text-center cursor-pointer"
+            @click="handlePoiClick(poi)"
+          >
             <q-avatar
               :icon="classToIcon[poi.properties?.class] ?? 'mdi-circle-medium'"
               text-color="primary"

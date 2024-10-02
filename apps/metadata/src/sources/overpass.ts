@@ -1,39 +1,43 @@
 import type Emittery from 'emittery'
+import Timezone from 'geo-tz'
+import { DateTime, IANAZone, Interval, type Zone } from 'luxon'
 
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
 import type { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
 import { Metadata } from '@project-maps/proto/metadata'
 import { Overpass } from '@project-maps/proto/overpass'
+import * as OpeningHours from '@project-maps/opening-hours-parser'
 
 import { OverpassClient } from 'src/clients/overpass'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
 export class OverpassSource extends MetadataSource {
   private static requestedTags = [
-      'addr:city',
-      'addr:housenumber',
-      'addr:postcode',
-      'addr:state',
-      'addr:street',
-      'name',
-      'name:latin',
-      'name:en',
-      'amenity',
-      'phone',
-      'website',
-      'leisure',
-      'shop',
-      'barrier',
-      'wheelchair',
-      'tourism',
-      'artwork_type',
-      'landuse',
+    'addr:city',
+    'addr:housenumber',
+    'addr:postcode',
+    'addr:state',
+    'addr:street',
+    'name',
+    'name:latin',
+    'name:en',
+    'amenity',
+    'phone',
+    'website',
+    'leisure',
+    'shop',
+    'barrier',
+    'wheelchair',
+    'tourism',
+    'artwork_type',
+    'landuse',
+    'opening_hours',
   ]
 
   private static processElement(
     response: OpenStreetMap.Element,
+    zone: Zone,
     onItem: (item: Metadata.MetadataItem) => void
-  ): Metadata.MetadataItem {
+  ): void {
     const element = response.toObject()
     let item:
       | ReturnType<OpenStreetMap.Node['toObject']>
@@ -45,43 +49,74 @@ export class OverpassSource extends MetadataSource {
     if (element.node) item = element.node
     if (element.relation) item = element.relation
 
-    if (!item) {
-      return Metadata.MetadataItem.fromObject({})
-    }
+    if (!item) return
 
-    const result = Metadata.MetadataItem.fromObject({})
+    onItem(
+      Metadata.MetadataItem.fromObject({
+        attribution: {
+          source: Metadata.Attribution.Source.OpenStreetMap,
+          license: 'ODbL',
+          url: item.id
+            ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+            : 'https://www.openstreetmap.org/',
+          name: String(item.id ?? 'OpenStreetMap'),
+        },
+        metadata: {
+          name: item.tags?.name || '',
+          address: {
+            city: item.tags?.['addr:city'] || '',
+            country: item.tags?.['addr:country'] || '',
+            housenumber: item.tags?.['addr:housenumber'] || '',
+            postcode: item.tags?.['addr:postcode'] || '',
+            state: item.tags?.['addr:state'] || '',
+            street: item.tags?.['addr:street'] || '',
+          },
+          phone: item.tags?.phone || '',
+          website: item.tags?.website || '',
+          amenity: item.tags?.amenity || '',
+        },
+      })
+    )
 
-    result.attribution = Metadata.Attribution.fromObject({
-      source: Metadata.Attribution.Source.OpenStreetMap,
-      license: 'ODbL',
-      url: item.id
-        ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
-        : 'https://www.openstreetmap.org/',
-      name: String(item.id ?? 'OpenStreetMap'),
-    })
+    if (!item.tags?.opening_hours) return
 
-    result.metadata = Metadata.TextMetadata.fromObject({})
-    result.metadata.name = item.tags?.name || ''
-    result.metadata.address = Metadata.Address.fromObject({
-      city: item.tags?.['addr:city'] || '',
-      country: item.tags?.['addr:country'] || '',
-      housenumber: item.tags?.['addr:housenumber'] || '',
-      postcode: item.tags?.['addr:postcode'] || '',
-      state: item.tags?.['addr:state'] || '',
-      street: item.tags?.['addr:street'] || '',
-    })
-    result.metadata.phone = item.tags?.phone || ''
-    result.metadata.website = item.tags?.website || ''
-    result.metadata.amenity = item.tags?.amenity || ''
+    const intervals = OpeningHours.parse(
+      item.tags.opening_hours,
+      Interval.after(DateTime.now().setZone(zone).startOf('week'), { days: 7 }),
+      zone
+    )
 
-    onItem(result)
+    console.log(intervals)
 
-    return result
+    onItem(
+      Metadata.MetadataItem.fromObject({
+        attribution: {
+          source: Metadata.Attribution.Source.OpenStreetMap,
+          license: 'ODbL',
+          url: item.id
+            ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+            : 'https://www.openstreetmap.org/',
+          name: String(item.id ?? 'OpenStreetMap'),
+        },
+        openingHours: {
+          ranges: intervals.map((interval) => ({
+            unknown: interval.unknown,
+            details: interval.detail,
+            start: {
+              millis: interval.start.isValid ? interval.start.toMillis() : undefined,
+            },
+            end: {
+              millis: interval.end.isValid ? interval.end.toMillis() : undefined,
+            },
+          })),
+        },
+      })
+    )
   }
 
   private client = new OverpassClient()
 
-  override handlesLocation(coordinates: Geospatial.Coordinates): boolean {
+  override handlesLocation(): boolean {
     return true // Handles all locations
   }
 
@@ -97,8 +132,10 @@ export class OverpassSource extends MetadataSource {
       })
     )
 
+    const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
+
     overpassResponse.on('data', (response: OpenStreetMap.Element) => {
-      OverpassSource.processElement(response, (item) => {
+      OverpassSource.processElement(response, zone, (item) => {
         events.emit('item', item)
       })
     })
@@ -119,8 +156,10 @@ export class OverpassSource extends MetadataSource {
       })
     )
 
+    const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
+
     overpassResponse.on('data', (response: OpenStreetMap.Element) => {
-      OverpassSource.processElement(response, (item) => {
+      OverpassSource.processElement(response, zone, (item) => {
         events.emit('item', item)
       })
     })

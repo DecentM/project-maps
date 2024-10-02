@@ -1,0 +1,30 @@
+id: opening-hours-parser
+language: typescript
+platform: node
+type: library
+
+tasks:
+  test:
+    command: ava
+    args:
+      - -s
+      - -T
+      - 5m
+    inputs:
+      - src
+      - test
+    options:
+      cache: true
+      persistent: false
+
+  build:
+    command: tsc
+    inputs:
+      - src
+      - tsconfig.json
+      - package.json
+    outputs:
+      - dist
+    options:
+      cache: true
+      persistent: false

@@ -11,7 +11,7 @@ const props = withDefaults(
     zoom?: number
   }>(),
   {
-    center: () => [-1.422504, 53.235409],
+    center: () => [0, 0],
     zoom: 16.25,
   }
 )
