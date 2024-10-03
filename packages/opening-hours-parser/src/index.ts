@@ -7,7 +7,10 @@ export const parse = (openingHours: string, interval: Interval, zone: Zone) => {
     throw new VError('Interval must have start and end', interval)
 
   const oh = new OpeningHours(openingHours)
-  const result = oh.getOpenIntervals(interval.start.toJSDate(), interval.end.toJSDate())
+  const result = oh.getOpenIntervals(
+    interval.start.toJSDate(),
+    interval.end.toJSDate()
+  )
 
   return result
     .map(([start, end, unknown, detail]) => {

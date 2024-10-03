@@ -30,7 +30,17 @@ const route = useRoute()
 const router = useRouter()
 
 const zoom = computed(() => {
-  return route.params.zoom ? Number.parseFloat(route.params.zoom as string) : 0
+  return Number.parseFloat(
+    Array.isArray(route.params.zoom) ? route.params.zoom[0] : route.params.zoom
+  )
+})
+
+const lng = computed(() => {
+  return Number.parseFloat(Array.isArray(route.params.lng) ? route.params.lng[0] : route.params.lng)
+})
+
+const lat = computed(() => {
+  return Number.parseFloat(Array.isArray(route.params.lat) ? route.params.lat[0] : route.params.lat)
 })
 
 const handleMoveEnd = (newCenter: LngLat) => {
@@ -82,7 +92,8 @@ const handleMapClick = () => {
       class="vh-100"
       @moveend="handleMoveEnd"
       @click="handleMapClick"
-      :center="[-2.00174, 53.364973]"
+      :center="[lng, lat]"
+      :zoom="zoom"
     >
       <map-data-layer
         :layers="['data_z14', 'data_z15', 'data_z16']"
