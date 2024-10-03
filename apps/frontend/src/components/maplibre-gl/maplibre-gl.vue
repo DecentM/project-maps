@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, provide, shallowRef, watch } from 'vue'
-import type { LngLat, MapLibreEvent } from 'maplibre-gl'
+import { LngLat, type MapLibreEvent } from 'maplibre-gl'
 
 import { useMap } from './use-map'
 import { MapSymbol } from './map-symbol'
 
 const props = withDefaults(
   defineProps<{
-    center?: [number, number]
+    center?: LngLat
     zoom?: number
   }>(),
   {
-    center: () => [0, 0],
+    center: () => new LngLat(0, 0),
     zoom: 16.25,
   }
 )

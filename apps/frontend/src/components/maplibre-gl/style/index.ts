@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import type { StyleSpecification } from 'maplibre-gl'
+import type { LngLat, StyleSpecification } from 'maplibre-gl'
 
 import { config } from './config'
 import { sources } from './sources'
@@ -9,7 +9,7 @@ import { layers } from './layers'
 export * as Consts from './consts'
 
 export type StyleDefaults = {
-  center: [number, number]
+  center: LngLat
   zoom: number
 }
 
@@ -18,6 +18,7 @@ export const useStyle = (defaults: StyleDefaults) => {
     return {
       ...config,
       ...defaults,
+      center: [defaults.center.lng, defaults.center.lat],
       sources,
       layers,
     } as const
