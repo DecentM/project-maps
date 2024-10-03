@@ -31,6 +31,11 @@ export class OverpassSource extends MetadataSource {
     'artwork_type',
     'landuse',
     'opening_hours',
+    'bench',
+    'bin',
+    'bus',
+    'highway',
+    'lit',
   ]
 
   private static processElement(
