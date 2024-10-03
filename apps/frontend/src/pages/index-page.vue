@@ -6,6 +6,7 @@ import type { LngLat } from 'maplibre-gl'
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 import MapDataLayer from 'src/components/maplibre-gl/map-data-layer.vue'
+import MapAttribution from 'src/components/maplibre-gl/map-attribution.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { classToIcon } from 'src/components/maplibre-gl/style/icon-mapping'
 
@@ -125,6 +126,8 @@ const handleMapClick = () => {
           </div>
         </template>
       </map-data-layer>
+
+      <map-attribution />
     </maplibre-gl>
   </q-page>
 </template>

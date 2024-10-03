@@ -44,6 +44,7 @@ export const useMap = (
       new MaplibreMap({
         container: container.value,
         antialias: true,
+        attributionControl: false,
       })
     )
 
