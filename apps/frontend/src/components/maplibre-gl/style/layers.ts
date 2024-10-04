@@ -112,6 +112,13 @@ import { data_z16 } from './layers/data_z16'
 
 export const layers: LayerSpecification[] = [
   background,
+  {
+    id: 'hills',
+    type: 'hillshade',
+    source: 'terrain',
+    layout: { visibility: 'visible' },
+    paint: { 'hillshade-shadow-color': '#473B24' },
+  },
   park,
   park_outline,
   landuse_residential,

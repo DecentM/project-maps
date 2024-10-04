@@ -8,16 +8,22 @@ export default fp(async (fastify, opts) => {
     decorateReply: false,
     prefix: '/tile',
     allowedPath(pathName, root, request) {
-      if (pathName === '/metadata.json') return true
+      if (pathName.endsWith('/metadata.json')) return true
 
-      return pathName.endsWith('.pbf') && !pathName.includes('..')
+      return (pathName.endsWith('.pbf') || pathName.endsWith('.png')) && !pathName.includes('..')
     },
     setHeaders(res, pathName, stat) {
-      if (pathName.endsWith('.json')) {
-        res.setHeader('Content-Type', 'application/json')
-      } else {
-        res.setHeader('Content-Type', 'application/x-protobuf')
-        res.setHeader('Content-Encoding', 'gzip')
+      switch (true) {
+        case pathName.endsWith('.json'):
+          res.setHeader('Content-Type', 'application/json')
+          break
+        case pathName.endsWith('.pbf'):
+          res.setHeader('Content-Type', 'application/x-protobuf')
+          res.setHeader('Content-Encoding', 'gzip')
+          break
+        case pathName.endsWith('.png'):
+          res.setHeader('Content-Type', 'image/png')
+          break
       }
     },
   })

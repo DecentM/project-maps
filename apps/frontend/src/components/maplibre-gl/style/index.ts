@@ -5,6 +5,7 @@ import { config } from './config'
 import { sources } from './sources'
 
 import { layers } from './layers'
+import { terrain } from './terrain'
 
 export * as Consts from './consts'
 
@@ -21,6 +22,7 @@ export const useStyle = (defaults: StyleDefaults) => {
       center: [defaults.center.lng, defaults.center.lat],
       sources,
       layers,
+      terrain,
     } as const
   })
 

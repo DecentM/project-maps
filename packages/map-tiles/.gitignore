@@ -1,2 +1,5 @@
 dist/*
 !dist/.gitkeep
+
+src/terrain/input/*
+!src/terrain/input/.gitkeep

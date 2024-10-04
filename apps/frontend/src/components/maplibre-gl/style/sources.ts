@@ -1,8 +1,14 @@
+import type { SourceSpecification } from 'maplibre-gl'
 import * as Consts from './consts'
 
-export const sources = {
+export const sources: Record<string, SourceSpecification> = {
   openmaptiles: {
     type: 'vector',
     url: Consts.Urls.openmaptilesSource,
   },
-} as const
+  terrain: {
+    type: 'raster-dem',
+    url: Consts.Urls.terrainSource,
+    tiles: [`${Consts.Urls.terrainSource.replace('/metadata.json', '')}/{z}/{x}/{y}.png`],
+  },
+}

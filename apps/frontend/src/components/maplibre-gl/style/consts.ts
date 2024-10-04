@@ -29,4 +29,5 @@ export const Urls = {
   sprite: '{spritesUrlBase}/mdi',
   glyphs: '{fontsUrlBase}/{fontstack}/{range}.pbf',
   openmaptilesSource: '{tileUrlBase}/metadata.json',
+  terrainSource: '{terrainUrlBase}/metadata.json',
 } as const

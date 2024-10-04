@@ -30,9 +30,10 @@ export const useMap = (
   const transformRequest = (url: string): RequestParameters => {
     return {
       url: url
-        .replace(/\{tileUrlBase\}/gu, `http://${window.location.hostname}:3000/tile`)
+        .replace(/\{tileUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/vector`)
         .replace(/\{spritesUrlBase\}/gu, `http://${window.location.hostname}:3000/icons/sprites`)
-        .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`),
+        .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`)
+        .replace(/\{terrainUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/terrain`),
     }
   }
 
