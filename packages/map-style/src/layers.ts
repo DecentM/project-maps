@@ -109,9 +109,11 @@ import { continent } from './layers/continent'
 import { data_z14 } from './layers/data_z14'
 import { data_z15 } from './layers/data_z15'
 import { data_z16 } from './layers/data_z16'
+import { tints } from './layers/tints'
 
 export const layers: LayerSpecification[] = [
   background,
+  tints,
   {
     id: 'hills',
     type: 'hillshade',

@@ -30,4 +30,5 @@ export const Urls = {
   glyphs: '{fontsUrlBase}/{fontstack}/{range}.pbf',
   openmaptilesSource: '{tileUrlBase}/metadata.json',
   terrainSource: '{terrainUrlBase}/metadata.json',
+  tintsSource: '{tintsUrlBase}/metadata.json',
 } as const

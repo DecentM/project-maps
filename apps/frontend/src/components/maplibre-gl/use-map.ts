@@ -33,7 +33,8 @@ export const useMap = (
         .replace(/\{tileUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/vector`)
         .replace(/\{spritesUrlBase\}/gu, `http://${window.location.hostname}:3000/icons/sprites`)
         .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`)
-        .replace(/\{terrainUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/terrain`),
+        .replace(/\{terrainUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/terrain`)
+        .replace(/\{tintsUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/tints`),
     }
   }
 

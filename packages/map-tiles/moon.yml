@@ -4,20 +4,6 @@ platform: node
 type: library
 
 tasks:
-  download_pbf:
-    command: curl
-    args:
-      - -L
-      - -o
-      - ./dist/planet.osm.pbf
-      - https://download.geofabrik.de/europe/united-kingdom/scotland-latest.osm.pbf
-    outputs:
-      - ./dist/planet.osm.pbf
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-
   download_terrain:
     command: curl
     args:
@@ -49,10 +35,103 @@ tasks:
       persistent: false
       outputStyle: stream
 
-  build_terrain:
-    command: src/terrain/build.sh
+  build_terrain_prep:
+    command: sh
+    args:
+      - -c
+      - rm -rf ./dist/terrain_tmp && mkdir -p ./dist/terrain_tmp
+    outputs:
+      - ./dist/terrain_tmp
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  build_terrain_gdalbuildvrt:
+    deps:
+      - build_terrain_prep
+    command: gdalbuildvrt
+    args:
+      - -overwrite
+      - -srcnodata
+      - "-9999"
+      - -vrtnodata
+      - "-9999"
+      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
+      - ./src/terrain/input/*_DSM.tif
     inputs:
       - ./src/terrain/input
+    outputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  build_terrain_gdalwarp:
+    deps:
+      - build_terrain_gdalbuildvrt
+    command: gdalwarp
+    args:
+      - -r
+      - cubicspline
+      - -t_srs
+      - EPSG:3857
+      - -dstnodata
+      - "0"
+      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
+      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
+    inputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
+    outputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  build_terrain_rgbify:
+    deps:
+      - build_terrain_gdalwarp
+    command: python3
+    args:
+      - src/terrain/rgbify.py
+      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
+      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
+    inputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
+    outputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  build_terrain_index:
+    deps:
+      - build_terrain_rgbify
+    command: sqlite3
+    args:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
+      - "CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);"
+    inputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
+    outputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  build_terrain_mbutil:
+    deps:
+      - build_terrain_index
+    command: sh
+    args:
+      - -c
+      - rm -rf ./dist/terrain && mb-util ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles ./dist/terrain
+    inputs:
+      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
     outputs:
       - ./dist/terrain
     options:
@@ -60,9 +139,37 @@ tasks:
       persistent: false
       outputStyle: stream
 
+  build_terrain:
+    deps:
+      - build_terrain_mbutil
+    command: rm
+    args:
+      - -rf
+      - ./dist/terrain_tmp
+    inputs:
+      - ./dist/terrain_tmp
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  download_vector:
+    command: curl
+    args:
+      - -L
+      - -o
+      - ./dist/planet.osm.pbf
+      - https://download.geofabrik.de/europe/united-kingdom/scotland-latest.osm.pbf
+    outputs:
+      - ./dist/planet.osm.pbf
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
   build_vector:
     deps:
-      - download_pbf
+      - download_vector
     command: sh
     args:
       - -c
@@ -83,6 +190,37 @@ tasks:
       persistent: false
       outputStyle: stream
 
+  download_tints:
+    command: curl
+    args:
+      - -L
+      - -o
+      - ./dist/hints.mbtiles
+      - https://github.com/lukasmartinelli/naturalearthtiles/releases/download/v1.0/natural_earth_cross_blended_hypso.raster.mbtiles
+    outputs:
+      - ./dist/hints.mbtiles
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
+  build_tints:
+    deps:
+      - download_tints
+    command: sh
+    args:
+      - -c
+      - |
+        rm -rf ./dist/tints && mb-util ./dist/hints.mbtiles ./dist/tints
+    inputs:
+      - ./dist/hints.mbtiles
+    outputs:
+      - ./dist/tints
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+
   up:
     command: nodemon
     args:
@@ -91,7 +229,7 @@ tasks:
       - -w
       - Dockerfile
       - --exec
-      - moon map-tiles:build_vector map-tiles:build_terrain
+      - moon map-tiles:build_vector map-tiles:build_terrain map-tiles:build_tints
     options:
       cache: false
       persistent: true
