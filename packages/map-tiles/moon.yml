@@ -4,52 +4,61 @@ platform: node
 type: library
 
 tasks:
-  download_terrain:
-    command: curl
-    args:
-      - -L
-      - -o
-      - ./dist/terrain_tmp/terrain.zip
-      - https://www.eorc.jaxa.jp/ALOS/aw3d30/data/release_v2404/N050W005_N055E000.zip
-    outputs:
-      - ./dist/terrain_tmp/terrain.zip
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-
-  extract_terrain:
-    deps:
-      - download_terrain
-    command: unzip
-    args:
-      - -d
-      - ./dist/terrain_tmp
-      - ./dist/terrain_tmp/terrain.zip
-    inputs:
-      - ./dist/terrain_tmp/terrain.zip
-    outputs:
-      - ./dist/terrain_tmp/N050W005_N055E000
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-
   build_terrain_prep:
     command: sh
     args:
       - -c
       - rm -rf ./dist/terrain_tmp && mkdir -p ./dist/terrain_tmp
+    inputs:
+      - ./src/terrain
     outputs:
       - ./dist/terrain_tmp
     options:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
+
+  build_terrain_download:
+    deps:
+      - build_terrain_prep
+    command: curl
+    args:
+      - -L
+      - --no-progress-meter
+      - -o
+      - ./dist/terrain_tmp/terrain.zip
+      - https://www.eorc.jaxa.jp/ALOS/aw3d30/data/release_v2404/N055E020/N059E024.zip
+    outputs:
+      - ./dist/terrain_tmp/terrain.zip
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+      internal: true
+
+  build_terrain_extract:
+    deps:
+      - build_terrain_download
+    command: unzip
+    args:
+      - -o
+      - -d
+      - ./dist/terrain_tmp/extract
+      - ./dist/terrain_tmp/terrain.zip
+    inputs:
+      - ./dist/terrain_tmp/terrain.zip
+    outputs:
+      - ./dist/terrain_tmp/extract
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+      internal: true
 
   build_terrain_gdalbuildvrt:
     deps:
-      - build_terrain_prep
+      - build_terrain_extract
     command: gdalbuildvrt
     args:
       - -overwrite
@@ -58,15 +67,16 @@ tasks:
       - -vrtnodata
       - "-9999"
       - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
-      - ./src/terrain/input/*_DSM.tif
+      - ./dist/terrain_tmp/extract/**/*_DSM.tif
     inputs:
-      - ./src/terrain/input
+      - ./dist/terrain_tmp
     outputs:
       - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
     options:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_terrain_gdalwarp:
     deps:
@@ -89,6 +99,7 @@ tasks:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_terrain_rgbify:
     deps:
@@ -106,6 +117,7 @@ tasks:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_terrain_index:
     deps:
@@ -122,6 +134,7 @@ tasks:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_terrain_mbutil:
     deps:
@@ -138,6 +151,7 @@ tasks:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_terrain:
     deps:
@@ -157,15 +171,17 @@ tasks:
     command: curl
     args:
       - -L
+      - --no-progress-meter
       - -o
       - ./dist/planet.osm.pbf
-      - https://download.geofabrik.de/europe/united-kingdom/scotland-latest.osm.pbf
+      - http://download.geofabrik.de/europe/estonia-latest.osm.pbf
     outputs:
       - ./dist/planet.osm.pbf
     options:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_vector:
     deps:
@@ -203,6 +219,7 @@ tasks:
       cache: true
       persistent: false
       outputStyle: stream
+      internal: true
 
   build_tints:
     deps:
