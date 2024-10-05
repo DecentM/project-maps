@@ -1,7 +1,9 @@
 import type { SourceSpecification } from 'maplibre-gl'
 import * as Consts from './consts'
 
-export const sources: Record<string, SourceSpecification> = {
+import type { StyleConfig } from '.'
+
+export const createSources = (config: StyleConfig): Record<string, SourceSpecification> => ({
   openmaptiles: {
     type: 'vector',
     url: Consts.Urls.openmaptilesSource,
@@ -18,4 +20,4 @@ export const sources: Record<string, SourceSpecification> = {
     tiles: [`${Consts.Urls.tintsSource.replace('/metadata.json', '')}/{z}/{x}/{y}.png`],
     type: 'raster',
   },
-}
+})

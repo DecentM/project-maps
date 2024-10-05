@@ -4,6 +4,11 @@ import MapMarker from 'src/components/maplibre-gl/map-marker.vue'
 import MapDataLayer from 'src/components/maplibre-gl/map-data-layer.vue'
 
 import { classToIcon } from '@project-maps/map-style'
+import { ref } from 'vue'
+import { LngLat } from 'maplibre-gl'
+
+const zoom = ref(0)
+const center = ref<LngLat>(new LngLat(-1.422504, 53.235409))
 </script>
 
 <style lanng="scss" scoped>
@@ -18,7 +23,7 @@ import { classToIcon } from '@project-maps/map-style'
 </style>
 
 <template>
-  <maplibre-gl class="vh-100">
+  <maplibre-gl class="vh-100" :zoom="zoom" :center="center">
     <map-marker
       :coordinates="[-1.422504, 53.235409]"
       :options="{ offset: [0, 0] }"

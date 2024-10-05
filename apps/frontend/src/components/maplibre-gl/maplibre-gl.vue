@@ -1,20 +1,15 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, provide, shallowRef, watch } from 'vue'
 import { LngLat, type MapLibreEvent } from 'maplibre-gl'
+import type { StyleConfig } from '@project-maps/map-style'
 
 import { useMap } from './use-map'
 import { MapSymbol } from './map-symbol'
 
-const props = withDefaults(
-  defineProps<{
-    center?: LngLat
-    zoom?: number
-  }>(),
-  {
-    center: () => new LngLat(0, 0),
-    zoom: 16.25,
-  }
-)
+const props = withDefaults(defineProps<StyleConfig>(), {
+  center: () => new LngLat(0, 0),
+  zoom: 16.25,
+})
 
 const emit = defineEmits<{
   (event: 'load'): void

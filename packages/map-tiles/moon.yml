@@ -195,10 +195,10 @@ tasks:
     args:
       - -L
       - -o
-      - ./dist/hints.mbtiles
-      - https://github.com/lukasmartinelli/naturalearthtiles/releases/download/v1.0/natural_earth_cross_blended_hypso.raster.mbtiles
+      - ./dist/tints.mbtiles
+      - https://github.com/lukasmartinelli/naturalearthtiles/releases/download/v1.0/natural_earth_cross_blended_hypso_shaded_relief.raster.mbtiles
     outputs:
-      - ./dist/hints.mbtiles
+      - ./dist/tints.mbtiles
     options:
       cache: true
       persistent: false
@@ -211,9 +211,9 @@ tasks:
     args:
       - -c
       - |
-        rm -rf ./dist/tints && mb-util ./dist/hints.mbtiles ./dist/tints
+        rm -rf ./dist/tints && mb-util ./dist/tints.mbtiles ./dist/tints
     inputs:
-      - ./dist/hints.mbtiles
+      - ./dist/tints.mbtiles
     outputs:
       - ./dist/tints
     options:

@@ -2,7 +2,7 @@ import type { StyleSpecification } from 'maplibre-gl'
 
 import * as Consts from './consts'
 
-export const config: StyleSpecification = {
+export const specification: StyleSpecification = {
   version: 8,
   name: 'OSM Liberty',
   bearing: 0,

@@ -11,6 +11,7 @@ tasks:
     options:
       cache: false
       persistent: true
+      envFile: .env
 
   build:
     deps:

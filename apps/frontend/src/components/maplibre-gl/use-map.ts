@@ -5,36 +5,29 @@ import {
   onBeforeUnmount,
   onMounted,
   shallowRef,
-  watch,
   type ShallowRef,
 } from 'vue'
 
 import { Map as MaplibreMap, type RequestParameters } from 'maplibre-gl'
 
-import { type StyleDefaults, useStyle } from '@project-maps/map-style'
+import { type StyleConfig, createStyle } from '@project-maps/map-style'
 
 export const useMap = (
   container: ShallowRef<HTMLDivElement | undefined>,
-  styleDefaults: StyleDefaults
+  styleConfig: StyleConfig
 ) => {
   const map = shallowRef<MaplibreMap | null>(null)
-
-  const { style } = useStyle(styleDefaults)
-
-  watch(style, (newStyle) => {
-    map.value?.setStyle(newStyle, {
-      diff: false,
-    })
-  })
+  const style = createStyle(styleConfig)
+  const hostname = window.location.hostname
 
   const transformRequest = (url: string): RequestParameters => {
     return {
       url: url
-        .replace(/\{tileUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/vector`)
-        .replace(/\{spritesUrlBase\}/gu, `http://${window.location.hostname}:3000/icons/sprites`)
-        .replace(/\{fontsUrlBase\}/gu, `http://${window.location.hostname}:3000/fonts`)
-        .replace(/\{terrainUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/terrain`)
-        .replace(/\{tintsUrlBase\}/gu, `http://${window.location.hostname}:3000/tile/tints`),
+        .replace(/\{tileUrlBase\}/gu, `http://${hostname}:3000/tile/vector`)
+        .replace(/\{spritesUrlBase\}/gu, `http://${hostname}:3000/icons/sprites`)
+        .replace(/\{fontsUrlBase\}/gu, `http://${hostname}:3000/fonts`)
+        .replace(/\{terrainUrlBase\}/gu, `http://${hostname}:3000/tile/terrain`)
+        .replace(/\{tintsUrlBase\}/gu, `http://${hostname}:3000/tile/tints`),
     }
   }
 
@@ -55,7 +48,7 @@ export const useMap = (
 
     // set initial style
     map.value.setTransformRequest(transformRequest)
-    map.value.setStyle(style.value, {
+    map.value.setStyle(style, {
       diff: false,
     })
   }
