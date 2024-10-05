@@ -11,7 +11,7 @@ import {
 
 import { Map as MaplibreMap, type RequestParameters } from 'maplibre-gl'
 
-import { type StyleDefaults, useStyle } from './style'
+import { type StyleDefaults, useStyle } from '@project-maps/map-style'
 
 export const useMap = (
   container: ShallowRef<HTMLDivElement | undefined>,

@@ -4,51 +4,13 @@ platform: node
 type: library
 
 tasks:
-  validate:
-    command: gl-style-validate
-    args:
-      - src/style/*.json
-    inputs:
-      - src/style
-    options:
-      cache: true
-      persistent: false
-
-  format:
-    command: sh
-    args:
-      - -c
-      - gl-style-format src/style/light.json > /tmp/style.json && mv /tmp/style.json src/style/light.json
-    inputs:
-      - src/style
-    outputs:
-      - src/style
-    options:
-      cache: true
-      persistent: false
-
   build:
-    deps:
-      - validate
-    command: sh
-    args:
-      - -c
-      - cp -a src/style dist/
+    command:
+      - tsc
     inputs:
-      - src/style
+      - src
     outputs:
-      - dist/style
+      - dist
     options:
       cache: true
       persistent: false
-
-  up:
-    command: nodemon
-    args:
-      - -w
-      - src
-      - --exec
-      - moon map-style:build
-    options:
-      cache: false
-      persistent: true

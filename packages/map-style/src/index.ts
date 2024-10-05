@@ -9,6 +9,8 @@ import { terrain } from './terrain'
 
 export * as Consts from './consts'
 
+export { classToIcon } from './icon-mapping'
+
 export type StyleDefaults = {
   center: LngLat
   zoom: number

@@ -8,7 +8,7 @@ import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 import MapDataLayer from 'src/components/maplibre-gl/map-data-layer.vue'
 import MapAttribution from 'src/components/maplibre-gl/map-attribution.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { classToIcon } from 'src/components/maplibre-gl/style/icon-mapping'
+import { classToIcon } from '@project-maps/map-style'
 
 const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 

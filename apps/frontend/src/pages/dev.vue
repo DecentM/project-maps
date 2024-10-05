@@ -3,7 +3,7 @@ import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 import MapMarker from 'src/components/maplibre-gl/map-marker.vue'
 import MapDataLayer from 'src/components/maplibre-gl/map-data-layer.vue'
 
-import { classToIcon } from 'src/components/maplibre-gl/style/icon-mapping'
+import { classToIcon } from '@project-maps/map-style'
 </script>
 
 <style lanng="scss" scoped>
