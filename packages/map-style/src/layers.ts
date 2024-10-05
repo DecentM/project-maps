@@ -94,7 +94,6 @@ import { boundary_2_z0_4 } from './layers/boundary_2_z0_4'
 import { boundary_2_z5_ } from './layers/boundary_2_z5_'
 import { water_name_line } from './layers/water_name_line'
 import { water_name_point } from './layers/water_name_point'
-import { poi_transit } from './layers/poi_transit'
 import { road_label } from './layers/road_label'
 import { road_shield } from './layers/road_shield'
 import { place_other } from './layers/place_other'
@@ -204,7 +203,6 @@ export const layers: LayerSpecification[] = [
   boundary_2_z5_,
   water_name_line,
   water_name_point,
-  poi_transit,
   road_label,
   road_shield,
   place_other,
