@@ -28,7 +28,9 @@ tasks:
       - --no-progress-meter
       - -o
       - ./dist/terrain_tmp/terrain.zip
-      - https://www.eorc.jaxa.jp/ALOS/aw3d30/data/release_v2404/N055E020/N059E024.zip
+      - $(jq -r '.terrain_zips.[]' <build-input.json)
+    inputs:
+      - ./build-input.json
     outputs:
       - ./dist/terrain_tmp/terrain.zip
     options:
@@ -174,7 +176,9 @@ tasks:
       - --no-progress-meter
       - -o
       - ./dist/planet.osm.pbf
-      - http://download.geofabrik.de/europe/estonia-latest.osm.pbf
+      - $(jq -r '.pbfs.[]' <build-input.json)
+    inputs:
+      - ./build-input.json
     outputs:
       - ./dist/planet.osm.pbf
     options:
@@ -212,7 +216,9 @@ tasks:
       - -L
       - -o
       - ./dist/tints.mbtiles
-      - https://github.com/lukasmartinelli/naturalearthtiles/releases/download/v1.0/natural_earth_cross_blended_hypso_shaded_relief.raster.mbtiles
+      - $(jq -r '.tints.[]' <build-input.json)
+    inputs:
+      - ./build-input.json
     outputs:
       - ./dist/tints.mbtiles
     options:

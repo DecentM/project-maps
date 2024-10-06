@@ -3,3 +3,5 @@ dist/*
 
 src/terrain/input/*
 !src/terrain/input/.gitkeep
+
+build-input.json

@@ -389,10 +389,10 @@
       "maxzoom": 14
     },
     "transportation": {
-      "minzoom": 5,
+      "minzoom": 7,
       "maxzoom": 14,
       "simplify_below": 13,
-      "simplify_level": 0.0003
+      "simplify_level": 0.003
     },
     "transportation_detail": {
       "minzoom": 14,
