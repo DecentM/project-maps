@@ -25,14 +25,14 @@ tasks:
     command: curl
     args:
       - -L
-      - --no-progress-meter
-      - -o
-      - ./dist/terrain_tmp/terrain.zip
-      - $(jq -r '.terrain_zips.[]' <build-input.json)
+      - --output-dir
+      - ./dist/terrain_tmp
+      - --remote-name-all
+      - $(jq -r '.terrain_zips[]' <build-input.json)
     inputs:
       - ./build-input.json
     outputs:
-      - ./dist/terrain_tmp/terrain.zip
+      - ./dist/terrain_tmp/*.zip
     options:
       cache: true
       persistent: false
@@ -47,9 +47,9 @@ tasks:
       - -o
       - -d
       - ./dist/terrain_tmp/extract
-      - ./dist/terrain_tmp/terrain.zip
+      - ./dist/terrain_tmp/\*.zip
     inputs:
-      - ./dist/terrain_tmp/terrain.zip
+      - ./dist/terrain_tmp/*.zip
     outputs:
       - ./dist/terrain_tmp/extract
     options:
@@ -173,14 +173,14 @@ tasks:
     command: curl
     args:
       - -L
-      - --no-progress-meter
-      - -o
-      - ./dist/planet.osm.pbf
-      - $(jq -r '.pbfs.[]' <build-input.json)
+      - --output-dir
+      - ./dist
+      - -O
+      - $(jq -r '.pbfs[]' <build-input.json)
     inputs:
       - ./build-input.json
     outputs:
-      - ./dist/planet.osm.pbf
+      - ./dist/*.osm.pbf
     options:
       cache: true
       persistent: false
@@ -194,7 +194,7 @@ tasks:
     args:
       - -c
       - |
-        mkdir -p dist/store && bin/tilemaker-ubuntu-22.04/tilemaker ./dist/planet.osm.pbf \
+        mkdir -p dist/store && bin/tilemaker-ubuntu-22.04/tilemaker ./dist/*.osm.pbf \
           --output ./dist/vector \
           --config ./src/vector/config.json \
           --store ./dist/store \
@@ -202,7 +202,7 @@ tasks:
           --materialize-geometries; rm -rf ./dist/store
     inputs:
       - ./src/vector
-      - ./dist/planet.osm.pbf
+      - ./dist/*.osm.pbf
     outputs:
       - ./dist/vector
     options:
@@ -216,7 +216,7 @@ tasks:
       - -L
       - -o
       - ./dist/tints.mbtiles
-      - $(jq -r '.tints.[]' <build-input.json)
+      - $(jq -r '.tints[]' <build-input.json)
     inputs:
       - ./build-input.json
     outputs:
