@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "project-maps"
+version = "0.1.0"
+description = ""
+authors = ["DecentM <decentm@decentm.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+mercantile = "^1.2.1"
+rasterio = "^1.4.1"
+rio-mucho = "^1.0.0"
+pillow = "^10.4.0"
+
+[tool.poetry.group.dev.dependencies]
+mbutil = "^0.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

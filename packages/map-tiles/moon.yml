@@ -170,13 +170,13 @@ tasks:
       outputStyle: stream
 
   download_vector:
-    command: curl
+    command: sh
     args:
-      - -L
-      - --output-dir
-      - ./dist
-      - -O
-      - $(jq -r '.pbfs[]' <build-input.json)
+      - -c
+      - |
+        for url in $(jq -r '.pbfs | join(" ")' <build-input.json); do
+          curl --output-dir ./dist -L -o $(basename $url) $url
+        done
     inputs:
       - ./build-input.json
     outputs:
@@ -187,19 +187,31 @@ tasks:
       outputStyle: stream
       internal: true
 
-  build_vector:
+  prep_build_vector:
     deps:
       - download_vector
     command: sh
     args:
       - -c
+      - rm -rf ./.ignored/store && mkdir -p ./.ignored/store
+    outputs:
+      - ./.ignored/store
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream
+      internal: true
+
+  build_vector:
+    deps:
+      - prep_build_vector
+    command: sh
+    args:
+      - -c
       - |
-        mkdir -p dist/store && bin/tilemaker-ubuntu-22.04/tilemaker ./dist/*.osm.pbf \
-          --output ./dist/vector \
-          --config ./src/vector/config.json \
-          --store ./dist/store \
-          --process src/vector/process-openmaptiles.lua \
-          --materialize-geometries; rm -rf ./dist/store
+        for url in $(jq -r '.pbfs | join(" ")' <build-input.json); do
+          bin/tilemaker-ubuntu-22.04/tilemaker ./dist/$(basename $url) --output ./dist/vector --config ./src/vector/config.json --store ./.ignored/store --process src/vector/process-openmaptiles.lua --materialize-geometries
+        done
     inputs:
       - ./src/vector
       - ./dist/*.osm.pbf
