@@ -9,8 +9,6 @@ tasks:
     args:
       - -c
       - rm -rf ./dist/terrain_tmp && mkdir -p ./dist/terrain_tmp
-    inputs:
-      - ./src/terrain
     outputs:
       - ./dist/terrain_tmp
     options:
@@ -71,7 +69,7 @@ tasks:
       - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
       - ./dist/terrain_tmp/extract/**/*_DSM.tif
     inputs:
-      - ./dist/terrain_tmp
+      - ./dist/terrain_tmp/extract/**/*_DSM.tif
     outputs:
       - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
     options:
