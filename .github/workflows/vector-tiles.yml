@@ -67,8 +67,170 @@ jobs:
       matrix:
         pbf:
           # africa
-          - name: africa
-            url: http://download.geofabrik.de/africa-latest.osm.pbf
+          - name: algeria
+            url: http://download.geofabrik.de/africa/algeria-latest.osm.pbf
+
+          - name: angola
+            url: http://download.geofabrik.de/africa/angola-latest.osm.pbf
+
+          - name: benin
+            url: http://download.geofabrik.de/africa/benin-latest.osm.pbf
+
+          - name: botswana
+            url: http://download.geofabrik.de/africa/botsawana-latest.osm.pbf
+
+          - name: burkina-faso
+            url: http://download.geofabrik.de/africa/burkina-faso-latest.osm.pbf
+
+          - name: burundi
+            url: http://download.geofabrik.de/africa/burundi-latest.osm.pbf
+
+          - name: cameroon
+            url: http://download.geofabrik.de/africa/cameroon-latest.osm.pbf
+
+          - name: canary-islands
+            url: http://download.geofabrik.de/africa/canary-islands-latest.osm.pbf
+
+          - name: cape-verde
+            url: http://download.geofabrik.de/africa/cape-verde-latest.osm.pbf
+
+          - name: central-african-republic
+            url: http://download.geofabrik.de/africa/central-african-republic-latest.osm.pbf
+
+          - name: chad
+            url: http://download.geofabrik.de/africa/chad-latest.osm.pbf
+
+          - name: comores
+            url: http://download.geofabrik.de/africa/comores-latest.osm.pbf
+
+          - name: congo-brazzaville
+            url: http://download.geofabrik.de/africa/congo-brazzaville-latest.osm.pbf
+
+          - name: congo-kinshasa
+            url: http://download.geofabrik.de/africa/congo-democratic-republic-latest.osm.pbf
+
+          - name: djibouti
+            url: http://download.geofabrik.de/africa/djibouti-latest.osm.pbf
+
+          - name: egypt
+            url: http://download.geofabrik.de/africa/egypt-latest.osm.pbf
+
+          - name: equatorial-guinea
+            url: http://download.geofabrik.de/africa/equatorial-guinea-latest.osm.pbf
+
+          - name: eritrea
+            url: http://download.geofabrik.de/africa/eritrea-latest.osm.pbf
+
+          - name: ethiopia
+            url: http://download.geofabrik.de/africa/ethiopia-latest.osm.pbf
+
+          - name: gabon
+            url: http://download.geofabrik.de/africa/gabon-latest.osm.pbf
+
+          - name: ghana
+            url: http://download.geofabrik.de/africa/ghana-latest.osm.pbf
+
+          - name: guinea
+            url: http://download.geofabrik.de/africa/guinea-latest.osm.pbf
+
+          - name: guinea-bissau
+            url: http://download.geofabrik.de/africa/guinea-bissau-latest.osm.pbf
+
+          - name: ivory-coast
+            url: http://download.geofabrik.de/africa/ivory-coast-latest.osm.pbf
+
+          - name: kenya
+            url: http://download.geofabrik.de/africa/kenya-latest.osm.pbf
+
+          - name: lesotho
+            url: http://download.geofabrik.de/africa/lesotho-latest.osm.pbf
+
+          - name: liberia
+            url: http://download.geofabrik.de/africa/liberia-latest.osm.pbf
+
+          - name: libya
+            url: http://download.geofabrik.de/africa/libya-latest.osm.pbf
+
+          - name: madagascar
+            url: http://download.geofabrik.de/africa/madagascar-latest.osm.pbf
+
+          - name: malawi
+            url: http://download.geofabrik.de/africa/malawi-latest.osm.pbf
+
+          - name: mali
+            url: http://download.geofabrik.de/africa/mali-latest.osm.pbf
+
+          - name: mauritania
+            url: http://download.geofabrik.de/africa/mauritania-latest.osm.pbf
+
+          - name: mauritius
+            url: http://download.geofabrik.de/africa/mauritius-latest.osm.pbf
+
+          - name: morocco
+            url: http://download.geofabrik.de/africa/morocco-latest.osm.pbf
+
+          - name: mozambique
+            url: http://download.geofabrik.de/africa/mozambique-latest.osm.pbf
+
+          - name: namibia
+            url: http://download.geofabrik.de/africa/namibia-latest.osm.pbf
+
+          - name: niger
+            url: http://download.geofabrik.de/africa/niger-latest.osm.pbf
+
+          - name: nigeria
+            url: http://download.geofabrik.de/africa/nigeria-latest.osm.pbf
+
+          - name: rwanda
+            url: http://download.geofabrik.de/africa/rwanda-latest.osm.pbf
+
+          - name: saint-helena-ascension-and-tristan-da-cunha
+            url: http://download.geofabrik.de/africa/saint-helena-ascension-and-tristan-da-cunha-latest.osm.pbf
+
+          - name: sao-tome-and-principe
+            url: http://download.geofabrik.de/africa/sao-tome-and-principe-latest.osm.pbf
+
+          - name: senegal-and-gambia
+            url: http://download.geofabrik.de/africa/senegal-and-gambia-latest.osm.pbf
+
+          - name: seychelles
+            url: http://download.geofabrik.de/africa/seychelles-latest.osm.pbf
+
+          - name: sierra-leone
+            url: http://download.geofabrik.de/africa/sierra-leone-latest.osm.pbf
+
+          - name: somalia
+            url: http://download.geofabrik.de/africa/somalia-latest.osm.pbf
+
+          - name: south-africa
+            url: http://download.geofabrik.de/africa/south-africa-latest.osm.pbf
+
+          - name: south-sudan
+            url: http://download.geofabrik.de/africa/south-sudan-latest.osm.pbf
+
+          - name: sudan
+            url: http://download.geofabrik.de/africa/sudan-latest.osm.pbf
+
+          - name: swaziland
+            url: http://download.geofabrik.de/africa/swaziland-latest.osm.pbf
+
+          - name: tanzania
+            url: http://download.geofabrik.de/africa/tanzania-latest.osm.pbf
+
+          - name: togo
+            url: http://download.geofabrik.de/africa/togo-latest.osm.pbf
+
+          - name: tunisia
+            url: http://download.geofabrik.de/africa/tunisia-latest.osm.pbf
+
+          - name: uganda
+            url: http://download.geofabrik.de/africa/uganda-latest.osm.pbf
+
+          - name: zambia
+            url: http://download.geofabrik.de/africa/zambia
+
+          - name: zimbabwe
+            url: http://download.geofabrik.de/africa/zimbabwe
 
           # antarctica
           - name: antarctica
