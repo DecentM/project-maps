@@ -1,0 +1,62 @@
+name: Vector tiles
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: asdf-vm/actions/install@v3
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            apps/*/node_modules
+          key: lock-${{ hashFiles('pnpm.lock') }}
+          restore-keys: |
+            lock-
+
+      - name: Dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          pnpm install --frozen-lockfile
+
+  build:
+    needs:
+      - dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: asdf-vm/actions/install@v3
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            apps/*/node_modules
+          key: lock-${{ hashFiles('pnpm.lock') }}
+          fail-on-cache-miss: true
+
+      - name: Configure build
+        run: |
+          printf '{"pbfs":["http://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf"]}\n' > packages/map-tiles/build-input.json
+
+      - name: Build
+        if: steps.cache-node-modules.outputs.cache-hit == 'true'
+        run: |
+          set -exu
+          pnpm moon map-tiles:build_vector
