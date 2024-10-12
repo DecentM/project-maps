@@ -34,7 +34,7 @@ that's easy to remember.
     these binaries installed and available in your `$PATH`.
 - `xargs brew install <brew_requirements.txt`
 - `asdf install`
-- Activate the venv: `activate`
+- Activate the venv: `poetry env use`
   - Tip: Use an [auto-switch plugin](MichaelAquilina/zsh-autoswitch-virtualenv)
     to activate the venv when you `cd` into this directory
 - `poetry install`
