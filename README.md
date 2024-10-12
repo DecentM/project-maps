@@ -1,7 +1,6 @@
 # Project Maps
 
-An experiment to create an end-user focused maps application using only open
-data
+An experiment to create an end-user focused maps application using open data
 
 ![Screenshot of a map, with a point selected. An info panel shows details about
 its website, phone number, opening hours, and a street-level photo](/.github/readme/screenshot.png?raw=true)
@@ -9,8 +8,7 @@ its website, phone number, opening hours, and a street-level photo](/.github/rea
 ## Introduction
 
 - **Why**: I wanted to create something like mainstream maps applications, but
-  using only free data sources (free as in free beer, but preferring open ones),
-  and maybe also learn something in the process.
+  using only free data sources, and maybe also learn something in the process.
 - **What**: This repo is a monorepo of different apps and packages, managed
   using [Moon](https://moonrepo.dev/)
 
