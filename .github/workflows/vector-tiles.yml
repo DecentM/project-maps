@@ -4,11 +4,41 @@ on:
   workflow_dispatch:
 
 jobs:
-  dependencies:
+  tooling:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: asdf-vm/actions/install@v3
+
+      - name: Cache tooling
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+          restore-keys: |
+            tool-
+
+  dependencies:
+    needs:
+      - tooling
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get tooling from cache
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+          fail-on-cache-miss: true
 
       - uses: asdf-vm/actions/install@v3
 
@@ -38,9 +68,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get tooling from cache
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+          fail-on-cache-miss: true
+
       - uses: asdf-vm/actions/install@v3
 
-      - name: Cache node_modules
+      - name: Get node_modules from cache
         uses: actions/cache@v4
         id: cache-node-modules
         with:
@@ -53,7 +92,7 @@ jobs:
 
       - name: Configure build
         run: |
-          printf '{"pbfs":["http://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf"]}\n' > packages/map-tiles/build-input.json
+          printf '{"pbfs":["http://download.geofabrik.de/europe/united-kingdom-latest.osm.pbf"]}\n' > packages/map-tiles/build-input.json
 
       - name: Build
         if: steps.cache-node-modules.outputs.cache-hit == 'true'
