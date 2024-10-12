@@ -227,10 +227,10 @@ jobs:
             url: http://download.geofabrik.de/africa/uganda-latest.osm.pbf
 
           - name: zambia
-            url: http://download.geofabrik.de/africa/zambia
+            url: http://download.geofabrik.de/africa/zambia-latest.osm.pbf
 
           - name: zimbabwe
-            url: http://download.geofabrik.de/africa/zimbabwe
+            url: http://download.geofabrik.de/africa/zimbabwe-latest.osm.pbf
 
           # antarctica
           - name: antarctica
