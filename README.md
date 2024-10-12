@@ -3,6 +3,9 @@
 An experiment to create an end-user focused maps application using only open
 data
 
+![Screenshot of a map, with a point selected. An info panel shows details about
+its website, phone number, opening hours, and a street-level photo](/.github/readme/screenshot.png?raw=true)
+
 ## Introduction
 
 - **Why**: I wanted to create something like mainstream maps applications, but
