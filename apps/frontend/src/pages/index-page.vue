@@ -55,11 +55,14 @@ onMounted(() => {
   center.value = defaultCenter.value
 })
 
+const ZOOM_ACCURACY = 3
+const LATLNG_ACCURACY = 6
+
 const handleMoveEnd = (newCenter: LngLat) => {
   if (
     !newCenter ||
-    (newCenter.lat.toFixed(5) === center.value?.lat.toFixed(5) &&
-      newCenter.lng.toFixed(5) === center.value?.lng.toFixed(5))
+    (newCenter.lat.toFixed(LATLNG_ACCURACY) === center.value?.lat.toFixed(LATLNG_ACCURACY) &&
+      newCenter.lng.toFixed(LATLNG_ACCURACY) === center.value?.lng.toFixed(LATLNG_ACCURACY))
   )
     return
 
@@ -67,7 +70,7 @@ const handleMoveEnd = (newCenter: LngLat) => {
 }
 
 const handleZoomEnd = (newZoom: number) => {
-  if (newZoom.toFixed(2) === zoom.value.toFixed(2)) return
+  if (newZoom.toFixed(ZOOM_ACCURACY) === zoom.value.toFixed(ZOOM_ACCURACY)) return
 
   zoom.value = newZoom
 }
@@ -77,9 +80,9 @@ watch(zoom, (newZoom) => {
 
   router.push({
     params: {
-      zoom: encodeURIComponent(newZoom.toFixed(2)),
-      lat: encodeURIComponent(center.value.lat.toFixed(5)),
-      lng: encodeURIComponent(center.value.lng.toFixed(5)),
+      zoom: encodeURIComponent(newZoom.toFixed(ZOOM_ACCURACY)),
+      lat: encodeURIComponent(center.value.lat.toFixed(LATLNG_ACCURACY)),
+      lng: encodeURIComponent(center.value.lng.toFixed(LATLNG_ACCURACY)),
     },
   })
 })
@@ -89,9 +92,9 @@ watch(center, (newCenter) => {
 
   router.push({
     params: {
-      zoom: encodeURIComponent(zoom.value.toFixed(2)),
-      lat: encodeURIComponent(newCenter.lat.toFixed(5)),
-      lng: encodeURIComponent(newCenter.lng.toFixed(5)),
+      zoom: encodeURIComponent(zoom.value.toFixed(ZOOM_ACCURACY)),
+      lat: encodeURIComponent(newCenter.lat.toFixed(LATLNG_ACCURACY)),
+      lng: encodeURIComponent(newCenter.lng.toFixed(LATLNG_ACCURACY)),
     },
   })
 })
