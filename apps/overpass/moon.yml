@@ -4,24 +4,6 @@ platform: node
 type: application
 
 tasks:
-  docker_up:
-    command: sh
-    args:
-      - -c
-      - docker compose up || true
-    options:
-      cache: false
-      persistent: true
-
-  docker_down:
-    command: sh
-    args:
-      - -c
-      - docker compose down
-    options:
-      cache: false
-      persistent: false
-
   dev:
     command: tsx
     args:
@@ -34,13 +16,6 @@ tasks:
 
   up:
     deps:
-      - docker_up
       - dev
     options:
       persistent: true
-
-  down:
-    deps:
-      - docker_down
-    options:
-      persistent: false

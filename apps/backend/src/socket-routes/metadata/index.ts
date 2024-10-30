@@ -23,7 +23,7 @@ export const handleMetadata =
           )
           break
         default:
-          throw new Error(`Method ${method} not implemented`)
+          throw new Error(`Method "${method}" not implemented`)
       }
 
       result.on('data', (metadata) => {
@@ -32,6 +32,10 @@ export const handleMetadata =
 
       result.on('end', () => {
         socket.emit('Metadata', method, null, true)
+      })
+
+      result.on('error', (error) => {
+        log.error(new VError(error, 'Handling metadata'))
       })
     } catch (error) {
       if (error instanceof Error) {

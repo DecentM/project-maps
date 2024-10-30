@@ -1,4 +1,4 @@
 curl
 gdal
-spreet
+flother/taps/spreet
 unzip
