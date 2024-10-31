@@ -255,9 +255,6 @@ jobs:
           - name: cambodia
             url: http://download.geofabrik.de/asia/cambodia-latest.osm.pbf
 
-          - name: china
-            url: http://download.geofabrik.de/asia/china-latest.osm.pbf
-
           - name: east-timor
             url: http://download.geofabrik.de/asia/east-timor-latest.osm.pbf
 
@@ -350,6 +347,106 @@ jobs:
 
           - name: yemen
             url: http://download.geofabrik.de/asia/yemen-latest.osm.pbf
+
+          # china
+          - name: anhui
+            url: https://download.geofabrik.de/asia/china/anhui-latest.osm.pbf
+
+          - name: beijing
+            url: https://download.geofabrik.de/asia/china/beijing-latest.osm.pbf
+
+          - name: chongqing
+            url: https://download.geofabrik.de/asia/china/chongqing-latest.osm.pbf
+
+          - name: fujian
+            url: https://download.geofabrik.de/asia/china/fujian-latest.osm.pbf
+
+          - name: gansu
+            url: https://download.geofabrik.de/asia/china/gansu-latest.osm.pbf
+
+          - name: guangdong
+            url: https://download.geofabrik.de/asia/china/guangdong-latest.osm.pbf
+
+          - name: guangxi
+            url: https://download.geofabrik.de/asia/china/guangxi-latest.osm.pbf
+
+          - name: guizhou
+            url: https://download.geofabrik.de/asia/china/guizhou-latest.osm.pbf
+
+          - name: hainan
+            url: https://download.geofabrik.de/asia/china/hainan-latest.osm.pbf
+
+          - name: hebei
+            url: https://download.geofabrik.de/asia/china/hebei-latest.osm.pbf
+
+          - name: heilongjiang
+            url: https://download.geofabrik.de/asia/china/heilongjiang-latest.osm.pbf
+
+          - name: henan
+            url: https://download.geofabrik.de/asia/china/henan-latest.osm.pbf
+
+          - name: hong-kong
+            url: https://download.geofabrik.de/asia/china/hong-kong-latest.osm.pbf
+
+          - name: hubei
+            url: https://download.geofabrik.de/asia/china/hubei-latest.osm.pbf
+
+          - name: hunan
+            url: https://download.geofabrik.de/asia/china/hunan-latest.osm.pbf
+
+          - name: inner-mongolia
+            url: https://download.geofabrik.de/asia/china/inner-mongolia-latest.osm.pbf
+
+          - name: jiangsu
+            url: https://download.geofabrik.de/asia/china/jiangsu-latest.osm.pbf
+
+          - name: jiangxi
+            url: https://download.geofabrik.de/asia/china/jiangxi-latest.osm.pbf
+
+          - name: jilin
+            url: https://download.geofabrik.de/asia/china/jilin-latest.osm.pbf
+
+          - name: liaoning
+            url: https://download.geofabrik.de/asia/china/liaoning-latest.osm.pbf
+
+          - name: macau
+            url: https://download.geofabrik.de/asia/china/macau-latest.osm.pbf
+
+          - name: ningxia
+            url: https://download.geofabrik.de/asia/china/ningxia-latest.osm.pbf
+
+          - name: qinghai
+            url: https://download.geofabrik.de/asia/china/qinghai-latest.osm.pbf
+
+          - name: shaanxi
+            url: https://download.geofabrik.de/asia/china/shaanxi-latest.osm.pbf
+
+          - name: shandong
+            url: https://download.geofabrik.de/asia/china/shandong-latest.osm.pbf
+
+          - name: shanghai
+            url: https://download.geofabrik.de/asia/china/shanghai-latest.osm.pbf
+
+          - name: shanxi
+            url: https://download.geofabrik.de/asia/china/shanxi-latest.osm.pbf
+
+          - name: sichuan
+            url: https://download.geofabrik.de/asia/china/sichuan-latest.osm.pbf
+
+          - name: tianjin
+            url: https://download.geofabrik.de/asia/china/tianjin-latest.osm.pbf
+
+          - name: tibet
+            url: https://download.geofabrik.de/asia/china/tibet-latest.osm.pbf
+
+          - name: xinjiang
+            url: https://download.geofabrik.de/asia/china/xinjiang-latest.osm.pbf
+
+          - name: yunnan
+            url: https://download.geofabrik.de/asia/china/yunnan-latest.osm.pbf
+
+          - name: zhejiang
+            url: https://download.geofabrik.de/asia/china/zhejiang-latest.osm.pbf
 
           # russia (covers multiple continents)
           - name: russian-federation
