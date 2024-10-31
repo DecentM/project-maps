@@ -1,4 +1,4 @@
-name: Vector tiles
+name: Vector tiles (single)
 
 on:
   workflow_call:

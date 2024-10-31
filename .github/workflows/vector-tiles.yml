@@ -57,9 +57,12 @@ jobs:
           pnpm install --frozen-lockfile
 
   build-europe:
+    needs:
+      - dependencies
+
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 6
       matrix:
         pbf:
           # europe
@@ -214,22 +217,18 @@ jobs:
           - name: antarctica
             url: https://download.geofabrik.de/antarctica-latest.osm.pbf
 
+    uses: ./.github/workflows/vector-tiles-single.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
+
+  build-america:
     needs:
       - dependencies
 
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ${{ matrix.pbf.name }}
-        uses: ./.github/workflows/vector-tiles-single.yml
-        with:
-          url: ${{ matrix.pbf.url }}
-          name: ${{ matrix.pbf.name }}
-
-  build-america:
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 6
       matrix:
         pbf:
           # central-america
@@ -443,22 +442,18 @@ jobs:
           - name: venezuela
             url: https://download.geofabrik.de/south-america/venezuela-latest.osm.pbf
 
+    uses: ./.github/workflows/vector-tiles-single.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
+
+  build-asia:
     needs:
       - dependencies
 
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ${{ matrix.pbf.name }}
-        uses: ./.github/workflows/vector-tiles-single.yml
-        with:
-          url: ${{ matrix.pbf.url }}
-          name: ${{ matrix.pbf.name }}
-
-  build-asia:
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 6
       matrix:
         pbf:
           # asia
@@ -806,23 +801,18 @@ jobs:
           - name: wallis-et-futuna
             url: https://download.geofabrik.de/australia-oceania/wallis-et-futuna-latest.osm.pbf
 
+    uses: ./.github/workflows/vector-tiles-single.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
+
+  build-africa:
     needs:
       - dependencies
 
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ${{ matrix.pbf.name }}
-        uses: ./.github/workflows/vector-tiles-single.yml
-        with:
-          url: ${{ matrix.pbf.url }}
-          name: ${{ matrix.pbf.name }}
-
-
-  build-africa:
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 6
       matrix:
         pbf:
           # africa
@@ -991,15 +981,7 @@ jobs:
           - name: zimbabwe
             url: https://download.geofabrik.de/africa/zimbabwe-latest.osm.pbf
 
-    needs:
-      - dependencies
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ${{ matrix.pbf.name }}
-        uses: ./.github/workflows/vector-tiles-single.yml
-        with:
-          url: ${{ matrix.pbf.url }}
-          name: ${{ matrix.pbf.name }}
-
+    uses: ./.github/workflows/vector-tiles-single.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
