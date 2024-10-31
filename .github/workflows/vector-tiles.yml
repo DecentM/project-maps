@@ -17,8 +17,6 @@ jobs:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
-          restore-keys: |
-            tool-
 
       - uses: asdf-vm/actions/install@v3
 
@@ -50,9 +48,7 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm.lock') }}
-          restore-keys: |
-            lock-
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -662,7 +658,7 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm.lock') }}
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
           fail-on-cache-miss: true
 
       - name: Configure build
