@@ -1,0 +1,15 @@
+id: search
+language: typescript
+platform: node
+type: application
+
+tasks:
+  up:
+    command: tsx
+    args:
+      - --watch
+      - src/index.ts
+    options:
+      persistent: true
+      cache: false
+      envFile: /.env
