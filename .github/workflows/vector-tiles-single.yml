@@ -58,9 +58,13 @@ jobs:
           set -exu
           pnpm moon map-tiles:build_vector
 
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r vector.zip packages/map-tiles/dist/vector
+
       - name: Upload vector tiles
         uses: actions/upload-artifact@v4
         with:
           name: vector-tiles-${{ inputs.name }}
-          path: packages/map-tiles/dist/vector
+          path: vector.zip
           retention-days: 1
