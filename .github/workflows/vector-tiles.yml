@@ -62,7 +62,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 3
       matrix:
         pbf:
           # europe
@@ -213,6 +213,20 @@ jobs:
           - name: united-kingdom
             url: https://download.geofabrik.de/europe/united-kingdom-latest.osm.pbf
 
+    uses: ./.github/workflows/vector-tiles-single.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
+
+  build-antarctica:
+    needs:
+      - dependencies
+
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        pbf:
           # antarctica
           - name: antarctica
             url: https://download.geofabrik.de/antarctica-latest.osm.pbf
@@ -228,7 +242,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 3
       matrix:
         pbf:
           # central-america
@@ -453,7 +467,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 3
       matrix:
         pbf:
           # asia
@@ -731,6 +745,20 @@ jobs:
           - name: volga-federal-district
             url: https://download.geofabrik.de/asia/russia/volga-fed-district-latest.osm.pbf
 
+    uses: ./.github/workflows/vector-tiles-single.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
+
+  build-australia-oceania:
+    needs:
+      - dependencies
+
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        pbf:
           # australia-oceania
           - name: american-oceania
             url: https://download.geofabrik.de/australia-oceania/american-oceania-latest.osm.pbf
@@ -812,7 +840,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 3
       matrix:
         pbf:
           # africa
