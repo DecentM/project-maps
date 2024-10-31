@@ -11,6 +11,6 @@ tasks:
       - src/index.ts
     options:
       cache: false
-      envFile: .env
+      envFile: /.env
       persistent: true
       outputStyle: stream

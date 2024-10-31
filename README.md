@@ -40,8 +40,7 @@ that's easy to remember.
     to activate the venv when you `cd` into this directory
 - `poetry install`
 - `pnpm i`
-- In all directories under `apps/`, copy the `.env.example` files and name it
-  `.env`. Fill out the empty fields.
+- Copy the `.env.example` file and name it `.env`. Fill out the empty fields.
 - In `packages/map-tiles`, copy `build-input.example.json` to `build-input.json`
   and optionally, change the fields to refer to your preferred area for
   development. By default, this will be the greater London area.

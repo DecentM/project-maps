@@ -11,7 +11,7 @@ tasks:
       - src/main.ts
     options:
       cache: false
-      envFile: .env
+      envFile: /.env
       persistent: true
 
   build:

@@ -1,7 +1,7 @@
 export const config = {
   server: {
-    host: process.env.SERVER_HOST || '127.0.0.1',
-    port: Number.parseFloat(process.env.SERVER_PORT || '3000'),
+    host: process.env.BACKEND_HOST || '127.0.0.1',
+    port: Number.parseFloat(process.env.BACKEND_PORT || '3000'),
   },
 
   rpc: {

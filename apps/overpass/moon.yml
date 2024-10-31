@@ -4,7 +4,7 @@ platform: node
 type: application
 
 tasks:
-  dev:
+  up:
     command: tsx
     args:
       - --watch
@@ -12,10 +12,4 @@ tasks:
     options:
       persistent: true
       cache: false
-      envFile: .env
-
-  up:
-    deps:
-      - dev
-    options:
-      persistent: true
+      envFile: /.env

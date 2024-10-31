@@ -4,7 +4,7 @@ export const config = {
   },
 
   grpcServer: {
-    host: process.env.GRPC_SERVER_HOST ?? '',
-    port: Number.parseFloat(process.env.GRPC_SERVER_PORT ?? '50051'),
+    host: process.env.GRPC_OVERPASS_INTERPRETER_HOST ?? '127.0.0.1',
+    port: Number.parseFloat(process.env.GRPC_OVERPASS_INTERPRETER_PORT ?? '50052'),
   },
 } as const
