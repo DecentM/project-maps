@@ -218,23 +218,25 @@ jobs:
       url: ${{ matrix.pbf.url }}
       name: ${{ matrix.pbf.name }}
 
-  build-antarctica:
-    needs:
-      - dependencies
+  # Antarctica cannot be split up, and it makes the worker run out of disk space
+  # TODO: Fix this
+  # build-antarctica:
+  #   needs:
+  #     - dependencies
 
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix:
-        pbf:
-          # antarctica
-          - name: antarctica
-            url: https://download.geofabrik.de/antarctica-latest.osm.pbf
+  #   strategy:
+  #     fail-fast: false
+  #     max-parallel: 3
+  #     matrix:
+  #       pbf:
+  #         # antarctica
+  #         - name: antarctica
+  #           url: https://download.geofabrik.de/antarctica-latest.osm.pbf
 
-    uses: ./.github/workflows/vector-tiles-single.yml
-    with:
-      url: ${{ matrix.pbf.url }}
-      name: ${{ matrix.pbf.name }}
+  #   uses: ./.github/workflows/vector-tiles-single.yml
+  #   with:
+  #     url: ${{ matrix.pbf.url }}
+  #     name: ${{ matrix.pbf.name }}
 
   build-america:
     needs:
@@ -249,10 +251,44 @@ jobs:
           - name: central-america
             url: https://download.geofabrik.de/central-america-latest.osm.pbf
 
-          # north-america
-          - name: canada
-            url: https://download.geofabrik.de/north-america/canada-latest.osm.pbf
+          # canada
+          - name: alberta
+            url: https://download.geofabrik.de/north-america/canada/alberta-latest.osm.pbf
 
+          - name: british-columbia
+            url: https://download.geofabrik.de/north-america/canada/british-columbia-latest.osm.pbf
+
+          - name: manitoba
+            url: https://download.geofabrik.de/north-america/canada/manitoba-latest.osm.pbf
+
+          - name: new-brunswick
+            url: https://download.geofabrik.de/north-america/canada/new-brunswick-latest.osm.pbf
+
+          - name: newfoundland-and-labrador
+            url: https://download.geofabrik.de/north-america/canada/newfoundland-and-labrador-latest.osm.pbf
+
+          - name: nova-scotia
+            url: https://download.geofabrik.de/north-america/canada/nova-scotia-latest.osm.pbf
+
+          - name: nunavut
+            url: https://download.geofabrik.de/north-america/canada/nunavut-latest.osm.pbf
+
+          - name: ontario
+            url: https://download.geofabrik.de/north-america/canada/ontario-latest.osm.pbf
+
+          - name: prince-edward-island
+            url: https://download.geofabrik.de/north-america/canada/prince-edward-island-latest.osm.pbf
+
+          - name: quebec
+            url: https://download.geofabrik.de/north-america/canada/quebec-latest.osm.pbf
+
+          - name: saskatchewan
+            url: https://download.geofabrik.de/north-america/canada/saskatchewan-latest.osm.pbf
+
+          - name: yukon
+            url: https://download.geofabrik.de/north-america/canada/yukon-latest.osm.pbf
+
+          # north-america
           - name: greenland
             url: https://download.geofabrik.de/north-america/greenland-latest.osm.pbf
 
@@ -290,7 +326,7 @@ jobs:
           - name: florida
             url: https://download.geofabrik.de/north-america/us/florida-latest.osm.pbf
 
-          - name: georgia
+          - name: georgia-us
             url: https://download.geofabrik.de/north-america/us/georgia-latest.osm.pbf
 
           - name: hawaii

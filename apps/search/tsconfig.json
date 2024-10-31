@@ -1,0 +1,28 @@
+{
+  "extends": "tsconfig-moon/tsconfig.projects.json",
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "importHelpers": true,
+    "lib": ["es2017", "dom"],
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "checkJs": false,
+    "outDir": "dist",
+    "strict": true,
+    "target": "ES6",
+    "module": "ESNext",
+    "sourceMap": true,
+    "typeRoots": ["types/"],
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
+  },
+  "exclude": ["node_modules", "tmp"]
+}
