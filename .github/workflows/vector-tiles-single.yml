@@ -1,0 +1,66 @@
+name: Vector tiles
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+
+      url:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # https://github.com/actions/runner-images/issues/2840#issuecomment-790492173
+      - name: Maximize build space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - uses: actions/checkout@v4
+
+      - name: Get tooling from cache
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+          fail-on-cache-miss: true
+
+      - uses: asdf-vm/actions/install@v3
+
+      - name: Get node_modules from cache
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            apps/*/node_modules
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      - name: Configure build
+        run: |
+          printf '{"pbfs":["${{ inputs.url }}"]}\n' > packages/map-tiles/build-input.json
+
+      - name: Build
+        if: steps.cache-node-modules.outputs.cache-hit == 'true'
+        run: |
+          set -exu
+          pnpm moon map-tiles:build_vector
+
+      - name: Upload vector tiles
+        uses: actions/upload-artifact@v4
+        with:
+          name: vector-tiles-${{ inputs.name }}
+          path: packages/map-tiles/dist/vector
+          retention-days: 1
