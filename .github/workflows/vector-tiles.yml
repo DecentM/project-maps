@@ -257,12 +257,6 @@ jobs:
           - name: gcc-states
             url: http://download.geofabrik.de/asia/gcc-states-latest.osm.pbf
 
-          - name: india
-            url: http://download.geofabrik.de/asia/india-latest.osm.pbf
-
-          - name: indonesia
-            url: http://download.geofabrik.de/asia/indonesia-latest.osm.pbf
-
           - name: iran
             url: http://download.geofabrik.de/asia/iran-latest.osm.pbf
 
@@ -343,6 +337,47 @@ jobs:
 
           - name: yemen
             url: http://download.geofabrik.de/asia/yemen-latest.osm.pbf
+
+          # india
+          - name: central-zone
+            url: http://download.geofabrik.de/asia/india/central-zone-latest.osm.pbf
+
+          - name: eastern-zone
+            url: http://download.geofabrik.de/asia/india/eastern-zone-latest.osm.pbf
+
+          - name: north-easter-zone
+            url: http://download.geofabrik.de/asia/india/north-eastern-zone-latest.osm.pbf
+
+          - name: northern-zone
+            url: http://download.geofabrik.de/asia/india/northern-zone-latest.osm.pbf
+
+          - name: southern-zone
+            url: http://download.geofabrik.de/asia/india/southern-zone-latest.osm.pbf
+
+          - name: western-zone
+            url: http://download.geofabrik.de/asia/india/western-zone-latest.osm.pbf
+
+          # indonesia
+          - name: java
+            url: http://download.geofabrik.de/asia/indonesia/java-latest.osm.pbf
+
+          - name: kalimantan
+            url: http://download.geofabrik.de/asia/indonesia/kalimantan-latest.osm.pbf
+
+          - name: maluku
+            url: http://download.geofabrik.de/asia/indonesia/maluku-latest.osm.pbf
+
+          - name: nusa-tenggara
+            url: http://download.geofabrik.de/asia/indonesia/nusa-tenggara-latest.osm.pbf
+
+          - name: papua
+            url: http://download.geofabrik.de/asia/indonesia/papua-latest.osm.pbf
+
+          - name: sulawesi
+            url: http://download.geofabrik.de/asia/indonesia/sulawesi-latest.osm.pbf
+
+          - name: sumatra
+            url: http://download.geofabrik.de/asia/indonesia/sumatra-latest.osm.pbf
 
           # china
           - name: anhui
@@ -445,12 +480,102 @@ jobs:
             url: https://download.geofabrik.de/asia/china/zhejiang-latest.osm.pbf
 
           # russia (covers multiple continents)
-          - name: russian-federation
-            url: http://download.geofabrik.de/russia-latest.osm.pbf
+          - name: central-federal-district
+            url: http://download.geofabrik.de/asia/russia/central-fed-district-latest.osm.pbf
+
+          - name: crimean-federal-district
+            url: http://download.geofabrik.de/asia/russia/crimean-fed-district-latest.osm.pbf
+
+          - name: far-eastern-federal-district
+            url: http://download.geofabrik.de/asia/russia/far-eastern-fed-district-latest.osm.pbf
+
+          - name: north-caucasus-federal-district
+            url: http://download.geofabrik.de/asia/russia/north-caucasus-fed-district-latest.osm.pbf
+
+          - name: northwestern-federal-district
+            url: http://download.geofabrik.de/asia/russia/northwestern-fed-district-latest.osm.pbf
+
+          - name: siberian-federal-district
+            url: http://download.geofabrik.de/asia/russia/siberian-fed-district-latest.osm.pbf
+
+          - name: south-federal-district
+            url: http://download.geofabrik.de/asia/russia/south-fed-district-latest.osm.pbf
+
+          - name: ural-federal-district
+            url: http://download.geofabrik.de/asia/russia/ural-fed-district-latest.osm.pbf
+
+          - name: volga-federal-district
+            url: http://download.geofabrik.de/asia/russia/volga-fed-district-latest.osm.pbf
 
           # australia-oceania
-          - name: australia-oceania
-            url: http://download.geofabrik.de/australia-oceania-latest.osm.pbf
+          - name: american-oceania
+            url: http://download.geofabrik.de/australia-oceania/american-oceania-latest.osm.pbf
+
+          - name: australia
+            url: http://download.geofabrik.de/australia-oceania/australia-latest.osm.pbf
+
+          - name: cook-islands
+            url: http://download.geofabrik.de/australia-oceania/cook-islands-latest.osm.pbf
+
+          - name: fiji
+            url: http://download.geofabrik.de/australia-oceania/fiji-latest.osm.pbf
+
+          - name: ile-de-clipperton
+            url: http://download.geofabrik.de/australia-oceania/ile-de-clipperton-latest.osm.pbf
+
+          - name: kiribati
+            url: http://download.geofabrik.de/australia-oceania/kiribati-latest.osm.pbf
+
+          - name: marshall-islands
+            url: http://download.geofabrik.de/australia-oceania/marshall-islands-latest.osm.pbf
+
+          - name: micronesia
+            url: http://download.geofabrik.de/australia-oceania/micronesia-latest.osm.pbf
+
+          - name: nauru
+            url: http://download.geofabrik.de/australia-oceania/nauru-latest.osm.pbf
+
+          - name: new-caledonia
+            url: http://download.geofabrik.de/australia-oceania/new-caledonia-latest.osm.pbf
+
+          - name: new-zealand
+            url: http://download.geofabrik.de/australia-oceania/new-zealand-latest.osm.pbf
+
+          - name: niue
+            url: http://download.geofabrik.de/australia-oceania/niue-latest.osm.pbf
+
+          - name: palau
+            url: http://download.geofabrik.de/australia-oceania/palau-latest.osm.pbf
+
+          - name: papua-new-guinea
+            url: http://download.geofabrik.de/australia-oceania/papua-new-guinea-latest.osm.pbf
+
+          - name: pitcairn-islands
+            url: http://download.geofabrik.de/australia-oceania/pitcairn-islands-latest.osm.pbf
+
+          - name: polynesie-francaise
+            url: http://download.geofabrik.de/australia-oceania/polynesie-francaise-latest.osm.pbf
+
+          - name: samoa
+            url: http://download.geofabrik.de/australia-oceania/samoa-latest.osm.pbf
+
+          - name: solomon-islands
+            url: http://download.geofabrik.de/australia-oceania/solomon-islands-latest.osm.pbf
+
+          - name: tokelau
+            url: http://download.geofabrik.de/australia-oceania/tokelau-latest.osm.pbf
+
+          - name: tonga
+            url: http://download.geofabrik.de/australia-oceania/tonga-latest.osm.pbf
+
+          - name: tuvalu
+            url: http://download.geofabrik.de/australia-oceania/tuvalu-latest.osm.pbf
+
+          - name: vanuatu
+            url: http://download.geofabrik.de/australia-oceania/vanuatu-latest.osm.pbf
+
+          - name: wallis-et-futuna
+            url: http://download.geofabrik.de/australia-oceania/wallis-et-futuna-latest.osm.pbf
 
           # central-america
           - name: central-america
@@ -614,14 +739,202 @@ jobs:
           - name: mexico
             url: http://download.geofabrik.de/north-america/mexico-latest.osm.pbf
 
-          # united-states (might be too large, has special sub regions we may
-          # need also - http://download.geofabrik.de/north-america.html)
-          - name: united-states
-            url: http://download.geofabrik.de/north-america/us-latest.osm.pbf
+          # united-states
+          - name: alabama
+            url: http://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf
+
+          - name: alaska
+            url: http://download.geofabrik.de/north-america/us/alaska-latest.osm.pbf
+
+          - name: arizona
+            url: http://download.geofabrik.de/north-america/us/arizona-latest.osm.pbf
+
+          - name: arkansas
+            url: http://download.geofabrik.de/north-america/us/arkansas-latest.osm.pbf
+
+          - name: california
+            url: http://download.geofabrik.de/north-america/us/california-latest.osm.pbf
+
+          - name: colorado
+            url: http://download.geofabrik.de/north-america/us/colorado-latest.osm.pbf
+
+          - name: connecticut
+            url: http://download.geofabrik.de/north-america/us/connecticut-latest.osm.pbf
+
+          - name: delaware
+            url: http://download.geofabrik.de/north-america/us/delaware-latest.osm.pbf
+
+          - name: district-of-columbia
+            url: http://download.geofabrik.de/north-america/us/district-of-columbia-latest.osm.pbf
+
+          - name: florida
+            url: http://download.geofabrik.de/north-america/us/florida-latest.osm.pbf
+
+          - name: georgia
+            url: http://download.geofabrik.de/north-america/us/georgia-latest.osm.pbf
+
+          - name: hawaii
+            url: http://download.geofabrik.de/north-america/us/hawaii-latest.osm.pbf
+
+          - name: idaho
+            url: http://download.geofabrik.de/north-america/us/idaho-latest.osm.pbf
+
+          - name: illinois
+            url: http://download.geofabrik.de/north-america/us/illinois-latest.osm.pbf
+
+          - name: indiana
+            url: http://download.geofabrik.de/north-america/us/indiana-latest.osm.pbf
+
+          - name: iowa
+            url: http://download.geofabrik.de/north-america/us/iowa-latest.osm.pbf
+
+          - name: kansas
+            url: http://download.geofabrik.de/north-america/us/kansas-latest.osm.pbf
+
+          - name: kentucky
+            url: http://download.geofabrik.de/north-america/us/kentucky-latest.osm.pbf
+
+          - name: louisiana
+            url: http://download.geofabrik.de/north-america/us/louisiana-latest.osm.pbf
+
+          - name: maine
+            url: http://download.geofabrik.de/north-america/us/maine-latest.osm.pbf
+
+          - name: maryland
+            url: http://download.geofabrik.de/north-america/us/maryland-latest.osm.pbf
+
+          - name: massachusetts
+            url: http://download.geofabrik.de/north-america/us/massachusetts-latest.osm.pbf
+
+          - name: michigan
+            url: http://download.geofabrik.de/north-america/us/michigan-latest.osm.pbf
+
+          - name: minnesota
+            url: http://download.geofabrik.de/north-america/us/minnesota-latest.osm.pbf
+
+          - name: mississippi
+            url: http://download.geofabrik.de/north-america/us/mississippi-latest.osm.pbf
+
+          - name: missouri
+            url: http://download.geofabrik.de/north-america/us/missouri-latest.osm.pbf
+
+          - name: montana
+            url: http://download.geofabrik.de/north-america/us/montana-latest.osm.pbf
+
+          - name: nebraska
+            url: http://download.geofabrik.de/north-america/us/nebraska-latest.osm.pbf
+
+          - name: nevada
+            url: http://download.geofabrik.de/north-america/us/nevada-latest.osm.pbf
+
+          - name: new-hampshire
+            url: http://download.geofabrik.de/north-america/us/new-hampshire-latest.osm.pbf
+
+          - name: new-jersey
+            url: http://download.geofabrik.de/north-america/us/new-jersey-latest.osm.pbf
+
+          - name: new-mexico
+            url: http://download.geofabrik.de/north-america/us/new-mexico-latest.osm.pbf
+
+          - name: new-york
+            url: http://download.geofabrik.de/north-america/us/new-york-latest.osm.pbf
+
+          - name: north-carolina
+            url: http://download.geofabrik.de/north-america/us/north-carolina-latest.osm.pbf
+
+          - name: north-dakota
+            url: http://download.geofabrik.de/north-america/us/north-dakota-latest.osm.pbf
+
+          - name: ohio
+            url: http://download.geofabrik.de/north-america/us/ohio-latest.osm.pbf
+
+          - name: oklahoma
+            url: http://download.geofabrik.de/north-america/us/oklahoma-latest.osm.pbf
+
+          - name: oregon
+            url: http://download.geofabrik.de/north-america/us/oregon-latest.osm.pbf
+
+          - name: pennsylvania
+            url: http://download.geofabrik.de/north-america/us/pennsylvania-latest.osm.pbf
+
+          - name: puerto-rico
+            url: http://download.geofabrik.de/north-america/us/puerto-rico-latest.osm.pbf
+
+          - name: rhode-island
+            url: http://download.geofabrik.de/north-america/us/rhode-island-latest.osm.pbf
+
+          - name: south-carolina
+            url: http://download.geofabrik.de/north-america/us/south-carolina-latest.osm.pbf
+
+          - name: south-dakota
+            url: http://download.geofabrik.de/north-america/us/south-dakota-latest.osm.pbf
+
+          - name: tennessee
+            url: http://download.geofabrik.de/north-america/us/tennessee-latest.osm.pbf
+
+          - name: texas
+            url: http://download.geofabrik.de/north-america/us/texas-latest.osm.pbf
+
+          - name: united-states-virgin-islands
+            url: http://download.geofabrik.de/north-america/us/us-virgin-islands-latest.osm.pbf
+
+          - name: utah
+            url: http://download.geofabrik.de/north-america/us/utah-latest.osm.pbf
+
+          - name: vermont
+            url: http://download.geofabrik.de/north-america/us/vermont-latest.osm.pbf
+
+          - name: virginia
+            url: http://download.geofabrik.de/north-america/us/virginia-latest.osm.pbf
+
+          - name: washington
+            url: http://download.geofabrik.de/north-america/us/washington-latest.osm.pbf
+
+          - name: west-virginia
+            url: http://download.geofabrik.de/north-america/us/west-virginia-latest.osm.pbf
+
+          - name: wisconsin
+            url: http://download.geofabrik.de/north-america/us/wisconsin-latest.osm.pbf
+
+          - name: wyoming
+            url: http://download.geofabrik.de/north-america/us/wyoming-latest.osm.pbf
 
           # south-america
-          - name: south-america
-            url: http://download.geofabrik.de/south-america-latest.osm.pbf
+          - name: argentina
+            url: http://download.geofabrik.de/south-america/argentina-latest.osm.pbf
+
+          - name: bolivia
+            url: http://download.geofabrik.de/south-america/bolivia-latest.osm.pbf
+
+          - name: brazil
+            url: http://download.geofabrik.de/south-america/brazil-latest.osm.pbf
+
+          - name: chile
+            url: http://download.geofabrik.de/south-america/chile-latest.osm.pbf
+
+          - name: colombia
+            url: http://download.geofabrik.de/south-america/colombia-latest.osm.pbf
+
+          - name: ecuador
+            url: http://download.geofabrik.de/south-america/ecuador-latest.osm.pbf
+
+          - name: guyana
+            url: http://download.geofabrik.de/south-america/guyana-latest.osm.pbf
+
+          - name: paraguay
+            url: http://download.geofabrik.de/south-america/paraguay-latest.osm.pbf
+
+          - name: peru
+            url: http://download.geofabrik.de/south-america/peru-latest.osm.pbf
+
+          - name: suriname
+            url: http://download.geofabrik.de/south-america/suriname-latest.osm.pbf
+
+          - name: uruguay
+            url: http://download.geofabrik.de/south-america/uruguay-latest.osm.pbf
+
+          - name: venezuela
+            url: http://download.geofabrik.de/south-america/venezuela-latest.osm.pbf
 
     needs:
       - dependencies
