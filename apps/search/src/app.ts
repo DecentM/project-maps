@@ -93,6 +93,7 @@ export class App {
             building: item.tags?.building,
             alt_name: item.tags?.alt_name,
             phone: item.tags?.phone,
+            website: item.tags?.website,
           })
 
           if (batchSize >= MAX_BATCH_SIZE - 5) { // 5 bytes for braces and commas
