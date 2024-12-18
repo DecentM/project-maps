@@ -5,7 +5,10 @@
   "author": "",
   "type": "module",
   "dependencies": {
+    "@grpc/grpc-js": "^1.11.2",
     "@project-maps/logging": "workspace:*",
+    "@project-maps/proto": "workspace:*",
+    "@turf/turf": "^7.1.0",
     "got": "^14.4.2",
     "meilisearch": "^0.45.0",
     "osm-pbf-parser": "^2.3.0",

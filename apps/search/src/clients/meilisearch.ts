@@ -25,12 +25,16 @@ export class MeilisearchClient {
   }
 
   public async addDocuments(indexName: string, documents: Array<Record<string, unknown>>) {
-    const task = await this.client.index(indexName).addDocuments(documents)
-
-    return await this.client.waitForTask(task.taskUid, { timeOutMs: 10 * 60 * 1000 })
+    return await this.client.index(indexName).addDocuments(documents)
   }
 
   public async search(indexName: string, query: string) {
-    return await this.client.index(indexName).search(query)
+    return await this.client.index(indexName).search(query, {
+      attributesToRetrieve: ['id']
+    })
+  }
+
+  public async waitForTasks(indexName: string, taskIds: number[]) {
+    return await this.client.index(indexName).waitForTasks(taskIds)
   }
 }

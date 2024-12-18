@@ -3,7 +3,7 @@ import AutoLoad from '@fastify/autoload'
 import Fastify from 'fastify'
 import VError from 'verror'
 
-import {log} from '@project-maps/logging'
+import { log } from '@project-maps/logging'
 
 import { config } from './config'
 
@@ -17,7 +17,8 @@ fastify.register(AutoLoad, {
   dir: path.join(import.meta.dirname, 'routes'),
 })
 
-fastify.listen({ host: config.server.host, port: config.server.port })
+fastify
+  .listen({ host: config.server.host, port: config.server.port })
   .then(() => log.info(config.server, 'Server listening'))
   .catch((error) => log.error(new VError(error, 'Starting server')))
 

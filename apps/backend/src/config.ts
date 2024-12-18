@@ -10,6 +10,11 @@ export const config = {
         host: process.env.GRPC_METADATA_HOST || '127.0.0.1',
         port: Number.parseFloat(process.env.GRPC_METADATA_PORT || '50051'),
       },
+
+      search: {
+        host: process.env.GRPC_SEARCH_HOST || '127.0.0.1',
+        port: Number.parseFloat(process.env.GRPC_SEARCH_PORT || '50053'),
+      },
     },
   }
 } as const

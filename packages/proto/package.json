@@ -12,6 +12,10 @@
       "import": "./dist/overpass/index.js",
       "types": "./dist/overpass-interpreter/index.d.ts"
     },
+    "./search": {
+      "import": "./dist/search/index.js",
+      "types": "./dist/search/index.d.ts"
+    },
     "./lib/geospatial": {
       "import": "./dist/lib/geospatial.js",
       "types": "./dist/lib/geospatial.d.ts"
