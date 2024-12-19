@@ -33,12 +33,12 @@ that's easy to remember.
   - [poetry](https://github.com/asdf-community/asdf-poetry.git)
   - You can also use other version management software, what matters is you get
     these binaries installed and available in your `$PATH`.
-- `xargs brew install <brew_requirements.txt`
 - `asdf install`
 - Activate the venv: `poetry shell`
   - Tip: Use an [auto-switch plugin](https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv)
     to activate the venv when you `cd` into this directory
 - `poetry install`
+- `xargs brew install <brew_requirements.txt`
 - `pnpm i`
 - Copy the `.env.example` file and name it `.env`. Fill out the empty fields.
 - In `packages/map-tiles`, copy `build-input.example.json` to `build-input.json`

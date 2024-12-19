@@ -5,16 +5,15 @@ import { LngLat } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
-import MapDataLayer from 'src/components/maplibre-gl/map-data-layer.vue'
 import MapAttribution from 'src/components/maplibre-gl/map-attribution.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { classToIcon } from '@project-maps/map-style'
+// import { classToIcon } from '@project-maps/map-style'
 
 const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 
-const handlePoiClick = (poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties>) => {
-  selectedPoi.value = poi
-}
+// const handlePoiClick = (poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties>) => {
+//   selectedPoi.value = poi
+// }
 
 const imageLocations = ref<Metadata.Image[]>([])
 
@@ -143,37 +142,6 @@ const handleMapClick = () => {
       :center="center"
       :zoom="zoom"
     >
-      <map-data-layer
-        :layers="['data_z14', 'data_z15', 'data_z16']"
-        :limit="50"
-      >
-        <template #poi="{ poi }">
-          <div
-            class="poi column items-center text-center cursor-pointer"
-            @click="handlePoiClick(poi)"
-          >
-            <q-avatar
-              :icon="classToIcon[poi.properties?.class] ?? 'mdi-circle-medium'"
-              text-color="primary"
-              size="sm"
-              font-size="large"
-              color="white"
-              class="poi-avatar"
-            />
-
-            <span
-              class="text-grey-9 font-noto-sans-display text-italic text-caption text-outline-white"
-            >
-              {{
-                poi.properties?.["name_int"] ||
-                poi.properties?.["name:latin"] ||
-                poi.properties?.["name"]
-              }}
-            </span>
-          </div>
-        </template>
-      </map-data-layer>
-
       <map-attribution />
     </maplibre-gl>
   </q-page>

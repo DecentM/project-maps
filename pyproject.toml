@@ -12,8 +12,6 @@ mercantile = "^1.2.1"
 rasterio = "^1.4.1"
 rio-mucho = "^1.0.0"
 pillow = "^10.4.0"
-
-[tool.poetry.group.dev.dependencies]
 mbutil = "^0.3.0"
 
 [build-system]
