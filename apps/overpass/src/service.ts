@@ -1,17 +1,22 @@
 import type { ServerWritableStream } from '@grpc/grpc-js'
-import { Overpass } from '@project-maps/proto/overpass'
-import { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
+import {
+  UnimplementedOverpassService,
+  type QueryParameters,
+  WikidataId,
+  type PoiMetadataParameters,
+} from '@project-maps/proto/overpass/node'
+import { Element } from '@project-maps/proto/lib/openstreetmap/node'
 
 import { OverpassClient } from './clients/overpass'
 import { config } from './config'
 
 const client = new OverpassClient(config.overpassApi.baseUrl)
 
-export class OverpassService extends Overpass.UnimplementedOverpassService {
+export class OverpassService extends UnimplementedOverpassService {
   private static processLines(
     lines: string[],
     requestedTags: string[],
-    onResult: (result: OpenStreetMap.Element) => void
+    onResult: (result: Element) => void
   ) {
     while (lines.length > 0) {
       // Leave the last line in the buffer as it may be incomplete
@@ -34,7 +39,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
 
       if (type === 'way') {
         onResult(
-          OpenStreetMap.Element.fromObject({
+          Element.fromObject({
             way: {
               id: Number.parseInt(id, 10),
               tags,
@@ -46,7 +51,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
 
       if (type === 'node') {
         onResult(
-          OpenStreetMap.Element.fromObject({
+          Element.fromObject({
             node: {
               id: Number.parseInt(id, 10),
               lat: Number.parseFloat(lat),
@@ -60,7 +65,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
 
       if (type === 'relation') {
         onResult(
-          OpenStreetMap.Element.fromObject({
+          Element.fromObject({
             relation: {
               id: Number.parseInt(id, 10),
               tags,
@@ -71,9 +76,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
     }
   }
 
-  override ShortRangeNamed(
-    call: ServerWritableStream<Overpass.QueryParameters, OpenStreetMap.Element>
-  ): void {
+  override ShortRangeNamed(call: ServerWritableStream<QueryParameters, Element>): void {
     const params = call.request.toObject()
 
     const stream = client.shortRangeNamedStreaming({
@@ -110,9 +113,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
     })
   }
 
-  override WikidataIdsInRange(
-    call: ServerWritableStream<Overpass.QueryParameters, Overpass.WikidataId>
-  ): void {
+  override WikidataIdsInRange(call: ServerWritableStream<QueryParameters, WikidataId>): void {
     const params = call.request.toObject()
 
     const stream = client.wikidataIdsInRangeStreaming({
@@ -149,7 +150,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
         )
 
         call.write(
-          Overpass.WikidataId.fromObject({
+          WikidataId.fromObject({
             id: tags.wikidata || tags['brand:wikidata'],
           })
         )
@@ -176,9 +177,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
     })
   }
 
-  override PoiMetadata(
-    call: ServerWritableStream<Overpass.PoiMetadataParameters, OpenStreetMap.Element>
-  ): void {
+  override PoiMetadata(call: ServerWritableStream<PoiMetadataParameters, Element>): void {
     const parameters = call.request.toObject()
 
     if (!parameters.id) {
@@ -216,12 +215,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
     })
   }
 
-  override PoiWikidataId(
-    call: ServerWritableStream<
-      Overpass.PoiMetadataParameters,
-      Overpass.WikidataId
-    >
-  ): void {
+  override PoiWikidataId(call: ServerWritableStream<PoiMetadataParameters, WikidataId>): void {
     const parameters = call.request.toObject()
 
     if (!parameters.id) {
@@ -259,7 +253,7 @@ export class OverpassService extends Overpass.UnimplementedOverpassService {
         )
 
         call.write(
-          Overpass.WikidataId.fromObject({
+          WikidataId.fromObject({
             id: tags.wikidata || tags['brand:wikidata'],
           })
         )

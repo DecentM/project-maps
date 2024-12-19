@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { MetadataItem, Address } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 import WebUrl from '../web-url/web-url.vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
+  metadata: ReturnType<MetadataItem['toObject']>[]
 }>()
 
-const addressCount = (address: ReturnType<Metadata.Address['toObject']>) => {
+const addressCount = (address: ReturnType<Address['toObject']>) => {
   return Object.values(address).filter((value) => value).length
 }
 

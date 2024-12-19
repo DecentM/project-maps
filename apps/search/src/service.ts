@@ -1,21 +1,23 @@
 import type { ServerWritableStream } from '@grpc/grpc-js'
-import { Search } from '@project-maps/proto/search'
+import {
+  UnimplementedSearchService,
+  SearchResult,
+  type QueryParameters,
+} from '@project-maps/proto/search/node'
 
 import { MeilisearchClient } from './clients/meilisearch'
-import { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
+import { MemberType } from '@project-maps/proto/lib/openstreetmap'
 
-export class SearchService extends Search.UnimplementedSearchService {
+export class SearchService extends UnimplementedSearchService {
   private static client = new MeilisearchClient()
 
-  override async Query(
-    call: ServerWritableStream<Search.QueryParameters, Search.SearchResult>
-  ): Promise<void> {
+  override async Query(call: ServerWritableStream<QueryParameters, SearchResult>): Promise<void> {
     const geoNodesResults = await SearchService.client.search('geo-nodes', call.request.query)
 
     for (const result of geoNodesResults.hits) {
       call.write(
-        Search.SearchResult.fromObject({
-          type: OpenStreetMap.Member.Type.NODE,
+        SearchResult.fromObject({
+          type: MemberType.NODE,
           id: result.id,
         })
       )

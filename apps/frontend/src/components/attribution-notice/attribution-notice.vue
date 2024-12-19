@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { Attribution } from '@project-maps/proto/metadata'
 
 import { imageSourceString } from 'src/lib/image-source-string'
 import { licenseUrlToString } from 'src/lib/license-url-to-string'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  attribution: ReturnType<Metadata.Attribution['toObject']>
+  attribution: ReturnType<Attribution['toObject']>
 }>()
 
 const hideSource = computed(() => {

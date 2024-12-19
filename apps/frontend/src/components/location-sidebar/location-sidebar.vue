@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
 
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata'
 import { useSocket } from 'src/lib/socketio'
 
 import LocationMetadata from './location-metadata.vue'
@@ -26,7 +26,7 @@ const props = defineProps<{
 
 const { socket } = useSocket()
 
-const metadata = ref<Metadata.MetadataItem[]>([])
+const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
@@ -89,7 +89,7 @@ const hasOpeningHours = computed(() => {
 })
 
 const sortedMetadata = computed(() => {
-  return sortMetadataItems(metadata.value as Metadata.MetadataItem[])
+  return sortMetadataItems(metadata.value as MetadataItem[])
 })
 </script>
 

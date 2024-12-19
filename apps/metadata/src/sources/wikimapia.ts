@@ -1,7 +1,12 @@
 import type Emittery from 'emittery'
 
-import { Metadata } from '@project-maps/proto/metadata'
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
+import {
+  GetAreaMetadataInput,
+  type GetPoiMetadataInput,
+  MetadataItem,
+  AttributionSource,
+} from '@project-maps/proto/metadata'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial'
 
 import { WikimapiaClient } from 'src/clients/wikimapia'
 import { config } from 'src/config'
@@ -14,11 +19,14 @@ export class WikimapiaSource extends MetadataSource {
     config.clients.wikimapia.apiKey
   )
 
-  override handlesLocation(coordinates: Geospatial.Coordinates): boolean {
+  override handlesLocation(coordinates: Coordinates): boolean {
     return true // Handles all locations
   }
 
-  public async getAreaMetadata(params: Metadata.GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
+  public async getAreaMetadata(
+    params: GetAreaMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     try {
       const nearest = await this.client.Place_Getnearest({
         lat: params.coordinates.lat,
@@ -38,48 +46,56 @@ export class WikimapiaSource extends MetadataSource {
       })
 
       for (const photo of place.photos) {
-        events.emit('item', Metadata.MetadataItem.fromObject({
-          attribution: {
-            source: Metadata.Attribution.Source.Wikimapia,
-            license: 'CC-BY SA',
-            name: photo.user_name,
-            url: `https://wikimapia.org/user/${photo.user_id}`,
-          },
-          image: {
-            url: {
-              canonical: photo.big_url,
-              small: photo.thumbnail_url,
-              medium: photo['960_url'],
-              large: photo['1280_url'],
+        events.emit(
+          'item',
+          MetadataItem.fromObject({
+            attribution: {
+              source: AttributionSource.Wikimapia,
+              license: 'CC-BY SA',
+              name: photo.user_name,
+              url: `https://wikimapia.org/user/${photo.user_id}`,
             },
-            createdAt: {
-              seconds: photo.time,
+            image: {
+              url: {
+                canonical: photo.big_url,
+                small: photo.thumbnail_url,
+                medium: photo['960_url'],
+                large: photo['1280_url'],
+              },
+              createdAt: {
+                seconds: photo.time,
+              },
             },
-          }
-        }))
+          })
+        )
       }
 
       for (const comment of place.comments) {
-        events.emit('item', Metadata.MetadataItem.fromObject({
-          attribution: {
-            source: Metadata.Attribution.Source.Wikimapia,
-            license: 'CC-BY SA',
-            name: comment.name,
-            url: `https://wikimapia.org/user/${comment.user_id}`,
-          },
-          comment: {
-            author: {
+        events.emit(
+          'item',
+          MetadataItem.fromObject({
+            attribution: {
+              source: AttributionSource.Wikimapia,
+              license: 'CC-BY SA',
               name: comment.name,
-              avatarUrl: comment.user_photo ? `https://wikimapia.org/${comment.user_photo}` : 'https://wikimapia.org/img/nofoto_50.png',
-              profileUrl: `https://wikimapia.org/user/${comment.user_id}`,
+              url: `https://wikimapia.org/user/${comment.user_id}`,
             },
-            text: comment.message,
-            createdAt: {
-              seconds: comment.date,
+            comment: {
+              author: {
+                name: comment.name,
+                avatarUrl: comment.user_photo
+                  ? `https://wikimapia.org/${comment.user_photo}`
+                  : 'https://wikimapia.org/img/nofoto_50.png',
+                profileUrl: `https://wikimapia.org/user/${comment.user_id}`,
+              },
+              text: comment.message,
+              createdAt: {
+                seconds: comment.date,
+              },
+              replies: [],
             },
-            replies: [],
-          }
-        }))
+          })
+        )
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -92,11 +108,17 @@ export class WikimapiaSource extends MetadataSource {
     }
   }
 
-  override async getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
+  override async getPoiMetadata(
+    request: GetPoiMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     try {
-      await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
-        coordinates: request.coordinates,
-      }), events)
+      await this.getAreaMetadata(
+        GetAreaMetadataInput.fromObject({
+          coordinates: request.coordinates,
+        }),
+        events
+      )
     } catch (error) {
       if (error instanceof Error) {
         throw new VError(error, 'WikimapiaSource.getPoiMetadata')

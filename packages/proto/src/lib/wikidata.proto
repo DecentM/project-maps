@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package Wikidata;
-
-message Statement {
-  oneof statement {
-    string _ = 1;
-  }
-}

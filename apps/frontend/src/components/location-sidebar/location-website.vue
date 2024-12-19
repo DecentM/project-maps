@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata'
 import { sameUrls } from 'src/lib/urls'
 import { computed } from 'vue'
 import WebUrl from 'src/components/web-url/web-url.vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
+  metadata: ReturnType<MetadataItem['toObject']>[]
 }>()
 
 const website = computed(() => {

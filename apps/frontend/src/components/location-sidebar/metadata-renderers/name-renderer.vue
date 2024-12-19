@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
+  metadata: ReturnType<MetadataItem['toObject']>[]
 }>()
 
 const textMetadata = computed(() => {

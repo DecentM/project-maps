@@ -1,7 +1,7 @@
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { AttributionSource } from '@project-maps/proto/metadata'
 
 // TODO: Use enum instead of number, once the grpc readable issue was resolved
-export const imageSourceString = (source: Metadata.Attribution.Source): string => {
+export const imageSourceString = (source: AttributionSource): string => {
   switch (source) {
     case 1:
       return 'Geograph UK'

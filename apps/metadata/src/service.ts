@@ -1,7 +1,12 @@
 import Emittery from 'emittery'
 import type { ServerWritableStream } from '@grpc/grpc-js'
 
-import { Metadata } from '@project-maps/proto/metadata'
+import {
+  UnimplementedMetadataService,
+  type GetAreaMetadataInput,
+  type GetPoiMetadataInput,
+  type MetadataItem,
+} from '@project-maps/proto/metadata/node'
 
 import type { Events, MetadataSource } from 'src/declarations/metadata-source'
 
@@ -13,7 +18,7 @@ import { WikidataSource } from './sources/wikidata'
 import { log } from '@project-maps/logging'
 import VError from 'verror'
 
-export class MetadataService extends Metadata.UnimplementedMetadataService {
+export class MetadataService extends UnimplementedMetadataService {
   private static sources: MetadataSource[] = [
     new GeographUKImageSource(),
     new OverpassSource(),
@@ -40,9 +45,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
     return emitter
   }
 
-  override GetAreaMetadata(
-    call: ServerWritableStream<Metadata.GetAreaMetadataInput, Metadata.MetadataItem>
-  ): void {
+  override GetAreaMetadata(call: ServerWritableStream<GetAreaMetadataInput, MetadataItem>): void {
     const events = MetadataService.mergeEmitters(
       MetadataService.sources.map((source) => {
         const emitter = new Emittery<Events>()
@@ -59,7 +62,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
       })
     )
 
-    const onItem = (item: Metadata.MetadataItem) => {
+    const onItem = (item: MetadataItem) => {
       call.write(item)
     }
 
@@ -74,9 +77,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
     events.on('end', onEnd)
   }
 
-  override GetPoiMetadata(
-    call: ServerWritableStream<Metadata.GetPoiMetadataInput, Metadata.MetadataItem>
-  ): void {
+  override GetPoiMetadata(call: ServerWritableStream<GetPoiMetadataInput, MetadataItem>): void {
     const events = MetadataService.mergeEmitters(
       MetadataService.sources.map((source) => {
         const emitter = new Emittery<Events>()
@@ -93,7 +94,7 @@ export class MetadataService extends Metadata.UnimplementedMetadataService {
       })
     )
 
-    const onItem = (item: Metadata.MetadataItem) => {
+    const onItem = (item: MetadataItem) => {
       call.write(item)
     }
 

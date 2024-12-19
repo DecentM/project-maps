@@ -1,7 +1,12 @@
 import type Emittery from 'emittery'
 
-import { Metadata } from '@project-maps/proto/metadata'
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
+import {
+  MetadataItem,
+  GetAreaMetadataInput,
+  AttributionSource,
+  type GetPoiMetadataInput,
+} from '@project-maps/proto/metadata'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial'
 
 import { GeographClient } from 'src/clients/geograph'
 import { config } from 'src/config'
@@ -9,7 +14,7 @@ import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import VError from 'verror'
 
 export class GeographUKImageSource extends MetadataSource {
-  override handlesLocation(location: ReturnType<Geospatial.Coordinates['toObject']>): boolean {
+  override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
     if (!location.lat || !location.lng) return false
 
     // Geograph UK only supports locations within the UK
@@ -28,7 +33,7 @@ export class GeographUKImageSource extends MetadataSource {
   )
 
   public async getAreaMetadata(
-    request: Metadata.GetAreaMetadataInput,
+    request: GetAreaMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     try {
@@ -45,12 +50,12 @@ export class GeographUKImageSource extends MetadataSource {
 
         events.emit(
           'item',
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
               name: details.geograph.user['#text'],
               license: item.licence,
               url: `${config.clients.geographUK.baseUrl}/photo/${item.guid}`,
-              source: Metadata.Attribution.Source.GeographUK,
+              source: AttributionSource.GeographUK,
             },
             image: {
               url: {
@@ -80,14 +85,17 @@ export class GeographUKImageSource extends MetadataSource {
   }
 
   public async getPoiMetadata(
-    request: Metadata.GetPoiMetadataInput,
+    request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     try {
-      await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
-        coordinates: request.coordinates,
-        radiusMeters: 8,
-      }), events)
+      await this.getAreaMetadata(
+        GetAreaMetadataInput.fromObject({
+          coordinates: request.coordinates,
+          radiusMeters: 8,
+        }),
+        events
+      )
     } catch (error) {
       if (error instanceof Error) {
         throw new VError(error, 'GeographUKImageSource.getPoiMetadata')

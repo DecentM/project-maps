@@ -1,6 +1,6 @@
 project:
-  name: 'proto'
-  description: 'Proto definitions for the project'
+  name: "proto"
+  description: "Proto definitions for the project"
 
 tasks:
   up:
@@ -17,7 +17,18 @@ tasks:
       cache: false
       persistent: true
 
-  generate:
+  prepare:
+    command:
+      - sh
+      - -c
+      - rm -rf generated dist && mkdir generated generated/web generated/node dist
+    options:
+      cache: false
+      persistent: false
+
+  generate_types:
+    deps:
+      - prepare
     inputs:
       - src/**/*.proto
       - package.json
@@ -30,13 +41,55 @@ tasks:
     command:
       - packages/proto/node_modules/.bin/grpc_tools_node_protoc
       - --ts_out=packages/proto/generated
+      - --ts_opt=no_grpc
+      - --ts_opt=no_namespace
+      - -I=packages/proto/src
+      - packages/proto/src/**/*.proto
+
+  generate_node:
+    deps:
+      - generate_types
+    inputs:
+      - src/**/*.proto
+      - package.json
+    outputs:
+      - generated
+    options:
+      runFromWorkspaceRoot: true
+      cache: true
+      persistent: false
+    command:
+      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
+      - --ts_out=packages/proto/generated/node
+      - --ts_opt=no_namespace
       - --ts_opt=unary_rpc_promise=true
+      - --ts_opt=target=node
+      - -I=packages/proto/src
+      - packages/proto/src/**/*.proto
+
+  generate_web:
+    deps:
+      - generate_types
+    inputs:
+      - src/**/*.proto
+      - package.json
+    outputs:
+      - generated
+    options:
+      runFromWorkspaceRoot: true
+      cache: true
+      persistent: false
+    command:
+      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
+      - --js_out=import_style=commonjs:packages/proto/generated/web
+      - --grpc-web_out=import_style=typescript,mode=grpcwebtext:packages/proto/generated/web
       - -I=packages/proto/src
       - packages/proto/src/**/*.proto
 
   build:
     deps:
-      - generate
+      - generate_node
+      - generate_web
     inputs:
       - generated
     outputs:
@@ -46,4 +99,3 @@ tasks:
     options:
       cache: true
       persistent: false
-

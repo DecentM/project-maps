@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata'
 import { getImageUrl } from 'src/lib/get-image-url'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
+  metadata: ReturnType<MetadataItem['toObject']>[]
 }>()
 
 const logo = computed(() => {

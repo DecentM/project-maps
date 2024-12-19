@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { Image } from '@project-maps/proto/metadata'
 import { LngLat } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
@@ -15,9 +15,9 @@ const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties
 //   selectedPoi.value = poi
 // }
 
-const imageLocations = ref<Metadata.Image[]>([])
+const imageLocations = ref<Image[]>([])
 
-const addImageLocation = (location: Metadata.Image) => {
+const addImageLocation = (location: Image) => {
   imageLocations.value = [...imageLocations.value, location]
 }
 

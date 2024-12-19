@@ -1,17 +1,21 @@
 import VError from 'verror'
-import { Overpass } from '@project-maps/proto/overpass'
+import {
+  OverpassClient as GRPCOverpassClient,
+  type QueryParameters,
+  type PoiMetadataParameters,
+} from '@project-maps/proto/overpass/node'
 import { log } from '@project-maps/logging'
 import { credentials } from '@grpc/grpc-js'
 
 import { config } from '../config'
 
 export class OverpassClient {
-  private client = new Overpass.OverpassClient(
+  private client = new GRPCOverpassClient(
     `${config.clients.overpassInterpreter.host}:${config.clients.overpassInterpreter.port}`,
     credentials.createInsecure()
   )
 
-  public ShortRangeNamed (params: Overpass.QueryParameters) {
+  public ShortRangeNamed(params: QueryParameters) {
     log.trace({ params: params.toObject() }, 'OverpassClient.ShortRangeNamed')
 
     const stream = this.client.ShortRangeNamed(params)
@@ -23,7 +27,7 @@ export class OverpassClient {
     return stream
   }
 
-  public WikidataIdsInRange (params: Overpass.QueryParameters) {
+  public WikidataIdsInRange(params: QueryParameters) {
     log.trace({ params: params.toObject() }, 'OverpassClient.WikidataIdsInRange')
 
     const stream = this.client.WikidataIdsInRange(params)
@@ -35,7 +39,7 @@ export class OverpassClient {
     return stream
   }
 
-  public PoiMetadata (params: Overpass.PoiMetadataParameters) {
+  public PoiMetadata(params: PoiMetadataParameters) {
     log.trace({ params: params.toObject() }, 'OverpassClient.GetPoiMetadata')
 
     const stream = this.client.PoiMetadata(params)
@@ -47,7 +51,7 @@ export class OverpassClient {
     return stream
   }
 
-  public PoiWikidataId (params: Overpass.PoiMetadataParameters) {
+  public PoiWikidataId(params: PoiMetadataParameters) {
     log.trace({ params: params.toObject() }, 'OverpassClient.GetPoiWikidataId')
 
     const stream = this.client.PoiWikidataId(params)

@@ -1,15 +1,20 @@
 import type Emittery from 'emittery'
 import VError from 'verror'
 
-import { Metadata } from '@project-maps/proto/metadata'
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
+import {
+  GetAreaMetadataInput,
+  MetadataItem,
+  AttributionSource,
+  type GetPoiMetadataInput,
+} from '@project-maps/proto/metadata'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial'
 
 import { MapillaryClient } from 'src/clients/mapillary'
 import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { createBBox } from 'src/lib/bbox'
 export class MapillarySource extends MetadataSource {
-  override handlesLocation(location: ReturnType<Geospatial.Coordinates['toObject']>): boolean {
+  override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
     return true // Handles all locations
   }
 
@@ -19,13 +24,17 @@ export class MapillarySource extends MetadataSource {
   )
 
   public async getAreaMetadata(
-    request: Metadata.GetAreaMetadataInput,
+    request: GetAreaMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     try {
       const parameters = request.toObject()
 
-      if (!parameters.coordinates?.lat || !parameters.coordinates?.lng || !parameters.radiusMeters) {
+      if (
+        !parameters.coordinates?.lat ||
+        !parameters.coordinates?.lng ||
+        !parameters.radiusMeters
+      ) {
         events.emit('end')
         return
       }
@@ -49,10 +58,10 @@ export class MapillarySource extends MetadataSource {
 
         events.emit(
           'item',
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
               license: 'CC BY-SA',
-              source: Metadata.Attribution.Source.Mapillary,
+              source: AttributionSource.Mapillary,
               name: imageData.creator?.username,
               url: `https://mapillary.com/app/user/${imageData.creator?.username}?pKey=${imageData.id}&focus=photo`,
             },
@@ -86,14 +95,17 @@ export class MapillarySource extends MetadataSource {
   }
 
   public async getPoiMetadata(
-    request: Metadata.GetPoiMetadataInput,
+    request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     try {
-      await this.getAreaMetadata(Metadata.GetAreaMetadataInput.fromObject({
-        coordinates: request.coordinates,
-        radiusMeters: 6,
-      }), events)
+      await this.getAreaMetadata(
+        GetAreaMetadataInput.fromObject({
+          coordinates: request.coordinates,
+          radiusMeters: 6,
+        }),
+        events
+      )
     } catch (error) {
       if (error instanceof Error) {
         throw new VError(error, 'MapillarySource.getPoiMetadata')

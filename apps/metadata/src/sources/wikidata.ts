@@ -1,9 +1,19 @@
 import type Emittery from 'emittery'
 import { isEntityId, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
 
-import { Metadata } from '@project-maps/proto/metadata'
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
-import { Overpass } from '@project-maps/proto/overpass'
+import {
+  MetadataItem,
+  AttributionSource,
+  LinkType,
+  type GetAreaMetadataInput,
+  type GetPoiMetadataInput,
+} from '@project-maps/proto/metadata'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial'
+import {
+  QueryParameters,
+  type WikidataId,
+  PoiMetadataParameters,
+} from '@project-maps/proto/overpass/node'
 
 import { WikidataClient } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
@@ -15,16 +25,16 @@ import { log } from '@project-maps/logging'
 export class WikidataSource extends MetadataSource {
   private overpassClient = new OverpassClient()
 
-  private processEntity(entity: SimplifiedEntity, onItem: (item: Metadata.MetadataItem) => void) {
+  private processEntity(entity: SimplifiedEntity, onItem: (item: MetadataItem) => void) {
     try {
       if (!entity || entity.type !== 'item') {
         return
       }
 
       onItem(
-        Metadata.MetadataItem.fromObject({
+        MetadataItem.fromObject({
           attribution: {
-            source: Metadata.Attribution.Source.Wikidata,
+            source: AttributionSource.Wikidata,
             license: 'CC0',
             name: entity.id,
             url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -39,9 +49,9 @@ export class WikidataSource extends MetadataSource {
 
       if (image) {
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -59,9 +69,9 @@ export class WikidataSource extends MetadataSource {
 
       if (instagram?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -70,7 +80,7 @@ export class WikidataSource extends MetadataSource {
               list: instagram?.length
                 ? instagram!
                     .map((item) => ({
-                      type: Metadata.Link.Type.Instagram,
+                      type: LinkType.Instagram,
                       url: `https://instagram.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -83,9 +93,9 @@ export class WikidataSource extends MetadataSource {
 
       if (linkedin?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -94,7 +104,7 @@ export class WikidataSource extends MetadataSource {
               list: linkedin?.length
                 ? linkedin
                     .map((item) => ({
-                      type: Metadata.Link.Type.LinkedIn,
+                      type: LinkType.LinkedIn,
                       url: `https://linkedin.com/company/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -107,9 +117,9 @@ export class WikidataSource extends MetadataSource {
 
       if (pinterest?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -118,7 +128,7 @@ export class WikidataSource extends MetadataSource {
               list: pinterest?.length
                 ? pinterest
                     .map((item) => ({
-                      type: Metadata.Link.Type.Pinterest,
+                      type: LinkType.Pinterest,
                       url: `https://pinterest.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -131,9 +141,9 @@ export class WikidataSource extends MetadataSource {
 
       if (x?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -142,7 +152,7 @@ export class WikidataSource extends MetadataSource {
               list: x?.length
                 ? x
                     .map((item) => ({
-                      type: Metadata.Link.Type.X,
+                      type: LinkType.X,
                       url: `https://x.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -155,9 +165,9 @@ export class WikidataSource extends MetadataSource {
 
       if (facebook?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -166,7 +176,7 @@ export class WikidataSource extends MetadataSource {
               list: facebook?.length
                 ? facebook
                     .map((item) => ({
-                      type: Metadata.Link.Type.Facebook,
+                      type: LinkType.Facebook,
                       url: `https://facebook.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -179,9 +189,9 @@ export class WikidataSource extends MetadataSource {
 
       if (bbcNewsTopicId?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -190,7 +200,7 @@ export class WikidataSource extends MetadataSource {
               list: bbcNewsTopicId?.length
                 ? bbcNewsTopicId
                     .map((item) => ({
-                      type: Metadata.Link.Type.BBCNewsTopic,
+                      type: LinkType.BBCNewsTopic,
                       url: `https://www.bbc.co.uk/news/topics/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -204,9 +214,9 @@ export class WikidataSource extends MetadataSource {
 
       if (logo?.length || smallLogo?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -222,9 +232,9 @@ export class WikidataSource extends MetadataSource {
 
       if (website?.length)
         onItem(
-          Metadata.MetadataItem.fromObject({
+          MetadataItem.fromObject({
             attribution: {
-              source: Metadata.Attribution.Source.Wikidata,
+              source: AttributionSource.Wikidata,
               license: 'CC0',
               name: entity.id,
               url: `https://www.wikidata.org/wiki/${entity.id}`,
@@ -245,16 +255,13 @@ export class WikidataSource extends MetadataSource {
 
   private client = new WikidataClient()
 
-  override handlesLocation(coordinates: Geospatial.Coordinates): boolean {
+  override handlesLocation(coordinates: Coordinates): boolean {
     return true // Handles all locations
   }
 
-  public getAreaMetadata(
-    params: Metadata.GetAreaMetadataInput,
-    events: Emittery<Events>
-  ): void {
+  public getAreaMetadata(params: GetAreaMetadataInput, events: Emittery<Events>): void {
     const ids = this.overpassClient.WikidataIdsInRange(
-      Overpass.QueryParameters.fromObject({
+      QueryParameters.fromObject({
         range: params.radiusMeters,
         coordinates: params.coordinates,
         tags: ['wikidata', 'brand:wikidata'],
@@ -263,7 +270,7 @@ export class WikidataSource extends MetadataSource {
 
     const requestedIds: EntityId[] = []
 
-    ids.on('data', (data: Overpass.WikidataId) => {
+    ids.on('data', (data: WikidataId) => {
       if (isEntityId(data.id)) {
         requestedIds.push(data.id)
       }
@@ -304,16 +311,19 @@ export class WikidataSource extends MetadataSource {
   }
 
   override async getPoiMetadata(
-    request: Metadata.GetPoiMetadataInput,
+    request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     const wikidataIdStream = this.overpassClient.PoiWikidataId(
-      Overpass.PoiMetadataParameters.fromObject({ id: request.id, tags: ['wikidata', 'brand:wikidata'] })
+      PoiMetadataParameters.fromObject({
+        id: request.id,
+        tags: ['wikidata', 'brand:wikidata'],
+      })
     )
 
     const requestedIds: EntityId[] = []
 
-    wikidataIdStream.on('data', async (data: Overpass.WikidataId) => {
+    wikidataIdStream.on('data', async (data: WikidataId) => {
       try {
         if (!isEntityId(data.id)) return
 

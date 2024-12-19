@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { Metadata } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata'
 import { computed, ref } from 'vue'
 import { DateTime } from 'luxon'
 
 const props = defineProps<{
-  metadata: ReturnType<Metadata.MetadataItem['toObject']>[]
+  metadata: ReturnType<MetadataItem['toObject']>[]
   coordinates: GeoJSON.Position
 }>()
 

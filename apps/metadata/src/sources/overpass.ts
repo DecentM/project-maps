@@ -2,9 +2,14 @@ import type Emittery from 'emittery'
 import Timezone from 'geo-tz'
 import { DateTime, IANAZone, Interval, type Zone } from 'luxon'
 
-import type { OpenStreetMap } from '@project-maps/proto/lib/openstreetmap'
-import { Metadata } from '@project-maps/proto/metadata'
-import { Overpass } from '@project-maps/proto/overpass'
+import type { Element, Node, Way, Relation } from '@project-maps/proto/lib/openstreetmap'
+import {
+  AttributionSource,
+  MetadataItem,
+  type GetAreaMetadataInput,
+  type GetPoiMetadataInput,
+} from '@project-maps/proto/metadata'
+import { QueryParameters, PoiMetadataParameters } from '@project-maps/proto/overpass/node'
 import * as OpeningHours from '@project-maps/opening-hours-parser'
 
 import { OverpassClient } from 'src/clients/overpass'
@@ -39,15 +44,15 @@ export class OverpassSource extends MetadataSource {
   ]
 
   private static processElement(
-    response: OpenStreetMap.Element,
+    response: Element,
     zone: Zone,
-    onItem: (item: Metadata.MetadataItem) => void
+    onItem: (item: MetadataItem) => void
   ): void {
     const element = response.toObject()
     let item:
-      | ReturnType<OpenStreetMap.Node['toObject']>
-      | ReturnType<OpenStreetMap.Way['toObject']>
-      | ReturnType<OpenStreetMap.Relation['toObject']>
+      | ReturnType<Node['toObject']>
+      | ReturnType<Way['toObject']>
+      | ReturnType<Relation['toObject']>
       | undefined
 
     if (element.way) item = element.way
@@ -57,9 +62,9 @@ export class OverpassSource extends MetadataSource {
     if (!item) return
 
     onItem(
-      Metadata.MetadataItem.fromObject({
+      MetadataItem.fromObject({
         attribution: {
-          source: Metadata.Attribution.Source.OpenStreetMap,
+          source: AttributionSource.OpenStreetMap,
           license: 'ODbL',
           url: item.id
             ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
@@ -92,9 +97,9 @@ export class OverpassSource extends MetadataSource {
     )
 
     onItem(
-      Metadata.MetadataItem.fromObject({
+      MetadataItem.fromObject({
         attribution: {
-          source: Metadata.Attribution.Source.OpenStreetMap,
+          source: AttributionSource.OpenStreetMap,
           license: 'ODbL',
           url: item.id
             ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
@@ -124,11 +129,11 @@ export class OverpassSource extends MetadataSource {
   }
 
   public async getAreaMetadata(
-    request: Metadata.GetAreaMetadataInput,
+    request: GetAreaMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     const overpassResponse = this.client.ShortRangeNamed(
-      Overpass.QueryParameters.fromObject({
+      QueryParameters.fromObject({
         coordinates: request.coordinates.toObject(),
         range: request.radiusMeters,
         tags: OverpassSource.requestedTags,
@@ -137,7 +142,7 @@ export class OverpassSource extends MetadataSource {
 
     const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
 
-    overpassResponse.on('data', (response: OpenStreetMap.Element) => {
+    overpassResponse.on('data', (response: Element) => {
       OverpassSource.processElement(response, zone, (item) => {
         events.emit('item', item)
       })
@@ -149,11 +154,11 @@ export class OverpassSource extends MetadataSource {
   }
 
   public async getPoiMetadata(
-    request: Metadata.GetPoiMetadataInput,
+    request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
     const overpassResponse = this.client.PoiMetadata(
-      Overpass.PoiMetadataParameters.fromObject({
+      PoiMetadataParameters.fromObject({
         id: request.id,
         tags: OverpassSource.requestedTags,
       })
@@ -161,7 +166,7 @@ export class OverpassSource extends MetadataSource {
 
     const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
 
-    overpassResponse.on('data', (response: OpenStreetMap.Element) => {
+    overpassResponse.on('data', (response: Element) => {
       OverpassSource.processElement(response, zone, (item) => {
         events.emit('item', item)
       })

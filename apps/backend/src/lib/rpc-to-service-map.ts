@@ -1,8 +1,8 @@
 import { metadataClient } from '../grpc-clients/metadata'
-import { Metadata } from '@project-maps/proto/metadata'
+import { UnimplementedMetadataService } from '@project-maps/proto/metadata/node'
 
 export const rpcToServiceMap = {
-  LocationMetadata: [Metadata.UnimplementedMetadataService, metadataClient],
+  LocationMetadata: [UnimplementedMetadataService, metadataClient],
 } as const
 
 export type MappedService = keyof typeof rpcToServiceMap
@@ -23,8 +23,8 @@ export type MappedReturnTypeByMethod<
   T extends MappedService,
   M extends MappedMethodNameByService<T>,
 > = M extends keyof (typeof rpcToServiceMap)[T][1]
-  // biome-ignore lint/suspicious/noExplicitAny: causes never
-  ? (typeof rpcToServiceMap)[T][1][M] extends (...args: any[]) => infer R
+  ? // biome-ignore lint/suspicious/noExplicitAny: causes never
+    (typeof rpcToServiceMap)[T][1][M] extends (...args: any[]) => infer R
     ? R
     : never
   : never

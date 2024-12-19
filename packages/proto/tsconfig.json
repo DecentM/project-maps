@@ -2,7 +2,7 @@
   "extends": "tsconfig-moon/tsconfig.projects.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "checkJs": false,
+    "checkJs": true,
     "outDir": "dist",
     "strict": true,
     "target": "ES6",
@@ -12,6 +12,8 @@
     "sourceMap": true,
     "noUnusedLocals": false,
     "rootDir": "generated",
-    "tsBuildInfoFile": "dist/.tsbuildinfo"
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "allowJs": true,
+    "noImplicitOverride": false
   }
 }

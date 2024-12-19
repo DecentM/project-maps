@@ -8,40 +8,70 @@
       "import": "./dist/metadata/index.js",
       "types": "./dist/metadata/index.d.ts"
     },
+    "./metadata/node": {
+      "import": "./dist/node/metadata/index.js",
+      "types": "./dist/node/metadata/index.d.ts"
+    },
     "./overpass": {
       "import": "./dist/overpass/index.js",
-      "types": "./dist/overpass-interpreter/index.d.ts"
+      "types": "./dist/overpass/index.d.ts"
+    },
+    "./overpass/node": {
+      "import": "./dist/node/overpass/index.js",
+      "types": "./dist/node/overpass/index.d.ts"
     },
     "./search": {
       "import": "./dist/search/index.js",
       "types": "./dist/search/index.d.ts"
     },
+    "./search/node": {
+      "import": "./dist/node/search/index.js",
+      "types": "./dist/node/search/index.d.ts"
+    },
     "./lib/geospatial": {
       "import": "./dist/lib/geospatial.js",
       "types": "./dist/lib/geospatial.d.ts"
+    },
+    "./lib/geospatial/node": {
+      "import": "./dist/node/lib/geospatial.js",
+      "types": "./dist/node/lib/geospatial.d.ts"
     },
     "./lib/openstreetmap": {
       "import": "./dist/lib/openstreetmap.js",
       "types": "./dist/lib/openstreetmap.d.ts"
     },
+    "./lib/openstreetmap/node": {
+      "import": "./dist/node/lib/openstreetmap.js",
+      "types": "./dist/node/lib/openstreetmap.d.ts"
+    },
     "./lib/pagination": {
       "import": "./dist/lib/pagination.js",
       "types": "./dist/lib/pagination.d.ts"
     },
+    "./lib/pagination/node": {
+      "import": "./dist/node/lib/pagination.js",
+      "types": "./dist/node/lib/pagination.d.ts"
+    },
     "./lib/datetime": {
       "import": "./dist/lib/datetime.js",
       "types": "./dist/lib/datetime.d.ts"
+    },
+    "./lib/datetime/node": {
+      "import": "./dist/node/lib/datetime.js",
+      "types": "./dist/node/lib/datetime.d.ts"
     }
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.11.2",
     "google-protobuf": "^3.21.4",
-    "grpc-tools": "^1.12.4"
+    "grpc-tools": "^1.12.4",
+    "grpc-web": "^1.5.0"
   },
   "devDependencies": {
     "@types/google-protobuf": "^3.15.12",
     "@types/node": "20.16.3",
     "nodemon": "^3.1.3",
+    "protoc-gen-grpc-web": "^1.5.0",
     "protoc-gen-ts": "^0.8.7",
     "tsconfig-moon": "^1.3.0"
   }

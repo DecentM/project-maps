@@ -1,16 +1,26 @@
 import type Emittery from 'emittery'
-import type { Metadata } from '@project-maps/proto/metadata'
-import type { Geospatial } from '@project-maps/proto/lib/geospatial'
+import type {
+  GetAreaMetadataInput,
+  GetPoiMetadataInput,
+  MetadataItem,
+} from '@project-maps/proto/metadata'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial'
 
 export type Events = {
-  item: Metadata.MetadataItem
+  item: MetadataItem
   end: undefined
 }
 
 export abstract class MetadataSource {
-  abstract handlesLocation(location: ReturnType<typeof Geospatial.Coordinates['toObject']>): boolean
+  abstract handlesLocation(location: ReturnType<(typeof Coordinates)['toObject']>): boolean
 
-  abstract getAreaMetadata(request: Metadata.GetAreaMetadataInput, events: Emittery<Events>): void | Promise<void>
+  abstract getAreaMetadata(
+    request: GetAreaMetadataInput,
+    events: Emittery<Events>
+  ): void | Promise<void>
 
-  abstract getPoiMetadata(request: Metadata.GetPoiMetadataInput, events: Emittery<Events>): void | Promise<void>
+  abstract getPoiMetadata(
+    request: GetPoiMetadataInput,
+    events: Emittery<Events>
+  ): void | Promise<void>
 }

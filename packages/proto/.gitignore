@@ -1,5 +1,2 @@
-generated/*
-!generated/.gitkeep
-
-dist/*
-!dist/.gitkeep
+generated
+dist
