@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Attribution } from '@project-maps/proto/metadata'
+import type { Attribution } from '@project-maps/proto/metadata/web'
 
 import { imageSourceString } from 'src/lib/image-source-string'
 import { licenseUrlToString } from 'src/lib/license-url-to-string'

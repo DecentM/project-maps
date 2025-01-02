@@ -7,8 +7,8 @@ import {
   LinkType,
   type GetAreaMetadataInput,
   type GetPoiMetadataInput,
-} from '@project-maps/proto/metadata'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial'
+} from '@project-maps/proto/metadata/node'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 import {
   QueryParameters,
   type WikidataId,
@@ -300,9 +300,9 @@ export class WikidataSource extends MetadataSource {
         }
 
         log.error(error, 'WikidataSource.getAreaMetadata')
-      } finally {
-        events.emit('end')
       }
+
+      events.emit('end')
     })
 
     ids.on('error', (error: Error) => {

@@ -15,10 +15,6 @@ export const useSocket = () => {
     socket.disconnect()
   })
 
-  socket.on('connect', () => {
-    console.log('socketio connected')
-  })
-
   return {
     socket,
   }

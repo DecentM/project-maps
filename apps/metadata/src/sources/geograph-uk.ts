@@ -5,8 +5,8 @@ import {
   GetAreaMetadataInput,
   AttributionSource,
   type GetPoiMetadataInput,
-} from '@project-maps/proto/metadata'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial'
+} from '@project-maps/proto/metadata/node'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 import { GeographClient } from 'src/clients/geograph'
 import { config } from 'src/config'
@@ -73,8 +73,6 @@ export class GeographUKImageSource extends MetadataSource {
           })
         )
       }
-
-      events.emit('end')
     } catch (error) {
       if (error instanceof Error) {
         throw new VError(error, 'GeographUKImageSource.getAreaMetadata')
@@ -82,6 +80,8 @@ export class GeographUKImageSource extends MetadataSource {
 
       throw new Error('GeographUKImageSource.getAreaMetadata')
     }
+
+    events.emit('end')
   }
 
   public async getPoiMetadata(

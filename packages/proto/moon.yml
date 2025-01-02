@@ -21,46 +21,46 @@ tasks:
     command:
       - sh
       - -c
-      - rm -rf generated dist && mkdir generated generated/web generated/node dist
+      - mkdir -p dist/web dist/node
     options:
       cache: false
       persistent: false
 
-  generate_types:
+  # generate_types:
+  #   deps:
+  #     - prepare
+  #   inputs:
+  #     - src/**/*.proto
+  #     - package.json
+  #   outputs:
+  #     - dist
+  #   options:
+  #     runFromWorkspaceRoot: true
+  #     cache: true
+  #     persistent: false
+  #   command:
+  #     - packages/proto/node_modules/.bin/grpc_tools_node_protoc
+  #     - --ts_out=packages/proto/dist
+  #     - --ts_opt=no_grpc
+  #     - --ts_opt=no_namespace
+  #     - -I=packages/proto/src
+  #     - packages/proto/src/**/*.proto
+
+  generate_node:
     deps:
       - prepare
     inputs:
       - src/**/*.proto
       - package.json
     outputs:
-      - generated
+      - dist
     options:
       runFromWorkspaceRoot: true
       cache: true
       persistent: false
     command:
       - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-      - --ts_out=packages/proto/generated
-      - --ts_opt=no_grpc
-      - --ts_opt=no_namespace
-      - -I=packages/proto/src
-      - packages/proto/src/**/*.proto
-
-  generate_node:
-    deps:
-      - generate_types
-    inputs:
-      - src/**/*.proto
-      - package.json
-    outputs:
-      - generated
-    options:
-      runFromWorkspaceRoot: true
-      cache: true
-      persistent: false
-    command:
-      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-      - --ts_out=packages/proto/generated/node
+      - --ts_out=packages/proto/dist/node
       - --ts_opt=no_namespace
       - --ts_opt=unary_rpc_promise=true
       - --ts_opt=target=node
@@ -69,20 +69,20 @@ tasks:
 
   generate_web:
     deps:
-      - generate_types
+      - prepare
     inputs:
       - src/**/*.proto
       - package.json
     outputs:
-      - generated
+      - dist
     options:
       runFromWorkspaceRoot: true
       cache: true
       persistent: false
     command:
       - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-      - --js_out=import_style=commonjs:packages/proto/generated/web
-      - --grpc-web_out=import_style=typescript,mode=grpcwebtext:packages/proto/generated/web
+      - --js_out=import_style=commonjs,binary:packages/proto/dist/web
+      - --grpc-web_out=import_style=typescript,mode=grpcwebtext:packages/proto/dist/web
       - -I=packages/proto/src
       - packages/proto/src/**/*.proto
 
@@ -91,7 +91,7 @@ tasks:
       - generate_node
       - generate_web
     inputs:
-      - generated
+      - dist
     outputs:
       - dist
     command:

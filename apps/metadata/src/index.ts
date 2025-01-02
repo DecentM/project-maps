@@ -1,8 +1,9 @@
 import { Server, ServerCredentials } from '@grpc/grpc-js'
 
-import { MetadataService } from "./service";
-import { config } from './config';
-import { log } from '@project-maps/logging';
+import { log } from '@project-maps/logging'
+
+import { MetadataService } from './service'
+import { config } from './config'
 
 const startServer = (server: Server): Promise<void> => {
   return new Promise((resolve, reject) => {

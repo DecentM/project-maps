@@ -24,6 +24,7 @@
     "@turf/turf": "^7.1.0",
     "browser-geo-tz": "^0.1.0",
     "buffer": "^6.0.3",
+    "emittery": "^1.0.3",
     "lodash.debounce": "^4.0.8",
     "luxon": "^3.5.0",
     "maplibre-gl": "^4.7.0",

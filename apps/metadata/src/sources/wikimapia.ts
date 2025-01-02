@@ -5,8 +5,8 @@ import {
   type GetPoiMetadataInput,
   MetadataItem,
   AttributionSource,
-} from '@project-maps/proto/metadata'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial'
+} from '@project-maps/proto/metadata/node'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 import { WikimapiaClient } from 'src/clients/wikimapia'
 import { config } from 'src/config'

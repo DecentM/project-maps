@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import type { MetadataItem } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: ReturnType<MetadataItem['toObject']>[]
+  metadata: MetadataItem.AsObject[]
 }>()
 
 const commentItems = computed(() => {
@@ -25,15 +25,15 @@ const commentItems = computed(() => {
       :default-opened="index === 0"
     >
       <template #header>
-        <q-item-section avatar v-if="item.comment?.author?.avatarUrl">
+        <q-item-section avatar v-if="item.comment?.author?.avatarurl">
           <q-avatar>
-            <img :src="item.comment.author.avatarUrl">
+            <img :src="item.comment.author.avatarurl">
           </q-avatar>
         </q-item-section>
 
         <q-item-section class="font-noto-sans-display">
           <q-item-label>{{ item.comment?.author?.name }}</q-item-label>
-          <q-item-label caption lines="1">{{ item.comment?.createdAt?.seconds }}</q-item-label>
+          <q-item-label caption lines="1">{{ item.comment?.createdat?.seconds }}</q-item-label>
         </q-item-section>
       </template>
 

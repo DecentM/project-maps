@@ -1,6 +1,6 @@
-import type { MetadataItem } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
-const getRawScore = (item: ReturnType<MetadataItem['toObject']>): number => {
+const getRawScore = (item: MetadataItem.AsObject): number => {
   let points = 0
 
   const good = (bool: unknown) => {
@@ -23,8 +23,8 @@ const getRawScore = (item: ReturnType<MetadataItem['toObject']>): number => {
 }
 
 export const sortMetadataItems = (
-  items: Array<ReturnType<MetadataItem['toObject']>>
-): Array<ReturnType<MetadataItem['toObject']>> => {
+  items: Array<MetadataItem.AsObject>
+): Array<MetadataItem.AsObject> => {
   const result: number[] = []
 
   let maxPoints = 0

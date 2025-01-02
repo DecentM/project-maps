@@ -2,8 +2,7 @@
   "extends": "tsconfig-moon/tsconfig.projects.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "checkJs": true,
-    "outDir": "dist",
+    "checkJs": false,
     "strict": true,
     "target": "ES6",
     "module": "ESNext",
@@ -11,9 +10,9 @@
     "emitDeclarationOnly": false,
     "sourceMap": true,
     "noUnusedLocals": false,
-    "rootDir": "generated",
+    "rootDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
-    "allowJs": true,
+    "allowJs": false,
     "noImplicitOverride": false
   }
 }

@@ -3,8 +3,8 @@ import type {
   GetAreaMetadataInput,
   GetPoiMetadataInput,
   MetadataItem,
-} from '@project-maps/proto/metadata'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial'
+} from '@project-maps/proto/metadata/node'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 export type Events = {
   item: MetadataItem

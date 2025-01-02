@@ -6,8 +6,8 @@ import {
   MetadataItem,
   AttributionSource,
   type GetPoiMetadataInput,
-} from '@project-maps/proto/metadata'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial'
+} from '@project-maps/proto/metadata/node'
+import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 import { MapillaryClient } from 'src/clients/mapillary'
 import { config } from 'src/config'
@@ -86,6 +86,8 @@ export class MapillarySource extends MetadataSource {
 
       events.emit('end')
     } catch (error) {
+      events.emit('end')
+
       if (error instanceof Error) {
         throw new VError(error, 'MapillarySource.getAreaMetadata')
       }

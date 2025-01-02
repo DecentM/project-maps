@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "metadata/index.proto";
+import "overpass/index.proto";
+import "search/index.proto";
+
+import "lib/openstreetmap.proto";
+
+package Backend;
+
+service Backend {
+  // Metadata
+  rpc GetAreaMetadata(.Metadata.GetAreaMetadataInput) returns (stream .Metadata.MetadataItem);
+  rpc GetPoiMetadata(.Metadata.GetPoiMetadataInput) returns (stream .Metadata.MetadataItem);
+
+  // Overpass
+  rpc ShortRangeNamed(.Overpass.QueryParameters) returns (stream .OpenStreetMap.Element);
+  rpc WikidataIdsInRange(.Overpass.QueryParameters) returns (stream .Overpass.WikidataId);
+  rpc PoiMetadata(.Overpass.PoiMetadataParameters) returns (stream .OpenStreetMap.Element);
+  rpc PoiWikidataId(.Overpass.PoiMetadataParameters) returns (stream .Overpass.WikidataId);
+
+  // Search
+  rpc Query(.Search.QueryParameters) returns (stream .Search.SearchResult);
+}

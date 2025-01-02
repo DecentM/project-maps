@@ -4,61 +4,85 @@
   "author": "DecentM <decentm@decentm.com>",
   "type": "module",
   "exports": {
-    "./metadata": {
-      "import": "./dist/metadata/index.js",
-      "types": "./dist/metadata/index.d.ts"
+    "./backend/node": {
+      "import": "./dist/node/backend/index.js",
+      "types": "./dist/node/backend/index.d.ts"
+    },
+    "./backend/web": {
+      "import": "./dist/web/backend/index_pb.js",
+      "types": "./dist/web/backend/index_pb.d.ts"
+    },
+    "./backend/web/client": {
+      "import": "./dist/web/backend/IndexServiceClientPb.js",
+      "types": "./dist/web/backend/IndexServiceClientPb.d.ts"
     },
     "./metadata/node": {
       "import": "./dist/node/metadata/index.js",
       "types": "./dist/node/metadata/index.d.ts"
     },
-    "./overpass": {
-      "import": "./dist/overpass/index.js",
-      "types": "./dist/overpass/index.d.ts"
+    "./metadata/web": {
+      "import": "./dist/web/metadata/index_pb.js",
+      "types": "./dist/web/metadata/index_pb.d.ts"
+    },
+    "./metadata/web/client": {
+      "import": "./dist/web/metadata/IndexServiceClientPb.js",
+      "types": "./dist/web/metadata/IndexServiceClientPb.d.ts"
     },
     "./overpass/node": {
       "import": "./dist/node/overpass/index.js",
       "types": "./dist/node/overpass/index.d.ts"
     },
-    "./search": {
-      "import": "./dist/search/index.js",
-      "types": "./dist/search/index.d.ts"
+    "./overpass/web": {
+      "import": "./dist/web/overpass/index_pb.js",
+      "types": "./dist/web/overpass/index_pb.d.ts"
+    },
+    "./overpass/web/client": {
+      "import": "./dist/web/overpass/IndexServiceClientPb.js",
+      "types": "./dist/web/overpass/IndexServiceClientPb.d.ts"
     },
     "./search/node": {
       "import": "./dist/node/search/index.js",
       "types": "./dist/node/search/index.d.ts"
     },
-    "./lib/geospatial": {
-      "import": "./dist/lib/geospatial.js",
-      "types": "./dist/lib/geospatial.d.ts"
+    "./search/web": {
+      "import": "./dist/web/search/index_pb.js",
+      "types": "./dist/web/search/index_pb.d.ts"
+    },
+    "./search/web/client": {
+      "import": "./dist/web/search/IndexServiceClientPb.js",
+      "types": "./dist/web/search/IndexServiceClientPb.d.ts"
     },
     "./lib/geospatial/node": {
       "import": "./dist/node/lib/geospatial.js",
       "types": "./dist/node/lib/geospatial.d.ts"
     },
-    "./lib/openstreetmap": {
-      "import": "./dist/lib/openstreetmap.js",
-      "types": "./dist/lib/openstreetmap.d.ts"
+    "./lib/geospatial/web": {
+      "import": "./dist/web/lib/geospatial_pb.js",
+      "types": "./dist/web/lib/geospatial_pb.d.ts"
     },
     "./lib/openstreetmap/node": {
       "import": "./dist/node/lib/openstreetmap.js",
       "types": "./dist/node/lib/openstreetmap.d.ts"
     },
-    "./lib/pagination": {
-      "import": "./dist/lib/pagination.js",
-      "types": "./dist/lib/pagination.d.ts"
+    "./lib/openstreetmap/web": {
+      "import": "./dist/web/lib/openstreetmap_pb.js",
+      "types": "./dist/web/lib/openstreetmap_pb.d.ts"
     },
     "./lib/pagination/node": {
       "import": "./dist/node/lib/pagination.js",
       "types": "./dist/node/lib/pagination.d.ts"
     },
-    "./lib/datetime": {
-      "import": "./dist/lib/datetime.js",
-      "types": "./dist/lib/datetime.d.ts"
+    "./lib/pagination/web": {
+      "import": "./dist/web/lib/pagination_pb.js",
+      "types": "./dist/web/lib/pagination_pb.d.ts"
     },
     "./lib/datetime/node": {
       "import": "./dist/node/lib/datetime.js",
       "types": "./dist/node/lib/datetime.d.ts"
+    },
+    "./lib/datetime/web": {
+      "import": "./dist/web/lib/datetime_pb.js",
+      "types": "./dist/web/lib/datetime_pb.d.ts"
     }
   },
   "dependencies": {

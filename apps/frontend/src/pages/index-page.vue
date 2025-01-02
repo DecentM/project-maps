@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import type { Image } from '@project-maps/proto/metadata'
+import type { Image } from '@project-maps/proto/metadata/web'
 import { LngLat } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'

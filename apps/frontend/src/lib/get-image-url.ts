@@ -1,4 +1,4 @@
-import type { ImageUrl } from '@project-maps/proto/metadata'
+import type { ImageUrl } from '@project-maps/proto/metadata/web'
 
 export const getImageUrl = (
   input: ReturnType<ImageUrl['toObject']>,

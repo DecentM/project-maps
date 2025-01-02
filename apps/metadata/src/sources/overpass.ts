@@ -2,13 +2,13 @@ import type Emittery from 'emittery'
 import Timezone from 'geo-tz'
 import { DateTime, IANAZone, Interval, type Zone } from 'luxon'
 
-import type { Element, Node, Way, Relation } from '@project-maps/proto/lib/openstreetmap'
+import type { Element, Node, Way, Relation } from '@project-maps/proto/lib/openstreetmap/node'
 import {
   AttributionSource,
   MetadataItem,
   type GetAreaMetadataInput,
   type GetPoiMetadataInput,
-} from '@project-maps/proto/metadata'
+} from '@project-maps/proto/metadata/node'
 import { QueryParameters, PoiMetadataParameters } from '@project-maps/proto/overpass/node'
 import * as OpeningHours from '@project-maps/opening-hours-parser'
 

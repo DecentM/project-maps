@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import type { MetadataItem } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata/web'
 import { computed, ref } from 'vue'
 import { DateTime } from 'luxon'
 
 const props = defineProps<{
-  metadata: ReturnType<MetadataItem['toObject']>[]
+  metadata: MetadataItem.AsObject[]
   coordinates: GeoJSON.Position
 }>()
 
 const openingHours = computed(() => {
-  return props.metadata.findLast((item) => 'openingHours' in item)
+  return props.metadata.findLast((item) => 'openinghours' in item)
 })
 
 const ranges = computed(() => {
-  return openingHours.value?.openingHours?.ranges?.filter(
+  return openingHours.value?.openinghours?.rangesList?.filter(
     (range) => range.start?.millis && range.end?.millis
   )
 })
@@ -22,7 +22,7 @@ const tz = ref('Etc/UTC')
 </script>
 
 <template>
-  <div class="relative-position" v-if="openingHours && openingHours.openingHours?.ranges">
+  <div class="relative-position" v-if="openingHours && openingHours.openinghours?.rangesList">
     <q-item>
       <q-item-section side top>
         <q-icon name="mdi-clock" color="primary" size="md" />

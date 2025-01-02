@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { MetadataItem } from '@project-maps/proto/metadata'
+import type { MetadataItem } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
 
 import AttributionNotice from 'src/components/attribution-notice/attribution-notice.vue'
 
 const props = defineProps<{
-  metadata: ReturnType<MetadataItem['toObject']>[]
+  metadata: MetadataItem.AsObject[]
 }>()
 
 const items = computed(() => {

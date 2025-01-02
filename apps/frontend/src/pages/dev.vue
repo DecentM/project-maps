@@ -1,14 +1,28 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { QueryParameters } from '@project-maps/proto/search'
-// biome-ignore lint/style/useNodejsImportProtocol: Not imported from Node, but the browser version of the Buffer package
-import { Buffer } from 'buffer'
+import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
-const a = ref('')
+import { useSocket } from 'src/lib/socketio'
+import { Backend } from 'src/lib/socketio-services'
 
-onMounted(() => {
-  a.value = Buffer.from(QueryParameters.fromObject({ query: 'test' }).serialize()).toString('hex')
-})
+const { socket } = useSocket()
+
+const backend = new Backend(socket)
+
+const handleTest = () => {
+  console.log('Sending test request')
+
+  const events = backend.getAreaMetadata({
+    radiusmeters: 5,
+    coordinates: {
+      lat: 51.504696,
+      lng: -0.121622,
+    },
+  })
+
+  events.on('data', (data: MetadataItem.AsObject) => {
+    console.log('test data:', data)
+  })
+}
 </script>
 
 <style lanng="scss" scoped>
@@ -16,5 +30,5 @@ onMounted(() => {
 </style>
 
 <template>
-  <h1>Boo {{ a }}</h1>
+  <q-btn label="Test" @click="handleTest" />
 </template>

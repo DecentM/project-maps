@@ -30,15 +30,15 @@ type ImagesFilter = {
 }
 
 type ImageFields = StringArrayCombinations<
-    [
-      'captured_at',
-      'creator',
-      'thumb_256_url',
-      'thumb_1024_url',
-      'thumb_2048_url',
-      'thumb_original_url',
-    ]
-  >
+  [
+    'captured_at',
+    'creator',
+    'thumb_256_url',
+    'thumb_1024_url',
+    'thumb_2048_url',
+    'thumb_original_url',
+  ]
+>
 
 type ImagesParams = ImagesFilter & {
   /**
