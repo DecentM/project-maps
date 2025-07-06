@@ -9,6 +9,7 @@ import MapAttribution from 'src/components/maplibre-gl/map-attribution.vue'
 import { useRoute, useRouter } from 'vue-router'
 // import { classToIcon } from '@project-maps/map-style'
 
+const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 
 // const handlePoiClick = (poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties>) => {
@@ -99,7 +100,11 @@ watch(center, (newCenter) => {
 })
 
 const handleMapClick = () => {
-  selectedPoi.value = null
+  selectedPoi.value = hoveredPoi.value
+}
+
+const handlePoiHover = (poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null) => {
+  hoveredPoi.value = poi
 }
 </script>
 
@@ -139,6 +144,7 @@ const handleMapClick = () => {
       @moveend="handleMoveEnd"
       @zoomend="handleZoomEnd"
       @click="handleMapClick"
+      @hover="handlePoiHover"
       :center="center"
       :zoom="zoom"
     >

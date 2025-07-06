@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import type { MetadataItem, TextMetadata } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -11,7 +11,7 @@ const textMetadata = computed(() => {
 
   if (!result) return null
 
-  return { name: 'FIXME' }
+  return result.item.value as TextMetadata
 })
 </script>
 

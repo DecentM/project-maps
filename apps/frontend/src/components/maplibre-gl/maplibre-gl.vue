@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, provide, shallowRef, watch } from 'vue'
+import { onBeforeUnmount, onMounted, provide, ref, shallowRef, watch } from 'vue'
 import { LngLat, type MapLibreEvent } from 'maplibre-gl'
 import type { StyleConfig } from '@project-maps/map-style'
 
@@ -16,6 +16,7 @@ const emit = defineEmits<{
   (event: 'moveend', lngLat: LngLat): void
   (event: 'zoomend', zoomLevel: number): void
   (event: 'click'): void
+  (event: 'hover', id: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null): void
 }>()
 
 const container = shallowRef<HTMLDivElement>()
@@ -39,11 +40,31 @@ const handleMoveEnd = (event: MapLibreEvent) => emit('moveend', event.target.get
 const handleZoomEnd = (event: MapLibreEvent) => emit('zoomend', event.target.getZoom())
 const handleClick = () => emit('click')
 
+const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
+
 onMounted(() => {
   map.value?.on('load', handleLoad)
   map.value?.on('moveend', handleMoveEnd)
   map.value?.on('zoomend', handleZoomEnd)
   map.value?.on('click', handleClick)
+
+  map.value?.on('mousemove', 'poi_z16', (event) => {
+    if (!event.features?.length) {
+      if (hoveredPoi.value) {
+        hoveredPoi.value = null
+        emit('hover', hoveredPoi.value)
+      }
+
+      return
+    }
+
+    const feature = event.features[0]
+
+    if (hoveredPoi.value?.id === String(feature.id)) return
+
+    hoveredPoi.value = feature.toJSON()
+    emit('hover', hoveredPoi.value)
+  })
 })
 
 onBeforeUnmount(() => {

@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
-import { useSocket } from 'src/lib/socketio'
 
 import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
@@ -17,6 +16,7 @@ import NameRenderer from './metadata-renderers/name-renderer.vue'
 import LogoRenderer from './metadata-renderers/logo-renderer.vue'
 
 import { sortMetadataItems } from 'src/lib/score-metadata-item'
+import { metadataClient } from 'src/lib/rpc'
 
 const props = defineProps<{
   poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
@@ -24,36 +24,21 @@ const props = defineProps<{
   maxZoomLevel: number
 }>()
 
-const { socket } = useSocket()
-
 const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
-onMounted(() => {
-  socket.on('Metadata', (method, response, end: boolean) => {
-    if (method !== 'GetPoiMetadata') return
-
-    if (end) {
-      loading.value = false
-      return
-    }
-
-    metadata.value = [...metadata.value, response]
-  })
-})
-
 watch(
   () => props.poi,
-  (newPoi) => {
+  async (newPoi) => {
     metadata.value = []
 
-    if (!newPoi) return
+    if (!newPoi || !newPoi.id) return
 
     loading.value = true
 
-    socket.emit('Metadata', 'GetPoiMetadata', {
-      id: newPoi.id,
+    const response = metadataClient.getPoiMetadata({
+      id: BigInt(newPoi.id),
       coordinates: {
         lat: newPoi.geometry.coordinates[1],
         lng: newPoi.geometry.coordinates[0],
@@ -61,6 +46,12 @@ watch(
       name:
         newPoi.properties?.name_int || newPoi.properties?.['name:latin'] || newPoi.properties?.name,
     })
+
+    for await (const item of response) {
+      metadata.value = [...metadata.value, item]
+    }
+
+    loading.value = false
   }
 )
 
