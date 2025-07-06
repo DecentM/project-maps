@@ -1,0 +1,9 @@
+{
+  "name": "Project Maps",
+
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace/",
+
+  "postCreateCommand": "asdf install"
+}

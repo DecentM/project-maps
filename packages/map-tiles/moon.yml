@@ -117,7 +117,7 @@ tasks:
       cache: true
       persistent: false
       outputStyle: stream
-      internal: true
+      internal: false
 
   build_terrain_index:
     deps:

@@ -1,0 +1,24 @@
+services:
+  devcontainer:
+    # image: ghcr.io/decentm/project-maps-devcontainer:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.11
+    network_mode: host
+    volumes:
+      - meili_data:/meili_data
+    environment:
+      MEILI_ENV: "development"
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: ""
+      MEILI_HTTP_PAYLOAD_SIZE_LIMIT: "104857600"
+
+volumes:
+  meili_data:
