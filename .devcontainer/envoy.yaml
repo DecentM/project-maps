@@ -47,6 +47,20 @@ static_resources:
                               allow_headers: "*"
                               max_age: "86400"
                               allow_credentials: true
+                        - match:
+                            prefix: "/search/"
+                          route:
+                            cluster: search
+                            prefix_rewrite: "/"
+                          typed_per_filter_config:
+                            envoy.filters.http.cors:
+                              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                              allow_origin_string_match:
+                                - prefix: "*"  # Matches everything
+                              allow_methods: "GET, PUT, DELETE, POST, OPTIONS"
+                              allow_headers: "*"
+                              max_age: "86400"
+                              allow_credentials: true
                 http_filters:
                   - name: envoy.filters.http.grpc_web
                     typed_config:
@@ -88,3 +102,18 @@ static_resources:
                     socket_address:
                       address: 127.0.0.1
                       port_value: 50052
+
+    - name: search
+      connect_timeout: 0.25s
+      type: logical_dns
+      lb_policy: round_robin
+      http2_protocol_options: {}
+      load_assignment:
+        cluster_name: search
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 127.0.0.1
+                      port_value: 50053

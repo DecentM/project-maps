@@ -101,17 +101,6 @@ export default configure((ctx) => {
     devServer: {
       // https: true
       open: false, // opens browser window automatically
-
-      proxy: {
-        // proxy all requests starting with /api to jsonplaceholder
-        '/api/envoy': {
-          target: 'http://127.0.0.1:8080',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/api/envoy': '',
-          },
-        },
-      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
