@@ -11,7 +11,7 @@
     "emitDeclarationOnly": false,
     "sourceMap": true,
     "noUnusedLocals": false,
-    "rootDir": ".",
+    "rootDir": "src",
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   }
 }

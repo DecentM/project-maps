@@ -10,7 +10,7 @@
     "emitDeclarationOnly": false,
     "sourceMap": true,
     "noUnusedLocals": false,
-    "rootDir": "generated",
+    "rootDir": "src",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
     "allowJs": false,
     "noImplicitOverride": false,

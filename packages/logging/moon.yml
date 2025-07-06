@@ -4,6 +4,8 @@ project:
 
 tasks:
   build:
+    inputs:
+      - src
     outputs:
       - dist
     command:

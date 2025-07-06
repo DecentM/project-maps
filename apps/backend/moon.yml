@@ -17,7 +17,7 @@ tasks:
   build:
     deps:
       - proto:build
-    command: tsc
+    command: ../../node_modules/.bin/tsc
     inputs:
       - src
       - tsconfig.json

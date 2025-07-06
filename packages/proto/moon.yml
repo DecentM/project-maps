@@ -26,26 +26,6 @@ tasks:
       cache: false
       persistent: false
 
-  # generate_types:
-  #   deps:
-  #     - prepare
-  #   inputs:
-  #     - src/**/*.proto
-  #     - package.json
-  #   outputs:
-  #     - dist
-  #   options:
-  #     runFromWorkspaceRoot: true
-  #     cache: true
-  #     persistent: false
-  #   command:
-  #     - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-  #     - --ts_out=packages/proto/dist
-  #     - --ts_opt=no_grpc
-  #     - --ts_opt=no_namespace
-  #     - -I=packages/proto/src
-  #     - packages/proto/src/**/*.proto
-
   generate_node:
     deps:
       - prepare
@@ -91,11 +71,11 @@ tasks:
       - generate_node
       - generate_web
     inputs:
-      - dist
+      - generated
     outputs:
       - dist
     command:
-      - tsc
+      - ../../node_modules/.bin/tsc
     options:
       cache: true
       persistent: false
