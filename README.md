@@ -21,25 +21,20 @@ that's easy to remember.
 
 ## Development setup
 
-> If you're on Windows, you must use WSL to run these commands. Running the
-> project natively on Windows isn't supported.
+> We build a large devcontainer with all needed tools preinstalled to run the
+> project. You can probably get everything running on your host machine, but
+> outside the prebuilt devcontainer, you're treading foreign waters.
 
-- Install `brew`
-  - [Linuxbrew](https://docs.brew.sh/Homebrew-on-Linux) for Linux and WSL
-  - [Homebrew](https://brew.sh/) for Macs
-- [Set up asdf](https://asdf-vm.com/) with these plugins:
-  - [nodejs](https://github.com/asdf-vm/asdf-nodejs.git)
-  - [pnpm](https://github.com/jonathanmorley/asdf-pnpm.git)
-  - [poetry](https://github.com/asdf-community/asdf-poetry.git)
-  - You can also use other version management software, what matters is you get
-    these binaries installed and available in your `$PATH`.
-- `asdf install`
-- Activate the venv: `poetry shell`
-  - Tip: Use an [auto-switch plugin](https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv)
-    to activate the venv when you `cd` into this directory
-- `poetry install`
-- `xargs brew install <brew_requirements.txt`
-- `pnpm i`
+- Clone the repo: `git clone https://github.com/DecentM/project-maps.git`
+- Set up devcontainers for your editor
+  - [Extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+  - [nvim plugin](https://github.com/esensar/nvim-dev-container)
+  - If your editor/IDE doesn't support devcontainers, you can also run the
+    prebuilt container manually:  
+    `docker run -v ./project-maps:/workspace:cached -it -w /workspace
+    ghcr.io/decentm/project-maps-devcontainer:latest`
+- Run the devcontainer and open a terminal in it
+- Run `pnpm i`
 - Copy the `.env.example` file and name it `.env`. Fill out the empty fields.
 - In `packages/map-tiles`, copy `build-input.example.json` to `build-input.json`
   and optionally, change the fields to refer to your preferred area for
