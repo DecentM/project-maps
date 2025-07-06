@@ -4,17 +4,26 @@ import { computed, ref } from 'vue'
 import { DateTime } from 'luxon'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
   coordinates: GeoJSON.Position
 }>()
 
 const openingHours = computed(() => {
-  return props.metadata.findLast((item) => 'openinghours' in item)
+  const result = props.metadata.findLast(({ item }) => item.case === 'openingHours' && item.value)
+
+  if (!result || !result.item.value || result.item.value.$typeName !== 'Metadata.OpeningHours')
+    return null
+
+  return result.item.value
 })
 
 const ranges = computed(() => {
-  return openingHours.value?.openinghours?.rangesList?.filter(
-    (range) => range.start?.millis && range.end?.millis
+  return openingHours.value?.ranges?.filter(
+    (range) =>
+      range.start?.value.case === 'millis' &&
+      range.start.value.value &&
+      range.end?.value.case === 'millis' &&
+      range.end.value.value
   )
 })
 
@@ -22,7 +31,7 @@ const tz = ref('Etc/UTC')
 </script>
 
 <template>
-  <div class="relative-position" v-if="openingHours && openingHours.openinghours?.rangesList">
+  <div class="relative-position" v-if="openingHours && openingHours?.ranges?.length">
     <q-item>
       <q-item-section side top>
         <q-icon name="mdi-clock" color="primary" size="md" />
@@ -37,15 +46,15 @@ const tz = ref('Etc/UTC')
           <q-item v-for="(interval, index) of ranges" :key="index" dense class="q-px-none">
             <q-item-section>
               <q-item-label>
-                {{ DateTime.fromMillis(interval.start!.millis!).setZone(tz).toLocaleString(DateTime.TIME_24_SIMPLE) }}
+                {{ DateTime.fromMillis(Number(interval.start!.value.value)).setZone(tz).toLocaleString(DateTime.TIME_24_SIMPLE) }}
                 -
-                {{ DateTime.fromMillis(interval.end!.millis!).setZone(tz).toLocaleString(DateTime.TIME_24_SIMPLE) }}
+                {{ DateTime.fromMillis(Number(interval.end!.value.value)).setZone(tz).toLocaleString(DateTime.TIME_24_SIMPLE) }}
               </q-item-label>
             </q-item-section>
 
             <q-item-section side>
               <q-item-label>
-                {{ DateTime.fromMillis(interval.start!.millis!).setZone(tz).toFormat('EEEE') }}
+                {{ DateTime.fromMillis(Number(interval.start!.value.value)).setZone(tz).toFormat('EEEE') }}
               </q-item-label>
             </q-item-section>
           </q-item>

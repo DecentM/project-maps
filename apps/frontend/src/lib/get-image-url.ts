@@ -1,7 +1,7 @@
 import type { ImageUrl } from '@project-maps/proto/metadata/web'
 
 export const getImageUrl = (
-  input: ReturnType<ImageUrl['toObject']>,
+  input: ImageUrl,
   config: 'canonical' | 'large' | 'medium' | 'small'
 ): string | null => {
   switch (config) {

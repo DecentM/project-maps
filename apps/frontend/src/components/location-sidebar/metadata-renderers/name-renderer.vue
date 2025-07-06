@@ -3,15 +3,15 @@ import type { MetadataItem } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
 const textMetadata = computed(() => {
-  const item = props.metadata.findLast((item) => 'metadata' in item && item.metadata?.name)
+  const result = props.metadata.findLast(({ item }) => item.case === 'metadata' && item.value?.name)
 
-  if (!item || !item.metadata) return null
+  if (!result) return null
 
-  return item.metadata
+  return { name: 'FIXME' }
 })
 </script>
 

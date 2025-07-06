@@ -5,23 +5,25 @@ import { computed } from 'vue'
 import WebUrl from 'src/components/web-url/web-url.vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
 const website = computed(() => {
-  const item = props.metadata.findLast((item) => 'website' in item)
+  const result = props.metadata.findLast(({ item }) => item.case === 'website' && item.value)
 
-  if (!item || !item.website) return null
+  if (!result || !result.item.value || result.item.value.$typeName !== 'Metadata.Website')
+    return null
 
-  return item.website
+  return result.item.value
 })
 
 const textMetadata = computed(() => {
-  const item = props.metadata.findLast((item) => 'metadata' in item)
+  const result = props.metadata.findLast(({ item }) => item.case === 'metadata' && item.value)
 
-  if (!item || !item.metadata) return null
+  if (!result || !result.item.value || result.item.value.$typeName !== 'Metadata.TextMetadata')
+    return null
 
-  return item.metadata
+  return result.item.value
 })
 
 const url = computed(() => {

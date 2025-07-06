@@ -1,27 +1,33 @@
 <script lang="ts" setup>
-import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import { Metadata as MetadataService } from '@project-maps/proto/metadata/web'
 
-import { useSocket } from 'src/lib/socketio'
-import { Backend } from 'src/lib/socketio-services'
+import { createClient } from '@connectrpc/connect'
+import { createGrpcWebTransport } from '@connectrpc/connect-web'
 
-const { socket } = useSocket()
+const transport = createGrpcWebTransport({
+  baseUrl: 'http://localhost:8080/metadata',
+  useBinaryFormat: true,
+  fetch: (i, init) => fetch(i, { ...init, credentials: 'include' }),
+})
 
-const backend = new Backend(socket)
+const client = createClient(MetadataService, transport)
 
-const handleTest = () => {
+const handleTest = async () => {
   console.log('Sending test request')
 
-  const events = backend.getAreaMetadata({
-    radiusmeters: 5,
+  const response = client.getAreaMetadata({
     coordinates: {
-      lat: 51.504696,
-      lng: -0.121622,
+      lat: 37.7749,
+      lng: -122.4194,
     },
+    radiusMeters: BigInt(10),
   })
 
-  events.on('data', (data: MetadataItem.AsObject) => {
-    console.log('test data:', data)
-  })
+  for await (const item of response) {
+    console.log('Received item:', item)
+  }
+
+  console.log('Test request completed')
 }
 </script>
 
@@ -30,5 +36,5 @@ const handleTest = () => {
 </style>
 
 <template>
-  <q-btn label="Test" @click="handleTest" />
+  <q-btn label="Test" @click="handleTest().catch(console.error)" />
 </template>

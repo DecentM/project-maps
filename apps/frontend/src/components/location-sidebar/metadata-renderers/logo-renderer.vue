@@ -4,15 +4,16 @@ import { getImageUrl } from 'src/lib/get-image-url'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
 const logo = computed(() => {
-  const item = props.metadata.findLast((item) => 'logo' in item)
+  const result = props.metadata.findLast(({ item }) => item.case === 'logo' && item.value)
 
-  if (!item || !item.logo) return null
+  if (!result || !result.item.value || result.item.value.$typeName !== 'Metadata.ImageUrl')
+    return null
 
-  return getImageUrl(item.logo, 'small')
+  return getImageUrl(result.item.value, 'small')
 })
 </script>
 

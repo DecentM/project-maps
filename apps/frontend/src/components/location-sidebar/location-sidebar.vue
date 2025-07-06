@@ -26,7 +26,7 @@ const props = defineProps<{
 
 const { socket } = useSocket()
 
-const metadata = ref<MetadataItem.AsObject[]>([])
+const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
@@ -65,31 +65,31 @@ watch(
 )
 
 const hasNameOrDescription = computed(() => {
-  return metadata.value.some((item) => 'metadata' in item && item.metadata?.name)
+  return metadata.value.some(({ item }) => item.case === 'metadata' && item.value.name)
 })
 
 const hasAmenity = computed(() => {
-  return metadata.value.some((item) => 'metadata' in item && item.metadata?.amenity)
+  return metadata.value.some(({ item }) => item.case === 'metadata' && item.value.amenity)
 })
 
 const hasComments = computed(() => {
-  return metadata.value.some((item) => 'comment' in item && item.comment)
+  return metadata.value.some(({ item }) => item.case === 'comment' && item.value)
 })
 
 const hasWebsite = computed(() => {
-  return metadata.value.some((item) => 'website' in item && item.website)
+  return metadata.value.some(({ item }) => item.case === 'website' && item.value)
 })
 
 const hasMetadata = computed(() => {
-  return metadata.value.some((item) => 'metadata' in item && item.metadata)
+  return metadata.value.some(({ item }) => item.case === 'metadata' && item.value)
 })
 
 const hasOpeningHours = computed(() => {
-  return metadata.value.some((item) => 'openingHours' in item && item.openingHours)
+  return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value)
 })
 
 const sortedMetadata = computed(() => {
-  return sortMetadataItems(metadata.value as MetadataItem.AsObject[])
+  return sortMetadataItems(metadata.value as MetadataItem[])
 })
 </script>
 

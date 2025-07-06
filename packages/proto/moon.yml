@@ -56,26 +56,19 @@ tasks:
     outputs:
       - dist
     options:
-      runFromWorkspaceRoot: true
       cache: true
       persistent: false
     command:
-      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-      - --js_out=import_style=commonjs,binary:packages/proto/dist/web
-      - --grpc-web_out=import_style=typescript,mode=grpcwebtext:packages/proto/dist/web
-      - -I=packages/proto/src
-      - packages/proto/src/**/*.proto
+      - grpc_tools_node_protoc
+      - --es_out dist/web
+      - --es_opt target=ts
+      - -I=src
+      - src/**/*.proto
 
   build:
     deps:
       - generate_node
       - generate_web
-    inputs:
-      - generated
-    outputs:
-      - dist
-    command:
-      - ../../node_modules/.bin/tsc
     options:
       cache: true
       persistent: false

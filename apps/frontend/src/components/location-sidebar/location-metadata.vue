@@ -4,19 +4,28 @@ import { computed } from 'vue'
 import WebUrl from '../web-url/web-url.vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
-const addressCount = (address: ReturnType<Address['toObject']>) => {
-  return Object.values(address).filter((value) => value).length
+const addressCount = (address: Address) => {
+  let count = 0
+
+  for (const key of ['country', 'state', 'city', 'street', 'housenumber', 'postcode'] as const) {
+    if (address[key]) {
+      count++
+    }
+  }
+
+  return count
 }
 
 const textMetadata = computed(() => {
-  const item = props.metadata.findLast((item) => 'metadata' in item)
+  const result = props.metadata.findLast(({ item }) => item.case === 'metadata' && item.value)
 
-  if (!item || !item.metadata) return null
+  if (!result || !result.item || result.item.value?.$typeName !== 'Metadata.TextMetadata')
+    return null
 
-  return item.metadata
+  return result.item.value
 })
 </script>
 

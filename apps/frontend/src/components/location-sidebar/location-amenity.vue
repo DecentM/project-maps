@@ -4,15 +4,16 @@ import { getAmenityIcon } from 'src/lib/amenity-icon'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
 const textMetadata = computed(() => {
-  const item = props.metadata.findLast((item) => 'metadata' in item)
+  const result = props.metadata.findLast(({ item }) => item.case === 'metadata' && item.value)
 
-  if (!item || !item.metadata) return null
+  if (!result || !result.item || result.item.value?.$typeName !== 'Metadata.TextMetadata')
+    return null
 
-  return item.metadata
+  return result.item.value
 })
 </script>
 

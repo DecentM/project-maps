@@ -6,21 +6,21 @@ import HeroImage from 'src/components/image/hero-image.vue'
 import { getImageUrl } from 'src/lib/get-image-url'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
 const firstItem = computed(() => {
-  const item = props.metadata.find((item) => 'image' in item)
+  const result = props.metadata.find(({ item }) => item.case === 'image' && item.value)
 
-  if (!item || !item.image) return null
+  if (!result || !result.item || result.item.value?.$typeName !== 'Metadata.Image') return null
 
-  return item
+  return result.item.value
 })
 
 const firstImageUrl = computed(() => {
-  if (!firstItem.value?.image?.url) return null
+  if (!firstItem.value?.url) return null
 
-  return getImageUrl(firstItem.value.image.url, 'medium')
+  return getImageUrl(firstItem.value.url, 'medium')
 })
 </script>
 

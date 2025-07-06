@@ -1,8 +1,6 @@
 import Emittery from 'emittery'
-import type { ClientReadableStream } from 'grpc-web'
 import type { Socket } from 'socket.io-client'
 
-import type { BackendClient } from '@project-maps/proto/backend/web/client'
 import type {
   GetAreaMetadataInput,
   GetPoiMetadataInput,
@@ -43,7 +41,8 @@ abstract class SocketService {
   }
 }
 
-type ExtractGeneric<T> = T extends ClientReadableStream<infer U> ? U : never
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type ExtractGeneric<T> = any
 
 // biome-ignore lint/suspicious/noExplicitAny: Used as a constraint
 type MethodGeneric<T, K extends keyof T> = T[K] extends (...args: any[]) => any
@@ -74,40 +73,36 @@ type Sterilised<T> = {
     : never
 }
 
-export class Backend extends SocketService implements Sterilised<BackendClient> {
-  getAreaMetadata(
-    request: GetAreaMetadataInput.AsObject
-  ): Emittery<{ data: MetadataItem.AsObject }> {
-    const events = new Emittery<{ data: MetadataItem.AsObject }>()
+export class Backend extends SocketService implements Sterilised<unknown> {
+  getAreaMetadata(request: GetAreaMetadataInput): Emittery<{ data: MetadataItem }> {
+    const events = new Emittery<{ data: MetadataItem }>()
 
     this.rpc('GetAreaMetadata', request, events)
 
     return events
   }
 
-  getPoiMetadata(request: GetPoiMetadataInput.AsObject): Emittery<{ data: MetadataItem.AsObject }> {
+  getPoiMetadata(request: GetPoiMetadataInput): Emittery<{ data: MetadataItem }> {
     throw new Error('Method not implemented.')
   }
 
-  shortRangeNamed(): Emittery<{ data: Element.AsObject }> {
+  shortRangeNamed(): Emittery<{ data: Element }> {
     throw new Error('Method not implemented.')
   }
 
-  wikidataIdsInRange(
-    request: OverpassQueryParameters.AsObject
-  ): Emittery<{ data: WikidataId.AsObject }> {
+  wikidataIdsInRange(request: OverpassQueryParameters): Emittery<{ data: WikidataId }> {
     throw new Error('Method not implemented.')
   }
 
-  poiMetadata(request: PoiMetadataParameters.AsObject): Emittery<{ data: Element.AsObject }> {
+  poiMetadata(request: PoiMetadataParameters): Emittery<{ data: Element }> {
     throw new Error('Method not implemented.')
   }
 
-  poiWikidataId(request: PoiMetadataParameters.AsObject): Emittery<{ data: WikidataId.AsObject }> {
+  poiWikidataId(request: PoiMetadataParameters): Emittery<{ data: WikidataId }> {
     throw new Error('Method not implemented.')
   }
 
-  query(request: SearchQueryParameters.AsObject): Emittery<{ data: SearchResult.AsObject }> {
+  query(request: SearchQueryParameters): Emittery<{ data: SearchResult }> {
     throw new Error('Method not implemented.')
   }
 }

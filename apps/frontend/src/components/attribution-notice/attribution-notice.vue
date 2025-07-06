@@ -6,7 +6,7 @@ import { licenseUrlToString } from 'src/lib/license-url-to-string'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  attribution: ReturnType<Attribution['toObject']>
+  attribution: Attribution
 }>()
 
 const hideSource = computed(() => {

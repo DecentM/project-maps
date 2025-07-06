@@ -17,5 +17,11 @@ services:
       MEILI_MASTER_KEY: ""
       MEILI_HTTP_PAYLOAD_SIZE_LIMIT: "104857600"
 
+  envoy:
+    image: envoyproxy/envoy:v1.33-latest
+    network_mode: host
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+
 volumes:
   meili_data:

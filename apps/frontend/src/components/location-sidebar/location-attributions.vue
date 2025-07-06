@@ -5,11 +5,11 @@ import { computed } from 'vue'
 import AttributionNotice from 'src/components/attribution-notice/attribution-notice.vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
 const items = computed(() => {
-  return props.metadata.filter((item) => 'attribution' in item && item.attribution)
+  return props.metadata.filter((metadata) => metadata.attribution)
 })
 
 const filteredAttributions = computed(() => {

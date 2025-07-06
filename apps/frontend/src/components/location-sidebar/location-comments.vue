@@ -1,13 +1,18 @@
 <script lang="ts" setup>
-import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import type { Comment, MetadataItem } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  metadata: MetadataItem.AsObject[]
+  metadata: MetadataItem[]
 }>()
 
-const commentItems = computed(() => {
-  return props.metadata.filter((item) => 'comment' in item)
+const commentItems = computed<Comment[]>(() => {
+  return props.metadata
+    .filter(
+      ({ item }) =>
+        item.case === 'comment' && item.value && item.value.$typeName === 'Metadata.Comment'
+    )
+    .map(({ item }) => item.value as Comment)
 })
 </script>
 
@@ -25,22 +30,22 @@ const commentItems = computed(() => {
       :default-opened="index === 0"
     >
       <template #header>
-        <q-item-section avatar v-if="item.comment?.author?.avatarurl">
+        <q-item-section avatar v-if="item?.author?.avatarUrl">
           <q-avatar>
-            <img :src="item.comment.author.avatarurl">
+            <img :src="item.author.avatarUrl">
           </q-avatar>
         </q-item-section>
 
         <q-item-section class="font-noto-sans-display">
-          <q-item-label>{{ item.comment?.author?.name }}</q-item-label>
-          <q-item-label caption lines="1">{{ item.comment?.createdat?.seconds }}</q-item-label>
+          <q-item-label>{{ item?.author?.name }}</q-item-label>
+          <q-item-label caption lines="1">{{ item?.createdAt?.value.value }}</q-item-label>
         </q-item-section>
       </template>
 
       <q-separator />
 
       <q-card-section class="font-noto-sans-display">
-        {{ item.comment?.text }}
+        {{ item?.text }}
       </q-card-section>
     </q-expansion-item>
   </div>
