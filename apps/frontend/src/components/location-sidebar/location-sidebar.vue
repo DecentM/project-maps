@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 
-import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import type { ImageUrl, MetadataItem } from '@project-maps/proto/metadata/web'
 
 import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
@@ -17,6 +17,7 @@ import LogoRenderer from './metadata-renderers/logo-renderer.vue'
 
 import { sortMetadataItems } from 'src/lib/score-metadata-item'
 import { metadataClient } from 'src/lib/rpc'
+import ModalCarousel from '../modal-carousel/modal-carousel.vue'
 
 const props = defineProps<{
   poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
@@ -82,6 +83,24 @@ const hasOpeningHours = computed(() => {
 const sortedMetadata = computed(() => {
   return sortMetadataItems(metadata.value as MetadataItem[])
 })
+
+const carouselEnabled = computed(() => {
+  return !!sortedMetadata.value.filter(({ item }) => item.case === 'image').length
+})
+
+const carouselOpen = ref(false)
+
+const handleImageClick = () => {
+  if (carouselEnabled.value) {
+    carouselOpen.value = true
+  }
+}
+
+const carouselUrls = computed(() => {
+  return sortedMetadata.value
+    .map(({ item }) => (item.value?.$typeName === 'Metadata.Image' ? item.value.url : null))
+    .filter((url): url is ImageUrl => url !== null)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -90,12 +109,16 @@ const sortedMetadata = computed(() => {
   overflow-y: auto;
   max-height: calc(100vh - 32px);
 }
+
+.pointer {
+  cursor: pointer;
+}
 </style>
 
 <template>
   <q-card class="location-sidebar">
     <image-renderer :metadata="sortedMetadata">
-      <div class="fit col">
+      <div class="fit col" :class="{'pointer': carouselEnabled}" @click="handleImageClick">
         <q-card class="font-noto-sans-display">
           <q-input :model-value="''" outlined placeholder="Search..." dense />
         </q-card>
@@ -137,4 +160,9 @@ const sortedMetadata = computed(() => {
 
     <q-linear-progress v-if="loading" indeterminate />
   </q-card>
+
+  <modal-carousel
+    v-if="carouselEnabled"
+    v-model="carouselOpen"
+    :urls="carouselUrls" />
 </template>

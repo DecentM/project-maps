@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, provide, ref, shallowRef, watch } from 'vue'
-import { LngLat, type MapLibreEvent } from 'maplibre-gl'
+import { LngLat, type MapGeoJSONFeature, type MapMouseEvent, type MapLibreEvent } from 'maplibre-gl'
 import type { StyleConfig } from '@project-maps/map-style'
 
 import { useMap } from './use-map'
@@ -42,29 +42,36 @@ const handleClick = () => emit('click')
 
 const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 
+const handlePoiHover = (
+  event: MapMouseEvent & {
+    features?: MapGeoJSONFeature[]
+  }
+) => {
+  if (!event.features?.length) {
+    if (hoveredPoi.value) {
+      hoveredPoi.value = null
+      emit('hover', hoveredPoi.value)
+    }
+    return
+  }
+
+  const feature = event.features[0]
+
+  if (hoveredPoi.value?.id === String(feature.id)) return
+
+  hoveredPoi.value = feature.toJSON()
+  emit('hover', hoveredPoi.value)
+}
+
 onMounted(() => {
   map.value?.on('load', handleLoad)
   map.value?.on('moveend', handleMoveEnd)
   map.value?.on('zoomend', handleZoomEnd)
   map.value?.on('click', handleClick)
 
-  map.value?.on('mousemove', 'poi_z16', (event) => {
-    if (!event.features?.length) {
-      if (hoveredPoi.value) {
-        hoveredPoi.value = null
-        emit('hover', hoveredPoi.value)
-      }
-
-      return
-    }
-
-    const feature = event.features[0]
-
-    if (hoveredPoi.value?.id === String(feature.id)) return
-
-    hoveredPoi.value = feature.toJSON()
-    emit('hover', hoveredPoi.value)
-  })
+  map.value?.on('mousemove', 'poi_z16', handlePoiHover)
+  map.value?.on('mousemove', 'poi_z15', handlePoiHover)
+  map.value?.on('mousemove', 'poi_z14', handlePoiHover)
 })
 
 onBeforeUnmount(() => {
@@ -72,6 +79,10 @@ onBeforeUnmount(() => {
   map.value?.off('moveend', handleMoveEnd)
   map.value?.off('zoomend', handleZoomEnd)
   map.value?.off('click', handleClick)
+
+  map.value?.off('mousemove', 'poi_z16', handlePoiHover)
+  map.value?.off('mousemove', 'poi_z15', handlePoiHover)
+  map.value?.off('mousemove', 'poi_z14', handlePoiHover)
 })
 
 watch(

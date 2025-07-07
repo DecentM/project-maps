@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import type { Image } from '@project-maps/proto/metadata/web'
 import { LngLat } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
@@ -15,16 +14,6 @@ const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties
 // const handlePoiClick = (poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties>) => {
 //   selectedPoi.value = poi
 // }
-
-const imageLocations = ref<Image[]>([])
-
-const addImageLocation = (location: Image) => {
-  imageLocations.value = [...imageLocations.value, location]
-}
-
-const resetImageLocations = () => {
-  imageLocations.value = []
-}
 
 // TODO: This state isn't synced back to the map, only from map to url
 const route = useRoute()
@@ -133,8 +122,6 @@ const handlePoiHover = (poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonPrope
         :poi="selectedPoi"
         :zoom-level="zoom"
         :max-zoom-level="19"
-        @show-image="addImageLocation"
-        @reset-images="resetImageLocations"
       />
     </div>
 
