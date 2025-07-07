@@ -18,16 +18,15 @@ export const useMap = (
 ) => {
   const map = shallowRef<MaplibreMap | null>(null)
   const style = createStyle(styleConfig)
-  const hostname = window.location.hostname
 
   const transformRequest = (url: string): RequestParameters => {
     return {
       url: url
-        .replace(/\{tileUrlBase\}/gu, `http://${hostname}:3000/tile/vector`)
-        .replace(/\{spritesUrlBase\}/gu, `http://${hostname}:3000/icons/sprites`)
-        .replace(/\{fontsUrlBase\}/gu, `http://${hostname}:3000/fonts`)
-        .replace(/\{terrainUrlBase\}/gu, `http://${hostname}:3000/tile/terrain`)
-        .replace(/\{tintsUrlBase\}/gu, `http://${hostname}:3000/tile/tints`),
+        .replace(/\{tileUrlBase\}/gu, process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme')
+        .replace(/\{spritesUrlBase\}/gu, process.env.WEB_SPRITES_BASE_URL || 'fixme')
+        .replace(/\{fontsUrlBase\}/gu, process.env.WEB_FONTS_BASE_URL || 'fixme')
+        .replace(/\{terrainUrlBase\}/gu, process.env.WEB_TERRAIN_BASE_URL || 'fixme')
+        .replace(/\{tintsUrlBase\}/gu, process.env.WEB_TINTS_BASE_URL || 'fixme'),
     }
   }
 

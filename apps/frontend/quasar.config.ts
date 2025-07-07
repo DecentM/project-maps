@@ -101,6 +101,20 @@ export default configure((ctx) => {
     devServer: {
       // https: true
       open: false, // opens browser window automatically
+
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+
+        '/static': {
+          target: 'http://localhost:9080',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/static/, ''),
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

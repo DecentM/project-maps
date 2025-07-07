@@ -7,7 +7,7 @@
     "maxzoom": 14,
     "basezoom": 14,
     "combine_below": 12,
-    "compress": "gzip",
+    "compress": "none",
     "include_ids": true,
     "filemetadata": {
       "format": "pbf",
