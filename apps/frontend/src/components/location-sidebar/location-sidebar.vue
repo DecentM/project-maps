@@ -16,8 +16,9 @@ import NameRenderer from './metadata-renderers/name-renderer.vue'
 import LogoRenderer from './metadata-renderers/logo-renderer.vue'
 
 import { sortMetadataItems } from 'src/lib/score-metadata-item'
-import { metadataClient } from 'src/lib/rpc'
+import { metadataClient, searchClient } from 'src/lib/rpc'
 import ModalCarousel from '../modal-carousel/modal-carousel.vue'
+import type { SearchResult } from '@project-maps/proto/search/web'
 
 const props = defineProps<{
   poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
@@ -32,6 +33,7 @@ const loading = ref(false)
 watch(
   () => props.poi,
   async (newPoi) => {
+    searchQuery.value = ''
     metadata.value = []
 
     if (!newPoi || !newPoi.id) return
@@ -101,6 +103,23 @@ const carouselUrls = computed(() => {
     .map(({ item }) => (item.value?.$typeName === 'Metadata.Image' ? item.value.url : null))
     .filter((url): url is ImageUrl => url !== null)
 })
+
+const searchQuery = ref('')
+const searchResults = ref<SearchResult[]>([])
+
+watch(searchQuery, async (newQuery) => {
+  const response = searchClient.query({
+    query: newQuery,
+  })
+
+  const results: SearchResult[] = []
+
+  for await (const item of response) {
+    results.push(item)
+  }
+
+  searchResults.value = results
+})
 </script>
 
 <style lang="scss" scoped>
@@ -113,6 +132,11 @@ const carouselUrls = computed(() => {
 .pointer {
   cursor: pointer;
 }
+
+.search-results-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
 </style>
 
 <template>
@@ -120,7 +144,25 @@ const carouselUrls = computed(() => {
     <image-renderer :metadata="sortedMetadata">
       <div class="fit col" :class="{'pointer': carouselEnabled}" @click="handleImageClick">
         <q-card class="font-noto-sans-display">
-          <q-input :model-value="''" outlined placeholder="Search..." dense />
+          <q-input
+            v-model="searchQuery"
+            outlined
+            placeholder="Search..."
+            dense
+            debounce="300" />
+
+          <q-list v-if="searchQuery && searchResults.length && !props.poi" dense class="search-results-list">
+            <q-item
+              v-for="(result, index) in searchResults"
+              :key="index"
+              clickable>
+              <q-item-section>
+                <q-item-label class="text-description">
+                  {{ result.name }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
         </q-card>
       </div>
     </image-renderer>

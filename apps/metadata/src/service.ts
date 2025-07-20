@@ -3,10 +3,10 @@ import type { ServerWritableStream } from '@grpc/grpc-js'
 
 import { log } from '@project-maps/logging'
 import {
-  UnimplementedMetadataService,
-  type GetAreaMetadataInput,
   type GetPoiMetadataInput,
   type MetadataItem,
+  UnimplementedMetadataService,
+  type GetAreaMetadataInput,
 } from '@project-maps/proto/metadata/node'
 
 import type { Events, MetadataSource } from 'src/declarations/metadata-source'

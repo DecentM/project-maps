@@ -30,7 +30,7 @@ export class MeilisearchClient {
 
   public async search(indexName: string, query: string) {
     return await this.client.index(indexName).search(query, {
-      attributesToRetrieve: ['id']
+      attributesToRetrieve: ['id', 'name', '_geo'],
     })
   }
 

@@ -6,55 +6,36 @@ import {
 } from '@project-maps/proto/search/node'
 
 import { MeilisearchClient } from './clients/meilisearch'
-import { MemberType } from '@project-maps/proto/lib/openstreetmap'
+import { MemberType } from '@project-maps/proto/lib/openstreetmap/node'
+
+const search = async (
+  client: MeilisearchClient,
+  indexName: string,
+  memberType: MemberType,
+  query: string,
+  onResult: (result: SearchResult) => void
+) => {
+  const geoNodesResults = await client.search(indexName, query)
+
+  for (const result of geoNodesResults.hits) {
+    onResult(
+      SearchResult.fromObject({
+        type: memberType,
+        id: result.id,
+        name: result.name,
+        coordinates: result._geo,
+      })
+    )
+  }
+}
 
 export class SearchService extends UnimplementedSearchService {
   private static client = new MeilisearchClient()
 
   override async Query(call: ServerWritableStream<QueryParameters, SearchResult>): Promise<void> {
-    const geoNodesResults = await SearchService.client.search('geo-nodes', call.request.query)
-
-    for (const result of geoNodesResults.hits) {
-      call.write(
-        SearchResult.fromObject({
-          type: MemberType.NODE,
-          id: result.id,
-        })
-      )
-    }
-
-    // const nodesResults = await SearchService.client.search('nodes', call.request.query)
-
-    // for (const result of nodesResults.hits) {
-    //   call.write(
-    //     Search.SearchResult.fromObject({
-    //       type: OpenStreetMap.Member.Type.NODE,
-    //       id: result.id,
-    //     })
-    //   )
-    // }
-
-    // const waysResults = await SearchService.client.search('ways', call.request.query)
-
-    // for (const result of waysResults.hits) {
-    //   call.write(
-    //     Search.SearchResult.fromObject({
-    //       type: OpenStreetMap.Member.Type.WAY,
-    //       id: result.id,
-    //     })
-    //   )
-    // }
-
-    // const relationsResults = await SearchService.client.search('relations', call.request.query)
-
-    // for (const result of relationsResults.hits) {
-    //   call.write(
-    //     Search.SearchResult.fromObject({
-    //       type: OpenStreetMap.Member.Type.RELATION,
-    //       id: result.id,
-    //     })
-    //   )
-    // }
+    await search(SearchService.client, 'nodes', MemberType.NODE, call.request.query, (result) =>
+      call.write(result)
+    )
 
     call.end()
   }

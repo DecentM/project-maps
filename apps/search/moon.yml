@@ -4,6 +4,20 @@ platform: node
 type: application
 
 tasks:
+  build:
+    deps:
+      - proto:build
+    command: ../../node_modules/.bin/tsc
+    inputs:
+      - src
+      - tsconfig.json
+      - package.json
+    outputs:
+      - dist
+    options:
+      cache: true
+      persistent: false
+
   up:
     command: tsx
     args:

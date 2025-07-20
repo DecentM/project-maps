@@ -7,7 +7,10 @@ import got from 'got'
 import { MeilisearchClient } from './clients/meilisearch'
 
 class Batch {
-  constructor(private indexName: string, private client: MeilisearchClient) {}
+  constructor(
+    private indexName: string,
+    private client: MeilisearchClient
+  ) {}
 
   private batch: Array<Record<string, unknown>> = []
 
@@ -43,30 +46,22 @@ class App {
   private client = new MeilisearchClient()
 
   public async createIndex() {
-    if (!config.recreateIndex) {
+    if (!config.recreateIndex && (await this.client.findOneIndex('nodes'))) {
       log.info('Skipping index recreation')
       return
     }
 
-    log.info('Recreating indexes')
-    for (const index of ['nodes', 'ways', 'relations', 'geo-nodes']) {
-      await this.client.deleteIndex(index)
-    }
-
-    log.debug('Creating indexes')
-    for (const index of ['nodes', 'ways', 'relations', 'geo-nodes']) {
-      await this.client.createIndex(index)
-    }
+    log.info('Deleting index')
+    await this.client.deleteIndex('nodes')
+    log.debug('Creating index')
+    await this.client.createIndex('nodes')
 
     const osm = parseOSM()
     const stream = got.stream(config.indexPbfUrl)
 
     let processedCount = 0
 
-    const geoNodesBatch = new Batch('geo-nodes', this.client)
     const nodesBatch = new Batch('nodes', this.client)
-    const waysBatch = new Batch('ways', this.client)
-    const relationsBatch = new Batch('relations', this.client)
 
     const taskIds: number[] = []
 
@@ -76,15 +71,16 @@ class App {
           processedCount++
 
           if (
-            !item.tags?.name &&
-            !item.tags?.name_int &&
-            !item.tags?.['name:latin'] &&
-            !item.tags?.['name:en']
+            item.type !== 'node' ||
+            (!item.tags?.name &&
+              !item.tags?.name_int &&
+              !item.tags?.['name:latin'] &&
+              !item.tags?.['name:en'])
           ) {
             continue
           }
 
-          const indexItem = {
+          const indexItem: Record<string, string> = {
             id: item.id,
             name: item.tags?.name,
             name_int: item.tags?.name_int,
@@ -123,43 +119,27 @@ class App {
             website: item.tags?.website,
           }
 
-          switch (item.type) {
-            case 'node':
-              item.lat && item.lon
-                ? geoNodesBatch.add({
-                    ...indexItem,
-                    _geo: {
-                      lat: item.lat,
-                      lng: item.lon,
-                    },
-                  })
-                : nodesBatch.add(indexItem)
-              break
-
-            case 'way':
-              waysBatch.add(indexItem)
-              break
-
-            case 'relation':
-              relationsBatch.add(indexItem)
-              break
-          }
+          nodesBatch.add({
+            ...indexItem,
+            _geo: {
+              lat: item.lat,
+              lng: item.lon,
+            },
+          })
 
           if (processedCount % 10000 === 0) {
-            log.debug({
-              count: processedCount,
-              geoNodes: geoNodesBatch.getSize(),
-              nodes: nodesBatch.getSize(),
-              ways: waysBatch.getSize(),
-              relations: relationsBatch.getSize(),
-            }, 'Processed items')
+            log.debug(
+              {
+                count: processedCount,
+                nodes: nodesBatch.getSize(),
+              },
+              'Processed items'
+            )
           }
 
-          for (const batch of [nodesBatch, waysBatch, relationsBatch, geoNodesBatch]) {
-            if (batch.getSize() >= config.meilisearch.maxBatchSize - 1024) {
-              const task = await batch.send()
-              taskIds.push(task.taskUid)
-            }
+          if (nodesBatch.getSize() >= config.meilisearch.maxBatchSize - 1024) {
+            const task = await nodesBatch.send()
+            taskIds.push(task.taskUid)
           }
         }
 
@@ -170,15 +150,12 @@ class App {
     stream.once('end', async () => {
       log.debug('Stream ended, sending final batch')
 
-      for (const batch of [nodesBatch, waysBatch, relationsBatch, geoNodesBatch]) {
+      for (const batch of [nodesBatch]) {
         await batch.send()
       }
 
       log.debug('Waiting for indexing to complete')
       await this.client.waitForTasks('nodes', taskIds)
-      await this.client.waitForTasks('ways', taskIds)
-      await this.client.waitForTasks('relations', taskIds)
-      await this.client.waitForTasks('geo-nodes', taskIds)
 
       log.info('Indexing complete')
     })

@@ -180,13 +180,13 @@ export class OverpassService extends UnimplementedOverpassService {
   override PoiMetadata(call: ServerWritableStream<PoiMetadataParameters, Element>): void {
     const parameters = call.request.toObject()
 
-    if (!parameters.id) {
+    if (!parameters.ids || parameters.ids.length === 0) {
       call.end()
       return
     }
 
     const stream = client.poiMetadataStreaming({
-      id: parameters.id,
+      ids: parameters.ids,
       tags: parameters.tags ?? [],
     })
 
@@ -218,13 +218,13 @@ export class OverpassService extends UnimplementedOverpassService {
   override PoiWikidataId(call: ServerWritableStream<PoiMetadataParameters, WikidataId>): void {
     const parameters = call.request.toObject()
 
-    if (!parameters.id) {
+    if (!parameters.ids || parameters.ids.length === 0) {
       call.end()
       return
     }
 
     const stream = client.poiWikidataIdStreaming({
-      id: parameters.id,
+      ids: parameters.ids,
       tags: parameters.tags ?? [],
     })
 

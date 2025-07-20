@@ -5,5 +5,7 @@
   "service": "devcontainer",
   "workspaceFolder": "/workspace/",
 
+  "forwardPorts": [],
+
   "postCreateCommand": "asdf install"
 }

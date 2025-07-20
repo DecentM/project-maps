@@ -3,13 +3,13 @@
 
 (
   node
-    (id:{{id}});
+    (id:{{ids}});
 
   way
-  	(id:{{id}});
+  	(id:{{ids}});
 
   relation
-  	(id:{{id}});
+  	(id:{{ids}});
 );
 
 out body 10;

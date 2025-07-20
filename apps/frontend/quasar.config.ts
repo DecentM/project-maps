@@ -104,7 +104,7 @@ export default configure((ctx) => {
 
       proxy: {
         '/api': {
-          target: 'http://localhost:8080',
+          target: 'http://localhost:9081',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },

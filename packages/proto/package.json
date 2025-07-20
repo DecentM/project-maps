@@ -4,18 +4,6 @@
   "author": "DecentM <decentm@decentm.com>",
   "type": "module",
   "exports": {
-    "./backend/node": {
-      "import": "./dist/node/backend/index.js",
-      "types": "./dist/node/backend/index.d.ts"
-    },
-    "./backend/web": {
-      "import": "./dist/web/backend/index_pb.js",
-      "types": "./dist/web/backend/index_pb.d.ts"
-    },
-    "./backend/web/client": {
-      "import": "./dist/web/backend/IndexServiceClientPb.js",
-      "types": "./dist/web/backend/IndexServiceClientPb.d.ts"
-    },
     "./metadata/node": {
       "import": "./dist/node/metadata/index.js",
       "types": "./dist/node/metadata/index.d.ts"

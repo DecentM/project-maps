@@ -1,6 +1,7 @@
 import got from 'got'
 
 import * as Query from '../queries'
+import { log } from '@project-maps/logging'
 
 type Element<T extends string> = {
   type: T
@@ -41,9 +42,19 @@ export class OverpassClient {
   public constructor(private baseUrl: string) {}
 
   private post = (path: string, formData: Record<string, string | number>) => {
-    return got.stream.post(`${this.baseUrl}${path}`, {
-      form: formData,
-    })
+    return got.stream
+      .post(`${this.baseUrl}${path}`, {
+        form: formData,
+      })
+      .on('error', (error) => {
+        log.error(
+          {
+            ...error,
+            formData,
+          },
+          'Overpass API request failed'
+        )
+      })
   }
 
   public shortRangeNamedStreaming(params: Query.ShortRangeNamed.Params): NodeJS.ReadableStream {

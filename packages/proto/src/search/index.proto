@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "lib/openstreetmap.proto";
+import "lib/geospatial.proto";
 
 package Search;
 
@@ -15,4 +16,6 @@ message QueryParameters {
 message SearchResult {
   int64 id = 1;
   OpenStreetMap.Member.Type type = 2;
+  string name = 3;
+  Geospatial.Coordinates coordinates = 4;
 }
