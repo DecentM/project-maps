@@ -6,9 +6,10 @@ import type { StyleConfig } from '@project-maps/map-style'
 import { useMap } from './use-map'
 import { MapSymbol } from './map-symbol'
 
-const props = withDefaults(defineProps<StyleConfig>(), {
+const props = withDefaults(defineProps<Partial<StyleConfig>>(), {
   center: () => new LngLat(0, 0),
   zoom: 16.25,
+  variant: 'light',
 })
 
 const emit = defineEmits<{
@@ -24,6 +25,7 @@ const container = shallowRef<HTMLDivElement>()
 const { map } = useMap(container, {
   center: props.center,
   zoom: props.zoom,
+  variant: 'light',
 })
 
 watch(map, (newMap) => {

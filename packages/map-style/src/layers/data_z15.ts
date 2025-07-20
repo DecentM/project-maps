@@ -1,6 +1,6 @@
-import type { LayerSpecification } from 'maplibre-gl'
+import type { StyleComponent } from '..'
 
-export const data_z15: LayerSpecification = {
+export const data_z15: StyleComponent = (config) => ({
   id: 'poi_z15',
   type: 'symbol',
   source: 'openmaptiles',
@@ -28,4 +28,4 @@ export const data_z15: LayerSpecification = {
     'text-halo-color': '#ffffff',
     'text-halo-width': 1,
   },
-}
+})

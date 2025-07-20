@@ -1,6 +1,6 @@
-import type { LayerSpecification } from 'maplibre-gl'
+import type { StyleComponent } from '..'
 
-export const hillshade: LayerSpecification = {
+export const hillshade: StyleComponent = (config) => ({
   id: 'hillshade',
   type: 'hillshade',
   source: 'terrain',
@@ -8,4 +8,4 @@ export const hillshade: LayerSpecification = {
   maxzoom: 17,
   layout: { visibility: 'visible' },
   paint: { 'hillshade-shadow-color': 'rgba(71, 59, 36, 0.5)' },
-}
+})
