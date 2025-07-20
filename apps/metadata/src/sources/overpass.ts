@@ -159,7 +159,7 @@ export class OverpassSource extends MetadataSource {
   ): Promise<void> {
     const overpassResponse = this.client.PoiMetadata(
       PoiMetadataParameters.fromObject({
-        id: request.id,
+        ids: [request.id],
         tags: OverpassSource.requestedTags,
       })
     )

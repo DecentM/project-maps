@@ -6,8 +6,8 @@ export const config = {
     },
 
     overpassInterpreter: {
-      host: process.env.OVERPASS_INTERPRETER_HOST ?? '127.0.0.1',
-      port: Number.parseFloat(process.env.OVERPASS_INTERPRETER_PORT ?? '50052'),
+      host: process.env.GRPC_OVERPASS_INTERPRETER_HOST ?? 'fixme',
+      port: Number.parseFloat(process.env.GRPC_OVERPASS_INTERPRETER_PORT ?? 'fixme'),
     },
 
     wikimapia: {
@@ -22,7 +22,7 @@ export const config = {
   },
 
   grpcServer: {
-    host: process.env.GRPC_METADATA_HOST ?? '127.0.0.1',
-    port: Number.parseFloat(process.env.GRPC_METADATA_PORT ?? '50051'),
+    host: process.env.GRPC_METADATA_HOST ?? 'fixme',
+    port: Number.parseFloat(process.env.GRPC_METADATA_PORT ?? 'fixme'),
   },
 } as const

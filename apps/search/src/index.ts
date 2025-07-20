@@ -1,9 +1,8 @@
 import { log } from '@project-maps/logging'
 import { Server, ServerCredentials } from '@grpc/grpc-js'
 
-import { config } from './config';
-import { SearchService } from './service';
-import { app } from './app';
+import { config } from './config'
+import { SearchService } from './service'
 
 const startServer = (server: Server): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -25,8 +24,6 @@ server.addService(SearchService.definition, new SearchService())
 startServer(server)
   .then(() => {
     log.info(config.grpcServer, 'Server started')
-
-    return app.createIndex()
   })
   .catch((error) => {
     log.error(error, 'Failed to start server')

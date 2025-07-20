@@ -86,7 +86,7 @@ export class MapillaryClient {
     path: string,
     query: Record<string, string | number | boolean | undefined>
   ) {
-    log.trace({ method, path, query }, 'MapillaryClient.fetch')
+    log.trace({ method, path, base: this.baseUrl, query }, 'MapillaryClient.fetch')
 
     return got(`${this.baseUrl}${path}`, {
       method,

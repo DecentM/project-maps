@@ -6,17 +6,6 @@ services:
       - ..:/workspace:cached
     command: sleep infinity
 
-  meilisearch:
-    image: getmeili/meilisearch:v1.11
-    network_mode: host
-    volumes:
-      - meili_data:/meili_data
-    environment:
-      MEILI_ENV: "development"
-      MEILI_NO_ANALYTICS: "true"
-      MEILI_MASTER_KEY: ""
-      MEILI_HTTP_PAYLOAD_SIZE_LIMIT: "104857600"
-
   envoy:
     image: envoyproxy/envoy:v1.33-latest
     network_mode: host
@@ -31,6 +20,3 @@ services:
       - ../packages/map-tiles/dist:/usr/share/nginx/html/tile:ro
       - ../packages/map-icons/dist:/usr/share/nginx/html/icons:ro
       - ../packages/map-fonts/dist:/usr/share/nginx/html/fonts:ro
-
-volumes:
-  meili_data:

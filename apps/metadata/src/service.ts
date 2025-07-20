@@ -14,8 +14,8 @@ import type { Events, MetadataSource } from 'src/declarations/metadata-source'
 import { OverpassSource } from 'src/sources/overpass'
 import { GeographUKImageSource } from 'src/sources/geograph-uk'
 import { WikimapiaSource } from 'src/sources/wikimapia'
-import { MapillarySource } from './sources/mapillary'
-import { WikidataSource } from './sources/wikidata'
+import { MapillarySource } from 'src/sources/mapillary'
+import { WikidataSource } from 'src/sources/wikidata'
 
 export class MetadataService extends UnimplementedMetadataService {
   private static sources: MetadataSource[] = [
@@ -51,7 +51,7 @@ export class MetadataService extends UnimplementedMetadataService {
 
       const promise = promiseFactory(source, sourceEmitter)
 
-      if (promise instanceof Promise) {
+      if (promise) {
         promise.catch((error) => {
           log.error(error)
           sourceEmitter.emit('end')

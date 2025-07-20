@@ -138,10 +138,10 @@ export class GeographClient {
   public constructor(
     private baseUrl: string,
     private apiKey: string
-  ) { }
+  ) {}
 
   private fetch = (path: string, query: Record<string, string | number>) => {
-    log.trace({ path, query }, 'GeographClient.fetch')
+    log.trace({ base: this.baseUrl, path, query }, 'GeographClient.fetch')
 
     return got.get(`${this.baseUrl}${path}`, {
       headers: {

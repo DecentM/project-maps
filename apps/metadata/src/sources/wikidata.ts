@@ -316,7 +316,7 @@ export class WikidataSource extends MetadataSource {
   ): Promise<void> {
     const wikidataIdStream = this.overpassClient.PoiWikidataId(
       PoiMetadataParameters.fromObject({
-        id: request.id,
+        ids: [request.id],
         tags: ['wikidata', 'brand:wikidata'],
       })
     )
