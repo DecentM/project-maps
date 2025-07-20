@@ -7,5 +7,6 @@
 
   "forwardPorts": [],
 
-  "postCreateCommand": "asdf install"
+  "postCreateCommand": "asdf install",
+  "postStartCommand": "pnpm install"
 }
