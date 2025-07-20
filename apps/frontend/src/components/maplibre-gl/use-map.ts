@@ -8,39 +8,39 @@ import {
   type ShallowRef,
 } from 'vue'
 
-import { Map as MaplibreMap, type RequestParameters } from 'maplibre-gl'
+import { Map as MaplibreGl, type RequestParameters } from 'maplibre-gl'
 
 import { type StyleConfig, createStyle } from '@project-maps/map-style'
+
+const transformRequest = (url: string): RequestParameters => {
+  return {
+    url: url
+      .replace(/\{tileUrlBase\}/gu, process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme')
+      .replace(/\{spritesUrlBase\}/gu, process.env.WEB_SPRITES_BASE_URL || 'fixme')
+      .replace(/\{fontsUrlBase\}/gu, process.env.WEB_FONTS_BASE_URL || 'fixme')
+      .replace(/\{terrainUrlBase\}/gu, process.env.WEB_TERRAIN_BASE_URL || 'fixme')
+      .replace(/\{tintsUrlBase\}/gu, process.env.WEB_TINTS_BASE_URL || 'fixme'),
+  }
+}
 
 export const useMap = (
   container: ShallowRef<HTMLDivElement | undefined>,
   styleConfig: StyleConfig
 ) => {
-  const map = shallowRef<MaplibreMap | null>(null)
+  const map = shallowRef<MaplibreGl | null>(null)
   const style = createStyle(styleConfig)
-
-  const transformRequest = (url: string): RequestParameters => {
-    return {
-      url: url
-        .replace(/\{tileUrlBase\}/gu, process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme')
-        .replace(/\{spritesUrlBase\}/gu, process.env.WEB_SPRITES_BASE_URL || 'fixme')
-        .replace(/\{fontsUrlBase\}/gu, process.env.WEB_FONTS_BASE_URL || 'fixme')
-        .replace(/\{terrainUrlBase\}/gu, process.env.WEB_TERRAIN_BASE_URL || 'fixme')
-        .replace(/\{tintsUrlBase\}/gu, process.env.WEB_TINTS_BASE_URL || 'fixme'),
-    }
-  }
 
   const init = () => {
     if (map.value || !container.value) return
 
+    const rawMap = new MaplibreGl({
+      container: container.value,
+      antialias: true,
+      attributionControl: false,
+    })
+
     // init map
-    map.value = markRaw(
-      new MaplibreMap({
-        container: container.value,
-        antialias: true,
-        attributionControl: false,
-      })
-    )
+    map.value = markRaw(rawMap)
 
     // restart on context lost to prevent blank screen
     map.value.getCanvas().addEventListener('webglcontextlost', restart)

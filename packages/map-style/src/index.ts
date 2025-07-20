@@ -1,4 +1,4 @@
-import type { LayerSpecification, LngLat, StyleSpecification } from 'maplibre-gl'
+import type { LayerSpecification, StyleSpecification } from 'maplibre-gl'
 
 import { createSources } from './sources'
 
@@ -18,8 +18,6 @@ const StyleVariant = {
 type StyleVariant = (typeof StyleVariant)[keyof typeof StyleVariant]
 
 export type StyleConfig = {
-  center: LngLat
-  zoom: number
   variant: StyleVariant
 }
 
@@ -28,8 +26,6 @@ export type StyleComponent = (config: StyleConfig) => LayerSpecification
 export const createStyle = (config: StyleConfig): StyleSpecification => {
   return {
     ...specification,
-    zoom: config.zoom,
-    center: [config.center.lng, config.center.lat],
     sources: createSources(config),
     layers: createLayers(config),
     terrain,

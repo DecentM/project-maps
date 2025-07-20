@@ -22,8 +22,6 @@ import type { SearchResult } from '@project-maps/proto/search/web'
 
 const props = defineProps<{
   poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
-  zoomLevel: number
-  maxZoomLevel: number
 }>()
 
 const metadata = ref<MetadataItem[]>([])

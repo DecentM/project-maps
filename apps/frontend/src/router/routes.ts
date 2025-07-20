@@ -2,9 +2,15 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/:zoom?/:lat?/:lng?',
+    path: '/:lng?/:lat?/:zoom?',
     component: () => import('layouts/map-layout.vue'),
-    children: [{ path: '', component: () => import('pages/index-page.vue') }],
+    children: [
+      {
+        name: 'IndexPage',
+        path: '',
+        component: () => import('pages/index-page.vue'),
+      },
+    ],
   },
 
   // Always leave this as last one,
