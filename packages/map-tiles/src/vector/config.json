@@ -514,7 +514,7 @@
       "write_to": "landuse"
     },
     "water": {
-      "minzoom": 7,
+      "minzoom": 0,
       "maxzoom": 14,
       "simplify_below": 12,
       "simplify_level": 0.0003,

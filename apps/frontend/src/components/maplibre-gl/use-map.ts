@@ -25,6 +25,8 @@ export const useMap = (
     const rawMap = new MaplibreGl({
       container: container.value,
       attributionControl: false,
+      minPitch: 0,
+      maxPitch: 80,
     })
 
     // init map

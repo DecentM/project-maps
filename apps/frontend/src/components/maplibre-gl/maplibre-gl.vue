@@ -32,6 +32,12 @@ onBeforeUnmount(() => {
 })
 </script>
 
+<style lang="scss" scoped>
+.position-relative {
+  background-color: black;
+}
+</style>
+
 <template>
   <div class="position-relative">
     <div ref="container" class="fit absolute-top-left"></div>

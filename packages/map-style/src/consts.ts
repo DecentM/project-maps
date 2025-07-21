@@ -15,7 +15,7 @@ export const Colours = {
   aerowayFill: 'rgba(229, 228, 224, 1)',
   aerowayRunway: '#f0ede9',
   aerowayTaxiway: '#f0ede9',
-  background: 'rgb(239, 239, 239)',
+  background: '#eeebe6ff',
   bridgeLinkCasing: '#e9ac77',
   bridgeLink: '#fea',
 } as const

@@ -1,6 +1,6 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleConfig } from '..'
+import { Consts, type StyleConfig } from '..'
 
 export const water = (config: StyleConfig) =>
   ({
@@ -8,6 +8,9 @@ export const water = (config: StyleConfig) =>
     type: 'fill',
     source: 'openmaptiles',
     'source-layer': 'water',
+    layout: {
+      visibility: 'visible',
+    },
     filter: ['all', ['!=', 'brunnel', 'tunnel']],
-    paint: { 'fill-color': 'rgb(158,189,255)' },
+    paint: { 'fill-color': Consts.Colours.water },
   }) as unknown as LayerSpecification
