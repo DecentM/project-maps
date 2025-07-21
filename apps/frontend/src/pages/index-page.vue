@@ -10,6 +10,7 @@ import MapHoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-trac
 import MapPanzoomTrackerPlugin, {
   type PanZoom,
 } from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
+import MapGlobeControlPlugin from 'src/components/maplibre-gl/plugins/globe-control.vue'
 
 const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
@@ -24,6 +25,7 @@ const panzoom = computed<PanZoom>(() => {
       (Array.isArray(route.params.lat) ? route.params.lat[0] : route.params.lat) || '0',
     ],
     zoom: (Array.isArray(route.params.zoom) ? route.params.zoom[0] : route.params.zoom) || '1',
+    pitch: (Array.isArray(route.params.pitch) ? route.params.pitch[0] : route.params.pitch) || '0',
   }
 })
 
@@ -34,6 +36,7 @@ const handlePanzoomChange = (newPanzoom: PanZoom) => {
       lng: newPanzoom.center[0],
       lat: newPanzoom.center[1],
       zoom: newPanzoom.zoom,
+      pitch: newPanzoom.pitch,
     },
   })
 }
@@ -81,6 +84,7 @@ const handleMapClick = () => {
           :map="map"
           :model-value="panzoom"
           @update:model-value="handlePanzoomChange" />
+        <map-globe-control-plugin v-if="map" :map="map" />
       </template>
     </maplibre-gl>
   </q-page>

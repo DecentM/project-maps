@@ -9,6 +9,7 @@ import { onBeforeUnmount, onMounted } from 'vue'
 export type PanZoom = {
   center: [string, string]
   zoom: string
+  pitch: string
 }
 
 const props = defineProps<{
@@ -18,8 +19,9 @@ const props = defineProps<{
 
 const emit = defineEmits<(event: 'update:modelValue', value: PanZoom) => void>()
 
-const ZOOM_ACCURACY = 3
-const CENTER_ACCURACY = 6
+const ZOOM_ACCURACY = 4
+const CENTER_ACCURACY = 5
+const PITCH_ACCURACY = 2
 
 const handleMoveEnd = (event: MapMouseEvent) => {
   const newCenter = event.target.getCenter()
@@ -34,9 +36,14 @@ const handleMoveEnd = (event: MapMouseEvent) => {
 
   if (newZoom.toFixed(ZOOM_ACCURACY) === props.modelValue.zoom) return
 
+  const newPitch = event.target.getPitch()
+
+  if (newPitch.toFixed(PITCH_ACCURACY) === props.modelValue.pitch) return
+
   emit('update:modelValue', {
     center: [newCenter.lng.toFixed(CENTER_ACCURACY), newCenter.lat.toFixed(CENTER_ACCURACY)],
     zoom: newZoom.toFixed(ZOOM_ACCURACY),
+    pitch: newPitch.toFixed(PITCH_ACCURACY),
   })
 }
 
@@ -47,6 +54,8 @@ onMounted(() => {
     lng: Number.parseFloat(props.modelValue.center[0]),
     lat: Number.parseFloat(props.modelValue.center[1]),
   })
+
+  props.map.setPitch(Number.parseFloat(props.modelValue.pitch))
 
   props.map.on('moveend', handleMoveEnd)
   props.map.on('zoomend', handleMoveEnd)
