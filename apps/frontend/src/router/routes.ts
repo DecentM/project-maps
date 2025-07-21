@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/:lng?/:lat?/:zoom?/:pitch?',
+    path: '/:lng?/:lat?/:zoom?/:pitch?/:bearing?',
     component: () => import('layouts/map-layout.vue'),
     children: [
       {

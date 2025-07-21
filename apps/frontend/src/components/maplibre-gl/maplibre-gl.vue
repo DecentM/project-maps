@@ -1,25 +1,32 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, shallowRef } from 'vue'
-import type { StyleConfig } from '@project-maps/map-style'
 
 import { useMap } from './use-map'
+import type { MapOptions } from 'maplibre-gl'
 
-withDefaults(defineProps<Partial<StyleConfig>>(), {
-  variant: 'light',
-})
+const props = defineProps<Pick<MapOptions, 'minPitch' | 'maxPitch'>>()
 
 const emit = defineEmits<(event: 'click') => void>()
 
 const container = shallowRef<HTMLDivElement>()
 
-const { map } = useMap(container, {
-  variant: 'light',
-  tileUrlBase: process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme',
-  spritesUrlBase: process.env.WEB_SPRITES_BASE_URL || 'fixme',
-  fontsUrlBase: process.env.WEB_FONTS_BASE_URL || 'fixme',
-  terrainUrlBase: process.env.WEB_TERRAIN_BASE_URL || 'fixme',
-  tintsUrlBase: process.env.WEB_TINTS_BASE_URL || 'fixme',
-})
+const { map } = useMap(
+  container,
+  {
+    variant: 'light',
+    tileUrlBase: process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme',
+    spritesUrlBase: process.env.WEB_SPRITES_BASE_URL || 'fixme',
+    fontsUrlBase: process.env.WEB_FONTS_BASE_URL || 'fixme',
+    terrainUrlBase: process.env.WEB_TERRAIN_BASE_URL || 'fixme',
+    tintsUrlBase: process.env.WEB_TINTS_BASE_URL || 'fixme',
+  },
+  {
+    hash: false,
+    attributionControl: false,
+    minPitch: props.minPitch,
+    maxPitch: props.maxPitch,
+  }
+)
 
 const handleClick = () => emit('click')
 

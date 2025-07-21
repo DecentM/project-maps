@@ -8,13 +8,14 @@ import {
   type ShallowRef,
 } from 'vue'
 
-import { Map as MaplibreGl } from 'maplibre-gl'
+import { Map as MaplibreGl, type MapOptions } from 'maplibre-gl'
 
 import { type StyleConfig, createStyle } from '@project-maps/map-style'
 
 export const useMap = (
   container: ShallowRef<HTMLDivElement | undefined>,
-  styleConfig: StyleConfig
+  styleConfig: StyleConfig,
+  options: Omit<MapOptions, 'container'> = {}
 ) => {
   const map = shallowRef<MaplibreGl | null>(null)
   const style = createStyle(styleConfig)
@@ -24,9 +25,7 @@ export const useMap = (
 
     const rawMap = new MaplibreGl({
       container: container.value,
-      attributionControl: false,
-      minPitch: 0,
-      maxPitch: 80,
+      ...options,
     })
 
     // init map
