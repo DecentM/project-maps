@@ -20,10 +20,10 @@ const router = useRouter()
 const panzoom = computed<PanZoom>(() => {
   return {
     center: [
-      Array.isArray(route.params.lng) ? route.params.lng[0] : route.params.lng,
-      Array.isArray(route.params.lat) ? route.params.lat[0] : route.params.lat,
+      (Array.isArray(route.params.lng) ? route.params.lng[0] : route.params.lng) || '0',
+      (Array.isArray(route.params.lat) ? route.params.lat[0] : route.params.lat) || '0',
     ],
-    zoom: Array.isArray(route.params.zoom) ? route.params.zoom[0] : route.params.zoom,
+    zoom: (Array.isArray(route.params.zoom) ? route.params.zoom[0] : route.params.zoom) || '1',
   }
 })
 
