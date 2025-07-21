@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const waterway_tunnel: StyleComponent = (config) =>
+export const waterway_tunnel = (config: StyleConfig) =>
   ({
     id: 'waterway_tunnel',
     type: 'line',

@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const bridge_path_pedestrian_casing: StyleComponent = (config) =>
+export const bridge_path_pedestrian_casing = (config: StyleConfig) =>
   ({
     id: 'bridge_path_pedestrian_casing',
     type: 'line',

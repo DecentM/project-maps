@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const tunnel_major_rail: StyleComponent = (config) =>
+export const tunnel_major_rail = (config: StyleConfig) =>
   ({
     id: 'tunnel_major_rail',
     type: 'line',

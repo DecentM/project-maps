@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const road_transit_rail_hatching: StyleComponent = (config) =>
+export const road_transit_rail_hatching = (config: StyleConfig) =>
   ({
     id: 'road_transit_rail_hatching',
     type: 'line',

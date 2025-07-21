@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const park_outline: StyleComponent = (config) =>
+export const park_outline = (config: StyleConfig) =>
   ({
     id: 'park_outline',
     type: 'line',

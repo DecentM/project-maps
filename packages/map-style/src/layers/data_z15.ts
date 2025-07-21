@@ -1,6 +1,7 @@
-import type { StyleComponent } from '..'
+import type { LayerSpecification } from 'maplibre-gl'
+import type { StyleConfig } from '..'
 
-export const data_z15: StyleComponent = (config) => ({
+export const data_z15 = (config: StyleConfig): LayerSpecification => ({
   id: 'poi_z15',
   type: 'symbol',
   source: 'openmaptiles',

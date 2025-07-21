@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const road_path_pedestrian: StyleComponent = (config) =>
+export const road_path_pedestrian = (config: StyleConfig) =>
   ({
     id: 'road_path_pedestrian',
     type: 'line',

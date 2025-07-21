@@ -2,9 +2,9 @@ import type { LayerSpecification } from 'maplibre-gl'
 
 import * as Consts from '../consts'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const bridge_link_casing: StyleComponent = (config) =>
+export const bridge_link_casing = (config: StyleConfig) =>
   ({
     id: 'bridge_link_casing',
     type: 'line',

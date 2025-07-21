@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const road_minor: StyleComponent = (config) =>
+export const road_minor = (config: StyleConfig) =>
   ({
     id: 'road_minor',
     type: 'line',

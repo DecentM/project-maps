@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const place_village: StyleComponent = (config) =>
+export const place_village = (config: StyleConfig) =>
   ({
     id: 'place_village',
     type: 'symbol',

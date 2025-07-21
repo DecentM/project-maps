@@ -1,23 +1,22 @@
 import type { SourceSpecification } from 'maplibre-gl'
-import * as Consts from './consts'
 
 import type { StyleConfig } from '.'
 
 export const createSources = (config: StyleConfig): Record<string, SourceSpecification> => ({
   openmaptiles: {
     type: 'vector',
-    url: Consts.Urls.openmaptilesSource,
+    url: `${config.tileUrlBase}/metadata.json`,
   },
   terrain: {
     type: 'raster-dem',
-    url: Consts.Urls.terrainSource,
-    tiles: [`${Consts.Urls.terrainSource.replace('/metadata.json', '')}/{z}/{x}/{y}.png`],
+    url: `${config.terrainUrlBase}/metadata.json`,
+    tiles: [`${config.terrainUrlBase}/{z}/{x}/{y}.png`],
   },
   tints: {
     maxzoom: 6,
     tileSize: 256,
-    url: Consts.Urls.tintsSource,
-    tiles: [`${Consts.Urls.tintsSource.replace('/metadata.json', '')}/{z}/{x}/{y}.png`],
+    url: `${config.tintsUrlBase}/metadata.json`,
+    tiles: [`${config.tintsUrlBase}/{z}/{x}/{y}.png`],
     type: 'raster',
   },
 })

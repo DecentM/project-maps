@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const road_motorway: StyleComponent = (config) =>
+export const road_motorway = (config: StyleConfig) =>
   ({
     id: 'road_motorway',
     type: 'line',

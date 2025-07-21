@@ -1,6 +1,7 @@
-import type { StyleComponent } from '..'
+import type { LayerSpecification } from 'maplibre-gl'
+import type { StyleConfig } from '..'
 
-export const hillshade: StyleComponent = (config) => ({
+export const hillshade = (config: StyleConfig): LayerSpecification => ({
   id: 'hillshade',
   type: 'hillshade',
   source: 'terrain',

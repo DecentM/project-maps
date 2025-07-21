@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const bridge_major_rail: StyleComponent = (config) =>
+export const bridge_major_rail = (config: StyleConfig) =>
   ({
     id: 'bridge_major_rail',
     type: 'line',

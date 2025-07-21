@@ -1,12 +1,12 @@
 import type { StyleSpecification } from 'maplibre-gl'
+import type { StyleConfig } from '.'
 
-import * as Consts from './consts'
-
-export const specification: StyleSpecification = {
-  version: 8,
-  name: 'project-maps',
-  sprite: Consts.Urls.sprite,
-  glyphs: Consts.Urls.glyphs,
-  layers: [],
-  sources: {},
-}
+export const specification = (config: StyleConfig): StyleSpecification =>
+  ({
+    version: 8,
+    name: 'project-maps',
+    sprite: `${config.spritesUrlBase}/mdi`,
+    glyphs: `${config.fontsUrlBase}/{fontstack}/{range}.pbf`,
+    layers: [],
+    sources: {},
+  }) as const

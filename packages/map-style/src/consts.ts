@@ -24,11 +24,3 @@ export const FillOpacities = {
   park: 0.7,
   aeroway: 0.7,
 } as const
-
-export const Urls = {
-  sprite: '{spritesUrlBase}/mdi',
-  glyphs: '{fontsUrlBase}/{fontstack}/{range}.pbf',
-  openmaptilesSource: '{tileUrlBase}/metadata.json',
-  terrainSource: '{terrainUrlBase}/metadata.json',
-  tintsSource: '{tintsUrlBase}/metadata.json',
-} as const

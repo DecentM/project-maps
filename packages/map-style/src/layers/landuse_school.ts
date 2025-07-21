@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const landuse_school: StyleComponent = (config) =>
+export const landuse_school = (config: StyleConfig) =>
   ({
     id: 'landuse_school',
     type: 'fill',

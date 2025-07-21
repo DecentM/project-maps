@@ -2,9 +2,9 @@ import type { LayerSpecification } from 'maplibre-gl'
 
 import * as Consts from '../consts'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const boundary_2_z5_: StyleComponent = (config) =>
+export const boundary_2_z5_ = (config: StyleConfig) =>
   ({
     id: 'boundary_2_z5-',
     type: 'line',

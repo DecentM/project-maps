@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const bridge_trunk_primary: StyleComponent = (config) =>
+export const bridge_trunk_primary = (config: StyleConfig) =>
   ({
     id: 'bridge_trunk_primary',
     type: 'line',

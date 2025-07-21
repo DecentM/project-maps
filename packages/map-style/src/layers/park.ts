@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const park: StyleComponent = (config) =>
+export const park = (config: StyleConfig) =>
   ({
     id: 'park',
     type: 'fill',

@@ -2,9 +2,9 @@ import type { LayerSpecification } from 'maplibre-gl'
 
 import * as Consts from '../consts'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const background: StyleComponent = (config) =>
+export const background = (config: StyleConfig) =>
   ({
     id: 'background',
     type: 'background',

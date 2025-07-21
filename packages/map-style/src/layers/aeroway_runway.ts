@@ -2,9 +2,9 @@ import type { LayerSpecification } from 'maplibre-gl'
 
 import * as Consts from '../consts'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const aeroway_runway: StyleComponent = (config) =>
+export const aeroway_runway = (config: StyleConfig) =>
   ({
     id: 'aeroway_runway',
     type: 'line',

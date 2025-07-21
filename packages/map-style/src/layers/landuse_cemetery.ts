@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const landuse_cemetery: StyleComponent = (config) =>
+export const landuse_cemetery = (config: StyleConfig) =>
   ({
     id: 'landuse_cemetery',
     type: 'fill',

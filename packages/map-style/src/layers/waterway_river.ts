@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const waterway_river: StyleComponent = (config) =>
+export const waterway_river = (config: StyleConfig) =>
   ({
     id: 'waterway_river',
     type: 'line',

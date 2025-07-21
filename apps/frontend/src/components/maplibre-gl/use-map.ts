@@ -8,20 +8,9 @@ import {
   type ShallowRef,
 } from 'vue'
 
-import { Map as MaplibreGl, type RequestParameters } from 'maplibre-gl'
+import { Map as MaplibreGl } from 'maplibre-gl'
 
 import { type StyleConfig, createStyle } from '@project-maps/map-style'
-
-const transformRequest = (url: string): RequestParameters => {
-  return {
-    url: url
-      .replace(/\{tileUrlBase\}/gu, process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme')
-      .replace(/\{spritesUrlBase\}/gu, process.env.WEB_SPRITES_BASE_URL || 'fixme')
-      .replace(/\{fontsUrlBase\}/gu, process.env.WEB_FONTS_BASE_URL || 'fixme')
-      .replace(/\{terrainUrlBase\}/gu, process.env.WEB_TERRAIN_BASE_URL || 'fixme')
-      .replace(/\{tintsUrlBase\}/gu, process.env.WEB_TINTS_BASE_URL || 'fixme'),
-  }
-}
 
 export const useMap = (
   container: ShallowRef<HTMLDivElement | undefined>,
@@ -44,8 +33,12 @@ export const useMap = (
     // restart on context lost to prevent blank screen
     map.value.getCanvas().addEventListener('webglcontextlost', restart)
 
-    // set initial style
-    map.value.setTransformRequest(transformRequest)
+    map.value.setTransformRequest((url, resourceType) => {
+      return {
+        url: url.replace('{tileUrlBase}', styleConfig.tileUrlBase),
+      }
+    })
+
     map.value.setStyle(style, {
       diff: false,
     })

@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const tunnel_secondary_tertiary_casing: StyleComponent = (config) =>
+export const tunnel_secondary_tertiary_casing = (config: StyleConfig) =>
   ({
     id: 'tunnel_secondary_tertiary_casing',
     type: 'line',

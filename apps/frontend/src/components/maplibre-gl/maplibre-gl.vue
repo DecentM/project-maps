@@ -14,6 +14,11 @@ const container = shallowRef<HTMLDivElement>()
 
 const { map } = useMap(container, {
   variant: 'light',
+  tileUrlBase: process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme',
+  spritesUrlBase: process.env.WEB_SPRITES_BASE_URL || 'fixme',
+  fontsUrlBase: process.env.WEB_FONTS_BASE_URL || 'fixme',
+  terrainUrlBase: process.env.WEB_TERRAIN_BASE_URL || 'fixme',
+  tintsUrlBase: process.env.WEB_TINTS_BASE_URL || 'fixme',
 })
 
 const handleClick = () => emit('click')

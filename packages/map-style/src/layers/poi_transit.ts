@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const poi_transit: StyleComponent = (config) =>
+export const poi_transit = (config: StyleConfig) =>
   ({
     id: 'poi_transit',
     type: 'symbol',

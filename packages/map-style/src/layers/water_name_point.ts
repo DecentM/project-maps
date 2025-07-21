@@ -1,8 +1,8 @@
 import type { LayerSpecification } from 'maplibre-gl'
 
-import type { StyleComponent } from '..'
+import type { StyleConfig } from '..'
 
-export const water_name_point: StyleComponent = (config) =>
+export const water_name_point = (config: StyleConfig) =>
   ({
     id: 'water_name_point',
     type: 'symbol',

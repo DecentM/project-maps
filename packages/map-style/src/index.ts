@@ -1,4 +1,4 @@
-import type { LayerSpecification, StyleSpecification } from 'maplibre-gl'
+import type { StyleSpecification } from 'maplibre-gl'
 
 import { createSources } from './sources'
 
@@ -19,13 +19,16 @@ type StyleVariant = (typeof StyleVariant)[keyof typeof StyleVariant]
 
 export type StyleConfig = {
   variant: StyleVariant
+  tileUrlBase: string
+  spritesUrlBase: string
+  fontsUrlBase: string
+  terrainUrlBase: string
+  tintsUrlBase: string
 }
-
-export type StyleComponent = (config: StyleConfig) => LayerSpecification
 
 export const createStyle = (config: StyleConfig): StyleSpecification => {
   return {
-    ...specification,
+    ...specification(config),
     sources: createSources(config),
     layers: createLayers(config),
     terrain,
