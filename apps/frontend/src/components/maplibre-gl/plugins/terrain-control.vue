@@ -4,13 +4,18 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { GlobeControl, type Map as MaplibreGl } from 'maplibre-gl'
+import { TerrainControl, type Map as MaplibreGl } from 'maplibre-gl'
 
 const props = defineProps<{
   map: MaplibreGl
 }>()
 
-const control = ref(new GlobeControl())
+const control = ref(
+  new TerrainControl({
+    source: 'terrain',
+    exaggeration: 1,
+  })
+)
 
 onMounted(() => {
   props.map.addControl(control.value)

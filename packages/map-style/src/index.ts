@@ -3,7 +3,6 @@ import type { StyleSpecification } from 'maplibre-gl'
 import { createSources } from './sources'
 
 import { createLayers } from './layers'
-import { terrain } from './terrain'
 import { specification } from './config'
 
 export * as Consts from './consts'
@@ -31,6 +30,5 @@ export const createStyle = (config: StyleConfig): StyleSpecification => {
     ...specification(config),
     sources: createSources(config),
     layers: createLayers(config),
-    terrain,
   }
 }

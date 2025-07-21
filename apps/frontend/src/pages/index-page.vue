@@ -5,9 +5,13 @@ import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vu
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 import MapAttribution from 'src/components/maplibre-gl/map-attribution.vue'
 
-import MapPanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
-import MapHoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker.vue'
-import MapGlobeControlPlugin from 'src/components/maplibre-gl/plugins/globe-control.vue'
+import PanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
+import HoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker.vue'
+import GlobeControlPlugin from 'src/components/maplibre-gl/plugins/globe-control.vue'
+import GeolocateControlPlugin from 'src/components/maplibre-gl/plugins/geolocate-control.vue'
+import NavigationControlPlugin from 'src/components/maplibre-gl/plugins/navigation-control.vue'
+import TerrainControlPlugin from 'src/components/maplibre-gl/plugins/terrain-control.vue'
+import ScaleControlPlugin from 'src/components/maplibre-gl/plugins/scale-control.vue'
 
 const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
@@ -51,9 +55,13 @@ const handleMapClick = () => {
     >
       <template v-slot="{ map }">
         <map-attribution />
-        <map-hover-tracker-plugin v-if="map" :map="map" v-model="hoveredPoi" />
-        <map-globe-control-plugin v-if="map" :map="map" />
-        <map-panzoom-tracker-plugin v-if="map" :map="map" />
+        <hover-tracker-plugin v-if="map" :map="map" v-model="hoveredPoi" />
+        <globe-control-plugin v-if="map" :map="map" />
+        <panzoom-tracker-plugin v-if="map" :map="map" />
+        <geolocate-control-plugin v-if="map" :map="map" />
+        <navigation-control-plugin v-if="map" :map="map" />
+        <terrain-control-plugin v-if="map" :map="map" />
+        <scale-control-plugin v-if="map" :map="map" />
       </template>
     </maplibre-gl>
   </q-page>
