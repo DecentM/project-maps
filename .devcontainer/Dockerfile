@@ -19,7 +19,13 @@ RUN asdf plugin add nodejs && asdf plugin add pnpm
 
 RUN echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH" && . <(asdf completion bash)' >>~/.bashrc
 
-# mb-util
 WORKDIR /root
+
+# mb-util
 RUN git clone https://github.com/mapbox/mbutil.git
 RUN echo 'export PATH="$HOME/mbutil/:$PATH"' >>~/.bashrc
+
+# planetiler
+RUN pacman -S --noconfirm jre-openjdk
+RUN wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar
+RUN echo 'alias planetiler="java -Xmx4g -jar ~/planetiler.jar"' >>~/.bashrc
