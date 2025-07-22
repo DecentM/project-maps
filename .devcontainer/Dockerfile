@@ -27,5 +27,5 @@ RUN echo 'export PATH="$HOME/mbutil/:$PATH"' >>~/.bashrc
 
 # planetiler
 RUN pacman -S --noconfirm jre-openjdk
-RUN wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar
+RUN wget https://github.com/openmaptiles/planetiler-openmaptiles/releases/download/v3.15/planetiler-openmaptiles.jar -O ~/planetiler.jar
 RUN echo 'alias planetiler="java -Xmx4g -jar ~/planetiler.jar"' >>~/.bashrc

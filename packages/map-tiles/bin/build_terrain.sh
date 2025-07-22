@@ -50,17 +50,22 @@ fi
 
 TEMP_DIR=$(mktemp -d)
 
+echo "Downloading terrain data from $DOWNLOAD_URL to $TEMP_DIR"
 curl --output-dir "$TEMP_DIR" -L -o download.zip "$DOWNLOAD_URL"
 unzip -o -d "$TEMP_DIR/extract" "$TEMP_DIR/download.zip"
 rm -f "$TEMP_DIR/download.zip"
 
 DSM_FILE=$(find "$TEMP_DIR/extract" -type f -name "*_DSM.tif" | head -n 1)
 
+echo "Processing DSM file $DSM_FILE"
 gdalbuildvrt -overwrite -srcnodata -9999 -vrtnodata -9999 "$TEMP_DIR/jaxa_terrainrgb.vrt" "$DSM_FILE"
 gdalwarp -r cubicspline -t_srs EPSG:3857 -dstnodata "0" "$TEMP_DIR/jaxa_terrainrgb.vrt" "$TEMP_DIR/jaxa_terrainrgb_warp.vrt"
 python3 src/terrain/rgbify.py "$TEMP_DIR/jaxa_terrainrgb_warp.vrt" "$TEMP_DIR/jaxa_terrainrgb.mbtiles" 2>/dev/null
 
+echo "Creating SQLite index for tiles in $TEMP_DIR/jaxa_terrainrgb.mbtiles"
 sqlite3 "$TEMP_DIR/jaxa_terrainrgb.mbtiles" "CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);"
+
+echo "Converting MBTiles to PNG format in $OUTPUT_DIR"
 mb-util --image_format=png --do_compression --silent "$TEMP_DIR/jaxa_terrainrgb.mbtiles" "$OUTPUT_DIR"
 
 if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$(ls -A "$TEMP_DIR")" ]; then

@@ -31,24 +31,16 @@ fi
 
 TEMP_DIR=$(mktemp -d)
 
+echo "Downloading MBTiles from $DOWNLOAD_URL to $TEMP_DIR"
 curl --output-dir "$TEMP_DIR" -L -o download.mbtiles "$DOWNLOAD_URL"
 
+echo "Converting MBTiles to $IMAGE_FORMAT format in $OUTPUT_DIR"
 mb-util "--image_format=$IMAGE_FORMAT" --do_compression --silent "$TEMP_DIR/download.mbtiles" "$OUTPUT_DIR"
 
-# if pbf, rename to .gz, then gunzip
+# if pbf, rename to .gz
 if [ "$IMAGE_FORMAT" = "pbf" ]; then
-  FILES=$(find "$OUTPUT_DIR" -type f -name "*.pbf")
-  progress=0
-  total=$(echo "$FILES" | wc -l)
-
-  for FILE in $FILES; do
-    if [ $((progress % 250)) -eq 0 ]; then
-      echo "Renaming: $FILE ($((progress + 1)) of $total)"
-    fi
-
-    mv "$FILE" "$FILE.gz"
-    progress=$((progress + 1))
-  done
+  echo "Renaming .pbf files to .gz in $OUTPUT_DIR"
+  find "$OUTPUT_DIR" -name "*.pbf" -exec mv {} {}.gz \;
 fi
 
 # safety checks for rm -rf:

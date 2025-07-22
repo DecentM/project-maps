@@ -4,28 +4,13 @@ platform: node
 type: library
 
 tasks:
-  build_terrain:
-    command: sh
-    args:
-      - -c
-      - rm -rf ./dist/terrain && bin/build_terrain.sh $TERRAIN_DOWNLOAD_URL ./dist/terrain
-    inputs:
-      - ./bin/build_terrain.sh
-    outputs:
-      - ./dist/terrain
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      envFile: /.env
-
   build_vector:
     command: sh
     args:
       - -c
-      - rm -rf ./dist/vector && bin/build_tiles.sh $TILES_DOWNLOAD_URL ./dist/vector pbf
+      - rm -rf ./dist/vector && bin/build_planetiles.sh $TILES_REGION ./dist/vector ~/planetiler.jar pbf $WATER_DOWNLOAD_URL
     inputs:
-      - ./bin/build_tiles.sh
+      - ./bin/build_planetiles.sh
     outputs:
       - ./dist/vector
     options:
@@ -57,7 +42,7 @@ tasks:
       - -w
       - Dockerfile
       - --exec
-      - moon map-tiles:build_vector map-tiles:build_terrain map-tiles:build_tints
+      - moon map-tiles:build_vector map-tiles:build_tints
     options:
       cache: false
       persistent: true
