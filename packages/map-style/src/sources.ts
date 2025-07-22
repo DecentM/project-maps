@@ -6,6 +6,7 @@ export const createSources = (config: StyleConfig): Record<string, SourceSpecifi
   openmaptiles: {
     type: 'vector',
     url: `${config.tileUrlBase}/metadata.json`,
+    tiles: [`${config.tileUrlBase}/{z}/{x}/{y}.pbf`],
   },
   terrain: {
     type: 'raster-dem',

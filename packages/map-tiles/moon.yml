@@ -4,255 +4,50 @@ platform: node
 type: library
 
 tasks:
-  build_terrain_prep:
+  build_terrain:
     command: sh
     args:
       - -c
-      - rm -rf ./dist/terrain_tmp && mkdir -p ./dist/terrain_tmp
-    outputs:
-      - ./dist/terrain_tmp
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  build_terrain_download:
-    deps:
-      - build_terrain_prep
-    command: curl
-    args:
-      - -L
-      - --output-dir
-      - ./dist/terrain_tmp
-      - --remote-name-all
-      - $(jq -r '.terrain_zips[]' <build-input.json)
+      - rm -rf ./dist/terrain && bin/build_terrain.sh $TERRAIN_DOWNLOAD_URL ./dist/terrain
     inputs:
-      - ./build-input.json
-    outputs:
-      - ./dist/terrain_tmp/*.zip
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  build_terrain_extract:
-    deps:
-      - build_terrain_download
-    command: unzip
-    args:
-      - -o
-      - -d
-      - ./dist/terrain_tmp/extract
-      - ./dist/terrain_tmp/\*.zip
-    inputs:
-      - ./dist/terrain_tmp/*.zip
-    outputs:
-      - ./dist/terrain_tmp/extract
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  build_terrain_gdalbuildvrt:
-    deps:
-      - build_terrain_extract
-    command: gdalbuildvrt
-    args:
-      - -overwrite
-      - -srcnodata
-      - "-9999"
-      - -vrtnodata
-      - "-9999"
-      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
-      - ./dist/terrain_tmp/extract/**/*_DSM.tif
-    inputs:
-      - ./dist/terrain_tmp/extract/**/*_DSM.tif
-    outputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  build_terrain_gdalwarp:
-    deps:
-      - build_terrain_gdalbuildvrt
-    command: gdalwarp
-    args:
-      - -r
-      - cubicspline
-      - -t_srs
-      - EPSG:3857
-      - -dstnodata
-      - "0"
-      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
-      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
-    inputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.vrt
-    outputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  build_terrain_rgbify:
-    deps:
-      - build_terrain_gdalwarp
-    command: python3
-    args:
-      - src/terrain/rgbify.py
-      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
-      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
-    inputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb_warp.vrt
-    outputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: false
-
-  build_terrain_index:
-    deps:
-      - build_terrain_rgbify
-    command: sqlite3
-    args:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
-      - "CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);"
-    inputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
-    outputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  build_terrain_mbutil:
-    deps:
-      - build_terrain_index
-    command: sh
-    args:
-      - -c
-      - rm -rf ./dist/terrain && mb-util ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles ./dist/terrain
-    inputs:
-      - ./dist/terrain_tmp/jaxa_terrainrgb.mbtiles
+      - ./bin/build_terrain.sh
     outputs:
       - ./dist/terrain
     options:
       cache: true
       persistent: false
       outputStyle: stream
-      internal: true
-
-  build_terrain:
-    deps:
-      - build_terrain_mbutil
-    command: rm
-    args:
-      - -rf
-      - ./dist/terrain_tmp
-    inputs:
-      - ./dist/terrain_tmp
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-
-  download_vector:
-    command: sh
-    args:
-      - -c
-      - |
-        for url in $(jq -r '.pbfs | join(" ")' <build-input.json); do
-          curl --output-dir ./dist -L -o $(basename $url) $url
-        done
-    inputs:
-      - ./build-input.json
-    outputs:
-      - ./dist/*.osm.pbf
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
-
-  prep_build_vector:
-    deps:
-      - download_vector
-    command: sh
-    args:
-      - -c
-      - rm -rf ./.ignored/store && mkdir -p ./.ignored/store
-    outputs:
-      - ./.ignored/store
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
+      envFile: /.env
 
   build_vector:
-    deps:
-      - prep_build_vector
     command: sh
     args:
       - -c
-      - |
-        for url in $(jq -r '.pbfs | join(" ")' <build-input.json); do
-          bin/tilemaker-ubuntu-22.04/tilemaker ./dist/$(basename $url) --output ./dist/vector --config ./src/vector/config.json --store ./.ignored/store --process src/vector/process-openmaptiles.lua --materialize-geometries
-        done
+      - rm -rf ./dist/vector && bin/build_tiles.sh $TILES_DOWNLOAD_URL ./dist/vector pbf
     inputs:
-      - ./src/vector
-      - ./dist/*.osm.pbf
+      - ./bin/build_tiles.sh
     outputs:
       - ./dist/vector
     options:
       cache: true
       persistent: false
       outputStyle: stream
-
-  download_tints:
-    command: curl
-    args:
-      - -L
-      - -o
-      - ./dist/tints.mbtiles
-      - $(jq -r '.tints[]' <build-input.json)
-    inputs:
-      - ./build-input.json
-    outputs:
-      - ./dist/tints.mbtiles
-    options:
-      cache: true
-      persistent: false
-      outputStyle: stream
-      internal: true
+      envFile: /.env
 
   build_tints:
-    deps:
-      - download_tints
     command: sh
     args:
       - -c
-      - |
-        rm -rf ./dist/tints && mb-util ./dist/tints.mbtiles ./dist/tints
+      - rm -rf ./dist/tints && bin/build_tiles.sh $TINTS_DOWNLOAD_URL ./dist/tints png
     inputs:
-      - ./dist/tints.mbtiles
+      - ./bin/build_tiles.sh
     outputs:
       - ./dist/tints
     options:
       cache: true
       persistent: false
       outputStyle: stream
+      envFile: /.env
 
   up:
     command: nodemon

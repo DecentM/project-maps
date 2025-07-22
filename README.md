@@ -36,9 +36,6 @@ that's easy to remember.
 - Run the devcontainer and open a terminal in it
 - Run `pnpm i`
 - Copy the `.env.example` file and name it `.env`. Fill out the empty fields.
-- In `packages/map-tiles`, copy `build-input.example.json` to `build-input.json`
-  and optionally, change the fields to refer to your preferred area for
-  development. By default, this will be the greater London area.
 - In theory, `pnpm moon :up` should bring up the project in development mode
 
 > The first start will take a while depending on your internet connection and

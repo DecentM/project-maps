@@ -135,19 +135,19 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       '@project-maps/map-fonts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/map-fonts
       '@project-maps/map-style':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/map-style
       '@project-maps/map-tiles':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/map-tiles
       '@project-maps/opening-hours-parser':
         specifier: workspace:^
         version: link:../../packages/opening-hours-parser
       '@project-maps/proto':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/proto
       '@quasar/extras':
         specifier: ^1.16.12
@@ -179,9 +179,6 @@ importers:
       pinia:
         specifier: ^2.2.2
         version: 2.2.2(typescript@5.6.2)(vue@3.5.7(typescript@5.6.2))
-      pmtiles:
-        specifier: ^3.1.0
-        version: 3.1.0
       quasar:
         specifier: ^2.17.0
         version: 2.17.0
@@ -1791,9 +1788,6 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
-  '@types/leaflet@1.9.12':
-    resolution: {integrity: sha512-BK7XS+NyRI291HIo0HCfE18Lp8oA30H1gpi1tf0mF3TgiCEzanQjOqNZ4x126SXzzi2oNSZhZ5axJp1k0iM6jg==}
-
   '@types/lodash.debounce@4.0.9':
     resolution: {integrity: sha512-Ma5JcgTREwpLRwMM+XwBR7DaWe96nC38uCBDFKZWbNKD+osjVzdpnUSwBcqCptrp16sSOLBAUb50Car5I0TCsQ==}
 
@@ -3260,9 +3254,6 @@ packages:
 
   fd-slicer@1.1.0:
     resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
-
-  fflate@0.8.2:
-    resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
   figures@6.1.0:
     resolution: {integrity: sha512-d+l3qxjSesT4V7v2fh+QnmFnUWv9lSpjarhShNTgBOfA0ttejbQUAlHLitbjkoRiDulW0OPoQPYIGhIC8ohejg==}
@@ -4865,9 +4856,6 @@ packages:
   plur@5.1.0:
     resolution: {integrity: sha512-VP/72JeXqak2KiOzjgKtQen5y3IZHn+9GOuLDafPv0eXa47xq0At93XahYBs26MsifCQ4enGKwbjBTKgb9QJXg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  pmtiles@3.1.0:
-    resolution: {integrity: sha512-6JvgAQ8gElP1Ilg6ILM4KqleeKS+QcwpW8PXqhPWjRFmqF42yyUJ8sP3dZHQXm+G0HYXuw1kGlMTdVEs583pCQ==}
 
   point-in-polygon-hao@1.1.0:
     resolution: {integrity: sha512-3hTIM2j/v9Lio+wOyur3kckD4NxruZhpowUbEgmyikW+a2Kppjtu1eN+AhnMQtoHW46zld88JiYWv6fxpsDrTQ==}
@@ -8202,10 +8190,6 @@ snapshots:
     dependencies:
       '@types/node': 20.16.5
 
-  '@types/leaflet@1.9.12':
-    dependencies:
-      '@types/geojson': 7946.0.14
-
   '@types/lodash.debounce@4.0.9':
     dependencies:
       '@types/lodash': 4.17.7
@@ -10139,8 +10123,6 @@ snapshots:
     dependencies:
       pend: 1.2.0
 
-  fflate@0.8.2: {}
-
   figures@6.1.0:
     dependencies:
       is-unicode-supported: 2.1.0
@@ -11800,11 +11782,6 @@ snapshots:
   plur@5.1.0:
     dependencies:
       irregular-plurals: 3.5.0
-
-  pmtiles@3.1.0:
-    dependencies:
-      '@types/leaflet': 1.9.12
-      fflate: 0.8.2
 
   point-in-polygon-hao@1.1.0: {}
 
