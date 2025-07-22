@@ -1,15 +1,16 @@
-import type { SimplifiedEntity, SimplifiedPropertyClaims } from "wikibase-sdk"
+import type { SimplifiedEntity, SimplifiedPropertyClaims } from 'wikibase-sdk'
 
-export const getClaims = (entity: SimplifiedEntity, claims: ClaimId[]): SimplifiedPropertyClaims | null => {
-  let value: SimplifiedPropertyClaims | null = null
+export const getClaims = (
+  entity: SimplifiedEntity,
+  claims: ClaimId[]
+): SimplifiedPropertyClaims => {
+  const value: SimplifiedPropertyClaims = []
 
   for (const claim of claims) {
     if (!entity.claims || !entity.claims[claim]) continue
 
-    value = entity.claims?.[claim]
-
-    if (value && value.length > 0) {
-      return value
+    for (const claimProperty of entity.claims[claim]) {
+      value.push(claimProperty)
     }
   }
 
@@ -28,6 +29,8 @@ export const ClaimId = {
   FacebookUsername: 'P2013',
   BBCNewsTopicId: 'P6200',
   ParentOrganization: 'P749',
+  NighttimeView: 'P3451',
+  PanoramicView: 'P4291',
 } as const
 
-export type ClaimId = typeof ClaimId[keyof typeof ClaimId]
+export type ClaimId = (typeof ClaimId)[keyof typeof ClaimId]

@@ -45,24 +45,26 @@ export class WikidataSource extends MetadataSource {
         })
       )
 
-      const image = getClaims(entity, [ClaimId.Image])
+      const image = getClaims(entity, [ClaimId.Image, ClaimId.NighttimeView, ClaimId.PanoramicView])
 
-      if (image) {
-        onItem(
-          MetadataItem.fromObject({
-            attribution: {
-              source: AttributionSource.Wikidata,
-              license: 'CC0',
-              name: entity.id,
-              url: `https://www.wikidata.org/wiki/${entity.id}`,
-            },
-            image: {
-              url: {
-                canonical: this.client.getImageUrl(String(image[0])),
+      if (image && image.length !== 0) {
+        for (const imageClaim of image) {
+          onItem(
+            MetadataItem.fromObject({
+              attribution: {
+                source: AttributionSource.Wikidata,
+                license: 'CC0',
+                name: entity.id,
+                url: `https://www.wikidata.org/wiki/${entity.id}`,
               },
-            },
-          })
-        )
+              image: {
+                url: {
+                  canonical: this.client.getImageUrl(String(imageClaim)),
+                },
+              },
+            })
+          )
+        }
       }
 
       const instagram = getClaims(entity, [ClaimId.InstagramUsername])
