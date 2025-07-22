@@ -5,6 +5,8 @@ OUTPUT_DIR="$2"
 PLANETILER_JAR="$3"
 IMAGE_FORMAT="$4"
 WATER_POLYGONS_URL="$5"
+LAKE_CENTERLINE_URL="$6"
+NATURAL_EARTH_URL="$7"
 
 if [ -z "$REGION" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ] || [ -z "$IMAGE_FORMAT" ]; then
   echo "Usage: $0 <region> <output-dir> <planetiler-jar> <image-format>"
@@ -31,29 +33,33 @@ if [ -d "$OUTPUT_DIR" ]; then
   exit 1
 fi
 
-TEMP_DIR=$(mktemp -d)
+TEMP_DIR=$(mktemp -d -p ~/)
 
-java -jar "$PLANETILER_JAR" \
+mkdir -p "$TEMP_DIR/download"
+
+curl --output-dir "$TEMP_DIR/download" -L -o natural_earth_vector.sqlite.zip "$NATURAL_EARTH_URL"
+curl --output-dir "$TEMP_DIR/download" -L -o lake_centerline.shp.zip "$LAKE_CENTERLINE_URL"
+curl --output-dir "$TEMP_DIR/download" -L -o water-polygons-split-3857.zip "$WATER_POLYGONS_URL"
+
+java -Xmx4g -jar "$PLANETILER_JAR" \
   --download \
   --download_dir="$TEMP_DIR/download" \
-  --water-polygons-url="$WATER_POLYGONS_URL" \
   --area="$REGION" \
   --minzoom=0 \
-  --maxzoom=15 \
-  --render_maxzoom=15 \
+  --maxzoom=14 \
+  --render_maxzoom=14 \
   --tmpdir="$TEMP_DIR/tmp" \
   --tile_compression=none \
-  --output="$TEMP_DIR/data.mbtiles"
-
-echo "Converting MBTiles to $IMAGE_FORMAT format in $OUTPUT_DIR"
-mb-util "--image_format=$IMAGE_FORMAT" --silent "$TEMP_DIR/data.mbtiles" "$OUTPUT_DIR"
+  --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 
 # safety checks for rm -rf:
 # - check if the directory exists
-# - check if the directory is not empty
 # - check if the directory is not the root directory
 # - check if the directory is not a symlink
-if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$(ls -A "$TEMP_DIR")" ]; then
+# - check if the directory is not the home directory
+# - check if the directory is not the current directory
+# - check if the directory is not empty
+if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$TEMP_DIR" != "$HOME" ] && [ "$TEMP_DIR" != "$(pwd)" ] && [ "$(ls -A "$TEMP_DIR")" ]; then
   rm -rf "$TEMP_DIR"
 else
   echo "Error: Temporary directory $TEMP_DIR is not safe to clean up!"

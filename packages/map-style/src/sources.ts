@@ -8,11 +8,6 @@ export const createSources = (config: StyleConfig): Record<string, SourceSpecifi
     url: `${config.tileUrlBase}/metadata.json`,
     tiles: [`${config.tileUrlBase}/{z}/{x}/{y}.pbf`],
   },
-  terrain: {
-    type: 'raster-dem',
-    url: `${config.terrainUrlBase}/metadata.json`,
-    tiles: [`${config.terrainUrlBase}/{z}/{x}/{y}.png`],
-  },
   tints: {
     maxzoom: 6,
     tileSize: 256,

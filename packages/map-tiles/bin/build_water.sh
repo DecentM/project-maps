@@ -29,7 +29,7 @@ if [ -d "$OUTPUT_DIR" ]; then
   exit 1
 fi
 
-TEMP_DIR=$(mktemp -d)
+TEMP_DIR=$(mktemp -d -p ~/)
 
 echo "Downloading water data from $DOWNLOAD_URL to $TEMP_DIR"
 curl --output-dir "$TEMP_DIR" -L -o download.zip "$DOWNLOAD_URL"
@@ -51,10 +51,12 @@ find "$OUTPUT_DIR" -name "*.pbf" -exec mv {} {}.gz \;
 
 # safety checks for rm -rf:
 # - check if the directory exists
-# - check if the directory is not empty
 # - check if the directory is not the root directory
 # - check if the directory is not a symlink
-if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$(ls -A "$TEMP_DIR")" ]; then
+# - check if the directory is not the home directory
+# - check if the directory is not the current directory
+# - check if the directory is not empty
+if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$TEMP_DIR" != "$HOME" ] && [ "$TEMP_DIR" != "$(pwd)" ] && [ "$(ls -A "$TEMP_DIR")" ]; then
   rm -rf "$TEMP_DIR"
 else
   echo "Error: Temporary directory $TEMP_DIR is not safe to clean up!"

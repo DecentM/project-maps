@@ -48,7 +48,7 @@ if [ -d "$OUTPUT_DIR" ]; then
   exit 1
 fi
 
-TEMP_DIR=$(mktemp -d)
+TEMP_DIR=$(mktemp -d -p ~/)
 
 echo "Downloading terrain data from $DOWNLOAD_URL to $TEMP_DIR"
 curl --output-dir "$TEMP_DIR" -L -o download.zip "$DOWNLOAD_URL"
@@ -68,7 +68,14 @@ sqlite3 "$TEMP_DIR/jaxa_terrainrgb.mbtiles" "CREATE UNIQUE INDEX tile_index on t
 echo "Converting MBTiles to PNG format in $OUTPUT_DIR"
 mb-util --image_format=png --do_compression --silent "$TEMP_DIR/jaxa_terrainrgb.mbtiles" "$OUTPUT_DIR"
 
-if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$(ls -A "$TEMP_DIR")" ]; then
+# safety checks for rm -rf:
+# - check if the directory exists
+# - check if the directory is not the root directory
+# - check if the directory is not a symlink
+# - check if the directory is not the home directory
+# - check if the directory is not the current directory
+# - check if the directory is not empty
+if [ -d "$TEMP_DIR" ] && [ "$TEMP_DIR" != "/" ] && [ ! -L "$TEMP_DIR" ] && [ "$TEMP_DIR" != "$HOME" ] && [ "$TEMP_DIR" != "$(pwd)" ] && [ "$(ls -A "$TEMP_DIR")" ]; then
   rm -rf "$TEMP_DIR"
 else
   echo "Error: Temporary directory $TEMP_DIR is not safe to clean up!"

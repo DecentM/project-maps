@@ -109,7 +109,6 @@ import { data_z14 } from './layers/data_z14'
 import { data_z15 } from './layers/data_z15'
 import { data_z16 } from './layers/data_z16'
 import { tints } from './layers/tints'
-import { hillshade } from './layers/hills'
 
 import type { StyleConfig } from '.'
 
@@ -118,7 +117,6 @@ type LayerConstructor = (config: StyleConfig) => LayerSpecification[]
 export const createLayers: LayerConstructor = (context) => [
   background(context),
   tints(context),
-  hillshade(context),
   park(context),
   park_outline(context),
   landuse_residential(context),

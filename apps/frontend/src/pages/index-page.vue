@@ -10,7 +10,6 @@ import HoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker
 import GlobeControlPlugin from 'src/components/maplibre-gl/plugins/globe-control.vue'
 import GeolocateControlPlugin from 'src/components/maplibre-gl/plugins/geolocate-control.vue'
 import NavigationControlPlugin from 'src/components/maplibre-gl/plugins/navigation-control.vue'
-import TerrainControlPlugin from 'src/components/maplibre-gl/plugins/terrain-control.vue'
 import ScaleControlPlugin from 'src/components/maplibre-gl/plugins/scale-control.vue'
 
 const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
@@ -60,7 +59,6 @@ const handleMapClick = () => {
         <panzoom-tracker-plugin v-if="map" :map="map" />
         <geolocate-control-plugin v-if="map" :map="map" />
         <navigation-control-plugin v-if="map" :map="map" />
-        <terrain-control-plugin v-if="map" :map="map" />
         <scale-control-plugin v-if="map" :map="map" />
       </template>
     </maplibre-gl>
