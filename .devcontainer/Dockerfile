@@ -9,6 +9,7 @@ RUN su yay -c 'yay -Sy'
 RUN su yay -c 'yay -S --noconfirm jq fzf unzip asdf-vm'
 RUN su yay -c 'yay -S --noconfirm spreet gdal'
 RUN su yay -c 'yay -S --noconfirm python python-pip python-mercantile python-rasterio python-pillow'
+RUN su yay -c 'yay -S --noconfirm tippecanoe'
 
 RUN userdel yay
 
