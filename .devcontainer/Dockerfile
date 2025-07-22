@@ -8,12 +8,11 @@ RUN su yay -c 'cd && git clone https://aur.archlinux.org/yay.git && cd yay && ma
 RUN su yay -c 'yay -Sy'
 RUN su yay -c 'yay -S --noconfirm jq fzf unzip asdf-vm'
 RUN su yay -c 'yay -S --noconfirm spreet gdal'
-RUN su yay -c 'yay -S --noconfirm python python-pip python-mercantile python-rasterio python-pillow'
+RUN su yay -c 'yay -S --noconfirm python python-pip python-rasterio python-pillow'
 RUN su yay -c 'yay -S --noconfirm tippecanoe'
-
 RUN userdel yay
 
-RUN pip install rio-mucho --break-system-packages
+RUN pip install rio-mucho mercantile --break-system-packages
 
 # NodeJS stuff
 RUN asdf plugin add nodejs && asdf plugin add pnpm
