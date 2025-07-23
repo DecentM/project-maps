@@ -45,7 +45,12 @@ export class WikidataSource extends MetadataSource {
         })
       )
 
-      const image = getClaims(entity, [ClaimId.Image, ClaimId.NighttimeView, ClaimId.PanoramicView])
+      const image = getClaims(entity, [
+        ClaimId.Image,
+        ClaimId.NighttimeView,
+        ClaimId.PanoramicView,
+        ClaimId.ImageOfInterior,
+      ])
 
       if (image && image.length !== 0) {
         for (const imageClaim of image) {
@@ -211,7 +216,7 @@ export class WikidataSource extends MetadataSource {
           })
         )
 
-      const logo = getClaims(entity, [ClaimId.Logo])
+      const logo = getClaims(entity, [ClaimId.LogoImage])
       const smallLogo = getClaims(entity, [ClaimId.SmallLogo])
 
       if (logo?.length || smallLogo?.length)
@@ -230,22 +235,30 @@ export class WikidataSource extends MetadataSource {
           })
         )
 
-      const website = getClaims(entity, [ClaimId.OfficialWebsite])
+      const links = getClaims(entity, [ClaimId.OfficialWebsite])
 
-      if (website?.length)
-        onItem(
-          MetadataItem.fromObject({
-            attribution: {
-              source: AttributionSource.Wikidata,
-              license: 'CC0',
-              name: entity.id,
-              url: `https://www.wikidata.org/wiki/${entity.id}`,
-            },
-            website: {
-              url: String(website[0]),
-            },
-          })
-        )
+      // TODO: i18n
+      if (entity.sitelinks?.enwiki) {
+        links.push(`https://en.wikipedia.org/wiki/${entity.sitelinks.enwiki}`)
+      }
+
+      if (links?.length) {
+        for (const link of links) {
+          onItem(
+            MetadataItem.fromObject({
+              attribution: {
+                source: AttributionSource.Wikidata,
+                license: 'CC0',
+                name: entity.id,
+                url: `https://www.wikidata.org/wiki/${entity.id}`,
+              },
+              website: {
+                url: String(link),
+              },
+            })
+          )
+        }
+      }
     } catch (error) {
       if (error instanceof Error) {
         throw new VError(error, 'WikidataSource.processEntity')

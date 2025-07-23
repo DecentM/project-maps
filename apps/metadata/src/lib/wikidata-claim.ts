@@ -19,7 +19,7 @@ export const getClaims = (
 
 export const ClaimId = {
   Image: 'P18',
-  Logo: 'P154',
+  LogoImage: 'P154',
   SmallLogo: 'P8972',
   OfficialWebsite: 'P856',
   InstagramUsername: 'P2003',
@@ -31,6 +31,9 @@ export const ClaimId = {
   ParentOrganization: 'P749',
   NighttimeView: 'P3451',
   PanoramicView: 'P4291',
+  CommonsGallery: 'P935',
+  CommonsCategory: 'P373',
+  ImageOfInterior: 'P5775',
 } as const
 
 export type ClaimId = (typeof ClaimId)[keyof typeof ClaimId]

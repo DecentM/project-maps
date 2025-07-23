@@ -7,13 +7,15 @@ const props = defineProps<{
 }>()
 
 const parts = computed(() => {
-  return splitUrl(props.url)
+  const [domain, path] = splitUrl(props.url)
+
+  return [domain, decodeURIComponent(path || '')]
 })
 </script>
 
 <template>
   <template v-if="parts.length === 2 && parts[1] !== '/'">
-    <span class="text-subtitle2">{{ parts[0] }}</span><span class="text-grey-7">{{ parts[1] }}</span>
+    <span>{{ parts[0] }}</span><span class="text-grey-7">{{ parts[1] }}</span>
   </template>
 
   <template v-else-if="parts[1] === '/'">
