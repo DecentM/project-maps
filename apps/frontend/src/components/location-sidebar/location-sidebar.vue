@@ -7,7 +7,7 @@ import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
 import LocationAttributions from './location-attributions.vue'
 import LocationAmenity from './location-amenity.vue'
-import LocationWebsite from './location-website.vue'
+import LocationLinks from './location-links.vue'
 import LocationOpeningHours from './location-opening-hours.vue'
 
 import ImageRenderer from './metadata-renderers/image-renderer.vue'
@@ -65,19 +65,21 @@ const hasAmenity = computed(() => {
 })
 
 const hasComments = computed(() => {
-  return metadata.value.some(({ item }) => item.case === 'comment' && item.value)
+  return metadata.value.some(({ item }) => item.case === 'comment' && item.value.text)
 })
 
-const hasWebsite = computed(() => {
-  return metadata.value.some(({ item }) => item.case === 'website' && item.value)
+const hasLinks = computed(() => {
+  return metadata.value.some(({ item }) => item.case === 'links' && item.value?.list.length)
 })
 
 const hasMetadata = computed(() => {
-  return metadata.value.some(({ item }) => item.case === 'metadata' && item.value)
+  return metadata.value.some(
+    ({ item }) => item.case === 'metadata' && Object.keys(item.value || {}).length > 2
+  )
 })
 
 const hasOpeningHours = computed(() => {
-  return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value)
+  return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value.ranges)
 })
 
 const sortedMetadata = computed(() => {
@@ -184,8 +186,8 @@ watch(searchQuery, async (newQuery) => {
     <location-amenity v-if="hasAmenity" :metadata="sortedMetadata" />
     <q-separator v-if="hasAmenity" />
 
-    <location-website :metadata="sortedMetadata" />
-    <q-separator v-if="hasWebsite" />
+    <location-links v-if="hasLinks" :metadata="sortedMetadata" />
+    <q-separator v-if="hasLinks" />
 
     <location-metadata :metadata="sortedMetadata" />
     <q-separator v-if="hasMetadata" />

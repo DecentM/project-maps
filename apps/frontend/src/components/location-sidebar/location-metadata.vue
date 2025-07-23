@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { MetadataItem, Address } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
-import WebUrl from '../web-url/web-url.vue'
 
 const props = defineProps<{
   metadata: MetadataItem[]
@@ -31,25 +30,6 @@ const textMetadata = computed(() => {
 
 <template>
   <div class="relative-position" v-if="textMetadata">
-    <q-item
-      v-if="textMetadata.website"
-      clickable
-      :href="textMetadata.website"
-      target="_blank"
-      noopener
-    >
-      <q-item-section side>
-        <q-icon name="mdi-web" color="primary" size="md" />
-      </q-item-section>
-
-      <q-item-section>
-        <q-item-label lines="1">
-          <web-url :url="textMetadata.website" />
-        </q-item-label>
-        <q-item-label caption>Website</q-item-label>
-      </q-item-section>
-    </q-item>
-
     <template v-if="textMetadata.address && addressCount(textMetadata.address) > 0">
       <q-item>
         <q-item-section side>

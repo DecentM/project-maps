@@ -82,11 +82,32 @@ export class OverpassSource extends MetadataSource {
             street: item.tags?.['addr:street'] || '',
           },
           phone: item.tags?.phone || '',
-          website: item.tags?.website || '',
           amenity: item.tags?.amenity || '',
         },
       })
     )
+
+    if (item.tags?.website) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          links: {
+            list: [
+              {
+                url: item.tags.website,
+              },
+            ],
+          },
+        })
+      )
+    }
 
     if (!item.tags?.opening_hours) return
 

@@ -4,7 +4,6 @@ import { isEntityId, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
 import {
   MetadataItem,
   AttributionSource,
-  LinkType,
   type GetAreaMetadataInput,
   type GetPoiMetadataInput,
 } from '@project-maps/proto/metadata/node'
@@ -87,7 +86,6 @@ export class WikidataSource extends MetadataSource {
               list: instagram?.length
                 ? instagram!
                     .map((item) => ({
-                      type: LinkType.Instagram,
                       url: `https://instagram.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -111,7 +109,6 @@ export class WikidataSource extends MetadataSource {
               list: linkedin?.length
                 ? linkedin
                     .map((item) => ({
-                      type: LinkType.LinkedIn,
                       url: `https://linkedin.com/company/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -135,7 +132,6 @@ export class WikidataSource extends MetadataSource {
               list: pinterest?.length
                 ? pinterest
                     .map((item) => ({
-                      type: LinkType.Pinterest,
                       url: `https://pinterest.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -159,7 +155,6 @@ export class WikidataSource extends MetadataSource {
               list: x?.length
                 ? x
                     .map((item) => ({
-                      type: LinkType.X,
                       url: `https://x.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -183,7 +178,6 @@ export class WikidataSource extends MetadataSource {
               list: facebook?.length
                 ? facebook
                     .map((item) => ({
-                      type: LinkType.Facebook,
                       url: `https://facebook.com/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -207,7 +201,6 @@ export class WikidataSource extends MetadataSource {
               list: bbcNewsTopicId?.length
                 ? bbcNewsTopicId
                     .map((item) => ({
-                      type: LinkType.BBCNewsTopic,
                       url: `https://www.bbc.co.uk/news/topics/${item}`,
                     }))
                     .filter((link) => link !== null)
@@ -252,8 +245,12 @@ export class WikidataSource extends MetadataSource {
                 name: entity.id,
                 url: `https://www.wikidata.org/wiki/${entity.id}`,
               },
-              website: {
-                url: String(link),
+              links: {
+                list: [
+                  {
+                    url: String(link),
+                  },
+                ],
               },
             })
           )
