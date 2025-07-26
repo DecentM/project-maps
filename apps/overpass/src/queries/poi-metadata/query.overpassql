@@ -1,4 +1,4 @@
-[out:csv(::id, ::type, ::lat, ::lon, {{tags}}; false; ";")]
+[out:csv(::id, ::type, ::lat, ::lon, {{tags}}; false; "🅰")]
 [timeout:30];
 
 (

@@ -25,7 +25,7 @@ export class OverpassService extends UnimplementedOverpassService {
       const line = lines.shift()
       if (!line) continue
 
-      const [id, type, lat, lon, ...columns] = line.split(';')
+      const [id, type, lat, lon, ...columns] = line.split('🅰')
 
       if (!parameters.tags?.length || columns.length < parameters.tags.length) {
         throw new Error('Not enough columns in the response')
@@ -137,7 +137,7 @@ export class OverpassService extends UnimplementedOverpassService {
         const line = lines.shift()
         if (!line) continue
 
-        const [, , , , ...columns] = line.split(';')
+        const [, , , , ...columns] = line.split('🅰')
 
         if (columns.length < requestedTags.length) {
           throw new Error('Not enough columns in the response')
@@ -240,7 +240,7 @@ export class OverpassService extends UnimplementedOverpassService {
         const line = lines.shift()
         if (!line) continue
 
-        const [, , , , ...columns] = line.split(';')
+        const [, , , , ...columns] = line.split('🅰')
 
         if (columns.length < requestedTags.length) {
           throw new Error('Not enough columns in the response')
