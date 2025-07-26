@@ -18,11 +18,12 @@ type StyleVariant = (typeof StyleVariant)[keyof typeof StyleVariant]
 
 export type StyleConfig = {
   variant: StyleVariant
-  tileUrlBase: string
-  spritesUrlBase: string
-  fontsUrlBase: string
-  terrainUrlBase: string
-  tintsUrlBase: string
+  tileMetadataUrl: string
+  tileUrlPattern: string
+  spritesUrl: string
+  fontsUrlPattern: string
+  tintsMetadataUrl: string
+  tintsUrlPattern: string
 }
 
 export const createStyle = (config: StyleConfig): StyleSpecification => {

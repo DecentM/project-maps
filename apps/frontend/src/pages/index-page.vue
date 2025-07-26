@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import type { MapGeoJSONFeature } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
@@ -12,11 +13,15 @@ import NavigationControlPlugin from 'src/components/maplibre-gl/plugins/navigati
 import ScaleControlPlugin from 'src/components/maplibre-gl/plugins/scale-control.vue'
 import AttributionControlPlugin from 'src/components/maplibre-gl/plugins/attribution-control.vue'
 
-const hoveredPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
 
-const handleMapClick = () => {
-  selectedPoi.value = hoveredPoi.value
+const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
+  if (!poi || poi.geometry.type !== 'Point') {
+    selectedPoi.value = null
+    return
+  }
+
+  selectedPoi.value = poi as GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties>
 }
 </script>
 
@@ -48,13 +53,12 @@ const handleMapClick = () => {
 
     <maplibre-gl
       class="vh-100"
-      @click="handleMapClick"
       :min-pitch="0"
       :max-pitch="80"
     >
       <template v-slot="{ map }">
         <attribution-control-plugin v-if="map" :map="map" />
-        <hover-tracker-plugin v-if="map" :map="map" v-model="hoveredPoi" />
+        <hover-tracker-plugin v-if="map" :map="map" @poi-click="handlePoiClick" />
         <globe-control-plugin v-if="map" :map="map" />
         <panzoom-tracker-plugin v-if="map" :map="map" />
         <geolocate-control-plugin v-if="map" :map="map" />

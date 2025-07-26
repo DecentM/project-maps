@@ -15,7 +15,9 @@ const client = new OverpassClient(config.overpassApi.baseUrl)
 export class OverpassService extends UnimplementedOverpassService {
   private static processLines(
     lines: string[],
-    requestedTags: string[],
+    parameters: {
+      tags?: string[]
+    },
     onResult: (result: Element) => void
   ) {
     while (lines.length > 0) {
@@ -25,13 +27,13 @@ export class OverpassService extends UnimplementedOverpassService {
 
       const [id, type, lat, lon, ...columns] = line.split(';')
 
-      if (columns.length < requestedTags.length) {
+      if (!parameters.tags?.length || columns.length < parameters.tags.length) {
         throw new Error('Not enough columns in the response')
       }
 
       const tags = columns.reduce(
         (acc, column, index) => {
-          acc[requestedTags[index]] = column
+          acc[parameters.tags![index]] = column
           return acc
         },
         {} as Record<string, string>
@@ -103,7 +105,7 @@ export class OverpassService extends UnimplementedOverpassService {
       lines.push(partialLine, ...responseLines)
       partialLine = lastResponseLine || ''
 
-      OverpassService.processLines(lines, params.tags ?? [], (result) => {
+      OverpassService.processLines(lines, params, (result) => {
         call.write(result)
       })
     })
@@ -205,7 +207,7 @@ export class OverpassService extends UnimplementedOverpassService {
       lines.push(partialLine, ...responseLines)
       partialLine = lastResponseLine || ''
 
-      OverpassService.processLines(lines, parameters.tags ?? [], (result) => {
+      OverpassService.processLines(lines, parameters, (result) => {
         call.write(result)
       })
     })

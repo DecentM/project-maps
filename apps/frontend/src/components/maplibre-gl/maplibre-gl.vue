@@ -14,11 +14,12 @@ const { map } = useMap(
   container,
   {
     variant: 'light',
-    tileUrlBase: process.env.WEB_VECTOR_TILE_BASE_URL || 'fixme',
-    spritesUrlBase: process.env.WEB_SPRITES_BASE_URL || 'fixme',
-    fontsUrlBase: process.env.WEB_FONTS_BASE_URL || 'fixme',
-    terrainUrlBase: process.env.WEB_TERRAIN_BASE_URL || 'fixme',
-    tintsUrlBase: process.env.WEB_TINTS_BASE_URL || 'fixme',
+    tileMetadataUrl: process.env.WEB_TILE_METADATA_URL || 'fixme',
+    tileUrlPattern: process.env.WEB_TILE_URL_PATTERN || 'fixme',
+    spritesUrl: process.env.WEB_SPRITES_URL || 'fixme',
+    fontsUrlPattern: process.env.WEB_FONTS_URL_PATTERN || 'fixme',
+    tintsMetadataUrl: process.env.WEB_TINTS_METADATA_URL || 'fixme',
+    tintsUrlPattern: process.env.WEB_TINTS_URL_PATTERN || 'fixme',
   },
   {
     hash: false,

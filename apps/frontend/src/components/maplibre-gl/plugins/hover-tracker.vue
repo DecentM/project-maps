@@ -8,45 +8,63 @@ import { onBeforeUnmount, onMounted } from 'vue'
 
 const props = defineProps<{
   map: MaplibreGl
-  modelValue: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
 }>()
 
-const emit =
-  defineEmits<
-    (
-      event: 'update:modelValue',
-      value: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
-    ) => void
-  >()
+const emit = defineEmits<(event: 'poi-click', poi: MapGeoJSONFeature | null) => void>()
 
-const handlePoiHover = (
-  event: MapMouseEvent & {
-    features?: MapGeoJSONFeature[]
-  }
-) => {
-  if (!event.features?.length) {
-    if (props.modelValue) {
-      emit('update:modelValue', null)
-    }
+const CLICKABLE_LAYERS = [
+  'poi-amenity',
+  'poi-emergency',
+  'poi-historic',
+  'poi-leisure',
+  'poi-man_made',
+  'poi-office',
+  'poi-shop',
+  'poi-tourism',
+] as const
+
+const handlePoiClick = (event: MapMouseEvent) => {
+  const features = props.map.queryRenderedFeatures(event.point, {
+    layers: [...CLICKABLE_LAYERS],
+  })
+
+  if (!features.length) {
+    emit('poi-click', null)
     return
   }
 
-  const feature = event.features[0]
+  emit('poi-click', features[0])
+}
 
-  if (props.modelValue?.id === String(feature.id)) return
+const updateCursor = (hovered: boolean) => {
+  if (hovered) {
+    props.map.getCanvas().style.cursor = 'pointer'
+  } else {
+    props.map.getCanvas().style.cursor = ''
+  }
+}
 
-  emit('update:modelValue', feature.toJSON())
+const handlePoiHover = () => {
+  updateCursor(true)
+}
+
+const handlePoiUnhover = () => {
+  updateCursor(false)
 }
 
 onMounted(() => {
-  props.map.on('mousemove', 'poi_z16', handlePoiHover)
-  props.map.on('mousemove', 'poi_z15', handlePoiHover)
-  props.map.on('mousemove', 'poi_z14', handlePoiHover)
+  for (const layer of CLICKABLE_LAYERS) {
+    props.map.on('mouseenter', layer, handlePoiHover)
+    props.map.on('mouseleave', layer, handlePoiUnhover)
+    props.map.on('click', layer, handlePoiClick)
+  }
 })
 
 onBeforeUnmount(() => {
-  props.map.off('mousemove', 'poi_z16', handlePoiHover)
-  props.map.off('mousemove', 'poi_z15', handlePoiHover)
-  props.map.off('mousemove', 'poi_z14', handlePoiHover)
+  for (const layer of CLICKABLE_LAYERS) {
+    props.map.off('mouseenter', layer, handlePoiHover)
+    props.map.off('mouseleave', layer, handlePoiUnhover)
+    props.map.off('click', layer, handlePoiClick)
+  }
 })
 </script>

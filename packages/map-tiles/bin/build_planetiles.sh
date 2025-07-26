@@ -33,22 +33,25 @@ if [ -d "$OUTPUT_DIR" ]; then
   exit 1
 fi
 
+if [ ! -f src/vector/shortbread.yml ]; then
+  echo "Error: Configuration file src/vector/shortbread.yml not found."
+  exit 1
+fi
+
 TEMP_DIR=$(mktemp -d -p ~/)
 
 mkdir -p "$TEMP_DIR/download"
 
-curl --output-dir "$TEMP_DIR/download" -L -o natural_earth_vector.sqlite.zip "$NATURAL_EARTH_URL"
-curl --output-dir "$TEMP_DIR/download" -L -o lake_centerline.shp.zip "$LAKE_CENTERLINE_URL"
-curl --output-dir "$TEMP_DIR/download" -L -o water-polygons-split-3857.zip "$WATER_POLYGONS_URL"
+# curl --output-dir "$TEMP_DIR/download" -L -o natural_earth_vector.sqlite.zip "$NATURAL_EARTH_URL"
+# curl --output-dir "$TEMP_DIR/download" -L -o lake_centerline.shp.zip "$LAKE_CENTERLINE_URL"
+# curl --output-dir "$TEMP_DIR/download" -L -o water-polygons-split-3857.zip "$WATER_POLYGONS_URL"
 
-java -Xmx4g -jar "$PLANETILER_JAR" \
+java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --download \
-  --download_dir="$TEMP_DIR/download" \
   --area="$REGION" \
   --minzoom=0 \
   --maxzoom=14 \
   --render_maxzoom=14 \
-  --tmpdir="$TEMP_DIR/tmp" \
   --tile_compression=none \
   --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 

@@ -38,18 +38,26 @@ watch(
 
     loading.value = true
 
-    const response = metadataClient.getPoiMetadata({
-      id: BigInt(newPoi.id),
-      coordinates: {
-        lat: newPoi.geometry.coordinates[1],
-        lng: newPoi.geometry.coordinates[0],
-      },
-      name:
-        newPoi.properties?.name_int || newPoi.properties?.['name:latin'] || newPoi.properties?.name,
-    })
+    console.debug('Fetching metadata for POI:', newPoi)
 
-    for await (const item of response) {
-      metadata.value = [...metadata.value, item]
+    try {
+      const response = metadataClient.getPoiMetadata({
+        id: BigInt(newPoi.id),
+        coordinates: {
+          lat: newPoi.geometry.coordinates[1],
+          lng: newPoi.geometry.coordinates[0],
+        },
+        name:
+          newPoi.properties?.name_int ||
+          newPoi.properties?.['name:latin'] ||
+          newPoi.properties?.name,
+      })
+
+      for await (const item of response) {
+        metadata.value.push(item)
+      }
+    } catch (error) {
+      console.error('Failed to fetch metadata:', error)
     }
 
     loading.value = false

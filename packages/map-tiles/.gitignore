@@ -5,3 +5,6 @@ src/terrain/input/*
 !src/terrain/input/.gitkeep
 
 build-input.json
+
+# Planetiler state files
+/data

@@ -15,9 +15,12 @@ export const Colours = {
   aerowayFill: 'rgba(229, 228, 224, 1)',
   aerowayRunway: '#f0ede9',
   aerowayTaxiway: '#f0ede9',
-  background: '#eeebe6ff',
+  background: 'rgb(249,244,238)',
   bridgeLinkCasing: '#e9ac77',
   bridgeLink: '#fea',
+  skyColor: '#3D71AD',
+  horizonColor: '#9CB6D4',
+  fogColor: '#CEE8FD',
 } as const
 
 export const FillOpacities = {

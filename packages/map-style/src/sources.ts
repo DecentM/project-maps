@@ -3,16 +3,18 @@ import type { SourceSpecification } from 'maplibre-gl'
 import type { StyleConfig } from '.'
 
 export const createSources = (config: StyleConfig): Record<string, SourceSpecification> => ({
-  openmaptiles: {
+  vector: {
     type: 'vector',
-    url: `${config.tileUrlBase}/metadata.json`,
-    tiles: [`${config.tileUrlBase}/{z}/{x}/{y}.pbf`],
+    // url: config.tileMetadataUrl,
+    tiles: [config.tileUrlPattern],
+    maxzoom: 14,
+    scheme: 'xyz',
   },
   tints: {
     maxzoom: 6,
     tileSize: 256,
-    url: `${config.tintsUrlBase}/metadata.json`,
-    tiles: [`${config.tintsUrlBase}/{z}/{x}/{y}.png`],
+    url: config.tintsMetadataUrl,
+    tiles: [config.tintsUrlPattern],
     type: 'raster',
   },
 })

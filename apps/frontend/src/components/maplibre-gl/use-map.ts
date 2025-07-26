@@ -34,12 +34,6 @@ export const useMap = (
     // restart on context lost to prevent blank screen
     map.value.getCanvas().addEventListener('webglcontextlost', restart)
 
-    map.value.setTransformRequest((url, resourceType) => {
-      return {
-        url: url.replace('{tileUrlBase}', styleConfig.tileUrlBase),
-      }
-    })
-
     map.value.setStyle(style, {
       diff: false,
     })

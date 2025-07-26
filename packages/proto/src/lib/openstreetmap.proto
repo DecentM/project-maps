@@ -17,9 +17,10 @@ message Way {
 
 message Member {
   enum Type {
-    NODE = 0;
-    WAY = 1;
-    RELATION = 2;
+    MEMBER_TYPE_UNSPECIFIED = 0;
+    MEMBER_TYPE_NODE = 1;
+    MEMBER_TYPE_WAY = 2;
+    MEMBER_TYPE_RELATION = 3;
   }
 
   Type type = 1;
