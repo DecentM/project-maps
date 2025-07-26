@@ -75,6 +75,8 @@ const dispose = () => {
     map.value.off('mouseleave', layer, handlePoiUnhover)
     map.value.off('click', layer, handlePoiClick)
   }
+
+  updateCursor(false)
 }
 
 if (map) {

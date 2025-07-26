@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import type { ImageUrl, MetadataItem } from '@project-maps/proto/metadata/web'
 
@@ -8,7 +8,7 @@ import LocationComments from './location-comments.vue'
 import LocationAttributions from './location-attributions.vue'
 import LocationAmenity from './location-amenity.vue'
 import LocationLinks from './location-links.vue'
-import LocationOpeningHours from './location-opening-hours.vue'
+// import LocationOpeningHours from './location-opening-hours.vue'
 
 import ImageRenderer from './metadata-renderers/image-renderer.vue'
 import DescriptionRenderer from './metadata-renderers/description-renderer.vue'
@@ -21,46 +21,54 @@ import ModalCarousel from '../modal-carousel/modal-carousel.vue'
 import type { SearchResult } from '@project-maps/proto/search/web'
 
 const props = defineProps<{
-  poi: GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null
+  poiOsmId?: string
 }>()
 
 const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
-watch(
-  () => props.poi,
-  async (newPoi) => {
-    searchQuery.value = ''
-    metadata.value = []
+const performSearch = async (osmId: string) => {
+  searchQuery.value = ''
+  metadata.value = []
 
-    if (!newPoi || !newPoi.id || !newPoi.properties?.osm_id) return
+  if (!osmId) return
 
-    loading.value = true
+  loading.value = true
 
-    try {
-      const response = metadataClient.getPoiMetadata({
-        id: BigInt(newPoi.properties.osm_id),
-        coordinates: {
-          lat: newPoi.geometry.coordinates[1],
-          lng: newPoi.geometry.coordinates[0],
-        },
-        name:
-          newPoi.properties?.name_int ||
-          newPoi.properties?.['name:latin'] ||
-          newPoi.properties?.name,
-      })
+  try {
+    const response = metadataClient.getPoiMetadata({
+      id: BigInt(osmId),
+    })
 
-      for await (const item of response) {
-        metadata.value.push(item)
-      }
-    } catch (error) {
-      console.error('Failed to fetch metadata:', error)
+    for await (const item of response) {
+      metadata.value.push(item)
     }
+  } catch (error) {
+    console.error('Failed to fetch metadata:', error)
+  }
 
-    loading.value = false
+  loading.value = false
+}
+
+watch(
+  () => props.poiOsmId,
+  (newPoiOsmId) => {
+    if (newPoiOsmId) {
+      performSearch(newPoiOsmId)
+    } else {
+      metadata.value = []
+    }
   }
 )
+
+onMounted(() => {
+  if (props.poiOsmId) {
+    performSearch(props.poiOsmId)
+  } else {
+    metadata.value = []
+  }
+})
 
 const hasNameOrDescription = computed(() => {
   return metadata.value.some(({ item }) => item.case === 'metadata' && item.value.name)
@@ -84,9 +92,9 @@ const hasMetadata = computed(() => {
   )
 })
 
-const hasOpeningHours = computed(() => {
-  return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value.ranges)
-})
+// const hasOpeningHours = computed(() => {
+//   return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value.ranges)
+// })
 
 const sortedMetadata = computed(() => {
   return sortMetadataItems(metadata.value as MetadataItem[])
@@ -157,7 +165,7 @@ watch(searchQuery, async (newQuery) => {
             dense
             debounce="300" />
 
-          <q-list v-if="searchQuery && searchResults.length && !props.poi" dense class="search-results-list">
+          <q-list v-if="searchQuery && searchResults.length && !props.poiOsmId" dense class="search-results-list">
             <q-item
               v-for="(result, index) in searchResults"
               :key="index"
@@ -201,8 +209,8 @@ watch(searchQuery, async (newQuery) => {
     <location-comments :metadata="sortedMetadata" />
     <q-separator v-if="hasComments" />
 
-    <location-opening-hours v-if="poi" :metadata="sortedMetadata" :coordinates="poi.geometry.coordinates" />
-    <q-separator v-if="hasOpeningHours" />
+    <!-- <location-opening-hours v-if="poi" :metadata="sortedMetadata" :coordinates="poi.geometry.coordinates" />
+    <q-separator v-if="hasOpeningHours" /> -->
 
     <location-attributions :metadata="sortedMetadata" />
 

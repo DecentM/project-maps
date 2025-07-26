@@ -15,7 +15,7 @@ import VError from 'verror'
 
 export class GeographUKImageSource extends MetadataSource {
   override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
-    if (!location.lat || !location.lng) return false
+    if (!location || !location.lat || !location.lng) return false
 
     // Geograph UK only supports locations within the UK
     // TODO: Proper bbox implementation (probably using a library)

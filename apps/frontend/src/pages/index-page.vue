@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
-
-import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 
 import PanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
 import HoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker.vue'
@@ -11,16 +8,23 @@ import GeolocateControlPlugin from 'src/components/maplibre-gl/plugins/geolocate
 import NavigationControlPlugin from 'src/components/maplibre-gl/plugins/navigation-control.vue'
 import ScaleControlPlugin from 'src/components/maplibre-gl/plugins/scale-control.vue'
 import AttributionControlPlugin from 'src/components/maplibre-gl/plugins/attribution-control.vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const selectedPoi = ref<GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties> | null>(null)
+const router = useRouter()
+const route = useRoute()
 
 const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
-  if (!poi || poi.geometry.type !== 'Point') {
-    selectedPoi.value = null
+  if (!poi || poi.geometry.type !== 'Point' || !poi.properties || !poi.properties.osm_id) {
     return
   }
 
-  selectedPoi.value = poi as GeoJSON.Feature<GeoJSON.Point, GeoJSON.GeoJsonProperties>
+  router.push({
+    name: 'DetailsPage',
+    params: {
+      ...route.params,
+      id: poi.properties.osm_id,
+    },
+  })
 }
 </script>
 
@@ -44,10 +48,6 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
 
 <template>
   <div class="q-pa-sm q-gutter-md">
-    <location-sidebar
-      :poi="selectedPoi"
-    />
-
     <attribution-control-plugin />
     <hover-tracker-plugin @poi-click="handlePoiClick" />
     <globe-control-plugin />

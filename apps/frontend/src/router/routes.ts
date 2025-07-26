@@ -10,10 +10,15 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/index-page.vue'),
       },
+      {
+        name: 'DetailsPage',
+        path: '/details/:id/:lng?/:lat?/:zoom?/:pitch?/:bearing?',
+        component: () => import('pages/details-page.vue'),
+      },
       process.env.NODE_ENV === 'development'
         ? {
             name: 'DevPage',
-            path: '/dev',
+            path: '/dev/:lng?/:lat?/:zoom?/:pitch?/:bearing?',
             component: () => import('pages/dev-page.vue'),
           }
         : null,
