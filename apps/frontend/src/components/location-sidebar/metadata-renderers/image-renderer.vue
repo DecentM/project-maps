@@ -12,7 +12,7 @@ const props = defineProps<{
 const firstItem = computed(() => {
   const result = props.metadata.find(({ item }) => item.case === 'image' && item.value)
 
-  if (!result || !result.item || result.item.value?.$typeName !== 'Metadata.Image') return null
+  if (!result || !result.item || result.item.case !== 'image') return null
 
   return result.item.value
 })

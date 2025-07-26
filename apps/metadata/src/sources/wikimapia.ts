@@ -36,7 +36,6 @@ export class WikimapiaSource extends MetadataSource {
       })
 
       if (!nearest.places || nearest.places.length === 0) {
-        events.emit('end')
         return
       }
 
@@ -103,8 +102,6 @@ export class WikimapiaSource extends MetadataSource {
       }
 
       throw new Error('WikimapiaSource.getAreaMetadata')
-    } finally {
-      events.emit('end')
     }
   }
 
@@ -112,6 +109,10 @@ export class WikimapiaSource extends MetadataSource {
     request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
+    if (!request.coordinates) {
+      return
+    }
+
     try {
       await this.getAreaMetadata(
         GetAreaMetadataInput.fromObject({
@@ -125,8 +126,6 @@ export class WikimapiaSource extends MetadataSource {
       }
 
       throw new Error('WikimapiaSource.getPoiMetadata')
-    } finally {
-      events.emit('end')
     }
   }
 }

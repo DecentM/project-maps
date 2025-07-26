@@ -271,7 +271,10 @@ export class WikidataSource extends MetadataSource {
     return true // Handles all locations
   }
 
-  public getAreaMetadata(params: GetAreaMetadataInput, events: Emittery<Events>): void {
+  public async getAreaMetadata(
+    params: GetAreaMetadataInput,
+    events: Emittery<Events>
+  ): Promise<void> {
     const ids = this.overpassClient.WikidataIdsInRange(
       QueryParameters.fromObject({
         range: params.radiusMeters,
@@ -290,7 +293,6 @@ export class WikidataSource extends MetadataSource {
 
     ids.on('end', async () => {
       if (requestedIds.length === 0) {
-        events.emit('end')
         return
       }
 
@@ -313,8 +315,6 @@ export class WikidataSource extends MetadataSource {
 
         log.error(error, 'WikidataSource.getAreaMetadata')
       }
-
-      events.emit('end')
     })
 
     ids.on('error', (error: Error) => {
@@ -322,63 +322,64 @@ export class WikidataSource extends MetadataSource {
     })
   }
 
-  override async getPoiMetadata(
-    request: GetPoiMetadataInput,
-    events: Emittery<Events>
-  ): Promise<void> {
-    const wikidataIdStream = this.overpassClient.PoiWikidataId(
-      PoiMetadataParameters.fromObject({
-        ids: [request.id],
-        tags: ['wikidata', 'brand:wikidata'],
+  override getPoiMetadata(request: GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const wikidataIdStream = this.overpassClient.PoiWikidataId(
+        PoiMetadataParameters.fromObject({
+          ids: [request.id],
+          tags: ['wikidata', 'brand:wikidata'],
+        })
+      )
+
+      const requestedIds: EntityId[] = []
+
+      wikidataIdStream.on('data', async (data: WikidataId) => {
+        try {
+          if (!isEntityId(data.id)) return
+
+          requestedIds.push(data.id)
+        } catch (error) {
+          if (error instanceof Error) {
+            log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
+          }
+
+          log.error(error, 'WikidataSource.getPoiMetadata')
+        }
       })
-    )
 
-    const requestedIds: EntityId[] = []
-
-    wikidataIdStream.on('data', async (data: WikidataId) => {
-      try {
-        if (!isEntityId(data.id)) return
-
-        requestedIds.push(data.id)
-      } catch (error) {
-        if (error instanceof Error) {
-          log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
+      wikidataIdStream.on('end', async () => {
+        if (requestedIds.length === 0) {
+          resolve()
+          return
         }
 
-        log.error(error, 'WikidataSource.getPoiMetadata')
-      }
-    })
+        try {
+          const entities = await this.client.getEntities({ ids: requestedIds })
 
-    wikidataIdStream.on('end', async () => {
-      if (requestedIds.length === 0) {
-        events.emit('end')
-        return
-      }
+          if (!entities || Object.keys(entities).length === 0) return
 
-      try {
-        const entities = await this.client.getEntities({ ids: requestedIds })
+          for (const entity of Object.values(entities)) {
+            this.processEntity(entity, (item) => {
+              events.emit('item', item)
+            })
+          }
 
-        if (!entities || Object.keys(entities).length === 0) return
+          resolve()
+        } catch (error) {
+          if (error instanceof Error) {
+            log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
+            reject(new VError(error, 'WikidataSource.getPoiMetadata'))
+          }
 
-        for (const entity of Object.values(entities)) {
-          this.processEntity(entity, (item) => {
-            events.emit('item', item)
-          })
+          log.error(error, 'WikidataSource.getPoiMetadata')
+          reject(new Error('WikidataSource.getPoiMetadata'))
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
-        }
+      })
 
-        log.error(error, 'WikidataSource.getPoiMetadata')
-      } finally {
-        events.emit('end')
-      }
-    })
-
-    wikidataIdStream.on('error', (error: Error) => {
-      log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
-      events.emit('end')
+      wikidataIdStream.on('error', (error: Error) => {
+        log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
+        reject(new VError(error, 'WikidataSource.getPoiMetadata'))
+      })
     })
   }
 }

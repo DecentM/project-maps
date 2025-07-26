@@ -29,6 +29,7 @@
     "browser-geo-tz": "^0.1.0",
     "buffer": "^6.0.3",
     "emittery": "^1.0.3",
+    "localforage": "^1.10.0",
     "lodash.debounce": "^4.0.8",
     "luxon": "^3.5.0",
     "maplibre-gl": "^5.6.1",

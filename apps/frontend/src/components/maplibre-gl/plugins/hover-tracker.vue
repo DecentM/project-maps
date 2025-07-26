@@ -4,6 +4,7 @@
 
 <script lang="ts" setup>
 import type { MapGeoJSONFeature, MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
+import { useOsmCache } from 'src/lib/osm-cache'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
 
 const map = inject<ShallowRef<MaplibreGl>>('map')
@@ -21,7 +22,9 @@ const CLICKABLE_LAYERS = [
   'poi-tourism',
 ] as const
 
-const handlePoiClick = (event: MapMouseEvent) => {
+const osmCache = useOsmCache()
+
+const handlePoiClick = async (event: MapMouseEvent) => {
   const features =
     map?.value?.queryRenderedFeatures(event.point, {
       layers: [...CLICKABLE_LAYERS],
@@ -45,8 +48,17 @@ const updateCursor = (hovered: boolean) => {
   }
 }
 
-const handlePoiHover = () => {
+const handlePoiHover = async (event: MapMouseEvent) => {
   updateCursor(true)
+
+  const features =
+    map?.value?.queryRenderedFeatures(event.point, {
+      layers: [...CLICKABLE_LAYERS],
+    }) ?? []
+
+  for (const feature of features) {
+    osmCache.set(feature)
+  }
 }
 
 const handlePoiUnhover = () => {

@@ -2,23 +2,25 @@
 import { computed, onMounted, ref, watch } from 'vue'
 
 import type { ImageUrl, MetadataItem } from '@project-maps/proto/metadata/web'
+import type { SearchResult } from '@project-maps/proto/search/web'
+
+import { metadataClient, searchClient } from 'src/lib/rpc'
+import { sortMetadataItems } from 'src/lib/score-metadata-item'
+import { useOsmCache } from 'src/lib/osm-cache'
 
 import LocationMetadata from './location-metadata.vue'
 import LocationComments from './location-comments.vue'
 import LocationAttributions from './location-attributions.vue'
 import LocationAmenity from './location-amenity.vue'
 import LocationLinks from './location-links.vue'
-// import LocationOpeningHours from './location-opening-hours.vue'
+import LocationOpeningHours from './location-opening-hours.vue'
 
 import ImageRenderer from './metadata-renderers/image-renderer.vue'
 import DescriptionRenderer from './metadata-renderers/description-renderer.vue'
 import NameRenderer from './metadata-renderers/name-renderer.vue'
 import LogoRenderer from './metadata-renderers/logo-renderer.vue'
 
-import { sortMetadataItems } from 'src/lib/score-metadata-item'
-import { metadataClient, searchClient } from 'src/lib/rpc'
 import ModalCarousel from '../modal-carousel/modal-carousel.vue'
-import type { SearchResult } from '@project-maps/proto/search/web'
 
 const props = defineProps<{
   poiOsmId?: string
@@ -28,9 +30,29 @@ const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
+const osmCache = useOsmCache()
+
 const performSearch = async (osmId: string) => {
   searchQuery.value = ''
   metadata.value = []
+
+  const cached = await osmCache.get('node', osmId)
+
+  if (cached && cached.case === 'node') {
+    metadata.value.push({
+      $typeName: 'Metadata.MetadataItem',
+      item: {
+        case: 'metadata',
+        value: {
+          $typeName: 'Metadata.TextMetadata',
+          name: cached.value.tags.name,
+          amenity: cached.value.tags.amenity || '',
+          phone: cached.value.tags.phone || '',
+          ...cached.value.tags,
+        },
+      },
+    })
+  }
 
   if (!osmId) return
 
@@ -92,9 +114,9 @@ const hasMetadata = computed(() => {
   )
 })
 
-// const hasOpeningHours = computed(() => {
-//   return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value.ranges)
-// })
+const hasOpeningHours = computed(() => {
+  return metadata.value.some(({ item }) => item.case === 'openingHours' && item.value)
+})
 
 const sortedMetadata = computed(() => {
   return sortMetadataItems(metadata.value as MetadataItem[])
@@ -114,7 +136,7 @@ const handleImageClick = () => {
 
 const carouselUrls = computed(() => {
   return sortedMetadata.value
-    .map(({ item }) => (item.value?.$typeName === 'Metadata.Image' ? item.value.url : null))
+    .map(({ item }) => (item.case === 'image' ? item.value.url : null))
     .filter((url): url is ImageUrl => url !== null)
 })
 
@@ -209,8 +231,8 @@ watch(searchQuery, async (newQuery) => {
     <location-comments :metadata="sortedMetadata" />
     <q-separator v-if="hasComments" />
 
-    <!-- <location-opening-hours v-if="poi" :metadata="sortedMetadata" :coordinates="poi.geometry.coordinates" />
-    <q-separator v-if="hasOpeningHours" /> -->
+    <location-opening-hours :metadata="sortedMetadata" />
+    <q-separator v-if="hasOpeningHours" />
 
     <location-attributions :metadata="sortedMetadata" />
 

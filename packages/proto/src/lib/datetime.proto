@@ -9,10 +9,3 @@ message Timestamp {
     int64 millis = 3;
   }
 }
-
-message Range {
-  Timestamp start = 1;
-  Timestamp end = 2;
-  bool unknown = 3;
-  string detail = 4;
-}

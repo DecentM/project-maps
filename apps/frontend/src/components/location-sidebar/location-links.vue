@@ -16,7 +16,7 @@ const links = computed<Link[]>(() => {
 
   return result
     .filter(({ item }) => item.case === 'links')
-    .flatMap(({ item }) => (item.value?.$typeName === 'Metadata.Links' ? item.value.list : []))
+    .flatMap(({ item }) => (item.case === 'links' ? item.value.list : []))
 })
 
 const deduplicatedLinks = computed(() => {

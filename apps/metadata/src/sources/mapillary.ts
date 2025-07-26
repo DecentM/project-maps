@@ -35,7 +35,6 @@ export class MapillarySource extends MetadataSource {
         !parameters.coordinates?.lng ||
         !parameters.radiusMeters
       ) {
-        events.emit('end')
         return
       }
 
@@ -83,11 +82,7 @@ export class MapillarySource extends MetadataSource {
           })
         )
       }
-
-      events.emit('end')
     } catch (error) {
-      events.emit('end')
-
       if (error instanceof Error) {
         throw new VError(error, 'MapillarySource.getAreaMetadata')
       }

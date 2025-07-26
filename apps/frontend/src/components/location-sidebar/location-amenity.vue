@@ -10,8 +10,7 @@ const props = defineProps<{
 const textMetadata = computed(() => {
   const result = props.metadata.findLast(({ item }) => item.case === 'metadata' && item.value)
 
-  if (!result || !result.item || result.item.value?.$typeName !== 'Metadata.TextMetadata')
-    return null
+  if (!result || !result.item || result.item.case !== 'metadata') return null
 
   return result.item.value
 })

@@ -34,7 +34,11 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
 
 <template>
   <div class="q-pa-sm q-gutter-md">
-    <location-sidebar :poi-osm-id="id" />
+    <transition name="fade-up" mode="out-in">
+      <div :key="id">
+        <location-sidebar :poi-osm-id="id" />
+      </div>
+    </transition>
 
     <attribution-control-plugin />
     <scale-control-plugin />

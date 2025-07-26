@@ -1,6 +1,6 @@
 import type Emittery from 'emittery'
 import Timezone from 'geo-tz'
-import { DateTime, IANAZone, Interval, type Zone } from 'luxon'
+import { IANAZone, type Zone } from 'luxon'
 
 import type { Element, Node, Way, Relation } from '@project-maps/proto/lib/openstreetmap/node'
 import {
@@ -10,10 +10,11 @@ import {
   type GetPoiMetadataInput,
 } from '@project-maps/proto/metadata/node'
 import { QueryParameters, PoiMetadataParameters } from '@project-maps/proto/overpass/node'
-import * as OpeningHours from '@project-maps/opening-hours-parser'
 
 import { OverpassClient } from 'src/clients/overpass'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
+import { log } from '@project-maps/logging'
+import VError from 'verror'
 
 export class OverpassSource extends MetadataSource {
   private static requestedTags = [
@@ -109,38 +110,21 @@ export class OverpassSource extends MetadataSource {
       )
     }
 
-    if (!item.tags?.opening_hours) return
-
-    const intervals = OpeningHours.parse(
-      item.tags.opening_hours,
-      Interval.after(DateTime.now().setZone(zone).startOf('week'), { days: 7 }),
-      zone
-    )
-
-    onItem(
-      MetadataItem.fromObject({
-        attribution: {
-          source: AttributionSource.OpenStreetMap,
-          license: 'ODbL',
-          url: item.id
-            ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
-            : 'https://www.openstreetmap.org/',
-          name: String(item.id ?? 'OpenStreetMap'),
-        },
-        openingHours: {
-          ranges: intervals.map((interval) => ({
-            unknown: interval.unknown,
-            details: interval.detail,
-            start: {
-              millis: interval.start.isValid ? interval.start.toMillis() : undefined,
-            },
-            end: {
-              millis: interval.end.isValid ? interval.end.toMillis() : undefined,
-            },
-          })),
-        },
-      })
-    )
+    if (item.tags?.opening_hours) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          openingHours: item.tags.opening_hours,
+        })
+      )
+    }
   }
 
   private client = new OverpassClient()
@@ -163,38 +147,50 @@ export class OverpassSource extends MetadataSource {
 
     const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
 
-    overpassResponse.on('data', (response: Element) => {
+    const handleData = (response: Element) => {
       OverpassSource.processElement(response, zone, (item) => {
         events.emit('item', item)
       })
-    })
+    }
 
-    overpassResponse.on('end', () => {
-      events.emit('end')
+    overpassResponse.on('data', handleData)
+
+    overpassResponse.once('end', () => {
+      overpassResponse.off('data', handleData)
     })
   }
 
-  public async getPoiMetadata(
-    request: GetPoiMetadataInput,
-    events: Emittery<Events>
-  ): Promise<void> {
-    const overpassResponse = this.client.PoiMetadata(
-      PoiMetadataParameters.fromObject({
-        ids: [request.id],
-        tags: OverpassSource.requestedTags,
+  public getPoiMetadata(request: GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const overpassResponse = this.client.PoiMetadata(
+        PoiMetadataParameters.fromObject({
+          ids: [request.id],
+          tags: OverpassSource.requestedTags,
+        })
+      )
+
+      const zone = request.coordinates
+        ? IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
+        : IANAZone.create('UTC')
+
+      const handleData = (response: Element) => {
+        OverpassSource.processElement(response, zone, (item) => {
+          events.emit('item', item)
+        })
+      }
+
+      overpassResponse.on('data', handleData)
+
+      overpassResponse.once('end', () => {
+        overpassResponse.off('data', handleData)
+        resolve()
       })
-    )
 
-    const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
-
-    overpassResponse.on('data', (response: Element) => {
-      OverpassSource.processElement(response, zone, (item) => {
-        events.emit('item', item)
+      overpassResponse.once('error', (error: Error) => {
+        overpassResponse.off('data', handleData)
+        log.error(new VError(error, 'OverpassSource.getPoiMetadata'))
+        reject(error)
       })
-    })
-
-    overpassResponse.on('end', () => {
-      events.emit('end')
     })
   }
 }

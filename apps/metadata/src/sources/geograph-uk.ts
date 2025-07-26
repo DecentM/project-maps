@@ -80,8 +80,6 @@ export class GeographUKImageSource extends MetadataSource {
 
       throw new Error('GeographUKImageSource.getAreaMetadata')
     }
-
-    events.emit('end')
   }
 
   public async getPoiMetadata(
@@ -89,6 +87,10 @@ export class GeographUKImageSource extends MetadataSource {
     events: Emittery<Events>
   ): Promise<void> {
     try {
+      if (!request.coordinates) {
+        return
+      }
+
       await this.getAreaMetadata(
         GetAreaMetadataInput.fromObject({
           coordinates: request.coordinates,

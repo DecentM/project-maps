@@ -10,8 +10,7 @@ const descriptionItem = computed(() => {
   const result =
     props.metadata.findLast(({ item }) => item.case === 'description' && item.value) ?? null
 
-  if (!result || !result.item.value || result.item.value.$typeName !== 'Metadata.Description')
-    return null
+  if (!result || !result.item.value || result.item.case !== 'description') return null
 
   return result.item.value
 })

@@ -105,10 +105,6 @@ message Links {
   repeated Link list = 1;
 }
 
-message OpeningHours {
-  repeated DateTime.Range ranges = 2;
-}
-
 message MetadataItem {
   Attribution attribution = 1;
 
@@ -120,6 +116,6 @@ message MetadataItem {
     Geospatial.Coordinates coordinates = 6;
     ImageUrl logo = 7;
     Links links = 8;
-    OpeningHours openingHours = 10;
+    string openingHours = 10;
   }
 }

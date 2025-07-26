@@ -1,5 +1,6 @@
 import Emittery from 'emittery'
 import type { ServerWritableStream } from '@grpc/grpc-js'
+import VError from 'verror'
 
 import { log } from '@project-maps/logging'
 import {
@@ -28,42 +29,32 @@ export class MetadataService extends UnimplementedMetadataService {
 
   private static mergeSources = (
     sources: MetadataSource[],
-    promiseFactory: (
-      source: MetadataSource,
-      sourceEmitter: Emittery<Events>
-    ) => Promise<void> | void
-  ): Emittery<Events> => {
+    promiseFactory: (source: MetadataSource, sourceEmitter: Emittery<Events>) => Promise<void>
+  ): { emitter: Emittery<Events>; done: Promise<void> } => {
     const emitter = new Emittery<Events>()
-    let ended = 0
 
-    for (const source of sources) {
-      const sourceEmitter = new Emittery<Events>()
-
-      sourceEmitter.on('item', (item) => emitter.emit('item', item))
-
-      sourceEmitter.once('end').then(() => {
-        ended += 1
-
-        if (ended === sources.length) {
-          emitter.emit('end')
-        }
+    const promises = sources.map((source) => {
+      return promiseFactory(source, emitter).catch((error) => {
+        log.error(
+          new VError(
+            error,
+            `MetadataService.mergeSources: Error in source ${source.constructor.name}`
+          )
+        )
       })
+    })
 
-      const promise = promiseFactory(source, sourceEmitter)
+    const done = Promise.all(promises) as unknown as Promise<void>
 
-      if (promise) {
-        promise.catch((error) => {
-          log.error(error)
-          sourceEmitter.emit('end')
-        })
-      }
-    }
+    done.catch((error) => {
+      log.error(new VError(error, 'MetadataService.mergeSources: Error in merging sources'))
+    })
 
-    return emitter
+    return { emitter, done }
   }
 
   override GetAreaMetadata(call: ServerWritableStream<GetAreaMetadataInput, MetadataItem>): void {
-    const events = MetadataService.mergeSources(
+    const { emitter, done } = MetadataService.mergeSources(
       MetadataService.sources,
       (source, sourceEmitter) => {
         return source.getAreaMetadata(call.request, sourceEmitter)
@@ -74,19 +65,16 @@ export class MetadataService extends UnimplementedMetadataService {
       call.write(item)
     }
 
-    const onEnd = () => {
-      events.off('item', onItem)
-      events.off('end', onEnd)
+    emitter.on('item', onItem)
 
+    done.then(() => {
+      emitter.off('item', onItem)
       call.end()
-    }
-
-    events.on('item', onItem)
-    events.on('end', onEnd)
+    })
   }
 
   override GetPoiMetadata(call: ServerWritableStream<GetPoiMetadataInput, MetadataItem>): void {
-    const events = MetadataService.mergeSources(
+    const { emitter, done } = MetadataService.mergeSources(
       MetadataService.sources,
       (source, sourceEmitter) => {
         return source.getPoiMetadata(call.request, sourceEmitter)
@@ -97,14 +85,11 @@ export class MetadataService extends UnimplementedMetadataService {
       call.write(item)
     }
 
-    const onEnd = () => {
-      events.off('item', onItem)
-      events.off('end', onEnd)
+    emitter.on('item', onItem)
 
+    done.then(() => {
+      emitter.off('item', onItem)
       call.end()
-    }
-
-    events.on('item', onItem)
-    events.on('end', onEnd)
+    })
   }
 }
