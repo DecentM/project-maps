@@ -117,5 +117,6 @@ message MetadataItem {
     ImageUrl logo = 7;
     Links links = 8;
     string openingHours = 10;
+    string wikidataId = 11;
   }
 }

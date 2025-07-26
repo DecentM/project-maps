@@ -12,6 +12,7 @@ import { GeographClient } from 'src/clients/geograph'
 import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import VError from 'verror'
+import { log } from '@project-maps/logging'
 
 export class GeographUKImageSource extends MetadataSource {
   override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
@@ -41,7 +42,7 @@ export class GeographUKImageSource extends MetadataSource {
 
       const response = await this.client.syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: 1,
+        perpage: 10,
         distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
       })
 
@@ -86,24 +87,41 @@ export class GeographUKImageSource extends MetadataSource {
     request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
-    try {
-      if (!request.coordinates) {
-        return
+    let foundCoordinates = false
+
+    return new Promise((resolve, reject) => {
+      events.once('overpass-end').then(() => {
+        if (!foundCoordinates) resolve()
+      })
+
+      const handleItem = async (item: MetadataItem) => {
+        if (!item.coordinates) {
+          return
+        }
+
+        foundCoordinates = true
+        events.off('item', handleItem)
+
+        try {
+          await this.getAreaMetadata(
+            GetAreaMetadataInput.fromObject({
+              coordinates: item.coordinates.toObject(),
+              radiusMeters: 8,
+            }),
+            events
+          )
+        } catch (error) {
+          if (error instanceof Error) {
+            log.error(new VError(error, 'GeographUKImageSource.getPoiMetadata'))
+          }
+
+          log.error(new Error('GeographUKImageSource.getPoiMetadata'))
+        }
+
+        resolve()
       }
 
-      await this.getAreaMetadata(
-        GetAreaMetadataInput.fromObject({
-          coordinates: request.coordinates,
-          radiusMeters: 8,
-        }),
-        events
-      )
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new VError(error, 'GeographUKImageSource.getPoiMetadata')
-      }
-
-      throw new Error('GeographUKImageSource.getPoiMetadata')
-    }
+      events.on('item', handleItem)
+    })
   }
 }

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useRoute, useRouter } from 'vue-router'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
 
 import PanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
@@ -8,7 +9,6 @@ import GeolocateControlPlugin from 'src/components/maplibre-gl/plugins/geolocate
 import NavigationControlPlugin from 'src/components/maplibre-gl/plugins/navigation-control.vue'
 import ScaleControlPlugin from 'src/components/maplibre-gl/plugins/scale-control.vue'
 import AttributionControlPlugin from 'src/components/maplibre-gl/plugins/attribution-control.vue'
-import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()

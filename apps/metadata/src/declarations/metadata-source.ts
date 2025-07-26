@@ -8,6 +8,7 @@ import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 export type Events = {
   item: MetadataItem
+  'overpass-end': undefined
 }
 
 export abstract class MetadataSource {

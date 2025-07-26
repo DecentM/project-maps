@@ -8,10 +8,7 @@ const props = defineProps<{
 
 const commentItems = computed<Comment[]>(() => {
   return props.metadata
-    .filter(
-      ({ item }) =>
-        item.case === 'comment' && item.value && item.value.$typeName === 'Metadata.Comment'
-    )
+    .filter(({ item }) => item.case === 'comment' && item.value)
     .map(({ item }) => item.value as Comment)
 })
 </script>

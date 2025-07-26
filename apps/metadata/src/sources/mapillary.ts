@@ -13,6 +13,7 @@ import { MapillaryClient } from 'src/clients/mapillary'
 import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { createBBox } from 'src/lib/bbox'
+import { log } from '@project-maps/logging'
 export class MapillarySource extends MetadataSource {
   override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
     return true // Handles all locations
@@ -45,7 +46,7 @@ export class MapillarySource extends MetadataSource {
 
       const images = await this.client.images({
         bbox: `${bbox[0].lng},${bbox[0].lat},${bbox[1].lng},${bbox[1].lat}`,
-        limit: 1,
+        limit: 10,
       })
 
       for (const image of images.data) {
@@ -95,20 +96,41 @@ export class MapillarySource extends MetadataSource {
     request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
-    try {
-      await this.getAreaMetadata(
-        GetAreaMetadataInput.fromObject({
-          coordinates: request.coordinates,
-          radiusMeters: 6,
-        }),
-        events
-      )
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new VError(error, 'MapillarySource.getPoiMetadata')
+    let foundCoordinates = false
+
+    return new Promise((resolve, reject) => {
+      events.once('overpass-end').then(() => {
+        if (!foundCoordinates) resolve()
+      })
+
+      const handleItem = async (item: MetadataItem) => {
+        if (!item.coordinates) {
+          return
+        }
+
+        foundCoordinates = true
+        events.off('item', handleItem)
+
+        try {
+          await this.getAreaMetadata(
+            GetAreaMetadataInput.fromObject({
+              coordinates: item.coordinates.toObject(),
+              radiusMeters: 8,
+            }),
+            events
+          )
+        } catch (error) {
+          if (error instanceof Error) {
+            log.error(new VError(error, 'GeographUKImageSource.getPoiMetadata'))
+          }
+
+          log.error(new Error('GeographUKImageSource.getPoiMetadata'))
+        }
+
+        resolve()
       }
 
-      throw new Error('MapillarySource.getPoiMetadata')
-    }
+      events.on('item', handleItem)
+    })
   }
 }

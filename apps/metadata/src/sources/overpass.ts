@@ -1,6 +1,4 @@
 import type Emittery from 'emittery'
-import Timezone from 'geo-tz'
-import { IANAZone, type Zone } from 'luxon'
 
 import type { Element, Node, Way, Relation } from '@project-maps/proto/lib/openstreetmap/node'
 import {
@@ -42,13 +40,11 @@ export class OverpassSource extends MetadataSource {
     'bus',
     'highway',
     'lit',
+    'wikidata',
+    'brand:wikidata',
   ]
 
-  private static processElement(
-    response: Element,
-    zone: Zone,
-    onItem: (item: MetadataItem) => void
-  ): void {
+  private static processElement(response: Element, onItem: (item: MetadataItem) => void): void {
     const element = response.toObject()
     let item:
       | ReturnType<Node['toObject']>
@@ -87,6 +83,41 @@ export class OverpassSource extends MetadataSource {
         },
       })
     )
+
+    if (item.tags?.wikidata || item.tags?.['brand:wikidata']) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          wikidataId: item.tags.wikidata || item.tags['brand:wikidata'],
+        })
+      )
+    }
+
+    if (element.node?.lat && element.node?.lon) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          coordinates: {
+            lat: element.node.lat,
+            lng: element.node.lon,
+          },
+        })
+      )
+    }
 
     if (item.tags?.website) {
       onItem(
@@ -133,30 +164,36 @@ export class OverpassSource extends MetadataSource {
     return true // Handles all locations
   }
 
-  public async getAreaMetadata(
-    request: GetAreaMetadataInput,
-    events: Emittery<Events>
-  ): Promise<void> {
-    const overpassResponse = this.client.ShortRangeNamed(
-      QueryParameters.fromObject({
-        coordinates: request.coordinates.toObject(),
-        range: request.radiusMeters,
-        tags: OverpassSource.requestedTags,
+  public getAreaMetadata(request: GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const overpassResponse = this.client.ShortRangeNamed(
+        QueryParameters.fromObject({
+          coordinates: request.coordinates.toObject(),
+          range: request.radiusMeters,
+          tags: OverpassSource.requestedTags,
+        })
+      )
+
+      const handleData = (response: Element) => {
+        OverpassSource.processElement(response, (item) => {
+          events.emit('item', item)
+        })
+      }
+
+      overpassResponse.on('data', handleData)
+
+      overpassResponse.once('end', () => {
+        overpassResponse.off('data', handleData)
+        events.emit('overpass-end')
+        resolve()
       })
-    )
 
-    const zone = IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
-
-    const handleData = (response: Element) => {
-      OverpassSource.processElement(response, zone, (item) => {
-        events.emit('item', item)
+      overpassResponse.once('error', (error: Error) => {
+        overpassResponse.off('data', handleData)
+        events.emit('overpass-end')
+        log.error(new VError(error, 'OverpassSource.getPoiMetadata'))
+        reject(error)
       })
-    }
-
-    overpassResponse.on('data', handleData)
-
-    overpassResponse.once('end', () => {
-      overpassResponse.off('data', handleData)
     })
   }
 
@@ -169,12 +206,8 @@ export class OverpassSource extends MetadataSource {
         })
       )
 
-      const zone = request.coordinates
-        ? IANAZone.create(Timezone.find(request.coordinates.lat, request.coordinates.lng)[0])
-        : IANAZone.create('UTC')
-
       const handleData = (response: Element) => {
-        OverpassSource.processElement(response, zone, (item) => {
+        OverpassSource.processElement(response, (item) => {
           events.emit('item', item)
         })
       }
@@ -183,11 +216,13 @@ export class OverpassSource extends MetadataSource {
 
       overpassResponse.once('end', () => {
         overpassResponse.off('data', handleData)
+        events.emit('overpass-end')
         resolve()
       })
 
       overpassResponse.once('error', (error: Error) => {
         overpassResponse.off('data', handleData)
+        events.emit('overpass-end')
         log.error(new VError(error, 'OverpassSource.getPoiMetadata'))
         reject(error)
       })

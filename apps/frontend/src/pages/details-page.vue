@@ -5,10 +5,12 @@ import type { MapGeoJSONFeature } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
 
+import PanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
+import HoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker.vue'
+import GlobeControlPlugin from 'src/components/maplibre-gl/plugins/globe-control.vue'
+import NavigationControlPlugin from 'src/components/maplibre-gl/plugins/navigation-control.vue'
 import ScaleControlPlugin from 'src/components/maplibre-gl/plugins/scale-control.vue'
 import AttributionControlPlugin from 'src/components/maplibre-gl/plugins/attribution-control.vue'
-import HoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker.vue'
-import PanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -41,8 +43,10 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     </transition>
 
     <attribution-control-plugin />
-    <scale-control-plugin />
     <hover-tracker-plugin @poi-click="handlePoiClick" />
+    <globe-control-plugin />
     <panzoom-tracker-plugin />
+    <navigation-control-plugin />
+    <scale-control-plugin />
   </div>
 </template>

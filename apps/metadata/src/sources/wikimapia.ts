@@ -1,4 +1,5 @@
 import type Emittery from 'emittery'
+import VError from 'verror'
 
 import {
   GetAreaMetadataInput,
@@ -7,11 +8,11 @@ import {
   AttributionSource,
 } from '@project-maps/proto/metadata/node'
 import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
+import { log } from '@project-maps/logging'
 
 import { WikimapiaClient } from 'src/clients/wikimapia'
 import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
-import VError from 'verror'
 
 export class WikimapiaSource extends MetadataSource {
   private client = new WikimapiaClient(
@@ -109,23 +110,41 @@ export class WikimapiaSource extends MetadataSource {
     request: GetPoiMetadataInput,
     events: Emittery<Events>
   ): Promise<void> {
-    if (!request.coordinates) {
-      return
-    }
+    let foundCoordinates = false
 
-    try {
-      await this.getAreaMetadata(
-        GetAreaMetadataInput.fromObject({
-          coordinates: request.coordinates,
-        }),
-        events
-      )
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new VError(error, 'WikimapiaSource.getPoiMetadata')
+    return new Promise((resolve, reject) => {
+      events.once('overpass-end').then(() => {
+        if (!foundCoordinates) resolve()
+      })
+
+      const handleItem = async (item: MetadataItem) => {
+        if (!item.coordinates) {
+          return
+        }
+
+        foundCoordinates = true
+        events.off('item', handleItem)
+
+        try {
+          await this.getAreaMetadata(
+            GetAreaMetadataInput.fromObject({
+              coordinates: item.coordinates.toObject(),
+              radiusMeters: 8,
+            }),
+            events
+          )
+        } catch (error) {
+          if (error instanceof Error) {
+            log.error(new VError(error, 'GeographUKImageSource.getPoiMetadata'))
+          }
+
+          log.error(new Error('GeographUKImageSource.getPoiMetadata'))
+        }
+
+        resolve()
       }
 
-      throw new Error('WikimapiaSource.getPoiMetadata')
-    }
+      events.on('item', handleItem)
+    })
   }
 }

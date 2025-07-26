@@ -8,11 +8,7 @@ import {
   type GetPoiMetadataInput,
 } from '@project-maps/proto/metadata/node'
 import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
-import {
-  QueryParameters,
-  type WikidataId,
-  PoiMetadataParameters,
-} from '@project-maps/proto/overpass/node'
+import { QueryParameters, type WikidataId } from '@project-maps/proto/overpass/node'
 
 import { WikidataClient } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
@@ -236,25 +232,21 @@ export class WikidataSource extends MetadataSource {
       }
 
       if (links?.length) {
-        for (const link of links) {
-          onItem(
-            MetadataItem.fromObject({
-              attribution: {
-                source: AttributionSource.Wikidata,
-                license: 'CC0',
-                name: entity.id,
-                url: `https://www.wikidata.org/wiki/${entity.id}`,
-              },
-              links: {
-                list: [
-                  {
-                    url: String(link),
-                  },
-                ],
-              },
-            })
-          )
-        }
+        onItem(
+          MetadataItem.fromObject({
+            attribution: {
+              source: AttributionSource.Wikidata,
+              license: 'CC0',
+              name: entity.id,
+              url: `https://www.wikidata.org/wiki/${entity.id}`,
+            },
+            links: {
+              list: links.map((link) => ({
+                url: String(link),
+              })),
+            },
+          })
+        )
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -323,38 +315,23 @@ export class WikidataSource extends MetadataSource {
   }
 
   override getPoiMetadata(request: GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
+    let foundWikidataId = false
+
     return new Promise((resolve, reject) => {
-      const wikidataIdStream = this.overpassClient.PoiWikidataId(
-        PoiMetadataParameters.fromObject({
-          ids: [request.id],
-          tags: ['wikidata', 'brand:wikidata'],
-        })
-      )
-
-      const requestedIds: EntityId[] = []
-
-      wikidataIdStream.on('data', async (data: WikidataId) => {
-        try {
-          if (!isEntityId(data.id)) return
-
-          requestedIds.push(data.id)
-        } catch (error) {
-          if (error instanceof Error) {
-            log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
-          }
-
-          log.error(error, 'WikidataSource.getPoiMetadata')
-        }
+      events.once('overpass-end').then(() => {
+        if (!foundWikidataId) resolve()
       })
 
-      wikidataIdStream.on('end', async () => {
-        if (requestedIds.length === 0) {
-          resolve()
+      const handleItem = async (item: MetadataItem) => {
+        if (!item.wikidataId || !isEntityId(item.wikidataId)) {
           return
         }
 
+        foundWikidataId = true
+        events.off('item', handleItem)
+
         try {
-          const entities = await this.client.getEntities({ ids: requestedIds })
+          const entities = await this.client.getEntities({ ids: [item.wikidataId] })
 
           if (!entities || Object.keys(entities).length === 0) return
 
@@ -374,12 +351,11 @@ export class WikidataSource extends MetadataSource {
           log.error(error, 'WikidataSource.getPoiMetadata')
           reject(new Error('WikidataSource.getPoiMetadata'))
         }
-      })
 
-      wikidataIdStream.on('error', (error: Error) => {
-        log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
-        reject(new VError(error, 'WikidataSource.getPoiMetadata'))
-      })
+        resolve()
+      }
+
+      events.on('item', handleItem)
     })
   }
 }
