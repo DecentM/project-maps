@@ -13,6 +13,9 @@ import { OverpassClient } from 'src/clients/overpass'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { log } from '@project-maps/logging'
 import VError from 'verror'
+import { parseAccess } from 'src/lib/parse-access'
+import { parseIndoor } from 'src/lib/parse-indoor'
+import { parseLocked } from 'src/lib/parse-locked'
 
 export class OverpassSource extends MetadataSource {
   private static requestedTags = [
@@ -42,6 +45,18 @@ export class OverpassSource extends MetadataSource {
     'lit',
     'wikidata',
     'brand:wikidata',
+    'access',
+    'defibrillator:location',
+    'defibrillator:location:en',
+    'emergency',
+    'emergency:phone',
+    'defibrillator:code',
+    'indoor',
+    'locked',
+    'locked:conditional',
+    'description',
+    'manufacturer',
+    'model',
   ]
 
   private static processElement(response: Element, onItem: (item: MetadataItem) => void): void {
@@ -83,6 +98,35 @@ export class OverpassSource extends MetadataSource {
         },
       })
     )
+
+    if (item.tags?.emergency === 'defibrillator') {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          defibrillator: {
+            access: parseAccess(item.tags?.access),
+            location:
+              item.tags?.['defibrillator:location'] || item.tags?.['defibrillator:location:en'],
+            indoor: parseIndoor(item.tags?.indoor),
+            phone: item.tags?.['emergency:phone'],
+            code: item.tags?.['defibrillator:code'],
+            locked: parseLocked(item.tags?.locked, item.tags?.['locked:conditional']),
+            level: item.tags?.level ? Number.parseInt(item.tags.level, 10) : undefined,
+            description: item.tags?.description,
+            manufacturer: item.tags?.manufacturer,
+            model: item.tags?.model,
+            cabinet: item.tags?.cabinet,
+          },
+        })
+      )
+    }
 
     if (item.tags?.wikidata || item.tags?.['brand:wikidata']) {
       onItem(

@@ -41,3 +41,29 @@ message Element {
     Relation relation = 3;
   }
 }
+
+// Tagging patterns
+enum Access {
+  ACCESS_UNSPECIFIED = 0;
+  ACCESS_PUBLIC = 1;
+  ACCESS_PERMISSIVE = 2;
+  ACCESS_PRIVATE = 3;
+}
+
+enum Indoor {
+  INDOOR_UNSPECIFIED = 0;
+  INDOOR_YES = 1;
+  INDOOR_NO = 2;
+  INDOOR_ROOM = 3;
+  INDOOR_AREA = 4;
+  INDOOR_WALL = 5;
+  INDOOR_CORRIDOR = 6;
+  INDOOR_DOOR = 7;
+  INDOOR_LEVEL = 8;
+  INDOOR_COLUMN = 9;
+}
+
+message Locked {
+  bool value = 1;
+  string conditional = 2;
+}

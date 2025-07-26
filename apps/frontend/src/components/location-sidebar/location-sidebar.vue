@@ -14,6 +14,7 @@ import LocationAttributions from './location-attributions.vue'
 import LocationAmenity from './location-amenity.vue'
 import LocationLinks from './location-links.vue'
 import LocationOpeningHours from './location-opening-hours.vue'
+import DefibrillatorDetails from './defribillator-details.vue'
 
 import ImageRenderer from './metadata-renderers/image-renderer.vue'
 import DescriptionRenderer from './metadata-renderers/description-renderer.vue'
@@ -102,6 +103,10 @@ const hasAmenity = computed(() => {
 
 const hasComments = computed(() => {
   return metadata.value.some(({ item }) => item.case === 'comment' && item.value.text)
+})
+
+const hasDefibrillator = computed(() => {
+  return metadata.value.some(({ item }) => item.case === 'defibrillator' && item.value)
 })
 
 const hasLinks = computed(() => {
@@ -221,6 +226,9 @@ watch(searchQuery, async (newQuery) => {
 
     <location-amenity v-if="hasAmenity" :metadata="sortedMetadata" />
     <q-separator v-if="hasAmenity" />
+
+    <defibrillator-details v-if="hasDefibrillator" :metadata="sortedMetadata" />
+    <q-separator v-if="hasDefibrillator" />
 
     <location-links v-if="hasLinks" :metadata="sortedMetadata" />
     <q-separator v-if="hasLinks" />

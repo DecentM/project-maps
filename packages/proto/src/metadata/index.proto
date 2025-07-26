@@ -105,6 +105,20 @@ message Links {
   repeated Link list = 1;
 }
 
+message Defibrillator {
+  OpenStreetMap.Access access = 1;
+  string location = 2;
+  OpenStreetMap.Indoor indoor = 3;
+  string phone = 4;
+  string code = 5;
+  OpenStreetMap.Locked locked = 6;
+  int32 level = 7;
+  string description = 8;
+  string manufacturer = 9;
+  string model = 10;
+  string cabinet = 11;
+}
+
 message MetadataItem {
   Attribution attribution = 1;
 
@@ -118,5 +132,6 @@ message MetadataItem {
     Links links = 8;
     string openingHours = 10;
     string wikidataId = 11;
+    Defibrillator defibrillator = 12;
   }
 }
