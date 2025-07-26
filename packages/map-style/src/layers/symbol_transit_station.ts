@@ -7,7 +7,13 @@ export const symbol_transit_station = (config: StyleConfig) => ({
   'source-layer': 'public_transport',
   filter: ['all', ['in', 'kind', 'station', 'halt'], ['!in', 'station', 'light_rail', 'subway']],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'icon-size': {
       stops: [
         [13, 0.5],

@@ -18,6 +18,16 @@ export const poi_emergency = (config: StyleConfig) => ({
     'symbol-placement': 'point',
     'icon-optional': true,
     'text-font': ['Noto Sans Regular'],
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
+    'icon-anchor': 'bottom',
+    'text-size': 10,
+    'text-anchor': 'top',
     'icon-image': [
       'match',
       ['get', 'emergency'],

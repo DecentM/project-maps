@@ -7,7 +7,13 @@ export const label_boundary_country_small = (config: StyleConfig) => ({
   'source-layer': 'boundary_labels',
   filter: ['all', ['in', 'admin_level', 2, '2'], ['<=', 'way_area', 10000000]],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'text-font': ['Noto Sans Regular'],
     'text-transform': 'uppercase',
     'text-anchor': 'top',

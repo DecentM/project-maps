@@ -7,7 +7,13 @@ export const symbol_transit_airport = (config: StyleConfig) => ({
   'source-layer': 'public_transport',
   filter: ['all', ['==', 'kind', 'aerodrome'], ['has', 'iata']],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'icon-size': {
       stops: [
         [12, 0.5],

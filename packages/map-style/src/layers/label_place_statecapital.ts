@@ -7,7 +7,13 @@ export const label_place_statecapital = (config: StyleConfig) => ({
   'source-layer': 'place_labels',
   filter: ['==', 'kind', 'state_capital'],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'text-font': ['Noto Sans Regular'],
     'text-size': {
       stops: [

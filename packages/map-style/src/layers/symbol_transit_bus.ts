@@ -7,7 +7,13 @@ export const symbol_transit_bus = (config: StyleConfig) => ({
   'source-layer': 'public_transport',
   filter: ['==', 'kind', 'bus_stop'],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'icon-size': {
       stops: [
         [16, 0.5],

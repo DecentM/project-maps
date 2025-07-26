@@ -7,7 +7,13 @@ export const label_boundary_state = (config: StyleConfig) => ({
   'source-layer': 'boundary_labels',
   filter: ['in', 'admin_level', 4, '4'],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'text-font': ['Noto Sans Regular'],
     'text-transform': 'uppercase',
     'text-anchor': 'top',

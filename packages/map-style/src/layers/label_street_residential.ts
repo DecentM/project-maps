@@ -7,7 +7,13 @@ export const label_street_residential = (config: StyleConfig) => ({
   'source-layer': 'street_labels',
   filter: ['==', 'kind', 'residential'],
   layout: {
-    'text-field': '{name_en}',
+    'text-field': [
+      'coalesce',
+      ['get', 'name_int'],
+      ['get', 'name_en'],
+      ['get', 'name:latin'],
+      ['get', 'name'],
+    ],
     'text-font': ['Noto Sans Regular'],
     'symbol-placement': 'line',
     'text-anchor': 'center',
