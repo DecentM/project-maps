@@ -49,7 +49,7 @@
   "basics:icon-shop": "mdi-store",
   "basics:icon-garden_centre": "mdi-circle-medium",
   "basics:icon-books": "mdi-read",
-  "basics:icon-clothes": "mdi-circle-medium",
+  "basics:icon-clothes": "mdi-hanger",
   "basics:icon-florist": "mdi-flower",
   "basics:icon-drycleaning": "mdi-circle-medium",
   "basics:icon-greengrocer": "mdi-fruit-pear",
@@ -98,5 +98,6 @@
   "basics:icon-prison": "mdi-circle-medium",
   "basics:icon-beergarden": "mdi-beer",
   "basics:icon-emergency_phone": "mdi-help",
-  "basics:icon-shrine": "mdi-church"
+  "basics:icon-shrine": "mdi-church",
+  "basics:icon-lighthouse": "mdi-lighthouse"
 }

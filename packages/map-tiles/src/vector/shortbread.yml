@@ -22,6 +22,9 @@ sources:
 definitions:
   # TODO let attribute definitions set multiple keys so you can just use `- *names`
   attributes:
+  - &osm_id
+    key: osm_id
+    value: "${ feature.id }"
   - &name
     key: name
   - &name_en
@@ -1022,6 +1025,7 @@ layers:
     - key: office
       include_when:
         office:  *poi_filter_office
+    - *osm_id
     - *name
     - *name_en
     - *name_de

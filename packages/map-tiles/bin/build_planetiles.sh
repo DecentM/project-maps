@@ -53,6 +53,11 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --maxzoom=14 \
   --render_maxzoom=14 \
   --tile_compression=none \
+  --fetch_wikidata=true \
+  --download_osm_tile_weights=true \
+  --compress_temp=true \
+  --tile_write_threads=2 \
+  --feature_read_threads=2 \
   --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 
 # safety checks for rm -rf:

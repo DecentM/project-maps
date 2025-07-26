@@ -34,15 +34,13 @@ watch(
     searchQuery.value = ''
     metadata.value = []
 
-    if (!newPoi || !newPoi.id) return
+    if (!newPoi || !newPoi.id || !newPoi.properties?.osm_id) return
 
     loading.value = true
 
-    console.debug('Fetching metadata for POI:', newPoi)
-
     try {
       const response = metadataClient.getPoiMetadata({
-        id: BigInt(newPoi.id),
+        id: BigInt(newPoi.properties.osm_id),
         coordinates: {
           lat: newPoi.geometry.coordinates[1],
           lng: newPoi.geometry.coordinates[0],
