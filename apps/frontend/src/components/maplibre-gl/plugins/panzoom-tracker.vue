@@ -22,20 +22,20 @@ const router = useRouter()
 const panzoom = computed<PanZoom>(() => {
   return {
     center: [
-      (Array.isArray(route.params.lng) ? route.params.lng[0] : route.params.lng) || '0',
-      (Array.isArray(route.params.lat) ? route.params.lat[0] : route.params.lat) || '0',
+      (Array.isArray(route.query.lng) ? route.query.lng[0] : route.query.lng) || '0',
+      (Array.isArray(route.query.lat) ? route.query.lat[0] : route.query.lat) || '0',
     ],
-    zoom: (Array.isArray(route.params.zoom) ? route.params.zoom[0] : route.params.zoom) || '1',
-    pitch: (Array.isArray(route.params.pitch) ? route.params.pitch[0] : route.params.pitch) || '0',
+    zoom: (Array.isArray(route.query.zoom) ? route.query.zoom[0] : route.query.zoom) || '1',
+    pitch: (Array.isArray(route.query.pitch) ? route.query.pitch[0] : route.query.pitch) || '0',
     bearing:
-      (Array.isArray(route.params.bearing) ? route.params.bearing[0] : route.params.bearing) || '0',
+      (Array.isArray(route.query.bearing) ? route.query.bearing[0] : route.query.bearing) || '0',
   }
 })
 
 const handlePanzoomChange = async (newPanzoom: PanZoom) => {
   await router.push({
     name: route.name,
-    params: {
+    query: {
       lng: newPanzoom.center[0],
       lat: newPanzoom.center[1],
       zoom: newPanzoom.zoom,

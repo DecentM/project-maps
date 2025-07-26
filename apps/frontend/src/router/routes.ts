@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/:lng?/:lat?/:zoom?/:pitch?/:bearing?',
+    path: '/',
     component: () => import('layouts/map-layout.vue'),
     children: [
       {
@@ -12,13 +12,13 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'DetailsPage',
-        path: '/details/:id/:lng?/:lat?/:zoom?/:pitch?/:bearing?',
+        path: '/details/:id',
         component: () => import('pages/details-page.vue'),
       },
       process.env.NODE_ENV === 'development'
         ? {
             name: 'DevPage',
-            path: '/dev/:lng?/:lat?/:zoom?/:pitch?/:bearing?',
+            path: '/dev',
             component: () => import('pages/dev-page.vue'),
           }
         : null,

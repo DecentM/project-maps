@@ -20,8 +20,8 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
 
   router.push({
     name: 'DetailsPage',
+    query: route.query,
     params: {
-      ...route.params,
       id: poi.properties.osm_id,
     },
   })
