@@ -10,7 +10,14 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/index-page.vue'),
       },
-    ],
+      process.env.NODE_ENV === 'development'
+        ? {
+            name: 'DevPage',
+            path: '/dev',
+            component: () => import('pages/dev-page.vue'),
+          }
+        : null,
+    ].filter((route) => route !== null),
   },
 
   // Always leave this as last one,
@@ -20,12 +27,5 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/error-not-found.vue'),
   },
 ]
-
-if (process.env.NODE_ENV === 'development') {
-  routes.push({
-    path: '/dev',
-    component: () => import('pages/dev.vue'),
-  })
-}
 
 export default routes

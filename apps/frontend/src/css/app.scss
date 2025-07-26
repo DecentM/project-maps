@@ -35,6 +35,24 @@
 /**
   * Vue transition - fade
   */
+.fade-up {
+  &-enter-active,
+  &-leave-active {
+    transition-property: opacity, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/**
+  * Vue transition - fade
+  */
 .fade {
   &-enter-active,
   &-leave-active {

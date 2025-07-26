@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 
 import { useMap } from './use-map'
 import type { MapOptions } from 'maplibre-gl'
 
 const props = defineProps<Pick<MapOptions, 'minPitch' | 'maxPitch'>>()
 
-const emit = defineEmits<(event: 'click') => void>()
-
 const container = shallowRef<HTMLDivElement>()
 
-const { map } = useMap(
+useMap(
   container,
   {
     variant: 'light',
@@ -28,16 +26,6 @@ const { map } = useMap(
     maxPitch: props.maxPitch,
   }
 )
-
-const handleClick = () => emit('click')
-
-onMounted(() => {
-  map.value?.on('click', handleClick)
-})
-
-onBeforeUnmount(() => {
-  map.value?.off('click', handleClick)
-})
 </script>
 
 <style lang="scss" scoped>
@@ -49,8 +37,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="position-relative">
     <div ref="container" class="fit absolute-top-left"></div>
-    <div v-if="$slots.default" class="fit absolute-top-left no-pointer-events overflow-hidden">
-      <slot :map="map" />
+    <div v-if="$slots.default" class="absolute-top-left">
+      <slot />
     </div>
   </div>
 </template>

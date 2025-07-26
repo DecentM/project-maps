@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
 
 import LocationSidebar from 'src/components/location-sidebar/location-sidebar.vue'
-import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 
 import PanzoomTrackerPlugin from 'src/components/maplibre-gl/plugins/panzoom-tracker.vue'
 import HoverTrackerPlugin from 'src/components/maplibre-gl/plugins/hover-tracker.vue'
@@ -44,27 +43,17 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
 </style>
 
 <template>
-  <q-page class="vh-100">
-    <div class="sidebar q-pa-md">
-      <location-sidebar
-        :poi="selectedPoi"
-      />
-    </div>
+  <div class="q-pa-sm q-gutter-md">
+    <location-sidebar
+      :poi="selectedPoi"
+    />
 
-    <maplibre-gl
-      class="vh-100"
-      :min-pitch="0"
-      :max-pitch="80"
-    >
-      <template v-slot="{ map }">
-        <attribution-control-plugin v-if="map" :map="map" />
-        <hover-tracker-plugin v-if="map" :map="map" @poi-click="handlePoiClick" />
-        <globe-control-plugin v-if="map" :map="map" />
-        <panzoom-tracker-plugin v-if="map" :map="map" />
-        <geolocate-control-plugin v-if="map" :map="map" />
-        <navigation-control-plugin v-if="map" :map="map" />
-        <scale-control-plugin v-if="map" :map="map" />
-      </template>
-    </maplibre-gl>
-  </q-page>
+    <attribution-control-plugin />
+    <hover-tracker-plugin @poi-click="handlePoiClick" />
+    <globe-control-plugin />
+    <panzoom-tracker-plugin />
+    <geolocate-control-plugin />
+    <navigation-control-plugin />
+    <scale-control-plugin />
+  </div>
 </template>

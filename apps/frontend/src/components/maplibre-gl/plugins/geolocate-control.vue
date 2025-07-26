@@ -3,12 +3,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
 import { GeolocateControl, type Map as MaplibreGl } from 'maplibre-gl'
 
-const props = defineProps<{
-  map: MaplibreGl
-}>()
+const map = inject<ShallowRef<MaplibreGl>>('map')
 
 const control = ref(
   new GeolocateControl({
@@ -20,11 +18,39 @@ const control = ref(
   })
 )
 
-onMounted(() => {
-  props.map.addControl(control.value)
-})
+const initialised = ref(false)
 
-onBeforeUnmount(() => {
-  props.map.removeControl(control.value)
-})
+const init = (newMap: MaplibreGl) => {
+  if (initialised.value) return
+
+  if (!newMap.hasControl(control.value)) {
+    newMap.addControl(control.value)
+  }
+
+  initialised.value = true
+}
+
+const dispose = () => {
+  if (!map || !map.value) return
+
+  if (map.value.hasControl(control.value)) {
+    map.value.removeControl(control.value)
+  }
+}
+
+if (map) {
+  watch(map, (newMap) => {
+    if (newMap) {
+      init(newMap)
+    }
+  })
+
+  onMounted(() => {
+    if (map.value) {
+      init(map.value)
+    }
+  })
+}
+
+onBeforeUnmount(() => dispose())
 </script>

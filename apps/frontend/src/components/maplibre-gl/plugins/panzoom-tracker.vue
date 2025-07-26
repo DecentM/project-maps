@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import type { Map as MaplibreGl, MapMouseEvent } from 'maplibre-gl'
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 export type PanZoom = {
@@ -14,9 +14,7 @@ export type PanZoom = {
   bearing: string
 }
 
-const props = defineProps<{
-  map: MaplibreGl
-}>()
+const map = inject<ShallowRef<MaplibreGl>>('map')
 
 const route = useRoute()
 const router = useRouter()
@@ -75,24 +73,45 @@ const handleMoveEnd = async (event: MapMouseEvent) => {
   })
 }
 
-onMounted(() => {
-  props.map.setZoom(Number.parseFloat(panzoom.value.zoom))
+const initialised = ref(false)
 
-  props.map.setCenter({
+const init = (map: MaplibreGl) => {
+  if (initialised.value) return
+
+  map.setZoom(Number.parseFloat(panzoom.value.zoom))
+  map.setCenter({
     lng: Number.parseFloat(panzoom.value.center[0]),
     lat: Number.parseFloat(panzoom.value.center[1]),
   })
+  map.setPitch(Number.parseFloat(panzoom.value.pitch))
+  map.setBearing(Number.parseFloat(panzoom.value.bearing))
 
-  props.map.setPitch(Number.parseFloat(panzoom.value.pitch))
+  map.on('moveend', handleMoveEnd)
+  map.on('zoomend', handleMoveEnd)
 
-  props.map.setBearing(Number.parseFloat(panzoom.value.bearing))
+  initialised.value = true
+}
 
-  props.map.on('moveend', handleMoveEnd)
-  props.map.on('zoomend', handleMoveEnd)
-})
+const dispose = () => {
+  if (!map || !map.value) return
 
-onBeforeUnmount(() => {
-  props.map.off('moveend', handleMoveEnd)
-  props.map.off('zoomend', handleMoveEnd)
-})
+  map.value.off('moveend', handleMoveEnd)
+  map.value.off('zoomend', handleMoveEnd)
+}
+
+if (map) {
+  watch(map, (newMap) => {
+    if (newMap) {
+      init(newMap)
+    }
+  })
+
+  onMounted(() => {
+    if (map.value) {
+      init(map.value)
+    }
+  })
+}
+
+onBeforeUnmount(() => dispose())
 </script>

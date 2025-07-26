@@ -1,9 +1,9 @@
 import {
-  computed,
   markRaw,
   nextTick,
-  onBeforeUnmount,
   onMounted,
+  onUnmounted,
+  provide,
   shallowRef,
   type ShallowRef,
 } from 'vue'
@@ -40,9 +40,9 @@ export const useMap = (
   }
 
   const dispose = async () => {
-    if (!map.value || !canvas.value) return
+    if (!map.value) return
 
-    canvas.value.removeEventListener('webglcontextlost', restart)
+    map.value.getCanvas().removeEventListener('webglcontextlost', restart)
 
     // destroy map
     map.value.remove()
@@ -58,14 +58,9 @@ export const useMap = (
     init()
   })
 
-  onBeforeUnmount(() => {
+  onUnmounted(() => {
     dispose()
   })
 
-  const canvas = computed(() => map.value?.getCanvas())
-
-  return {
-    map,
-    canvas,
-  }
+  provide('map', map)
 }

@@ -4,11 +4,9 @@
 
 <script lang="ts" setup>
 import type { MapGeoJSONFeature, MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
-import { onBeforeUnmount, onMounted } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
 
-const props = defineProps<{
-  map: MaplibreGl
-}>()
+const map = inject<ShallowRef<MaplibreGl>>('map')
 
 const emit = defineEmits<(event: 'poi-click', poi: MapGeoJSONFeature | null) => void>()
 
@@ -24,9 +22,10 @@ const CLICKABLE_LAYERS = [
 ] as const
 
 const handlePoiClick = (event: MapMouseEvent) => {
-  const features = props.map.queryRenderedFeatures(event.point, {
-    layers: [...CLICKABLE_LAYERS],
-  })
+  const features =
+    map?.value?.queryRenderedFeatures(event.point, {
+      layers: [...CLICKABLE_LAYERS],
+    }) ?? []
 
   if (!features.length) {
     emit('poi-click', null)
@@ -37,10 +36,12 @@ const handlePoiClick = (event: MapMouseEvent) => {
 }
 
 const updateCursor = (hovered: boolean) => {
+  if (!map?.value) return
+
   if (hovered) {
-    props.map.getCanvas().style.cursor = 'pointer'
+    map.value.getCanvas().style.cursor = 'pointer'
   } else {
-    props.map.getCanvas().style.cursor = ''
+    map.value.getCanvas().style.cursor = ''
   }
 }
 
@@ -52,19 +53,43 @@ const handlePoiUnhover = () => {
   updateCursor(false)
 }
 
-onMounted(() => {
-  for (const layer of CLICKABLE_LAYERS) {
-    props.map.on('mouseenter', layer, handlePoiHover)
-    props.map.on('mouseleave', layer, handlePoiUnhover)
-    props.map.on('click', layer, handlePoiClick)
-  }
-})
+const initialised = ref(false)
 
-onBeforeUnmount(() => {
+const init = (newMap: MaplibreGl) => {
+  if (initialised.value) return
+
   for (const layer of CLICKABLE_LAYERS) {
-    props.map.off('mouseenter', layer, handlePoiHover)
-    props.map.off('mouseleave', layer, handlePoiUnhover)
-    props.map.off('click', layer, handlePoiClick)
+    newMap.on('mouseenter', layer, handlePoiHover)
+    newMap.on('mouseleave', layer, handlePoiUnhover)
+    newMap.on('click', layer, handlePoiClick)
   }
-})
+
+  initialised.value = true
+}
+
+const dispose = () => {
+  if (!map || !map.value) return
+
+  for (const layer of CLICKABLE_LAYERS) {
+    map.value.off('mouseenter', layer, handlePoiHover)
+    map.value.off('mouseleave', layer, handlePoiUnhover)
+    map.value.off('click', layer, handlePoiClick)
+  }
+}
+
+if (map) {
+  watch(map, (newMap) => {
+    if (newMap) {
+      init(newMap)
+    }
+  })
+
+  onMounted(() => {
+    if (map.value) {
+      init(map.value)
+    }
+  })
+}
+
+onBeforeUnmount(() => dispose())
 </script>
