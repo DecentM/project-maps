@@ -10,7 +10,7 @@ export const mapRoutes: RouteRecordRaw[] = [
         path: '',
         components: {
           Sidebar: () => import('src/map/pages/index-page.vue'),
-          Topbar: () => import('src/shared/components/search-bar/fake-search-bar.vue'),
+          Topbar: () => import('src/map/components/top-bar/search-bar.vue'),
         },
       },
       {
@@ -18,15 +18,14 @@ export const mapRoutes: RouteRecordRaw[] = [
         path: '/details/:id',
         components: {
           Sidebar: () => import('src/map/pages/details-page.vue'),
-          Topbar: () => import('src/shared/components/search-bar/fake-search-bar.vue'),
+          Topbar: () => import('src/map/components/top-bar/navigation-bar.vue'),
         },
       },
       {
-        name: 'SearchPage',
-        path: '/search',
+        name: 'GalleryPage',
+        path: '/gallery/:id/:index?',
         components: {
-          Sidebar: () => import('src/map/pages/search-page.vue'),
-          Topbar: () => import('src/shared/components/search-bar/search-bar.vue'),
+          Sidebar: () => import('src/map/pages/gallery-page.vue'),
         },
       },
     ],

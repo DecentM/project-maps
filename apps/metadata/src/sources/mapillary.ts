@@ -46,7 +46,7 @@ export class MapillarySource extends MetadataSource {
 
       const images = await this.client.images({
         bbox: `${bbox[0].lng},${bbox[0].lat},${bbox[1].lng},${bbox[1].lat}`,
-        limit: 10,
+        limit: Math.min(Math.max(parameters.maxImages ?? 10, 1), 20),
       })
 
       for (const image of images.data) {
@@ -116,6 +116,7 @@ export class MapillarySource extends MetadataSource {
             GetAreaMetadataInput.fromObject({
               coordinates: item.coordinates.toObject(),
               radiusMeters: 8,
+              maxImages: Math.min(Math.max(request.maxImages ?? 10, 1), 20),
             }),
             events
           )

@@ -64,22 +64,11 @@ watch(query, (newQuery) => performSearch(newQuery))
 onMounted(() => performSearch(query.value))
 
 const handleSearch = (query?: string | number | null) => {
-  if (!query) {
-    router.push({
-      name: 'IndexPage',
-      query: {
-        ...route.query,
-        query: undefined,
-      },
-    })
-    return
-  }
-
   router.push({
-    name: 'SearchPage',
+    name: route.name,
     query: {
       ...route.query,
-      query: String(query) || '',
+      query: query ? String(query).trim() : undefined,
     },
   })
 }
@@ -89,8 +78,14 @@ const handleResultClick = (result: SearchResult) => {
 }
 </script>
 
+<style lang="scss" scoped>
+.search-bar {
+  width: 400px;
+}
+</style>
+
 <template>
-  <div class="q-px-sm q-mt-sm q-gutter-sm">
+  <div class="q-px-sm q-mt-sm q-gutter-sm search-bar">
     <q-card>
       <q-input
         :model-value="query"
@@ -125,8 +120,12 @@ const handleResultClick = (result: SearchResult) => {
               {{ result.address.municipality }}
             </q-item-label>
 
-            <q-item-label v-else-if="result.address.country" caption>
+            <q-item-label v-else-if="result.address.municipality && result.address.country" caption>
               {{ result.address.municipality }}, {{ result.address.country }}
+            </q-item-label>
+
+            <q-item-label v-else-if="!result.address.municipality && result.address.country" caption>
+              {{ result.address.country }}
             </q-item-label>
           </q-item-section>
         </q-item>

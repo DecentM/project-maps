@@ -42,7 +42,7 @@ export class GeographUKImageSource extends MetadataSource {
 
       const response = await this.client.syndicator({
         q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: 10,
+        perpage: Math.min(Math.max(parameters.maxImages ?? 10, 1), 20),
         distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
       })
 
@@ -107,6 +107,7 @@ export class GeographUKImageSource extends MetadataSource {
             GetAreaMetadataInput.fromObject({
               coordinates: item.coordinates.toObject(),
               radiusMeters: 8,
+              maxImages: Math.min(Math.max(request.maxImages ?? 10, 1), 20),
             }),
             events
           )

@@ -36,6 +36,7 @@ const handlePanzoomChange = async (newPanzoom: PanZoom) => {
   await router.push({
     name: route.name,
     query: {
+      ...route.query,
       lng: newPanzoom.center[0],
       lat: newPanzoom.center[1],
       zoom: newPanzoom.zoom,

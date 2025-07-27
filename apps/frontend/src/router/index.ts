@@ -5,7 +5,8 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from 'vue-router'
-import routes from './routes'
+
+import { mapRoutes } from 'src/map/routes'
 
 /*
  * If not building with SSR mode, you can
@@ -25,7 +26,16 @@ export default route((/* { store, ssrContext } */) => {
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
-    routes,
+    routes: [
+      ...mapRoutes,
+
+      // Always leave this as last one,
+      // but you can also remove it
+      {
+        path: '/:catchAll(.*)*',
+        component: () => import('pages/error-not-found.vue'),
+      },
+    ],
 
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode

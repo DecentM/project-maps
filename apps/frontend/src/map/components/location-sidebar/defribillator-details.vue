@@ -69,6 +69,8 @@ const locked = computed(() => {
 
 <template>
   <q-list v-if="defibrillator">
+    <q-separator />
+
     <q-item>
       <q-item-section side top>
         <q-icon name="mdi-heart-flash" color="secondary" size="md" />

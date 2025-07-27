@@ -30,6 +30,8 @@ const textMetadata = computed(() => {
 
 <template>
   <div class="relative-position" v-if="textMetadata">
+    <q-separator />
+
     <template v-if="textMetadata.address && addressCount(textMetadata.address) > 0">
       <q-item>
         <q-item-section side>

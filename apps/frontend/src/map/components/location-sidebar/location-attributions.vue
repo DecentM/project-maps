@@ -29,6 +29,8 @@ const filteredAttributions = computed(() => {
 
 <template>
   <div v-if="items.length > 0">
+    <q-separator />
+
     <q-item>
       <q-item-section>
         <q-item-label overline>Attributions</q-item-label>

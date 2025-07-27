@@ -9,12 +9,14 @@ package Metadata;
 message GetAreaMetadataInput {
   Geospatial.Coordinates coordinates = 1;
   int64 radiusMeters = 2;
+  int32 maxImages = 3;
 }
 
 message GetPoiMetadataInput {
   int64 id = 1;
   Geospatial.Coordinates coordinates = 2;
   string name = 3;
+  int32 maxImages = 4;
 }
 
 service Metadata {

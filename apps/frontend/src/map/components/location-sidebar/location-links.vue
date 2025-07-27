@@ -35,6 +35,8 @@ const deduplicatedLinks = computed(() => {
 
 <template>
   <q-list v-if="deduplicatedLinks.length">
+    <q-separator />
+
     <q-item v-for="link in deduplicatedLinks" :href="link.url" target="_blank" rel="noopener">
       <q-item-section side>
         <q-icon name="mdi-web" color="primary" size="md" />

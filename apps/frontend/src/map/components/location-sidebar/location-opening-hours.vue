@@ -16,6 +16,8 @@ const openingHours = computed(() => {
 
 <template>
   <div class="relative-position" v-if="openingHours">
+    <q-separator />
+
     <q-item>
       <q-item-section side top>
         <q-icon name="mdi-clock" color="primary" size="md" />
