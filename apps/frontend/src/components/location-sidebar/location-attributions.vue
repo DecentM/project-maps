@@ -29,7 +29,7 @@ const filteredAttributions = computed(() => {
 <template>
   <div v-if="items.length > 0">
     <q-item>
-      <q-item-section class="font-noto-sans-display">
+      <q-item-section>
         <q-item-label overline>Attributions</q-item-label>
         <q-item-label caption>
           We've derived this info card from these sources

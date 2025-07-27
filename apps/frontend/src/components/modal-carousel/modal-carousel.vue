@@ -38,6 +38,8 @@ defineEmits<(event: 'update:modelValue', value: boolean) => void>()
       arrows
       transition-prev="slide-right"
       transition-next="slide-left"
+      prev-icon="mdi-chevron-left"
+      next-icon="mdi-chevron-right"
     >
       <q-carousel-slide
         v-for="(url, index) in urls"

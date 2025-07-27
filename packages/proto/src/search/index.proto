@@ -13,9 +13,25 @@ message QueryParameters {
   string query = 1;
 }
 
+message AddressDetails {
+  string road = 1;
+  string city = 2;
+  string town = 3;
+  string county = 4;
+  string state = 5;
+  string postcode = 6;
+  string country = 7;
+  string hamlet = 8;
+  string state_district = 9;
+  string village = 10;
+  string municipality = 11;
+  string district = 12;
+}
+
 message SearchResult {
   int64 id = 1;
   OpenStreetMap.Member.Type type = 2;
   string name = 3;
   Geospatial.Coordinates coordinates = 4;
+  AddressDetails address = 5;
 }

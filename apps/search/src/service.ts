@@ -14,6 +14,7 @@ export class SearchService extends UnimplementedSearchService {
   override async Query(call: ServerWritableStream<QueryParameters, SearchResult>): Promise<void> {
     const results = await SearchService.nominatim.search({
       q: call.request.query,
+      addressdetails: 1,
       'accept-language': 'en', // TODO: i18n
     })
 
@@ -29,10 +30,11 @@ export class SearchService extends UnimplementedSearchService {
           // 3-way between node, way, and relation
           type:
             result.osm_type === 'node'
-              ? MemberType.NODE
+              ? MemberType.MEMBER_TYPE_NODE
               : result.osm_type === 'relation'
-                ? MemberType.RELATION
-                : MemberType.WAY,
+                ? MemberType.MEMBER_TYPE_RELATION
+                : MemberType.MEMBER_TYPE_WAY,
+          address: result.address,
         })
       )
     }

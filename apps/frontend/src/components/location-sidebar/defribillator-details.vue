@@ -73,19 +73,19 @@ const locked = computed(() => {
         <q-icon name="mdi-heart-flash" color="secondary" size="md" />
       </q-item-section>
 
-      <q-item-section class="font-noto-sans-display">
+      <q-item-section>
         <q-item-label overline class="text-secondary text-bold">Defibrillator</q-item-label>
         <q-item-label v-if="defibrillator.description" class="text-black" caption>{{ defibrillator.description }}</q-item-label>
         <q-item-label v-if="defibrillator.location" class="text-black" caption>{{ defibrillator.location }}</q-item-label>
       </q-item-section>
     </q-item>
 
-    <q-item>
+    <q-item v-if="defibrillator.access || defibrillator.level || defibrillator.indoor || defibrillator.cabinet || defibrillator.manufacturer || defibrillator.model || defibrillator.phone">
       <q-item-section side top>
         <q-icon name="mdi-information" color="tertiary" size="md" />
       </q-item-section>
 
-      <q-item-section class="font-noto-sans-display">
+      <q-item-section>
         <q-item-label :lines="lineCount">
           <template v-if="defibrillator.access">
             <span>Access: </span>

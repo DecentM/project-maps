@@ -2,6 +2,12 @@
 import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
 </script>
 
+<style lang="scss" scoped>
+.sidebar {
+  width: 400px;
+}
+</style>
+
 <template>
   <q-layout>
     <q-page-container>
@@ -11,11 +17,15 @@ import MaplibreGl from 'src/components/maplibre-gl/maplibre-gl.vue'
           :min-pitch="0"
           :max-pitch="80"
         >
-          <router-view v-slot="{ Component }">
-            <transition name="fade-up" mode="out-in">
-              <component :is="Component" />
-            </transition>
-          </router-view>
+          <div class="sidebar">
+            <router-view name="Topbar" />
+
+            <router-view name="Sidebar" v-slot="{ Component }">
+              <transition name="fade-up" mode="out-in">
+                <component :is="Component" />
+              </transition>
+            </router-view>
+          </div>
         </maplibre-gl>
       </q-page>
     </q-page-container>

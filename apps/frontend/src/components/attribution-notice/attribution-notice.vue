@@ -25,7 +25,7 @@ const hideSource = computed(() => {
       :target="attribution.url ? '_blank' : undefined"
       :noopener="!!attribution.url"
     >
-      <q-item-section class="font-noto-sans-display">
+      <q-item-section>
         <q-item-label>{{ attribution.name }}</q-item-label>
         <q-item-label
           v-if="typeof attribution.source === 'number' && !hideSource"
@@ -39,7 +39,6 @@ const hideSource = computed(() => {
         v-if="attribution.license"
         side
         top
-        class="font-noto-sans-display"
       >
         <q-item-label caption>{{
           licenseUrlToString(attribution.license)

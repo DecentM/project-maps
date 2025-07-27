@@ -7,29 +7,8 @@
   height: 100vh;
 }
 
-.font {
-  &-noto-sans {
-    &-display {
-      font-family: "Noto Sans Display Variable", sans-serif;
-      font-weight: 400;
-    }
-  }
-
-  &-light {
-    font-weight: 300;
-  }
-
-  &-bold {
-    font-weight: 700;
-  }
-}
-
-.text {
-  &-outline {
-    &-white {
-      text-shadow: 0 0 2px white, 0 0 2px white, 0 0 2px white, 0 0 2px white;
-    }
-  }
+body {
+  font-family: "Noto Sans Display Variable", sans-serif;
 }
 
 /**

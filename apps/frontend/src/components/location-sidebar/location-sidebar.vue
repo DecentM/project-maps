@@ -2,9 +2,8 @@
 import { computed, onMounted, ref, watch } from 'vue'
 
 import type { ImageUrl, MetadataItem } from '@project-maps/proto/metadata/web'
-import type { SearchResult } from '@project-maps/proto/search/web'
 
-import { metadataClient, searchClient } from 'src/lib/rpc'
+import { metadataClient } from 'src/lib/rpc'
 import { sortMetadataItems } from 'src/lib/score-metadata-item'
 import { useOsmCache } from 'src/lib/osm-cache'
 
@@ -34,7 +33,6 @@ const loading = ref(false)
 const osmCache = useOsmCache()
 
 const performSearch = async (osmId: string) => {
-  searchQuery.value = ''
   metadata.value = []
 
   const cached = await osmCache.get('node', osmId)
@@ -144,69 +142,25 @@ const carouselUrls = computed(() => {
     .map(({ item }) => (item.case === 'image' ? item.value.url : null))
     .filter((url): url is ImageUrl => url !== null)
 })
-
-const searchQuery = ref('')
-const searchResults = ref<SearchResult[]>([])
-
-watch(searchQuery, async (newQuery) => {
-  const response = searchClient.query({
-    query: newQuery,
-  })
-
-  const results: SearchResult[] = []
-
-  for await (const item of response) {
-    results.push(item)
-  }
-
-  searchResults.value = results
-})
 </script>
 
 <style lang="scss" scoped>
 .location-sidebar {
-  width: 400px;
   overflow-y: auto;
-  max-height: calc(100vh - 32px);
+  width: 100%;
 }
 
 .pointer {
   cursor: pointer;
 }
-
-.search-results-list {
-  max-height: 300px;
-  overflow-y: auto;
-}
 </style>
 
 <template>
   <q-card class="location-sidebar">
-    <image-renderer :metadata="sortedMetadata">
-      <div class="fit col" :class="{'pointer': carouselEnabled}" @click="handleImageClick">
-        <q-card class="font-noto-sans-display">
-          <q-input
-            v-model="searchQuery"
-            outlined
-            placeholder="Search..."
-            dense
-            debounce="300" />
-
-          <q-list v-if="searchQuery && searchResults.length && !props.poiOsmId" dense class="search-results-list">
-            <q-item
-              v-for="(result, index) in searchResults"
-              :key="index"
-              clickable>
-              <q-item-section>
-                <q-item-label class="text-description">
-                  {{ result.name }}
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card>
-      </div>
-    </image-renderer>
+    <image-renderer
+      :metadata="sortedMetadata"
+      :class="{'pointer': carouselEnabled}"
+      @click="handleImageClick" />
 
     <q-item v-if="hasNameOrDescription">
       <q-item-section>

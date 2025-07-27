@@ -45,6 +45,7 @@ export class OverpassSource extends MetadataSource {
     'lit',
     'wikidata',
     'brand:wikidata',
+    'subject:wikidata',
     'access',
     'defibrillator:location',
     'defibrillator:location:en',
@@ -128,7 +129,7 @@ export class OverpassSource extends MetadataSource {
       )
     }
 
-    if (item.tags?.wikidata || item.tags?.['brand:wikidata']) {
+    if (item.tags?.wikidata || item.tags?.['brand:wikidata'] || item.tags?.['subject:wikidata']) {
       onItem(
         MetadataItem.fromObject({
           attribution: {
@@ -139,7 +140,8 @@ export class OverpassSource extends MetadataSource {
               : 'https://www.openstreetmap.org/',
             name: String(item.id ?? 'OpenStreetMap'),
           },
-          wikidataId: item.tags.wikidata || item.tags['brand:wikidata'],
+          wikidataId:
+            item.tags.wikidata || item.tags['brand:wikidata'] || item.tags['subject:wikidata'],
         })
       )
     }

@@ -21,6 +21,7 @@ export const Colours = {
   skyColor: '#3D71AD',
   horizonColor: '#9CB6D4',
   fogColor: '#CEE8FD',
+  emergency: 'rgb(38, 166, 154)',
 } as const
 
 export const FillOpacities = {

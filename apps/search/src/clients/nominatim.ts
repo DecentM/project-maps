@@ -19,6 +19,9 @@ export type SearchParams = {
   exclude_place_ids?: string
   limit?: number
   dedupe?: 0 | 1
+  addressdetails?: 0 | 1
+  extratags?: 0 | 1
+  namedetails?: 0 | 1
 }
 
 export type SearchResult = {
@@ -34,6 +37,20 @@ export type SearchResult = {
   type: string
   importance: number
   licence: string
+  address?: {
+    road?: string
+    city?: string
+    town?: string
+    county?: string
+    state?: string
+    postcode?: string
+    country?: string
+    hamlet?: string
+    state_district?: string
+    village?: string
+    municipality?: string
+    district?: string
+  }
 }
 
 export class NominatimClient {

@@ -35,7 +35,7 @@ const textMetadata = computed(() => {
           <q-icon name="mdi-map-marker" color="primary" size="md" />
         </q-item-section>
 
-        <q-item-section class="font-noto-sans-display">
+        <q-item-section>
           <q-item-label :lines="addressCount(textMetadata.address)">
             <template v-if="textMetadata.address.country">
               <span>{{ textMetadata.address.country }}</span>
@@ -78,7 +78,7 @@ const textMetadata = computed(() => {
         <q-icon name="mdi-phone" color="primary" size="md" />
       </q-item-section>
 
-      <q-item-section class="font-noto-sans-display">
+      <q-item-section>
         <q-item-label>{{ textMetadata.phone }}</q-item-label>
         <q-item-label caption>Phone</q-item-label>
       </q-item-section>

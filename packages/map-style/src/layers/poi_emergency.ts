@@ -1,4 +1,4 @@
-import type { StyleConfig } from '..'
+import { Consts, type StyleConfig } from '..'
 
 export const poi_emergency = (config: StyleConfig) => ({
   source: 'vector',
@@ -43,17 +43,19 @@ export const poi_emergency = (config: StyleConfig) => ({
   paint: {
     'icon-opacity': {
       stops: [
-        [16, 0],
-        [17, 0.4],
+        [15, 0],
+        [16, 0.2],
+        [17, 0.6],
       ],
     },
     'text-opacity': {
       stops: [
-        [16, 0],
-        [17, 0.4],
+        [15, 0],
+        [16, 0.2],
+        [17, 0.6],
       ],
     },
-    'icon-color': 'rgb(85,85,85)',
+    'icon-color': Consts.Colours.emergency,
     'text-color': 'rgb(85,85,85)',
   },
 })

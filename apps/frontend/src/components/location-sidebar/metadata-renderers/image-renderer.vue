@@ -2,7 +2,6 @@
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
 import { computed } from 'vue'
 
-import HeroImage from 'src/components/image/hero-image.vue'
 import { getImageUrl } from 'src/lib/get-image-url'
 
 const props = defineProps<{
@@ -25,18 +24,18 @@ const firstImageUrl = computed(() => {
 </script>
 
 <template>
-  <div class="relative-position" v-if="firstImageUrl">
-    <hero-image
-      :height="250"
+  <div v-if="firstImageUrl">
+    <q-img
+      height="250px"
       :src="firstImageUrl"
       alt="Street Photo"
       class="q-pa-md"
     >
       <slot />
-    </hero-image>
+    </q-img>
   </div>
 
-  <div v-else class="q-pa-md">
+  <div v-else>
     <slot />
   </div>
 </template>

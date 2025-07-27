@@ -45,6 +45,7 @@ export class WikidataSource extends MetadataSource {
         ClaimId.NighttimeView,
         ClaimId.PanoramicView,
         ClaimId.ImageOfInterior,
+        ClaimId.PlaqueImage,
       ])
 
       if (image && image.length !== 0) {

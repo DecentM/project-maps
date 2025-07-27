@@ -52,7 +52,7 @@ export default configure((ctx) => {
       env: process.env,
       // rawDefine: {}
       // ignorePublicFolder: true,
-      // minify: false,
+      minify: process.env.NODE_ENV === 'production',
       // polyfillModulePreload: true,
       // distDir
 

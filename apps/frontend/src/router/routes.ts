@@ -8,12 +8,26 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'IndexPage',
         path: '',
-        component: () => import('pages/index-page.vue'),
+        components: {
+          Sidebar: () => import('pages/index-page.vue'),
+          Topbar: () => import('components/search-bar/fake-search-bar.vue'),
+        },
       },
       {
         name: 'DetailsPage',
         path: '/details/:id',
-        component: () => import('pages/details-page.vue'),
+        components: {
+          Sidebar: () => import('pages/details-page.vue'),
+          Topbar: () => import('components/search-bar/fake-search-bar.vue'),
+        },
+      },
+      {
+        name: 'SearchPage',
+        path: '/search',
+        components: {
+          Sidebar: () => import('pages/search-page.vue'),
+          Topbar: () => import('components/search-bar/search-bar.vue'),
+        },
       },
       process.env.NODE_ENV === 'development'
         ? {

@@ -39,7 +39,7 @@ const deduplicatedLinks = computed(() => {
         <q-icon name="mdi-web" color="primary" size="md" />
       </q-item-section>
 
-      <q-item-section class="font-noto-sans-display">
+      <q-item-section>
         <q-item-label class="ellipsis">
           <web-url :url="link.url" />
         </q-item-label>
