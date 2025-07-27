@@ -44,6 +44,13 @@ export class OverpassClient {
   private post = (path: string, formData: Record<string, string | number>) => {
     return got.stream
       .post(`${this.baseUrl}${path}`, {
+        retry: {
+          limit: 3,
+          statusCodes: [408, 429, 500, 502, 503, 504],
+          calculateDelay({ attemptCount }) {
+            return Math.min(attemptCount * 250, 2500)
+          },
+        },
         form: formData,
       })
       .on('error', (error) => {

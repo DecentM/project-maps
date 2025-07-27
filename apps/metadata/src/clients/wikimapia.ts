@@ -232,6 +232,13 @@ export class WikimapiaClient {
     log.trace({ base: this.baseUrl, method, path, query }, 'WikimapiaClient.fetch')
 
     return got(`${this.baseUrl}${path}`, {
+      retry: {
+        limit: 3,
+        statusCodes: [408, 429, 500, 502, 503, 504],
+        calculateDelay({ attemptCount }) {
+          return Math.min(attemptCount * 250, 2500)
+        },
+      },
       method,
       headers: {
         Accept: 'application/json',

@@ -19,6 +19,13 @@ export class WikidataClient {
     log.trace({ url }, 'WikidataClient.fetch')
 
     return got(url, {
+      retry: {
+        limit: 3,
+        statusCodes: [408, 429, 500, 502, 503, 504],
+        calculateDelay({ attemptCount }) {
+          return Math.min(attemptCount * 250, 2500)
+        },
+      },
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -28,7 +35,9 @@ export class WikidataClient {
 
   public async getEntities(params: GetEntitiesParams): Promise<GetEntitiesResponse> {
     try {
-      const { entities, success } = await this.fetch<{entities: Entities, success: number}>(this.wbk.getEntities(params))
+      const { entities, success } = await this.fetch<{ entities: Entities; success: number }>(
+        this.wbk.getEntities(params)
+      )
 
       if (success !== 1) {
         throw new Error(`success: ${success}`)
