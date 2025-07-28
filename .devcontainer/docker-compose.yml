@@ -11,7 +11,6 @@ services:
           cpus: '4'
           memory: 8g
 
-
   envoy:
     image: envoyproxy/envoy:v1.33-latest
     network_mode: host
@@ -23,18 +22,16 @@ services:
           cpus: '1'
           memory: 128m
 
-
   nginx:
     image: nginx:1.29.0-alpine
     network_mode: host
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ../packages/map-tiles/dist:/usr/share/nginx/html/tile:ro
-      - ../packages/map-icons/dist:/usr/share/nginx/html/icons:ro
+      - ../packages/map-style/dist/sprites:/usr/share/nginx/html/sprites:ro
       - ../packages/map-fonts/dist:/usr/share/nginx/html/fonts:ro
     deploy:
       resources:
         limits:
           cpus: '1'
           memory: 128m
-
