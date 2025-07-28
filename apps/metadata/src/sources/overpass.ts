@@ -30,6 +30,7 @@ export class OverpassSource extends MetadataSource {
     'amenity',
     'phone',
     'website',
+    'contact:website',
     'leisure',
     'shop',
     'barrier',
@@ -165,7 +166,7 @@ export class OverpassSource extends MetadataSource {
       )
     }
 
-    if (item.tags?.website) {
+    if (item.tags?.website || item.tags?.['contact:website']) {
       onItem(
         MetadataItem.fromObject({
           attribution: {
@@ -179,7 +180,7 @@ export class OverpassSource extends MetadataSource {
           links: {
             list: [
               {
-                url: item.tags.website,
+                url: item.tags.website || item.tags['contact:website'],
               },
             ],
           },
