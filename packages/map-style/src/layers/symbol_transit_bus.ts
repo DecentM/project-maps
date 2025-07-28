@@ -26,7 +26,7 @@ export const symbol_transit_bus = (config: StyleConfig) => ({
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
-    'icon-image': 'basics:icon-bus',
+    'icon-image': 'mdi:bus',
   },
   paint: {
     'icon-opacity': 0.7,

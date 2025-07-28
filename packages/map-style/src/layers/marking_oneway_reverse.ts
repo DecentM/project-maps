@@ -27,7 +27,7 @@ export const marking_oneway_reverse = (config: StyleConfig) => ({
     'icon-rotation-alignment': 'map',
     'icon-padding': 5,
     'symbol-avoid-edges': true,
-    'icon-image': 'basics:marking-arrow',
+    'icon-image': 'mdi:arrow-up-thin',
     'text-font': ['Noto Sans Regular'],
   },
   minzoom: 16,

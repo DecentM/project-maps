@@ -5,7 +5,6 @@ import type { StyleConfig } from '.'
 export const createSources = (config: StyleConfig): Record<string, SourceSpecification> => ({
   vector: {
     type: 'vector',
-    // url: config.tileMetadataUrl,
     tiles: [config.tileUrlPattern],
     maxzoom: 14,
     scheme: 'xyz',

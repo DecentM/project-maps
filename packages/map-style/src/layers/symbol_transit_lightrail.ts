@@ -26,7 +26,7 @@ export const symbol_transit_lightrail = (config: StyleConfig) => ({
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
-    'icon-image': 'basics:icon-rail_light',
+    'icon-image': 'mdi:train-variant',
   },
   paint: {
     'icon-opacity': 0.7,

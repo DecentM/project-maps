@@ -17,7 +17,24 @@ export const specification = (config: StyleConfig): StyleSpecification =>
       'fog-ground-blend': ['interpolate', ['linear'], ['zoom'], 0, 0.2],
       'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 5, 1, 7, 0],
     },
-    sprite: config.spritesUrl,
+    sprite: [
+      {
+        id: 'mdi',
+        url: `${config.spritesUrl}/mdi`,
+      },
+      {
+        id: 'mdi@2x',
+        url: `${config.spritesUrl}/mdi@2x`,
+      },
+      {
+        id: 'si',
+        url: `${config.spritesUrl}/si`,
+      },
+      {
+        id: 'si@2x',
+        url: `${config.spritesUrl}/si@2x`,
+      },
+    ],
     glyphs: config.fontsUrlPattern,
     layers: [],
     sources: {},

@@ -10,6 +10,6 @@ export const site_dangerarea = (config: StyleConfig) => ({
     'fill-color': 'rgb(255,0,0)',
     'fill-outline-color': 'rgb(255,0,0)',
     'fill-opacity': 0.3,
-    'fill-pattern': 'basics:pattern-warning',
+    'fill-pattern': 'mdi:alert-box',
   },
 })

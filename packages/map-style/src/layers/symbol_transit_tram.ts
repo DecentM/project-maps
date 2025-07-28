@@ -26,7 +26,7 @@ export const symbol_transit_tram = (config: StyleConfig) => ({
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
-    'icon-image': 'basics:transport-tram',
+    'icon-image': 'mdi:tram',
   },
   paint: {
     'icon-opacity': 0.7,

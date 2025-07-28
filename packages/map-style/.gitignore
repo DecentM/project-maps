@@ -1,7 +1,1 @@
-!dist
-dist/*
-!dist/.gitkeep
-
-!dist/style
-dist/style/*
-!dist/style/.gitkeep
+/dist

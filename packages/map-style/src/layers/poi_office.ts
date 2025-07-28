@@ -28,6 +28,15 @@ export const poi_office = (config: StyleConfig) => ({
     'icon-anchor': 'bottom',
     'text-size': 10,
     'text-anchor': 'top',
+    'icon-image': [
+      'match',
+      ['get', 'office'],
+      'diplomatic',
+      'mdi:office-building',
+      'government',
+      'mdi:office-building',
+      '',
+    ],
   },
   paint: {
     'icon-opacity': {

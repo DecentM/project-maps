@@ -7,8 +7,6 @@ import { specification } from './config'
 
 export * as Consts from './consts'
 
-export { classToIcon } from './icon-mapping'
-
 const StyleVariant = {
   Light: 'light',
   Dark: 'dark',

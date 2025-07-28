@@ -26,7 +26,7 @@ export const symbol_transit_airport = (config: StyleConfig) => ({
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
-    'icon-image': 'basics:icon-airport',
+    'icon-image': 'mdi:airport',
   },
   paint: {
     'icon-opacity': 0.7,

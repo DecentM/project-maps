@@ -12,6 +12,7 @@
     "sourceMap": true,
     "noUnusedLocals": false,
     "rootDir": ".",
-    "tsBuildInfoFile": "dist/.tsbuildinfo"
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "resolveJsonModule": true
   }
 }

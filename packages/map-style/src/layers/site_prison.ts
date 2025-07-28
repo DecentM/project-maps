@@ -8,7 +8,7 @@ export const site_prison = (config: StyleConfig) => ({
   filter: ['in', 'kind', 'prison'],
   paint: {
     'fill-color': 'rgb(253,242,252)',
-    'fill-pattern': 'basics:pattern-striped',
+    'fill-pattern': 'mdi:handcuffs',
     'fill-opacity': 0.1,
   },
 })

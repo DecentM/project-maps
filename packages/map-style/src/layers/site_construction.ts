@@ -8,7 +8,7 @@ export const site_construction = (config: StyleConfig) => ({
   filter: ['in', 'kind', 'construction'],
   paint: {
     'fill-color': 'rgb(169,169,169)',
-    'fill-pattern': 'basics:pattern-hatched_thin',
+    'fill-pattern': 'mdi:account-hard-hat',
     'fill-opacity': 0.1,
   },
 })

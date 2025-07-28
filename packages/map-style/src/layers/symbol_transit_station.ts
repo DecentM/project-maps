@@ -26,7 +26,7 @@ export const symbol_transit_station = (config: StyleConfig) => ({
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
-    'icon-image': 'basics:icon-rail',
+    'icon-image': 'mdi:train',
   },
   paint: {
     'icon-opacity': 0.7,

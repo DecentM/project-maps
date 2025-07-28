@@ -26,7 +26,7 @@ export const symbol_transit_subway = (config: StyleConfig) => ({
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
-    'icon-image': 'basics:icon-rail_metro',
+    'icon-image': 'mdi:subway',
   },
   paint: {
     'icon-opacity': 0.7,
