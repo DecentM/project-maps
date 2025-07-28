@@ -9,9 +9,6 @@ import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panz
 import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
 import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-control.vue'
 import NavigationControlPlugin from 'src/shared/components/maplibre-gl/plugins/navigation-control.vue'
-import ScaleControlPlugin from 'src/shared/components/maplibre-gl/plugins/scale-control.vue'
-import AttributionControlPlugin from 'src/shared/components/maplibre-gl/plugins/attribution-control.vue'
-import LoadingIndicatorPlugin from 'src/shared/components/maplibre-gl/plugins/loading-indicator.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -36,17 +33,21 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
 </script>
 
 <template>
-  <transition name="fade-up" mode="out-in">
-    <div :key="id" class="q-pa-sm q-gutter-md">
-      <location-sidebar :poi-osm-id="id" />
-    </div>
-  </transition>
+  <q-drawer
+    model-value
+    behavior="desktop"
+    side="left"
+    :width="400"
+  >
+    <transition name="fade-up" mode="out-in">
+      <div :key="id" class="row q-pa-sm">
+        <location-sidebar :poi-osm-id="id" />
+      </div>
+    </transition>
 
-  <attribution-control-plugin />
-  <hover-tracker-plugin @poi-click="handlePoiClick" />
-  <globe-control-plugin />
-  <panzoom-tracker-plugin />
-  <navigation-control-plugin />
-  <scale-control-plugin />
-  <loading-indicator-plugin />
+    <hover-tracker-plugin @poi-click="handlePoiClick" />
+    <globe-control-plugin />
+    <panzoom-tracker-plugin />
+    <navigation-control-plugin />
+  </q-drawer>
 </template>

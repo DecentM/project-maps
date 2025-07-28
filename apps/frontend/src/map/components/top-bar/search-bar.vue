@@ -85,7 +85,7 @@ const handleResultClick = (result: SearchResult) => {
 </style>
 
 <template>
-  <div class="q-px-sm q-mt-sm q-gutter-sm search-bar">
+  <div class="search-bar q-ma-sm">
     <q-card>
       <q-input
         :model-value="query"

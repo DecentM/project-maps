@@ -20,7 +20,7 @@ body {
 }
 
 /**
-  * Vue transition - fade
+  * Vue transition - fades
   */
 .fade-up {
   &-enter-active,
@@ -37,9 +37,21 @@ body {
   }
 }
 
-/**
-  * Vue transition - fade
-  */
+.fade-down {
+  &-enter-active,
+  &-leave-active {
+    transition-property: opacity, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
 .fade {
   &-enter-active,
   &-leave-active {

@@ -22,12 +22,9 @@ const backTo = computed(() => {
 </script>
 
 <template>
-  <div class="q-px-sm q-mt-sm">
-    <q-toolbar class="bg-primary text-white rounded-borders full-width">
-      <q-btn flat round dense icon="mdi-arrow-left" :to="backTo" />
-      <q-toolbar-title class="text-subtitle1">
-        Back
-      </q-toolbar-title>
-    </q-toolbar>
-  </div>
+  <q-toolbar class="q-px-none">
+    <q-card>
+      <q-btn flat color="primary" icon="mdi-arrow-left" :to="backTo" label="Back" />
+    </q-card>
+  </q-toolbar>
 </template>

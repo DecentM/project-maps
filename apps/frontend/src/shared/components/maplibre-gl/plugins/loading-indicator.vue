@@ -1,26 +1,11 @@
 <template>
-  <div class="loading-wrapper absolute-top-left vh-100 vw-100 flex justify-center">
-    <transition name="fade-up" mode="out-in">
-      <q-chip v-if="isLoading && loadingForSeconds > 0.66" color="primary" text-color="white" class="loading-chip">
-        <q-spinner indeterminate class="q-mr-sm" />
-        Loading - {{ loadingPercent }}%
-      </q-chip>
-    </transition>
-  </div>
+  <transition name="fade-down" mode="out-in">
+    <q-chip v-if="isLoading && loadingForSeconds > 0.4" color="primary" text-color="white">
+      <q-spinner indeterminate class="q-mr-sm" />
+      Loading - {{ loadingPercent }}%
+    </q-chip>
+  </transition>
 </template>
-
-<style lang="scss" scoped>
-.loading {
-  &-chip {
-    bottom: 0;
-    position: absolute;
-  }
-
-  &-wrapper {
-    pointer-events: none;
-  }
-}
-</style>
 
 <script lang="ts" setup>
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'

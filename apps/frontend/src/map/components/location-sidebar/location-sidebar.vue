@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
@@ -18,7 +19,6 @@ import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderer
 import DescriptionRenderer from 'src/map/components/location-sidebar/metadata-renderers/description-renderer.vue'
 import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
 import LogoRenderer from 'src/map/components/location-sidebar/metadata-renderers/logo-renderer.vue'
-import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps<{
   poiOsmId?: string
@@ -104,20 +104,12 @@ const route = useRoute()
 const handleImageClick = () => {
   router.push({
     name: 'GalleryPage',
-    params: {
-      id: props.poiOsmId,
-    },
     query: route.query,
   })
 }
 </script>
 
 <style lang="scss" scoped>
-.location-sidebar {
-  overflow-y: auto;
-  width: 400px;
-}
-
 .pointer {
   cursor: pointer;
 }
@@ -129,11 +121,13 @@ const handleImageClick = () => {
 </style>
 
 <template>
-  <q-card class="location-sidebar">
+  <q-card>
     <image-renderer
       :metadata="sortedMetadata"
       class="pointer"
       @click="handleImageClick" />
+
+    <q-separator />
 
     <q-item v-if="hasNameOrDescription">
       <q-item-section>
