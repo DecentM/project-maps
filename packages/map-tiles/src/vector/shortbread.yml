@@ -123,6 +123,7 @@ definitions:
       - windmill
     office: &poi_filter_office
       - diplomatic
+      - government
     shop: &poi_filter_shop
       - alcohol
       - bakery
