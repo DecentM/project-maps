@@ -76,6 +76,20 @@ const handleMoveEnd = async (event: MapMouseEvent) => {
 
 const initialised = ref(false)
 
+const updateCursor = (cursor: string) => {
+  if (!map?.value) return
+
+  map.value.getCanvas().style.cursor = cursor
+}
+
+const handleDragend = (event: MapMouseEvent) => {
+  updateCursor('default')
+}
+
+const handleDragstart = (event: MapMouseEvent) => {
+  updateCursor('grabbing')
+}
+
 const init = (map: MaplibreGl) => {
   if (initialised.value) return
 
@@ -87,8 +101,12 @@ const init = (map: MaplibreGl) => {
   map.setPitch(Number.parseFloat(panzoom.value.pitch))
   map.setBearing(Number.parseFloat(panzoom.value.bearing))
 
+  map.on('dragstart', handleDragstart)
+  map.on('dragend', handleDragend)
   map.on('moveend', handleMoveEnd)
   map.on('zoomend', handleMoveEnd)
+
+  updateCursor('default')
 
   initialised.value = true
 }
@@ -96,6 +114,8 @@ const init = (map: MaplibreGl) => {
 const dispose = () => {
   if (!map || !map.value) return
 
+  map.value.off('dragend', handleDragend)
+  map.value.off('dragstart', handleDragstart)
   map.value.off('moveend', handleMoveEnd)
   map.value.off('zoomend', handleMoveEnd)
 }

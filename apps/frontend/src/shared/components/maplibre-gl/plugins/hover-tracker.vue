@@ -44,7 +44,7 @@ const updateCursor = (hovered: boolean) => {
   if (hovered) {
     map.value.getCanvas().style.cursor = 'pointer'
   } else {
-    map.value.getCanvas().style.cursor = ''
+    map.value.getCanvas().style.cursor = 'default'
   }
 }
 
