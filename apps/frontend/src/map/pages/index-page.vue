@@ -9,6 +9,7 @@ import GeolocateControlPlugin from 'src/shared/components/maplibre-gl/plugins/ge
 import NavigationControlPlugin from 'src/shared/components/maplibre-gl/plugins/navigation-control.vue'
 import ScaleControlPlugin from 'src/shared/components/maplibre-gl/plugins/scale-control.vue'
 import AttributionControlPlugin from 'src/shared/components/maplibre-gl/plugins/attribution-control.vue'
+import LoadingIndicatorPlugin from 'src/shared/components/maplibre-gl/plugins/loading-indicator.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -47,7 +48,7 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
 </style>
 
 <template>
-  <div class="q-pa-sm q-gutter-md">
+  <div>
     <attribution-control-plugin />
     <hover-tracker-plugin @poi-click="handlePoiClick" />
     <globe-control-plugin />
@@ -55,5 +56,6 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     <geolocate-control-plugin />
     <navigation-control-plugin />
     <scale-control-plugin />
+    <loading-indicator-plugin />
   </div>
 </template>
