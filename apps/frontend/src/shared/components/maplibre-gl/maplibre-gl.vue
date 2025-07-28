@@ -8,7 +8,7 @@ const props = defineProps<Pick<MapOptions, 'minPitch' | 'maxPitch'>>()
 
 const container = shallowRef<HTMLDivElement>()
 
-useMap(
+const { loading } = useMap(
   container,
   {
     variant: 'light',
@@ -28,15 +28,12 @@ useMap(
 )
 </script>
 
-<style lang="scss" scoped>
-.position-relative {
-  background-color: black;
-}
-</style>
-
 <template>
-  <div class="position-relative">
-    <div ref="container" class="fit absolute-top-left"></div>
+  <div>
+    <div v-show="!loading" ref="container" class="fit absolute-top-left"></div>
+    <div v-if="loading" class="absolute-top-left fit column justify-center">
+      <q-spinner color="primary" size="4rem" class="self-center" indeterminate />
+    </div>
     <div v-if="$slots.default" class="absolute-top-left">
       <slot />
     </div>

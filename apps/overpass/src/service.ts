@@ -27,8 +27,14 @@ export class OverpassService extends UnimplementedOverpassService {
 
       const [id, type, lat, lon, ...columns] = line.split('🅰')
 
-      if (!parameters.tags?.length || columns.length < parameters.tags.length) {
-        throw new Error('Not enough columns in the response')
+      if (!parameters.tags?.length) {
+        throw new Error('No tags specified in the request')
+      }
+
+      if (columns.length < parameters.tags.length) {
+        throw new Error(
+          `Not enough columns in the response. Expected ${parameters.tags.length}, got ${columns.length}`
+        )
       }
 
       const tags = columns.reduce(

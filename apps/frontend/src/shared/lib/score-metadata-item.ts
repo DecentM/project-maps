@@ -1,4 +1,4 @@
-import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import { Attribution_Source, type MetadataItem } from '@project-maps/proto/metadata/web'
 
 const getRawScore = (item: MetadataItem): number => {
   let points = 0
@@ -13,11 +13,11 @@ const getRawScore = (item: MetadataItem): number => {
 
   good(item.attribution)
 
-  bad(item.attribution?.source === 0) // Unknown source
-  bad(item.attribution?.source === 2) // Mapillary - global, so we should prefer local sources
-  bad(item.attribution?.source === 8) // OSM - global
+  bad(item.attribution?.source === Attribution_Source.Unknown) // Unknown source
+  bad(item.attribution?.source === Attribution_Source.Mapillary) // Mapillary - global, so we should prefer local sources
+  bad(item.attribution?.source === Attribution_Source.OpenStreetMap) // OSM - global
 
-  good(item.attribution?.source === 7) // Wikidata
+  good(item.attribution?.source === Attribution_Source.Wikidata) // Wikidata
 
   return points
 }

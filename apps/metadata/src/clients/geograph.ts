@@ -1,4 +1,4 @@
-import got from 'got'
+import got, { type Method } from 'got'
 import { XMLParser } from 'fast-xml-parser'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
@@ -140,10 +140,11 @@ export class GeographClient {
     private apiKey: string
   ) {}
 
-  private fetch = (path: string, query: Record<string, string | number>) => {
+  private fetch = (method: Method, path: string, query: Record<string, string | number>) => {
     log.trace({ base: this.baseUrl, path, query }, 'GeographClient.fetch')
 
-    return got.get(`${this.baseUrl}${path}`, {
+    return got(`${this.baseUrl}${path}`, {
+      method,
       retry: {
         limit: 3,
         statusCodes: [408, 429, 500, 502, 503, 504],
@@ -159,7 +160,26 @@ export class GeographClient {
   }
 
   private get = (path: string, query: Record<string, string | number> = {}) => {
-    return this.fetch(path, query)
+    return this.fetch('GET', path, query)
+  }
+
+  private head = (path: string, query: Record<string, string | number> = {}) => {
+    return this.fetch('HEAD', path, query)
+  }
+
+  public isImageAllowed = async (url?: string): Promise<boolean> => {
+    if (!url) return false
+
+    try {
+      const response = await this.head(url)
+      const contentDisposition = response.headers['content-disposition']
+      if (!contentDisposition) return true
+
+      const filename = contentDisposition.split('filename=')[1]
+      return filename ? !filename.includes('geograph-error.jpg') : true
+    } catch {
+      return false
+    }
   }
 
   public syndicator = async (request: SyndicatorRequest): Promise<SyndicatorResponse> => {

@@ -1,4 +1,5 @@
 import type Emittery from 'emittery'
+import { DateTime } from 'luxon'
 
 import {
   MetadataItem,
@@ -49,18 +50,26 @@ export class GeographUKImageSource extends MetadataSource {
       for (const item of response.items) {
         const details = await this.client.photo(item.guid)
 
+        const downloadKey =
+          details.geograph.img.src.split('/').pop()?.split('_')[1].split('.')[0] ?? ''
+
+        const canonicalUrl = downloadKey
+          ? `${config.clients.geographUK.baseUrl}/reuse.php?id=${item.guid}&download=${downloadKey}&size=original`
+          : undefined
+
         events.emit(
           'item',
           MetadataItem.fromObject({
             attribution: {
               name: details.geograph.user['#text'],
               license: item.licence,
-              url: `${config.clients.geographUK.baseUrl}/photo/${item.guid}`,
+              url: item.link,
               source: AttributionSource.GeographUK,
             },
             image: {
               url: {
-                canonical: details.geograph.img.src,
+                canonical: canonicalUrl,
+                medium: details.geograph.img.src,
                 small: details.geograph.thumbnail,
               },
               coordinates: {
@@ -68,7 +77,7 @@ export class GeographUKImageSource extends MetadataSource {
                 lng: Number.parseFloat(item.long),
               },
               createdAt: {
-                seconds: Math.floor(new Date(item.date).getTime() / 1000),
+                seconds: Math.round(DateTime.fromMillis(item.date).toSeconds()),
               },
             },
           })

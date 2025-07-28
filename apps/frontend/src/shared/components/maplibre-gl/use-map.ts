@@ -4,6 +4,7 @@ import {
   onMounted,
   onUnmounted,
   provide,
+  ref,
   shallowRef,
   type ShallowRef,
 } from 'vue'
@@ -19,6 +20,12 @@ export const useMap = (
 ) => {
   const map = shallowRef<MaplibreGl | null>(null)
   const style = createStyle(styleConfig)
+
+  const loading = ref(true)
+
+  const handleLoad = () => {
+    loading.value = false
+  }
 
   const init = () => {
     if (map.value || !container.value) return
@@ -37,12 +44,16 @@ export const useMap = (
     map.value.setStyle(style, {
       diff: false,
     })
+
+    map.value.on('load', handleLoad)
   }
 
   const dispose = async () => {
     if (!map.value) return
 
     map.value.getCanvas().removeEventListener('webglcontextlost', restart)
+
+    map.value.off('load', handleLoad)
 
     // destroy map
     map.value.remove()
@@ -63,4 +74,8 @@ export const useMap = (
   })
 
   provide('map', map)
+
+  return {
+    loading,
+  }
 }

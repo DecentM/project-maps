@@ -10,6 +10,8 @@ import { getImageUrl } from 'src/shared/lib/get-image-url'
 import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panzoom-tracker.vue'
 import AttributionControlPlugin from 'src/shared/components/maplibre-gl/plugins/attribution-control.vue'
 import NavigationBar from 'src/map/components/top-bar/navigation-bar.vue'
+import { getImageSize } from 'src/shared/lib/get-image-size'
+import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'
 
 const router = useRouter()
 const route = useRoute()
@@ -36,8 +38,14 @@ const performSearch = async (osmId: string) => {
     })
 
     for await (const item of response) {
+      if (item.item.case !== 'image' || !item.item.value.url) {
+        continue
+      }
+
       metadata.value.push(item)
     }
+
+    metadata.value = sortMetadataItems(metadata.value)
   } catch (error) {
     console.error('Failed to fetch metadata:', error)
   }
@@ -61,21 +69,13 @@ onMounted(() => {
   }
 })
 
-const images = computed<Array<{ small: string; large: string }>>(() => {
+const images = computed<Array<Image & { url: ImageUrl }>>(() => {
   return metadata.value
-    .filter(({ item }) => item.case === 'image' && typeof item.value !== 'string')
     .map(({ item }) => item.value as Image)
-    .filter((image) => typeof image.url !== 'undefined')
-    .map(
-      (image) =>
-        ({
-          small: getImageUrl(image.url as ImageUrl, 'small'),
-          large: getImageUrl(image.url as ImageUrl, 'canonical'),
-        }) as { small: string; large: string }
-    )
+    .filter((image) => image.url !== undefined) as Array<Image & { url: ImageUrl }>
 })
 
-const previewUrl = computed(() => {
+const preview = computed(() => {
   if (!route.params.index) {
     return images.value[0]
   }
@@ -92,14 +92,29 @@ const previewUrl = computed(() => {
 })
 
 const handlePreviewClick = (index: number) => {
+  useFallbackImage.value = false
+
   router.push({
     name: 'GalleryPage',
     params: {
       id: id.value,
-      index: index.toString(),
+      index: String(index),
     },
     query: route.query,
   })
+}
+
+const useFallbackImage = ref(false)
+
+const handleCanonicalUrlLoaded = async (src: string) => {
+  if (useFallbackImage.value) return
+
+  const size = await getImageSize(src)
+
+  // Specific to Geograph, a 320x240 image is a "not available" image
+  if (size.width === 320 && size.height === 240) {
+    useFallbackImage.value = true
+  }
 }
 </script>
 
@@ -121,17 +136,17 @@ const handlePreviewClick = (index: number) => {
   transition-property: filter, transform;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
-  filter: grayscale(50%) brightness(0.8);
+  filter: grayscale(50%) brightness(0.5) sepia(10%);
   transform: scale(1);
 
   &:hover,
   &.active {
-    filter: grayscale(0%) brightness(1);
-    transform: scale(0.98);
+    filter: grayscale(0%) brightness(1) sepia(0);
+    transform: scale(0.95);
   }
 }
 
-.view {
+.image-view {
   max-height: calc(100vh - 5rem);
 }
 </style>
@@ -145,17 +160,17 @@ const handlePreviewClick = (index: number) => {
     </div>
 
     <div v-else class="col row q-pa-sm fit">
-      <div class="col-auto">
+      <div v-if="images.length > 1" class="col-auto">
         <q-scroll-area style="width: 200px; height: 100%;">
           <q-card v-for="(image, index) in images" class="q-mb-sm bg-secondary">
             <q-img
               v-ripple
               no-spinner
               no-transition
-              :key="image.large"
+              :key="getImageUrl(image.url, 'medium')"
               class="rounded-borders thumbnail"
-              :class="{ active: previewUrl?.large === image.large }"
-              :src="image.small"
+              :class="{ active: preview && getImageUrl(image.url, 'medium') === getImageUrl(preview.url, 'medium') }"
+              :src="getImageUrl(image.url, 'medium')"
               :ratio="16/9"
               fit="cover"
               @click="() => handlePreviewClick(index)"
@@ -164,15 +179,35 @@ const handlePreviewClick = (index: number) => {
         </q-scroll-area>
       </div>
 
-      <div class="col gallery q-ml-sm">
+      <div class="col gallery" :class="{ 'q-ml-sm': images.length > 1 }">
         <transition name="fade-up" mode="out-in">
-          <q-img
-            v-if="previewUrl"
-            :key="previewUrl.large"
-            class="rounded-borders view"
-            :src="previewUrl.large"
-            fit="contain"
-          />
+          <q-carousel
+            v-if="preview"
+            animated
+            infinite
+            vertical
+            :model-value="getImageUrl(preview.url, 'medium')"
+            height="100%"
+            class="transparent"
+            transition-prev="slide-down"
+            transition-next="slide-up"
+          >
+            <q-carousel-slide
+              v-for="image in images"
+              :key="getImageUrl(image.url, 'medium')"
+              :name="getImageUrl(image.url, 'medium')"
+              class="q-pa-none"
+            >
+              <q-img
+                :key="getImageUrl(preview?.url, 'medium')"
+                class="rounded-borders image-view"
+                :src="useFallbackImage ? getImageUrl(preview?.url, 'medium') : getImageUrl(preview?.url, 'canonical')"
+                fit="contain"
+                @load="(src) => handleCanonicalUrlLoaded(src)"
+              />
+            </q-carousel-slide>
+          </q-carousel>
+
         </transition>
       </div>
     </div>
