@@ -1,12 +1,9 @@
-#!/bin/sh -eu
+#!/bin/sh -e
 
 REGION="$1"
 OUTPUT_DIR="$2"
 PLANETILER_JAR="$3"
 IMAGE_FORMAT="$4"
-WATER_POLYGONS_URL="$5"
-LAKE_CENTERLINE_URL="$6"
-NATURAL_EARTH_URL="$7"
 
 if [ -z "$REGION" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ] || [ -z "$IMAGE_FORMAT" ]; then
   echo "Usage: $0 <region> <output-dir> <planetiler-jar> <image-format>"
@@ -38,13 +35,11 @@ if [ ! -f src/vector/shortbread.yml ]; then
   exit 1
 fi
 
+set -u
+
 TEMP_DIR=$(mktemp -d -p ~/)
 
 mkdir -p "$TEMP_DIR/download"
-
-# curl --output-dir "$TEMP_DIR/download" -L -o natural_earth_vector.sqlite.zip "$NATURAL_EARTH_URL"
-# curl --output-dir "$TEMP_DIR/download" -L -o lake_centerline.shp.zip "$LAKE_CENTERLINE_URL"
-# curl --output-dir "$TEMP_DIR/download" -L -o water-polygons-split-3857.zip "$WATER_POLYGONS_URL"
 
 java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --download \

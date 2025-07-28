@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -e
 
 DOWNLOAD_URL="$1"
 OUTPUT_DIR="$2"
@@ -47,6 +47,8 @@ if [ -d "$OUTPUT_DIR" ]; then
   echo "Output directory $OUTPUT_DIR already exists. Please remove it or choose a different directory."
   exit 1
 fi
+
+set -u
 
 TEMP_DIR=$(mktemp -d -p ~/)
 
