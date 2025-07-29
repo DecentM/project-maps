@@ -2,7 +2,8 @@
 import LoadingIndicatorPlugin from 'src/shared/components/maplibre-gl/plugins/loading-indicator.vue'
 
 import ScaleControlPlugin from 'src/shared/components/maplibre-gl/plugins/scale-control.vue'
-import AttributionControlPlugin from 'src/shared/components/maplibre-gl/plugins/attribution-control.vue'
+
+import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
 </script>
 
 <template>
@@ -11,9 +12,16 @@ import AttributionControlPlugin from 'src/shared/components/maplibre-gl/plugins/
       <q-space />
       <loading-indicator-plugin />
       <q-space />
+      <div class="row q-gutter-sm">
+        <attribution-notice static href="https://www.maplibre.org/">
+          MapLibre
+        </attribution-notice>
+        <attribution-notice static href="https://www.openstreetmap.org/copyright">
+          © OpenStreetMap contributors
+        </attribution-notice>
+      </div>
     </q-toolbar>
 
-    <attribution-control-plugin />
     <scale-control-plugin />
   </q-footer>
 </template>

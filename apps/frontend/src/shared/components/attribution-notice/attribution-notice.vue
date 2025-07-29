@@ -8,9 +8,10 @@ import { licenseUrlToString } from 'src/shared/lib/license-url-to-string'
 
 const props = withDefaults(
   defineProps<{
-    attribution: Attribution
+    attribution?: Attribution
     static?: boolean
     openWidth?: string
+    href?: string
   }>(),
   {
     static: false,
@@ -36,6 +37,8 @@ const updatePosition = (newOpen: boolean) => {
 watch(open, updatePosition)
 
 const attributionString = computed(() => {
+  if (!props.attribution) return 'No attribution available'
+
   return `Source: ${props.attribution.name} - ${imageSourceString(props.attribution.source)} (${licenseUrlToString(props.attribution.license)})`
 })
 </script>
@@ -102,9 +105,9 @@ const attributionString = computed(() => {
         clickable
         no-caps
         rounded
-        :href="attribution.url"
-        :target="attribution.url ? '_blank' : undefined"
-        :noopener="!!attribution.url"
+        :href="attribution?.url || props.href"
+        :target="(attribution?.url || props.href) ? '_blank' : undefined"
+        :noopener="!!attribution?.url || !!props.href"
       >
         <slot>
           {{ attributionString }}
@@ -113,11 +116,11 @@ const attributionString = computed(() => {
     </teleport>
 
     <q-btn
-      v-if="!static"
+      v-if="!static && attribution"
       size="sm"
-      :href="attribution.url"
-      :target="attribution.url ? '_blank' : undefined"
-      :noopener="!!attribution.url"
+      :href="attribution?.url || props.href"
+      :target="(attribution?.url || props.href) ? '_blank' : undefined"
+      :noopener="!!attribution?.url || !!props.href"
       flat
       round
       :color="open ? 'white' : 'grey'"

@@ -44,7 +44,7 @@ export const poi_amenity = (config: StyleConfig) => ({
       'bicycle_rental',
       'mdi:bike',
       'biergarten',
-      'mdi:beergarden',
+      'mdi:glass-mug-variant',
       'cafe',
       'mdi:coffee',
       'car_rental',

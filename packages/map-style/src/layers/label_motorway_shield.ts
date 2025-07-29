@@ -8,7 +8,7 @@ export const label_motorway_shield = (config: StyleConfig) => ({
   filter: ['==', 'kind', 'motorway'],
   layout: {
     'text-field': '{ref}',
-    'text-font': ['noto_sans_bold'],
+    'text-font': ['Noto Sans Bold'],
     'symbol-placement': 'line',
     'text-anchor': 'center',
     'text-size': {
