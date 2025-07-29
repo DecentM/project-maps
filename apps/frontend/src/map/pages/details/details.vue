@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
+import { usePreferredReducedMotion } from '@vueuse/core'
 
 import LocationSidebar from 'src/map/components/location-sidebar/location-sidebar.vue'
 
@@ -30,6 +31,8 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     },
   })
 }
+
+const reducedMotion = usePreferredReducedMotion()
 </script>
 
 <template>
@@ -39,11 +42,15 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     side="left"
     :width="400"
   >
-    <transition name="fade-up" mode="out-in">
-      <div :key="id" class="row q-pa-sm">
+    <transition v-if="reducedMotion === 'no-preference'" name="fade-up" mode="out-in">
+      <div :key="id" class="q-pa-sm fit">
         <location-sidebar :poi-osm-id="id" />
       </div>
     </transition>
+
+    <div v-else class="row q-pa-sm">
+      <location-sidebar :poi-osm-id="id" />
+    </div>
 
     <hover-tracker-plugin @poi-click="handlePoiClick" />
     <globe-control-plugin />

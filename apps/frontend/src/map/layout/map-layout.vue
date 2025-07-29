@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { usePreferredReducedMotion } from '@vueuse/core'
 import MaplibreGl from 'src/shared/components/maplibre-gl/maplibre-gl.vue'
+
+const reducedMotion = usePreferredReducedMotion()
 </script>
 
 <style lang="scss">
@@ -16,35 +19,43 @@ import MaplibreGl from 'src/shared/components/maplibre-gl/maplibre-gl.vue'
   >
     <q-layout view="lHh lpR fFf">
       <q-header class="transparent">
-        <router-view name="Toolbar" v-slot="{ Component }">
+        <router-view v-if="reducedMotion === 'no-preference'" name="Toolbar" v-slot="{ Component }">
           <transition name="fade-up" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
+
+        <router-view v-else name="Toolbar" />
       </q-header>
 
-      <router-view name="Sidebar" v-slot="{ Component }">
+      <router-view v-if="reducedMotion === 'no-preference'" name="Sidebar" v-slot="{ Component }">
         <transition name="fade-up" mode="out-in">
           <component :is="Component" />
         </transition>
       </router-view>
 
+      <router-view v-else name="Sidebar" />
+
       <router-view v-slot="{ Component }">
         <q-page-container :class="{'vh-100 vw-100': !!Component}" class="q-pb-sm q-pr-sm">
           <q-page>
-            <transition name="fade-up" mode="out-in">
+            <transition v-if="reducedMotion === 'no-preference'" name="fade-up" mode="out-in">
               <component :is="Component" />
             </transition>
+
+            <component v-else :is="Component" />
           </q-page>
         </q-page-container>
       </router-view>
 
       <q-footer bordered>
-        <router-view name="Footer" v-slot="{ Component }">
+        <router-view v-if="reducedMotion === 'no-preference'" name="Footer" v-slot="{ Component }">
           <transition name="fade-up" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
+
+        <router-view v-else name="Footer" />
       </q-footer>
     </q-layout>
   </maplibre-gl>

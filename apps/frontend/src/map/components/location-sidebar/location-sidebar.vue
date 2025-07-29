@@ -114,14 +114,13 @@ const handleImageClick = () => {
   cursor: pointer;
 }
 
-.scroll {
-  overflow-y: auto;
-  max-height: calc(100vh - 40rem);
+.scroll-limiter {
+  max-width: 24rem;
 }
 </style>
 
 <template>
-  <q-card>
+  <q-card class="fit column">
     <image-renderer
       :metadata="sortedMetadata"
       class="pointer"
@@ -144,13 +143,17 @@ const handleImageClick = () => {
       </q-item-section>
     </q-item>
 
-    <div class="scroll">
-      <defibrillator-details :metadata="sortedMetadata" />
-      <location-metadata :metadata="sortedMetadata" />
-      <location-comments :metadata="sortedMetadata" />
-      <location-opening-hours :metadata="sortedMetadata" />
-      <location-links :metadata="sortedMetadata" />
-    </div>
+    <q-scroll-area class="col">
+      <div class="scroll-limiter">
+        <defibrillator-details :metadata="sortedMetadata" />
+        <location-metadata :metadata="sortedMetadata" />
+        <location-comments :metadata="sortedMetadata" />
+        <location-opening-hours :metadata="sortedMetadata" />
+        <location-links :metadata="sortedMetadata" />
+      </div>
+    </q-scroll-area>
+
+    <q-space />
 
     <location-attributions :metadata="sortedMetadata" />
     <q-linear-progress v-if="loading" indeterminate />

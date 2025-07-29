@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { QuasarComponents } from 'quasar'
+import { usePreferredReducedMotion } from '@vueuse/core'
 
 import type { Image, ImageUrl, MetadataItem } from '@project-maps/proto/metadata/web'
 
@@ -13,6 +14,7 @@ import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'
 
 const router = useRouter()
 const route = useRoute()
+const reducedMotion = usePreferredReducedMotion()
 
 const id = computed(() => {
   return route.params.id as string
@@ -160,10 +162,10 @@ onBeforeUnmount(() => {
       ref="carousel"
       class="bg-dark"
       :arrows="images.length > 1"
-      navigation
+      :navigation="images.length > 1"
       navigation-icon="mdi-circle-medium"
       navigation-active-icon="mdi-circle"
-      animated
+      :animated="reducedMotion !== 'reduce'"
       infinite
       swipeable
       height="calc(100vh - 4rem)"
@@ -186,6 +188,8 @@ onBeforeUnmount(() => {
           :src="useFallbackImage ? getImageUrl(image.url, 'medium') : getImageUrl(image.url, 'canonical')"
           fit="contain"
           @load="(src) => handleCanonicalUrlLoaded(src)"
+          :no-transition="reducedMotion === 'reduce'"
+          :no-spinner="reducedMotion === 'reduce'"
         />
       </q-carousel-slide>
     </q-carousel>

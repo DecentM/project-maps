@@ -26,6 +26,7 @@
     "@project-maps/proto": "workspace:^",
     "@quasar/extras": "^1.16.12",
     "@turf/turf": "^7.1.0",
+    "@vueuse/core": "^13.6.0",
     "browser-geo-tz": "^0.1.0",
     "buffer": "^6.0.3",
     "emittery": "^1.0.3",
