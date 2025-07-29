@@ -34,7 +34,7 @@ const performSearch = async (osmId: string) => {
 
   const cached = await osmCache.get('node', osmId)
 
-  if (cached && cached.case === 'node') {
+  if (cached?.case) {
     metadata.value.push({
       $typeName: 'Metadata.MetadataItem',
       item: {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef, watch } from 'vue'
 
-import type { Attribution } from '@project-maps/proto/metadata/web'
+import { type Attribution, Attribution_Source } from '@project-maps/proto/metadata/web'
 
 import { imageSourceString } from 'src/shared/lib/image-source-string'
 import { licenseUrlToString } from 'src/shared/lib/license-url-to-string'
@@ -40,6 +40,24 @@ const attributionString = computed(() => {
   if (!props.attribution) return 'No attribution available'
 
   return `Source: ${props.attribution.name} - ${imageSourceString(props.attribution.source)} (${licenseUrlToString(props.attribution.license)})`
+})
+
+const attributionMap: { [key in Attribution_Source]: string } = {
+  [Attribution_Source.Flickr]: 'si-flickr',
+  [Attribution_Source.GeographDE]: 'mdi-rhombus-medium',
+  [Attribution_Source.GeographUK]: 'mdi-rhombus-medium',
+  [Attribution_Source.Wikimapia]: 'mdi-rhombus-medium',
+  [Attribution_Source.Unknown]: 'mdi-rhombus-medium',
+  [Attribution_Source.Mapillary]: 'si-mapillary',
+  [Attribution_Source.OpenStreetMap]: 'si-openstreetmap',
+  [Attribution_Source.Wikidata]: 'si-wikidata',
+  [Attribution_Source.WikimediaCommons]: 'si-wikimediacommons',
+}
+
+const attributionLogo = computed(() => {
+  if (!props.attribution) return 'mdi-rhombus-medium'
+
+  return attributionMap[props.attribution.source] || 'mdi-rhombus-medium'
 })
 </script>
 
@@ -99,7 +117,6 @@ const attributionString = computed(() => {
         outline
         color="primary"
         size="md"
-        icon="mdi-rhombus-medium"
         dense
         class="bg-white q-pr-sm"
         clickable
@@ -109,6 +126,8 @@ const attributionString = computed(() => {
         :target="(attribution?.url || props.href) ? '_blank' : undefined"
         :noopener="!!attribution?.url || !!props.href"
       >
+        <q-icon left :name="attributionLogo" class="q-ml-sm" size="xs" />
+
         <slot>
           {{ attributionString }}
         </slot>
@@ -124,7 +143,7 @@ const attributionString = computed(() => {
       flat
       round
       :color="open ? 'white' : 'grey'"
-      icon="mdi-rhombus-medium"
+      :icon="attributionLogo"
       class="transition-background"
       :class="{ 'bg-white': !open, 'bg-primary': open }"
       @mouseenter="open = true"

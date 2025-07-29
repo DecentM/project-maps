@@ -37,6 +37,7 @@
     "mitt": "^3.0.1",
     "pinia": "^2.2.2",
     "quasar": "^2.17.0",
+    "simple-icons-font": "^15.8.0",
     "socket.io-client": "^4.8.0",
     "vue": "^3.5.7",
     "vue-router": "^4.4.5"
