@@ -10,7 +10,6 @@ import { useOsmCache } from 'src/shared/lib/osm-cache'
 
 import LocationMetadata from 'src/map/components/location-sidebar/location-metadata.vue'
 import LocationComments from 'src/map/components/location-sidebar/location-comments.vue'
-import LocationAttributions from 'src/map/components/location-sidebar/location-attributions.vue'
 import LocationLinks from 'src/map/components/location-sidebar/location-links.vue'
 import LocationOpeningHours from 'src/map/components/location-sidebar/location-opening-hours.vue'
 import DefibrillatorDetails from 'src/map/components/location-sidebar/defribillator-details.vue'
@@ -126,7 +125,7 @@ const handleImageClick = () => {
       class="pointer"
       @click="handleImageClick" />
 
-    <q-separator />
+    <q-linear-progress v-if="loading" indeterminate />
 
     <q-item v-if="hasNameOrDescription">
       <q-item-section>
@@ -152,10 +151,5 @@ const handleImageClick = () => {
         <location-links :metadata="sortedMetadata" />
       </div>
     </q-scroll-area>
-
-    <q-space />
-
-    <location-attributions :metadata="sortedMetadata" />
-    <q-linear-progress v-if="loading" indeterminate />
   </q-card>
 </template>

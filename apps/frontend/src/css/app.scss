@@ -3,6 +3,11 @@
 
 @import "@fontsource-variable/noto-sans-display/index.css";
 
+body {
+  font-family: "Noto Sans Display Variable", sans-serif;
+  position: relative;
+}
+
 .vh-100 {
   height: 100vh;
 }
@@ -13,10 +18,6 @@
 
 .fixed {
   position: fixed;
-}
-
-body {
-  font-family: "Noto Sans Display Variable", sans-serif;
 }
 
 /**

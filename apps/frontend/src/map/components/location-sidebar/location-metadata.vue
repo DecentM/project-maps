@@ -3,6 +3,8 @@ import { computed } from 'vue'
 
 import type { MetadataItem, Address } from '@project-maps/proto/metadata/web'
 
+import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
+
 const props = defineProps<{
   metadata: MetadataItem[]
 }>()
@@ -24,7 +26,10 @@ const textMetadata = computed(() => {
 
   if (!result || !result.item || result.item.case !== 'metadata') return null
 
-  return result.item.value
+  return {
+    data: result.item.value,
+    attribution: result.attribution,
+  }
 })
 </script>
 
@@ -32,57 +37,63 @@ const textMetadata = computed(() => {
   <div class="relative-position" v-if="textMetadata">
     <q-separator />
 
-    <template v-if="textMetadata.address && addressCount(textMetadata.address) > 0">
+    <template v-if="textMetadata.data.address && addressCount(textMetadata.data.address) > 0">
       <q-item>
         <q-item-section side>
           <q-icon name="mdi-map-marker" color="primary" size="md" />
         </q-item-section>
 
         <q-item-section>
-          <q-item-label :lines="addressCount(textMetadata.address)">
-            <template v-if="textMetadata.address.country">
-              <span>{{ textMetadata.address.country }}</span>
+          <q-item-label :lines="addressCount(textMetadata.data.address)">
+            <template v-if="textMetadata.data.address.country">
+              <span>{{ textMetadata.data.address.country }}</span>
               <br />
             </template>
 
-            <template v-if="textMetadata.address.state">
-              <span>{{ textMetadata.address.state }}</span>
+            <template v-if="textMetadata.data.address.state">
+              <span>{{ textMetadata.data.address.state }}</span>
               <br />
             </template>
 
-            <template v-if="textMetadata.address.city">
-              <span>{{ textMetadata.address.city }}</span>
+            <template v-if="textMetadata.data.address.city">
+              <span>{{ textMetadata.data.address.city }}</span>
               <br />
             </template>
 
-            <template v-if="textMetadata.address.street">
-              <span>{{ textMetadata.address.street }}</span>
-              <br v-if="!textMetadata.address.housenumber" />
+            <template v-if="textMetadata.data.address.street">
+              <span>{{ textMetadata.data.address.street }}</span>
+              <br v-if="!textMetadata.data.address.housenumber" />
               <span v-else>&nbsp;</span>
             </template>
 
-            <template v-if="textMetadata.address.housenumber">
-              <span>{{ textMetadata.address.housenumber }}</span>
+            <template v-if="textMetadata.data.address.housenumber">
+              <span>{{ textMetadata.data.address.housenumber }}</span>
               <br />
             </template>
 
-            <template v-if="textMetadata.address.postcode">
-              <span>{{ textMetadata.address.postcode }}</span>
+            <template v-if="textMetadata.data.address.postcode">
+              <span>{{ textMetadata.data.address.postcode }}</span>
               <br />
             </template>
           </q-item-label>
           <q-item-label caption>Address</q-item-label>
         </q-item-section>
+
+        <q-item-section v-if="textMetadata.attribution" side>
+          <q-item-label>
+            <attribution-notice :attribution="textMetadata.attribution" />
+          </q-item-label>
+        </q-item-section>
       </q-item>
     </template>
 
-    <q-item v-if="textMetadata.phone" clickable :href="`tel:${textMetadata.phone}`">
+    <q-item v-if="textMetadata.data.phone" clickable :href="`tel:${textMetadata.data.phone}`">
       <q-item-section side>
         <q-icon name="mdi-phone" color="primary" size="md" />
       </q-item-section>
 
       <q-item-section>
-        <q-item-label>{{ textMetadata.phone }}</q-item-label>
+        <q-item-label>{{ textMetadata.data.phone }}</q-item-label>
         <q-item-label caption>Phone</q-item-label>
       </q-item-section>
     </q-item>

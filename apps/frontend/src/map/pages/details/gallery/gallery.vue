@@ -4,13 +4,15 @@ import { useRoute, useRouter } from 'vue-router'
 import type { QuasarComponents } from 'quasar'
 import { usePreferredReducedMotion } from '@vueuse/core'
 
-import type { Image, ImageUrl, MetadataItem } from '@project-maps/proto/metadata/web'
+import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
 import { metadataClient } from 'src/shared/lib/rpc'
 import { getImageUrl } from 'src/shared/lib/get-image-url'
 
 import { getImageSize } from 'src/shared/lib/get-image-size'
 import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'
+
+import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -69,10 +71,19 @@ onMounted(() => {
   }
 })
 
-const images = computed<Array<Image & { url: ImageUrl }>>(() => {
+const images = computed(() => {
   return metadata.value
-    .map(({ item }) => item.value as Image)
-    .filter((image) => image.url !== undefined) as Array<Image & { url: ImageUrl }>
+    .filter((image) => image.item.case === 'image' && image.item.value.url !== undefined)
+    .map((image) => {
+      const url = image.item.case === 'image' ? image.item.value.url : undefined
+      if (!url) return null
+
+      return {
+        url,
+        attribution: image.attribution,
+      }
+    })
+    .filter((image) => image !== null)
 })
 
 const useFallbackImage = ref(false)
@@ -95,7 +106,7 @@ const handleCarouselChange = (index: string | number) => {
     return
   }
 
-  router.push({
+  router.replace({
     name: 'GalleryPage',
     query: route.query,
     params: {
@@ -132,30 +143,6 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-.thumbscroll {
-  display: block;
-  overflow-y: scroll;
-  width: 400px;
-  max-height: calc(100vh - 20rem);
-}
-
-.thumbnail {
-  cursor: pointer;
-  transition-property: filter, transform;
-  transition-duration: 0.2s;
-  transition-timing-function: ease-in-out;
-  filter: grayscale(50%) brightness(0.5) sepia(10%);
-  transform: scale(1);
-
-  &:hover,
-  &.active {
-    filter: grayscale(0%) brightness(1) sepia(0);
-    transform: scale(0.95);
-  }
-}
-</style>
-
 <template>
   <q-card class="fit">
     <q-carousel
@@ -168,7 +155,7 @@ onBeforeUnmount(() => {
       :animated="reducedMotion !== 'reduce'"
       infinite
       swipeable
-      height="calc(100vh - 4rem)"
+      height="calc(100vh - 57px)"
       width="100%"
       transition-prev="jump-right"
       transition-next="jump-left"
@@ -176,6 +163,7 @@ onBeforeUnmount(() => {
       prev-icon="mdi-chevron-left"
       :model-value="Array.isArray(route.params.index) ? route.params.index[0] : (route.params.index || '0')"
       @update:model-value="handleCarouselChange"
+      navigation-position="top"
     >
       <q-carousel-slide
         v-for="(image, index) in images"
@@ -190,7 +178,14 @@ onBeforeUnmount(() => {
           @load="(src) => handleCanonicalUrlLoaded(src)"
           :no-transition="reducedMotion === 'reduce'"
           :no-spinner="reducedMotion === 'reduce'"
-        />
+        >
+          <attribution-notice
+            v-if="image.attribution"
+            static
+            class="absolute-bottom-right transparent"
+            :attribution="image.attribution"
+          />
+        </q-img>
       </q-carousel-slide>
     </q-carousel>
   </q-card>

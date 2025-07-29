@@ -4,14 +4,21 @@ import { computed } from 'vue'
 import type { Defibrillator, MetadataItem } from '@project-maps/proto/metadata/web'
 import { Access, Indoor } from '@project-maps/proto/lib/openstreetmap/web'
 
+import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
+
 const props = defineProps<{
   metadata: MetadataItem[]
 }>()
 
-const defibrillator = computed<Defibrillator | undefined>(() => {
-  return props.metadata.findLast(
+const defibrillator = computed(() => {
+  const data = props.metadata.findLast(
     ({ item }) => item.case === 'defibrillator' && item.value.$typeName === 'Metadata.Defibrillator'
-  )?.item.value as Defibrillator | undefined
+  )
+
+  return {
+    data: data?.item.value as Defibrillator | undefined,
+    attribution: data?.attribution,
+  }
 })
 
 const lineCount = computed(() => {
@@ -19,7 +26,7 @@ const lineCount = computed(() => {
 })
 
 const access = computed(() => {
-  switch (defibrillator.value?.access) {
+  switch (defibrillator.value?.data?.access) {
     case Access.PUBLIC:
       return 'Public'
     case Access.PRIVATE:
@@ -32,7 +39,7 @@ const access = computed(() => {
 })
 
 const indoor = computed(() => {
-  switch (defibrillator.value?.indoor) {
+  switch (defibrillator.value?.data?.indoor) {
     case Indoor.YES:
       return 'Indoors'
     case Indoor.NO:
@@ -55,12 +62,12 @@ const indoor = computed(() => {
 })
 
 const locked = computed(() => {
-  if (!defibrillator.value?.locked) return 'Unknown'
+  if (!defibrillator.value?.data?.locked) return 'Unknown'
 
-  if (defibrillator.value.locked.value) return 'Locked'
+  if (defibrillator.value.data.locked.value) return 'Locked'
 
-  if (defibrillator.value.locked.conditional) {
-    return `Locked sometimes: ${defibrillator.value.locked.conditional}`
+  if (defibrillator.value.data.locked.conditional) {
+    return `Locked sometimes: ${defibrillator.value.data?.locked.conditional}`
   }
 
   return 'Unlocked'
@@ -68,7 +75,7 @@ const locked = computed(() => {
 </script>
 
 <template>
-  <q-list v-if="defibrillator">
+  <q-list v-if="defibrillator.data">
     <q-separator />
 
     <q-item>
@@ -78,56 +85,69 @@ const locked = computed(() => {
 
       <q-item-section>
         <q-item-label overline class="text-secondary text-bold">Defibrillator</q-item-label>
-        <q-item-label v-if="defibrillator.description" class="text-black" caption>{{ defibrillator.description }}</q-item-label>
-        <q-item-label v-if="defibrillator.location" class="text-black" caption>{{ defibrillator.location }}</q-item-label>
+        <q-item-label v-if="defibrillator.data?.description" class="text-black" caption>{{ defibrillator.data?.description }}</q-item-label>
+        <q-item-label v-if="defibrillator.data?.location" class="text-black" caption>{{ defibrillator.data?.location }}</q-item-label>
       </q-item-section>
     </q-item>
 
-    <q-item v-if="defibrillator.access || defibrillator.level || defibrillator.indoor || defibrillator.cabinet || defibrillator.manufacturer || defibrillator.model || defibrillator.phone">
+    <q-item
+      v-if="defibrillator.data?.access
+        || defibrillator.data?.level
+        || defibrillator.data?.indoor
+        || defibrillator.data?.cabinet
+        || defibrillator.data?.manufacturer
+        || defibrillator.data?.model
+        || defibrillator.data?.phone"
+      >
       <q-item-section side top>
         <q-icon name="mdi-information" color="tertiary" size="md" />
       </q-item-section>
 
       <q-item-section>
         <q-item-label :lines="lineCount">
-          <template v-if="defibrillator.access">
+          <template v-if="defibrillator.data?.access">
             <span>Access: </span>
             <span class="text-bold">{{ access }}, {{ locked }}</span>
-            <span v-if="defibrillator.code"> (code: {{ defibrillator.code }})</span>
+            <span v-if="defibrillator.data.code"> (code: {{ defibrillator.data.code }})</span>
             <br />
           </template>
 
-          <template v-if="defibrillator.level">
+          <template v-if="defibrillator.data?.level">
             <span>Level: </span>
-            <span class="text-bold">{{ defibrillator.level }}</span>
+            <span class="text-bold">{{ defibrillator.data.level }}</span>
             <br />
           </template>
 
-          <template v-if="defibrillator.indoor">
+          <template v-if="defibrillator.data?.indoor">
             <span>Location: </span>
             <span class="text-bold">{{ indoor }}</span>
             <br />
           </template>
 
-          <template v-if="defibrillator.cabinet">
+          <template v-if="defibrillator.data?.cabinet">
             <span>Cabinet: </span>
-            <span class="text-bold">{{ defibrillator.cabinet }}</span>
+            <span class="text-bold">{{ defibrillator.data.cabinet }}</span>
             <br />
           </template>
 
-          <template v-if="defibrillator.manufacturer || defibrillator.model">
+          <template v-if="defibrillator.data?.manufacturer || defibrillator.data?.model">
             <span>Device: </span>
-            <span class="text-bold">{{ defibrillator.manufacturer }} {{ defibrillator.model }}</span>
+            <span class="text-bold">{{ defibrillator.data.manufacturer }} {{ defibrillator.data.model }}</span>
             <br />
           </template>
 
-          <template v-if="defibrillator.phone">
+          <template v-if="defibrillator.data?.phone">
             <span>Phone: </span>
-            <span class="text-bold">{{ defibrillator.phone }}</span>
+            <span class="text-bold">{{ defibrillator.data.phone }}</span>
             <br />
           </template>
         </q-item-label>
-        <q-item-label caption>Address</q-item-label>
+      </q-item-section>
+
+      <q-item-section side>
+        <q-item-label v-if="defibrillator.attribution">
+          <attribution-notice :attribution="defibrillator.attribution" />
+        </q-item-label>
       </q-item-section>
     </q-item>
   </q-list>
