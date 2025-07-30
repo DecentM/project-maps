@@ -77,7 +77,7 @@ for (const subregion of subregions$) {
     const sizeNumber = Number.parseFloat(sizeValue)
 
     if (sizeUnit === 'GB' || sizeUnit === 'GiB') {
-      sizeAcceptable = !Number.isNaN(sizeNumber) && sizeNumber < 4 && sizeNumber > 0
+      sizeAcceptable = !Number.isNaN(sizeNumber) && sizeNumber < 2 && sizeNumber > 0
     }
 
     if (sizeUnit === 'MB' || sizeUnit === 'MiB') {
