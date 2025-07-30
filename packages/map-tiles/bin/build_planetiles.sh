@@ -59,6 +59,7 @@ WORKDIR="$(pwd)"
 cd "$CACHE_DIR"
 
 java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
+  --force \
   --tmpdir="$TEMP_DIR" \
   \
   --ocean_url="$OCEAN_URL" \
