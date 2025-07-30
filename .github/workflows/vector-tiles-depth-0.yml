@@ -48,9 +48,11 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}c
+          lookup-only: true
 
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: |
           set -exu
           pnpm install --frozen-lockfile
