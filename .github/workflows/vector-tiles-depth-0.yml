@@ -1,21 +1,64 @@
-name: Vector tiles (recursive)
+name: Vector tiles
 
 on:
-  workflow_call:
-    inputs:
-      name:
-        required: true
-        type: string
-
-      url:
-        required: true
-        type: string
+  workflow_dispatch:
 
 jobs:
-  create-recursion-matrix:
+  tooling:
     runs-on: ubuntu-latest
 
-    if: contains(inputs.url, '.html')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache tooling
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+
+      - uses: asdf-vm/actions/install@v4
+
+  dependencies:
+    needs:
+      - tooling
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get tooling from cache
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+          fail-on-cache-miss: true
+
+      - uses: asdf-vm/actions/install@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            apps/*/node_modules
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+  create-top-level-matrix:
+    needs:
+      - dependencies
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
 
     steps:
       - uses: actions/checkout@v4
@@ -49,55 +92,18 @@ jobs:
           set -exu
           echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts https://download.geofabrik.de/) >> $GITHUB_OUTPUT"
 
-  recurse:
+  build:
     needs:
-      - create-recursion-matrix
+      - dependencies
+      - create-top-level-matrix
 
     strategy:
       fail-fast: false
       max-parallel: 3
       matrix:
-        pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
+        pbf: ${{ fromJson(needs.create-top-level-matrix.outputs.matrix) }}
 
-    uses: ./.github/workflows/vector-tiles-recursive.yml
+    uses: ./.github/workflows/vector-tiles-depth-1.yml
     with:
       url: ${{ matrix.url }}
       name: ${{ matrix.name }}
-
-  build:
-    runs-on: ubuntu-latest
-
-    if: contains(inputs.url, '.osm.pbf')
-
-    steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@v10
-
-      - uses: actions/checkout@v4
-
-      - name: Get tooling from cache
-        uses: actions/cache@v4
-        id: cache-tooling
-        with:
-          path: |
-            /home/runner/.asdf
-          key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
-
-      - uses: asdf-vm/actions/install@v4
-
-      - name: Get node_modules from cache
-        uses: actions/cache@v4
-        id: cache-node-modules
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      - name: Build
-        run: |
-          set -exu
-          echo "Would build now."

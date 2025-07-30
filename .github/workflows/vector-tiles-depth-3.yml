@@ -1,0 +1,65 @@
+name: Vector tiles (depth 3)
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+
+      url:
+        required: true
+        type: string
+
+jobs:
+  fail-if-not-pbf:
+    runs-on: ubuntu-latest
+
+    if: contains(inputs.url, '.html')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if not .osm.pbf
+        run: |
+          set -exu
+          echo "Ran out of depth."
+          exit 1
+
+  build:
+    runs-on: ubuntu-latest
+
+    if: contains(inputs.url, '.osm.pbf')
+
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@v10
+
+      - uses: actions/checkout@v4
+
+      - name: Get tooling from cache
+        uses: actions/cache@v4
+        id: cache-tooling
+        with:
+          path: |
+            /home/runner/.asdf
+          key: tool-${{ hashFiles('.tool-versions') }}
+          fail-on-cache-miss: true
+
+      - uses: asdf-vm/actions/install@v4
+
+      - name: Get node_modules from cache
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            apps/*/node_modules
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      - name: Build
+        run: |
+          set -exu
+          echo "Would build now."
