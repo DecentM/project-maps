@@ -85,7 +85,8 @@ jobs:
         with:
           path: |
             /home/runner/planetiler.jar
-          key: planetiler
+            /home/runner/planetiler-cache
+          key: planetiler-${{ inputs.url }}-${{ hashFiles('packages/map-tiles/bin/build_planetiles.sh') }}
 
       - name: Install Planetiler
         if: steps.cache-planetiler.outputs.cache-hit != 'true'
@@ -97,4 +98,14 @@ jobs:
         working-directory: packages/map-tiles
         run: |
           set -exu
-          bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar
+          bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar /home/runner/planetiler-cache
+
+      - name: Upload Vector Tiles
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_ACCOUNT_API_KEY }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: packages/map-tiles
+          command: |
+            pages deploy dist/vector --project-name=project-maps-tiles --branch=${{ github.ref_name }}

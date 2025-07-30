@@ -3,6 +3,7 @@
 DOWNLOAD_URL="$1"
 OUTPUT_DIR="$2"
 PLANETILER_JAR="$3"
+CACHE_DIR="$4"
 
 if [ -z "$DOWNLOAD_URL" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ]; then
   echo "Usage: $0 <download-url> <output-dir> <planetiler-jar>"
@@ -36,9 +37,11 @@ fi
 
 set -u
 
-TEMP_DIR=$(mktemp -d -p ~/)
+TEMP_DIR="${CACHE_DIR:-$(mktemp -d -p ~/)}"
 
-mkdir -p "$TEMP_DIR/download"
+if [ ! -d "$TEMP_DIR/download" ]; then
+  mkdir -p "$TEMP_DIR/download"
+fi
 
 java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --download \
@@ -58,10 +61,16 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --free_osm_after_read=true \
   --free_water_polygons_after_read=true \
   --free_lake_centerlines_after_read=true \
+  --tmpdir="$TEMP_DIR" \
   --temp_nodes="$TEMP_DIR/node.db" \
   --temp_multipolygons="$TEMP_DIR/multipolygon.db" \
   --temp_features="$TEMP_DIR/feature.db" \
   --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
+
+if [ -n "$CACHE_DIR" ]; then
+  echo "Leaving cache directory behind: $CACHE_DIR"
+  exit 0
+fi
 
 # safety checks for rm -rf:
 # - check if the directory exists
