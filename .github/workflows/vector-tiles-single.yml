@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Free Disk Space
-        if: inputs.skip_free_disk_space != 'true'
+        if: "!inputs.skip_free_disk_space"
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           tool-cache: true
@@ -67,6 +67,15 @@ jobs:
             packages/*/node_modules
             apps/*/node_modules
           key: lock-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      - name: Get planetiler from cache
+        uses: actions/cache@v4
+        id: cache-planetiler
+        with:
+          path: |
+            /home/runner/planetiler.jar
+          key: planetiler
           fail-on-cache-miss: true
 
       - name: Build
