@@ -51,10 +51,6 @@ on:
         required: true
         type: string
 
-      skip_tooling:
-        default: false
-        type: boolean
-
 jobs:
   fail-if-not-pbf:
     if: "!contains(inputs.url, '.pbf')"
@@ -68,45 +64,10 @@ jobs:
           echo "Error: The URL must point to a .pbf file."
           exit 1
 
-  tooling:
-    if: "!inputs.skip_tooling"
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache tooling
-        uses: actions/cache@v4
-        id: cache-tooling
-        with:
-          path: |
-            /home/runner/.asdf
-          key: tool-${{ hashFiles('.tool-versions') }}
-
-      - uses: asdf-vm/actions/install@v4
-
-      - name: Cache planetiler
-        uses: actions/cache@v4
-        id: cache-planetiler
-        with:
-          path: |
-            /home/runner/planetiler.jar
-          key: planetiler
-
-      - name: Install Planetiler
-        if: steps.cache-planetiler.outputs.cache-hit != 'true'
-        run: |
-          set -exu
-          wget -q https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
-
   build:
     runs-on: ubuntu-latest
 
     if: contains(inputs.url, '.pbf')
-
-    needs:
-      - tooling
 
     steps:
       - name: Maximise Disk Space
@@ -135,7 +96,12 @@ jobs:
           path: |
             /home/runner/planetiler.jar
           key: planetiler
-          fail-on-cache-miss: true
+
+      - name: Install Planetiler
+        if: steps.cache-planetiler.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          wget -q https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
 
       - name: Get planetiler data cache
         uses: actions/cache@v4
