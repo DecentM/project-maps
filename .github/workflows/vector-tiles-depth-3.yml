@@ -92,3 +92,4 @@ jobs:
           path: packages/map-tiles/dist/vector.zip
           if-no-files-found: error
           retention-days: 7
+          overwrite: 'true'
