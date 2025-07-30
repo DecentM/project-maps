@@ -45,15 +45,23 @@ if [ ! -d "$TEMP_DIR/download" ]; then
   mkdir -p "$TEMP_DIR/download"
 fi
 
-java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
+if [ -n "$CACHE_DIR" ]; then
+  echo "Using cache directory: $CACHE_DIR"
+  mkdir -p "$CACHE_DIR"
+else
+  CACHE_DIR="$TEMP_DIR/cache"
+  echo "No cache directory specified, using temporary cache: $CACHE_DIR"
+  mkdir -p "$CACHE_DIR"
+fi
+
+WORKDIR="$(pwd)"
+
+cd "$CACHE_DIR"
+
+java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --tmpdir="$TEMP_DIR" \
   --download_dir="$TEMP_DIR/download" \
   \
-  --temp_nodes="$TEMP_DIR/node.db" \
-  --temp_multipolygons="$TEMP_DIR/multipolygon.db" \
-  --temp_features="$TEMP_DIR/feature.db" \
-  \
-  --tile_weights="$CACHE_DIR/tile_weights.tsv.gz" \
   --ocean_url="$OCEAN_URL" \
   --admin_points_url="$ADMIN_POINTS_URL" \
   \
@@ -69,7 +77,6 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --compress_temp=true \
   \
   --fetch_wikidata=true \
-  --wikidata_cache="$CACHE_DIR/wikidata_names.json" \
   \
   --threads=4 \
   --process_threads=3 \
@@ -80,20 +87,19 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --sort_max_readers=4 \
   --sort_max_writers=4 \
   \
-  --water_polygons_path="$CACHE_DIR/water_polygons.shp.zip" \
   --refresh_water_polygons=true \
   \
-  --lake_centerlines_path="$CACHE_DIR/lake_centerline.shp.zip" \
   --refresh_lake_centerlines=true \
   \
-  --natural_earth_path="$CACHE_DIR/natural_earth.shp.zip" \
   --refresh_natural_earth=true \
   \
   --osm_url="$DOWNLOAD_URL" \
   --osm_path="$TEMP_DIR/download.osm.pbf" \
   --refresh_osm=true \
   --free_osm_after_read=true \
-  --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
+  --output="$WORKDIR/$OUTPUT_DIR/{z}/{x}/{y}.pbf"
+
+cd -
 
 if [ -n "$CACHE_DIR" ]; then
   echo "Leaving cache directory behind: $CACHE_DIR"
