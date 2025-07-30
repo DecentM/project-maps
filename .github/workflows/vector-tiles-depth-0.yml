@@ -26,13 +26,14 @@ jobs:
         with:
           path: |
             /home/runner/planetiler.jar
-          key: planetiler
+            /home/runner/planetiler-cache
+          key: planetiler-${{ inputs.name }}-${{ hashFiles('packages/map-tiles/bin/build_planetiles.sh') }}
 
       - name: Install Planetiler
         if: steps.cache-planetiler.outputs.cache-hit != 'true'
         run: |
           set -exu
-          wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
+          wget -q https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
 
   dependencies:
     needs:

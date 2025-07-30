@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - .devcontainer/**
-      - .github/workflows/devcontainer-prebuild.yml
+      - .github/workflows/devcontainer.yml
 
   workflow_dispatch:
 

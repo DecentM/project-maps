@@ -31,6 +31,7 @@ jobs:
 
     steps:
       - name: Free Disk Space
+        if: "!inputs.skip_free_disk_space"
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           tool-cache: true
@@ -44,7 +45,6 @@ jobs:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
 
       - uses: asdf-vm/actions/install@v4
 
@@ -57,9 +57,35 @@ jobs:
             packages/*/node_modules
             apps/*/node_modules
           key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
 
-      - name: Build
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: |
           set -exu
-          echo "Would build now."
+          pnpm install --frozen-lockfile
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '24'
+
+      - name: Get planetiler from cache
+        uses: actions/cache@v4
+        id: cache-planetiler
+        with:
+          path: |
+            /home/runner/planetiler.jar
+            /home/runner/planetiler-cache
+          key: planetiler-${{ inputs.name }}-${{ hashFiles('packages/map-tiles/bin/build_planetiles.sh') }}
+
+      - name: Install Planetiler
+        if: steps.cache-planetiler.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          wget -q https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
+
+      - name: Build
+        working-directory: packages/map-tiles
+        run: |
+          set -exu
+          bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar

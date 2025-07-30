@@ -40,3 +40,4 @@ jobs:
     uses: ./.github/workflows/vector-tiles-single.yml
     with:
       url: ${{ inputs.url }}
+      name: ${{ inputs.name }}
