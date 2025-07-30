@@ -64,8 +64,8 @@ jobs:
 
     uses: ./.github/workflows/vector-tiles-depth-2.yml
     with:
-      url: ${{ matrix.url }}
-      name: ${{ matrix.name }}
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
 
   build:
     runs-on: ubuntu-latest
