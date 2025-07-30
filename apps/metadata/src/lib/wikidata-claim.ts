@@ -35,6 +35,7 @@ export const ClaimId = {
   CommonsCategory: 'P373',
   ImageOfInterior: 'P5775',
   PlaqueImage: 'P1801',
+  WinterView: 'P5252',
 } as const
 
 export type ClaimId = (typeof ClaimId)[keyof typeof ClaimId]
