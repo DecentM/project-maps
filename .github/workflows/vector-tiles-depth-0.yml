@@ -57,21 +57,21 @@ jobs:
           set -exu
           pnpm install --frozen-lockfile
 
-  create-top-level-matrix:
+  create-recursion-matrix:
     uses: ./.github/workflows/create-recursion-matrix.yml
     with:
       url: https://download.geofabrik.de/
 
-  build:
+  recurse:
     needs:
       - dependencies
-      - create-top-level-matrix
+      - create-recursion-matrix
 
     strategy:
       fail-fast: false
       max-parallel: 3
       matrix:
-        pbf: ${{ fromJson(needs.create-top-level-matrix.outputs.matrix) }}
+        pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
 
     uses: ./.github/workflows/vector-tiles-depth-1.yml
     with:
