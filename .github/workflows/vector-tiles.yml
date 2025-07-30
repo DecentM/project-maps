@@ -89,9 +89,10 @@ jobs:
 
       - name: Create matrix
         id: create-matrix
+        working-directory: packages/map-tiles
         run: |
           set -exu
-          echo "::set-output name=matrix::$(pnpm tsx packages/map-tiles/bin/get-geofabric-matrix.ts https://download.geofabrik.de/)"
+          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts https://download.geofabrik.de/) >> $GITHUB_OUTPUT"
 
   # build-europe:
   #   needs:
