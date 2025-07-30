@@ -100,3 +100,9 @@ jobs:
       name: ${{ matrix.pbf.name }}
       ocean_url: ${{ matrix.pbf.ocean_url }}
       admin_points_url: ${{ matrix.pbf.admin_points_url }}
+
+  merge:
+    needs:
+      - recurse
+
+    uses: ./.github/workflows/vector-tiles-merge.yml

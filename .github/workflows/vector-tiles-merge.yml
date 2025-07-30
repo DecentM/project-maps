@@ -1,0 +1,29 @@
+name: Vector tiles (single)
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Free Disk Space
+        if: "!inputs.skip_free_disk_space"
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: tiles/
+          pattern: 'vector-tiles-*'
+          merge-multiple: true
+
+      - name: Check size
+        run: |
+          set -exu
+          ls -lh tiles/
+          du -cksh tiles/

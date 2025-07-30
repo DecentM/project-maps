@@ -41,6 +41,8 @@ jobs:
     with:
       url: ${{ matrix.pbf.url }}
       name: ${{ matrix.pbf.name }}
+      ocean_url: ${{ inputs.ocean_url }}
+      admin_points_url: ${{ inputs.admin_points_url }}
 
   build:
     if: contains(inputs.url, '.osm.pbf')
