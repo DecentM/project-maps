@@ -47,18 +47,17 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Get tooling from cache
+      - name: Cache tooling
         uses: actions/cache@v4
         id: cache-tooling
         with:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
 
       - uses: asdf-vm/actions/install@v4
 
-      - name: Get node_modules from cache
+      - name: Cache node_modules
         uses: actions/cache@v4
         id: cache-node-modules
         with:
@@ -66,17 +65,28 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}c
+          lookup-only: true
 
-      - name: Get planetiler from cache
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          pnpm install --frozen-lockfile
+
+      - name: Cache planetiler
         uses: actions/cache@v4
         id: cache-planetiler
         with:
           path: |
             /home/runner/planetiler.jar
           key: planetiler
-          fail-on-cache-miss: true
+
+      - name: Install Planetiler
+        if: steps.cache-planetiler.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
 
       - name: Build
         working-directory: packages/map-tiles
