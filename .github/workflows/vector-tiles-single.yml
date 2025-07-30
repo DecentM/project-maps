@@ -29,19 +29,9 @@ on:
         default: true
         type: boolean
 
-      cloudflare_deploy:
-        description: 'Deploy to Cloudflare'
-        required: false
-        default: true
-        type: boolean
-
   workflow_call:
     inputs:
       skip_free_disk_space:
-        default: false
-        type: boolean
-
-      cloudflare_deploy:
         default: false
         type: boolean
 
@@ -122,28 +112,6 @@ jobs:
           tool-cache: true
 
       - uses: actions/checkout@v4
-
-      - name: Get tooling from cache
-        uses: actions/cache@v4
-        id: cache-tooling
-        with:
-          path: |
-            /home/runner/.asdf
-          key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
-
-      - uses: asdf-vm/actions/install@v4
-
-      - name: Get node_modules from cache
-        uses: actions/cache@v4
-        id: cache-node-modules
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
 
       - uses: actions/setup-java@v4
         with:

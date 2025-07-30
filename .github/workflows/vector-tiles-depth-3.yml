@@ -46,28 +46,6 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Get tooling from cache
-        uses: actions/cache@v4
-        id: cache-tooling
-        with:
-          path: |
-            /home/runner/.asdf
-          key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
-
-      - uses: asdf-vm/actions/install@v4
-
-      - name: Get node_modules from cache
-        uses: actions/cache@v4
-        id: cache-node-modules
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
       - uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
@@ -95,3 +73,16 @@ jobs:
         run: |
           set -exu
           bin/build_planetiles.sh "${{ inputs.url }}" "${{ inputs.ocean_url }}" "${{ inputs.admin_points_url }}" dist/vector /home/runner/planetiler.jar /home/runner/planetiler-cache
+
+      - name: Zip Vector Tiles
+        working-directory: packages/map-tiles
+        run: |
+          set -exu
+          zip -rqmy0 dist/vector.zip dist/vector
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vector-tiles-${{ inputs.name }}
+          path: packages/map-tiles/dist/vector.zip
+          if-no-files-found: error
+          retention-days: 7
