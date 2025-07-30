@@ -60,22 +60,24 @@ cd "$CACHE_DIR"
 
 java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --tmpdir="$TEMP_DIR" \
-  --download_dir="$TEMP_DIR/download" \
   \
   --ocean_url="$OCEAN_URL" \
   --admin_points_url="$ADMIN_POINTS_URL" \
   \
   --download \
-  --refresh_sources=true \
   --download_osm_tile_weights=true \
-  --mmap_temp=true \
-  --skip_filled_tiles=true \
+  --download_dir="$TEMP_DIR/download" \
+  \
   --minzoom=0 \
   --maxzoom=14 \
   --render_maxzoom=14 \
+  \
+  --mmap_temp=true \
+  --skip_filled_tiles=true \
   --tile_compression=none \
   --compress_temp=true \
   \
+  --refresh_sources=true \
   --fetch_wikidata=true \
   \
   --threads=4 \
@@ -88,9 +90,7 @@ java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --sort_max_writers=4 \
   \
   --refresh_water_polygons=true \
-  \
   --refresh_lake_centerlines=true \
-  \
   --refresh_natural_earth=true \
   \
   --osm_url="$DOWNLOAD_URL" \
