@@ -1,22 +1,21 @@
 #!/bin/sh -e
 
-REGION="$1"
+DOWNLOAD_URL="$1"
 OUTPUT_DIR="$2"
 PLANETILER_JAR="$3"
-IMAGE_FORMAT="$4"
 
-if [ -z "$REGION" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ] || [ -z "$IMAGE_FORMAT" ]; then
-  echo "Usage: $0 <region> <output-dir> <planetiler-jar> <image-format>"
+if [ -z "$DOWNLOAD_URL" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ]; then
+  echo "Usage: $0 <download-url> <output-dir> <planetiler-jar>"
+  exit 1
+fi
+
+if ! echo "$DOWNLOAD_URL" | grep -qE '^https?://'; then
+  echo "Error: Invalid download URL '$DOWNLOAD_URL'. It should start with 'http://' or 'https://'."
   exit 1
 fi
 
 if [ ! -f "$PLANETILER_JAR" ]; then
   echo "Error: Planetiler JAR file not found at $PLANETILER_JAR"
-  exit 1
-fi
-
-if [ "$IMAGE_FORMAT" != "png" ] && [ "$IMAGE_FORMAT" != "pbf" ]; then
-  echo "Error: Invalid image format '$IMAGE_FORMAT'. Supported formats are 'png' and 'pbf'."
   exit 1
 fi
 
@@ -45,7 +44,7 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --download \
   --download_threads=1 \
   --refresh_sources=true \
-  --area="$REGION" \
+  --osm_url="$DOWNLOAD_URL" \
   --minzoom=0 \
   --maxzoom=14 \
   --render_maxzoom=14 \

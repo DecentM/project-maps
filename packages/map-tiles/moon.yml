@@ -8,7 +8,7 @@ tasks:
     command: sh
     args:
       - -c
-      - rm -rf ./dist/vector && bin/build_planetiles.sh $TILES_REGION ./dist/vector ~/planetiler.jar pbf $WATER_DOWNLOAD_URL $LAKE_CENTERLINE_DOWNLOAD_URL $NATURAL_EARTH_DOWNLOAD_URL
+      - rm -rf ./dist/vector && bin/build_planetiles.sh $TILES_DOWNLOAD_URL ./dist/vector ~/planetiler.jar
     inputs:
       - ./bin/build_planetiles.sh
       - ./src/vector

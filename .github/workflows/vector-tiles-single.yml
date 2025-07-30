@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       url:
-        description: 'URL to the workflow'
+        description: 'URL to the pbf'
         required: true
-        default: 'https://download.geofabrik.de'
+        default: 'https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf'
 
   workflow_call:
     inputs:
@@ -15,8 +15,22 @@ on:
         type: string
 
 jobs:
+  fail-if-not-pbf:
+    if: "!contains(inputs.url, '.pbf')"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fail if not .pbf
+        run: |
+          set -exu
+          echo "Error: The URL must point to a .pbf file."
+          exit 1
+
   build:
     runs-on: ubuntu-latest
+
+    if: contains(inputs.url, '.pbf')
 
     steps:
       - name: Free Disk Space
@@ -49,6 +63,7 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Build
+        working-directory: packages/map-tiles
         run: |
           set -exu
-          echo "Would build now."
+          bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar
