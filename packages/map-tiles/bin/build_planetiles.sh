@@ -54,6 +54,10 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --compress_temp=true \
   --tile_write_threads=2 \
   --feature_read_threads=2 \
+  --free_natural_earth_after_read=true \
+  --free_osm_after_read=true \
+  --free_water_polygons_after_read=true \
+  --free_lake_centerlines_after_read=true \
   --temp_nodes="$TEMP_DIR/node.db" \
   --temp_multipolygons="$TEMP_DIR/multipolygon.db" \
   --temp_features="$TEMP_DIR/feature.db" \
