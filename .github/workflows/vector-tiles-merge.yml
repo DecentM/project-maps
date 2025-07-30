@@ -1,4 +1,4 @@
-name: Vector tiles (single)
+name: Merge Vector Tiles
 
 on:
   workflow_call:
