@@ -19,6 +19,7 @@ jobs:
           key: tool-${{ hashFiles('.tool-versions') }}
 
       - uses: asdf-vm/actions/install@v4
+        if: steps.cache-tooling.outputs.cache-hit != 'true'
 
       - name: Cache planetiler
         uses: actions/cache@v4
