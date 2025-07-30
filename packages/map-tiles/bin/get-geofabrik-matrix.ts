@@ -11,7 +11,9 @@ const cmd = program
   .parse()
 
 const print = (message: string | object) =>
-  process.stdout.write(`${typeof message === 'string' ? message : JSON.stringify(message)}\n`)
+  process.stdout.write(
+    `${typeof message === 'string' ? message : JSON.stringify(message, null, 2)}\n`
+  )
 
 const [url] = cmd.args
 
@@ -62,7 +64,30 @@ for (const subregion of subregions$) {
   const regionName = link$?.getAttribute('href')?.split('/')?.pop()?.replace('.html', '')
 
   const shape$ = subregion.querySelector('a[href*=".shp."]')
-  const isLeaf = shape$ !== null
+  const size$ = subregion.querySelector('td:nth-child(3)')
+
+  const [sizeValue, sizeUnit] =
+    size$?.textContent
+      ?.substring(1, size$.textContent.length - 1)
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ') ?? []
+
+  let sizeAcceptable = false
+
+  if (sizeValue && sizeUnit) {
+    const sizeNumber = Number.parseFloat(sizeValue)
+
+    if (sizeUnit === 'GB' || sizeUnit === 'GiB') {
+      sizeAcceptable = !Number.isNaN(sizeNumber) && sizeNumber < 4 && sizeNumber > 0
+    }
+
+    if (sizeUnit === 'MB' || sizeUnit === 'MiB') {
+      sizeAcceptable = true
+    }
+  }
+
+  const isLeaf = shape$ !== null || sizeAcceptable
 
   const url$ = subregion.querySelector(isLeaf ? 'a[href$=".osm.pbf"]' : 'a[href$=".html"]')
   const href = url$?.getAttribute('href')
