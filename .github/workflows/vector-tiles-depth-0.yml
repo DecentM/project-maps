@@ -26,8 +26,7 @@ jobs:
         with:
           path: |
             /home/runner/planetiler.jar
-            /home/runner/planetiler-cache
-          key: planetiler-${{ inputs.name }}-${{ hashFiles('packages/map-tiles/bin/build_planetiles.sh') }}
+          key: planetiler
 
       - name: Install Planetiler
         if: steps.cache-planetiler.outputs.cache-hit != 'true'
@@ -90,8 +89,14 @@ jobs:
       max-parallel: 5
       matrix:
         pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
+        ocean_url:
+          - https://osmdata.openstreetmap.de/download/simplified-water-polygons-split-3857.zip
+        admin_points_url:
+          - https://shortbread.geofabrik.de/shapefiles/admin-points-4326.zip
 
     uses: ./.github/workflows/vector-tiles-depth-1.yml
     with:
       url: ${{ matrix.pbf.url }}
       name: ${{ matrix.pbf.name }}
+      ocean_url: ${{ matrix.pbf.ocean_url }}
+      admin_points_url: ${{ matrix.pbf.admin_points_url }}

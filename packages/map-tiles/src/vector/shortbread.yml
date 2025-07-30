@@ -3,19 +3,22 @@ schema_description: A vector tile schema for OpenStreetMap data using Shortbread
 attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
 examples: shortbread.spec.yml
 args:
-  area:
-    description: Geofabrik area to download
-    default: greater-london
   osm_url:
     description: OSM URL to download
-    default: '${ args.area == "planet" ? "aws:latest" : ("geofabrik:" + args.area) }'
+    default: 'https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf'
+  ocean_url:
+    description: URL to download ocean shapefile
+    default: 'https://osmdata.openstreetmap.de/download/simplified-water-polygons-split-3857.zip'
+  admin_points_url:
+    description: URL to download admin points shapefile
+    default: 'https://shortbread.geofabrik.de/shapefiles/admin-points-4326.zip'
 sources:
   ocean:
     type: shapefile
-    url: https://osmdata.openstreetmap.de/download/simplified-water-polygons-split-3857.zip
+    url: '${ args.ocean_url }'
   admin_points:
     type: shapefile
-    url: https://shortbread.geofabrik.de/shapefiles/admin-points-4326.zip
+    url: '${ args.admin_points_url }'
   osm:
     type: osm
     url: '${ args.osm_url }'

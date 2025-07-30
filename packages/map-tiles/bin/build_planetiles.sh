@@ -1,12 +1,14 @@
 #!/bin/sh -ex
 
 DOWNLOAD_URL="$1"
-OUTPUT_DIR="$2"
-PLANETILER_JAR="$3"
-CACHE_DIR="$4"
+OCEAN_URL="$2"
+ADMIN_POINTS_URL="$3"
+OUTPUT_DIR="$4"
+PLANETILER_JAR="$5"
+CACHE_DIR="$6"
 
-if [ -z "$DOWNLOAD_URL" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ]; then
-  echo "Usage: $0 <download-url> <output-dir> <planetiler-jar>"
+if [ -z "$DOWNLOAD_URL" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$PLANETILER_JAR" ] || [ -z "$OCEAN_URL" ] || [ -z "$ADMIN_POINTS_URL" ]; then
+  echo "Usage: $0 <download-url> <ocean-url> <admin-points-url> <output-dir> <planetiler-jar>"
   exit 1
 fi
 
@@ -37,35 +39,60 @@ fi
 
 set -u
 
-TEMP_DIR="${CACHE_DIR:-$(mktemp -d -p ~/)}"
+TEMP_DIR="$(mktemp -d -p ~/)"
 
 if [ ! -d "$TEMP_DIR/download" ]; then
   mkdir -p "$TEMP_DIR/download"
 fi
 
 java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
+  --tmpdir="$TEMP_DIR" \
+  --download_dir="$TEMP_DIR/download" \
+  \
+  --temp_nodes="$TEMP_DIR/node.db" \
+  --temp_multipolygons="$TEMP_DIR/multipolygon.db" \
+  --temp_features="$TEMP_DIR/feature.db" \
+  \
+  --tile_weights="$CACHE_DIR/tile_weights.tsv.gz" \
+  --ocean_url="$OCEAN_URL" \
+  --admin_points_url="$ADMIN_POINTS_URL" \
+  \
   --download \
-  --download_threads=2 \
   --refresh_sources=true \
+  --download_osm_tile_weights=true \
+  --mmap_temp=true \
   --skip_filled_tiles=true \
-  --osm_url="$DOWNLOAD_URL" \
   --minzoom=0 \
   --maxzoom=14 \
   --render_maxzoom=14 \
   --tile_compression=none \
-  --fetch_wikidata=true \
-  --download_osm_tile_weights=true \
   --compress_temp=true \
-  --tile_write_threads=2 \
-  --feature_read_threads=2 \
-  --free_natural_earth_after_read=true \
+  \
+  --fetch_wikidata=true \
+  --wikidata_cache="$CACHE_DIR/wikidata_names.json" \
+  \
+  --threads=4 \
+  --process_threads=3 \
+  --download_threads=1 \
+  --write_threads=1 \
+  --tile_write_threads=1 \
+  --feature_read_threads=1 \
+  --sort_max_readers=4 \
+  --sort_max_writers=4 \
+  \
+  --water_polygons_path="$CACHE_DIR/water_polygons.shp.zip" \
+  --refresh_water_polygons=true \
+  \
+  --lake_centerlines_path="$CACHE_DIR/lake_centerline.shp.zip" \
+  --refresh_lake_centerlines=true \
+  \
+  --natural_earth_path="$CACHE_DIR/natural_earth.shp.zip" \
+  --refresh_natural_earth=true \
+  \
+  --osm_url="$DOWNLOAD_URL" \
+  --osm_path="$TEMP_DIR/download.osm.pbf" \
+  --refresh_osm=true \
   --free_osm_after_read=true \
-  --free_water_polygons_after_read=true \
-  --free_lake_centerlines_after_read=true \
-  --tmpdir="$TEMP_DIR" \
-  --temp_nodes="$TEMP_DIR/node.db" \
-  --temp_multipolygons="$TEMP_DIR/multipolygon.db" \
-  --temp_features="$TEMP_DIR/feature.db" \
   --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 
 if [ -n "$CACHE_DIR" ]; then

@@ -11,6 +11,14 @@ on:
         required: true
         type: string
 
+      ocean_url:
+        required: true
+        type: string
+
+      admin_points_url:
+        required: true
+        type: string
+
 jobs:
   create-recursion-matrix:
     if: contains(inputs.url, '.html')
@@ -41,3 +49,5 @@ jobs:
     with:
       url: ${{ inputs.url }}
       name: ${{ inputs.name }}
+      ocean_url: ${{ inputs.ocean_url }}
+      admin_points_url: ${{ inputs.admin_points_url }}
