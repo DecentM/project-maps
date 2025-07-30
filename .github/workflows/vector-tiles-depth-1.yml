@@ -13,44 +13,11 @@ on:
 
 jobs:
   create-recursion-matrix:
-    runs-on: ubuntu-latest
-
     if: contains(inputs.url, '.html')
 
-    outputs:
-      matrix: ${{ steps.create-matrix.outputs.matrix }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get tooling from cache
-        uses: actions/cache@v4
-        id: cache-tooling
-        with:
-          path: |
-            /home/runner/.asdf
-          key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
-
-      - uses: asdf-vm/actions/install@v4
-
-      - name: Get node_modules from cache
-        uses: actions/cache@v4
-        id: cache-node-modules
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      - name: Create matrix
-        id: create-matrix
-        working-directory: packages/map-tiles
-        run: |
-          set -exu
-          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts ${{ inputs.url }})" >> $GITHUB_OUTPUT
+    uses: ./.github/workflows/create-recursion-matrix.yml
+    with:
+      url: ${{ inputs.url }}
 
   recurse:
     needs:

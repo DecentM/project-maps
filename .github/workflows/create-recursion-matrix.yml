@@ -7,6 +7,11 @@ on:
         required: true
         type: string
 
+    outputs:
+      matrix:
+        description: The recursion matrix for vector tiles.
+        value: ${{ jobs.create-recursion-matrix.outputs.matrix }}
+
 jobs:
   create-recursion-matrix:
     runs-on: ubuntu-latest
