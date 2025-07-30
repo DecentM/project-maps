@@ -50,7 +50,7 @@ jobs:
         working-directory: packages/map-tiles
         run: |
           set -exu
-          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts ${{ inputs.url }}) >> $GITHUB_OUTPUT"
+          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts ${{ inputs.url }})" >> $GITHUB_OUTPUT
 
   recurse:
     needs:

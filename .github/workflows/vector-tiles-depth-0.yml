@@ -49,7 +49,11 @@ jobs:
             packages/*/node_modules
             apps/*/node_modules
           key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
+
+      - name: Install dependencies
+        run: |
+          set -exu
+          pnpm install --frozen-lockfile
 
   create-top-level-matrix:
     needs:
@@ -90,7 +94,7 @@ jobs:
         working-directory: packages/map-tiles
         run: |
           set -exu
-          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts https://download.geofabrik.de/) >> $GITHUB_OUTPUT"
+          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts https://download.geofabrik.de/)" >> $GITHUB_OUTPUT
 
   build:
     needs:
