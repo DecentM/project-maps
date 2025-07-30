@@ -1,12 +1,15 @@
 name: Vector tiles (single)
 
 on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to the workflow'
+        required: true
+        default: 'https://download.geofabrik.de'
+
   workflow_call:
     inputs:
-      name:
-        required: true
-        type: string
-
       url:
         required: true
         type: string
