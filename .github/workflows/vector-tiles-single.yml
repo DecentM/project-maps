@@ -123,6 +123,7 @@ jobs:
           bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar /home/runner/planetiler-cache
 
       - name: Zip Vector Tiles
+        working-directory: packages/map-tiles
         run: |
           set -exu
           zip -r dist/vector.zip dist/vector
