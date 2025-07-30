@@ -43,6 +43,8 @@ mkdir -p "$TEMP_DIR/download"
 
 java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --download \
+  --download_threads=1 \
+  --refresh_sources=true \
   --area="$REGION" \
   --minzoom=0 \
   --maxzoom=14 \
@@ -53,6 +55,9 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --compress_temp=true \
   --tile_write_threads=2 \
   --feature_read_threads=2 \
+  --temp_nodes="$TEMP_DIR/node.db" \
+  --temp_multipolygons="$TEMP_DIR/multipolygon.db" \
+  --temp_features="$TEMP_DIR/feature.db" \
   --output="$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 
 # safety checks for rm -rf:

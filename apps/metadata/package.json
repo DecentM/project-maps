@@ -7,7 +7,6 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.11.2",
     "@project-maps/logging": "workspace:*",
-    "@project-maps/opening-hours-parser": "workspace:^",
     "@project-maps/proto": "workspace:*",
     "emittery": "^1.0.3",
     "fast-xml-parser": "^4.4.1",

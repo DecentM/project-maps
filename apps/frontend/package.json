@@ -22,7 +22,6 @@
     "@project-maps/map-fonts": "workspace:^",
     "@project-maps/map-style": "workspace:^",
     "@project-maps/map-tiles": "workspace:^",
-    "@project-maps/opening-hours-parser": "workspace:^",
     "@project-maps/proto": "workspace:^",
     "@quasar/extras": "^1.16.12",
     "@turf/turf": "^7.1.0",
