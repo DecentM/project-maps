@@ -47,6 +47,7 @@ java -Xmx4g -jar "$PLANETILER_JAR" src/vector/shortbread.yml \
   --download \
   --download_threads=1 \
   --refresh_sources=true \
+  --skip_filled_tiles=true \
   --osm_url="$DOWNLOAD_URL" \
   --minzoom=0 \
   --maxzoom=14 \
