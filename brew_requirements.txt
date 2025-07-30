@@ -1,4 +1,0 @@
-curl
-gdal
-flother/taps/spreet
-unzip
