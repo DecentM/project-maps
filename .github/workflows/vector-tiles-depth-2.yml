@@ -53,3 +53,4 @@ jobs:
       name: ${{ inputs.name }}
       ocean_url: ${{ inputs.ocean_url }}
       admin_points_url: ${{ inputs.admin_points_url }}
+      skip_tooling: true

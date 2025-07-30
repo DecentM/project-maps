@@ -51,6 +51,10 @@ on:
         required: true
         type: string
 
+      skip_tooling:
+        default: false
+        type: boolean
+
 jobs:
   fail-if-not-pbf:
     if: "!contains(inputs.url, '.pbf')"
@@ -65,7 +69,7 @@ jobs:
           exit 1
 
   tooling:
-    if: contains(inputs.url, '.pbf') && github.event_name == 'workflow_dispatch'
+    if: "!inputs.skip_tooling"
 
     runs-on: ubuntu-latest
 
