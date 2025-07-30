@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 DOWNLOAD_URL="$1"
 OUTPUT_DIR="$2"

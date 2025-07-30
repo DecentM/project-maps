@@ -43,7 +43,7 @@ tasks:
       - -w
       - Dockerfile
       - --exec
-      - moon map-tiles:build_vector map-tiles:build_tints
+      - moon map-tiles:build_tints
     options:
       cache: false
       persistent: true

@@ -1,16 +1,18 @@
-name: Vector tiles (single)
+name: Vector tiles (Single Manual)
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      skip_free_disk_space:
-        description: Skip the step to free disk space
-        default: false
-        type: boolean
-
       url:
+        description: 'URL to the pbf'
         required: true
-        type: string
+        default: 'https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf'
+
+      skip_free_disk_space:
+        description: 'Skip free disk space step'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   fail-if-not-pbf:
@@ -39,18 +41,17 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Get tooling from cache
+      - name: Cache tooling
         uses: actions/cache@v4
         id: cache-tooling
         with:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
 
       - uses: asdf-vm/actions/install@v4
 
-      - name: Get node_modules from cache
+      - name: Cache node_modules
         uses: actions/cache@v4
         id: cache-node-modules
         with:
@@ -58,25 +59,46 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}c
+          lookup-only: true
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          pnpm install --frozen-lockfile
 
       - uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: '24'
 
-      - name: Get planetiler from cache
+      - name: Cache planetiler
         uses: actions/cache@v4
         id: cache-planetiler
         with:
           path: |
             /home/runner/planetiler.jar
           key: planetiler
-          fail-on-cache-miss: true
+
+      - name: Install Planetiler
+        if: steps.cache-planetiler.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
 
       - name: Build
         working-directory: packages/map-tiles
         run: |
           set -exu
           bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar
+
+      - name: Upload Vector Tiles
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_ACCOUNT_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: packages/map-tiles
+          command: |
+            pages deploy dist/vector --project-name=project-maps-tiles --branch=${{ github.ref_name }}
