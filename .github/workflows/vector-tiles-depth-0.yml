@@ -58,6 +58,9 @@ jobs:
           pnpm install --frozen-lockfile
 
   create-recursion-matrix:
+    needs:
+      - dependencies
+
     uses: ./.github/workflows/create-recursion-matrix.yml
     with:
       url: https://download.geofabrik.de/
