@@ -120,7 +120,7 @@ jobs:
         working-directory: packages/map-tiles
         run: |
           set -exu
-          bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar
+          bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar /home/runner/planetiler-cache
 
       - uses: actions/upload-artifact@v4
         with:
