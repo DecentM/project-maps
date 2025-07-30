@@ -1,10 +1,32 @@
 name: Vector tiles (single)
 
 on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to the pbf'
+        required: true
+        default: 'https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf'
+
+      skip_free_disk_space:
+        description: 'Skip free disk space step'
+        required: false
+        default: true
+        type: boolean
+
+      cloudflare_deploy:
+        description: 'Deploy to Cloudflare'
+        required: false
+        default: true
+        type: boolean
+
   workflow_call:
     inputs:
       skip_free_disk_space:
-        description: Skip the step to free disk space
+        default: false
+        type: boolean
+
+      cloudflare_deploy:
         default: false
         type: boolean
 
@@ -46,7 +68,6 @@ jobs:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
 
       - uses: asdf-vm/actions/install@v4
 
@@ -59,7 +80,12 @@ jobs:
             packages/*/node_modules
             apps/*/node_modules
           key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          pnpm install --frozen-lockfile
 
       - uses: actions/setup-java@v4
         with:
@@ -72,11 +98,28 @@ jobs:
         with:
           path: |
             /home/runner/planetiler.jar
+            /home/runner/planetiler-cache
           key: planetiler
-          fail-on-cache-miss: true
+
+      - name: Install Planetiler
+        if: steps.cache-planetiler.outputs.cache-hit != 'true'
+        run: |
+          set -exu
+          wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O /home/runner/planetiler.jar
 
       - name: Build
         working-directory: packages/map-tiles
         run: |
           set -exu
           bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar
+
+      - name: Upload Vector Tiles
+        if: inputs.cloudflare_deploy == true
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_ACCOUNT_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: packages/map-tiles
+          command: |
+            pages deploy dist/vector --project-name=project-maps-tiles --branch=${{ github.ref_name }}
