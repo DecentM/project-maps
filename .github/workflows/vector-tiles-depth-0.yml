@@ -58,45 +58,9 @@ jobs:
           pnpm install --frozen-lockfile
 
   create-top-level-matrix:
-    needs:
-      - dependencies
-
-    runs-on: ubuntu-latest
-
-    outputs:
-      matrix: ${{ steps.create-matrix.outputs.matrix }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get tooling from cache
-        uses: actions/cache@v4
-        id: cache-tooling
-        with:
-          path: |
-            /home/runner/.asdf
-          key: tool-${{ hashFiles('.tool-versions') }}
-          fail-on-cache-miss: true
-
-      - uses: asdf-vm/actions/install@v4
-
-      - name: Get node_modules from cache
-        uses: actions/cache@v4
-        id: cache-node-modules
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      - name: Create matrix
-        id: create-matrix
-        working-directory: packages/map-tiles
-        run: |
-          set -exu
-          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts https://download.geofabrik.de/)" >> $GITHUB_OUTPUT
+    uses: ./.github/workflows/create-recursion-matrix.yml
+    with:
+      url: https://download.geofabrik.de/
 
   build:
     needs:

@@ -1,12 +1,8 @@
-name: Vector tiles (depth 1)
+name: Create Recursion Matrix
 
 on:
   workflow_call:
     inputs:
-      name:
-        required: true
-        type: string
-
       url:
         required: true
         type: string
@@ -14,8 +10,6 @@ on:
 jobs:
   create-recursion-matrix:
     runs-on: ubuntu-latest
-
-    if: contains(inputs.url, '.html')
 
     outputs:
       matrix: ${{ steps.create-matrix.outputs.matrix }}
@@ -51,26 +45,3 @@ jobs:
         run: |
           set -exu
           echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts ${{ inputs.url }})" >> $GITHUB_OUTPUT
-
-  recurse:
-    needs:
-      - create-recursion-matrix
-
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix:
-        pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
-
-    uses: ./.github/workflows/vector-tiles-depth-2.yml
-    with:
-      url: ${{ matrix.pbf.url }}
-      name: ${{ matrix.pbf.name }}
-
-  build:
-    if: contains(inputs.url, '.osm.pbf')
-
-    uses: ./.github/workflows/vector-tiles-single.yml
-    with:
-      url: ${{ inputs.url }}
-      name: ${{ inputs.name }}
