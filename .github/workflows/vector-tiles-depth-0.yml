@@ -17,10 +17,8 @@ jobs:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
-          lookup-only: true
 
       - uses: asdf-vm/actions/install@v4
-        if: steps.cache-tooling.outputs.cache-hit == 'true'
 
   dependencies:
     needs:
