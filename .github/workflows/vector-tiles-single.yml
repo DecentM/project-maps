@@ -126,7 +126,7 @@ jobs:
         working-directory: packages/map-tiles
         run: |
           set -exu
-          zip -rq dist/vector.zip dist/vector
+          zip -rqmy0 dist/vector.zip dist/vector
 
       - uses: actions/upload-artifact@v4
         with:
