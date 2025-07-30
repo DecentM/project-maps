@@ -17,8 +17,10 @@ jobs:
           path: |
             /home/runner/.asdf
           key: tool-${{ hashFiles('.tool-versions') }}
+          lookup-only: true
 
       - uses: asdf-vm/actions/install@v4
+        if: steps.cache-tooling.outputs.cache-hit == 'true'
 
   dependencies:
     needs:
@@ -69,7 +71,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 5
       matrix:
         pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
 

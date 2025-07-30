@@ -12,17 +12,27 @@ on:
         type: string
 
 jobs:
-  fail-if-not-pbf:
-    runs-on: ubuntu-latest
-
+  create-recursion-matrix:
     if: contains(inputs.url, '.html')
 
-    steps:
-      - name: Fail if not .osm.pbf
-        run: |
-          set -exu
-          echo "Ran out of depth."
-          exit 1
+    uses: ./.github/workflows/create-recursion-matrix.yml
+    with:
+      url: ${{ inputs.url }}
+
+  recurse:
+    needs:
+      - create-recursion-matrix
+
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
+
+    uses: ./.github/workflows/vector-tiles-depth-3.yml
+    with:
+      url: ${{ matrix.pbf.url }}
+      name: ${{ matrix.pbf.name }}
 
   build:
     if: contains(inputs.url, '.osm.pbf')
