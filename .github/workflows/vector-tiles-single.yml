@@ -125,7 +125,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: vector-tiles-${{ inputs.name }}
-          path: dist/vector/
+          path: packages/map-tiles/dist/vector/
           if-no-files-found: error
           retention-days: 7
 

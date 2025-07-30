@@ -11,9 +11,7 @@ const cmd = program
   .parse()
 
 const print = (message: string | object) =>
-  process.stdout.write(
-    `${typeof message === 'string' ? message : JSON.stringify(message, null, 2)}\n`
-  )
+  process.stdout.write(`${typeof message === 'string' ? message : JSON.stringify(message)}\n`)
 
 const [url] = cmd.args
 
