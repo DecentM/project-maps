@@ -122,10 +122,15 @@ jobs:
           set -exu
           bin/build_planetiles.sh "${{ inputs.url }}" dist/vector /home/runner/planetiler.jar /home/runner/planetiler-cache
 
+      - name: Zip Vector Tiles
+        run: |
+          set -exu
+          zip -r dist/vector.zip dist/vector
+
       - uses: actions/upload-artifact@v4
         with:
           name: vector-tiles-${{ inputs.name }}
-          path: packages/map-tiles/dist/vector/
+          path: packages/map-tiles/dist/vector.zip
           if-no-files-found: error
           retention-days: 7
 
