@@ -109,7 +109,6 @@ jobs:
         with:
           path: |
             /home/runner/work/project-maps/project-maps/planetiler-cache
-          fail-on-cache-miss: true
           key: planetiler-data-${{ github.run_id }}
 
       - name: Build

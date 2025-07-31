@@ -66,38 +66,17 @@ java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --admin_points_url="$ADMIN_POINTS_URL" \
   \
   --download \
-  --download_osm_tile_weights=true \
   --download_dir="$TEMP_DIR/download" \
-  \
-  --minzoom=0 \
-  --maxzoom=14 \
-  --render_maxzoom=14 \
-  \
-  --mmap_temp=true \
-  --skip_filled_tiles=true \
-  --tile_compression=none \
-  --compress_temp=true \
-  \
-  --refresh_sources=true \
   --fetch_wikidata=true \
   \
   --threads=4 \
-  --process_threads=3 \
-  --download_threads=1 \
-  --write_threads=1 \
-  --tile_write_threads=1 \
-  --feature_read_threads=1 \
-  --sort_max_readers=4 \
-  --sort_max_writers=4 \
+  --minzoom=0 \
+  --maxzoom=14 \
+  --render_maxzoom=14 \
+  --skip_filled_tiles=true \
   \
-  --refresh_water_polygons=true \
-  --refresh_lake_centerlines=true \
-  --refresh_natural_earth=true \
-  \
-  --osm_lazy_reads=false \
   --osm_url="$DOWNLOAD_URL" \
   --osm_path="$TEMP_DIR/download.osm.pbf" \
-  --refresh_osm=true \
   --free_osm_after_read=true \
   --output="$WORKDIR/$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 
