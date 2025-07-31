@@ -9,12 +9,12 @@ WORKDIR /home/user
 
 RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg --noconfirm -si && cd - && rm -rf yay && yay -Sy
 
-RUN yay -S --noconfirm jq=1.8.1-1
-RUN yay -S --noconfirm unzip=6.0-23
-RUN yay -S --noconfirm asdf-vm=0.18.0-1
-RUN yay -S --noconfirm spreet=0.12.1-1
-RUN yay -S --noconfirm jre-openjdk=24.0.2.u12-1
-RUN yay -S --noconfirm concourse-fly-cli=7.13.1-1
+RUN yay -S --noconfirm --removemake concourse-fly-cli=7.13.1-1 && yay -Sc --noconfirm
+RUN yay -S --noconfirm --removemake spreet=0.12.1-1 && yay -Sc --noconfirm
+RUN yay -S --noconfirm --removemake jre-openjdk=24.0.2.u12-1 && yay -Sc --noconfirm
+RUN yay -S --noconfirm --removemake jq=1.8.1-1 && yay -Sc --noconfirm
+RUN yay -S --noconfirm --removemake unzip=6.0-23 && yay -Sc --noconfirm
+RUN yay -S --noconfirm --removemake asdf-vm=0.18.0-1 && yay -Sc --noconfirm
 
 RUN echo 'export PATH="$PATH:${ASDF_DATA_DIR:-$HOME/.asdf}/shims" && . <(asdf completion bash)' >>~/.bashrc
 
