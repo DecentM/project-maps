@@ -94,6 +94,7 @@ java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --refresh_lake_centerlines=true \
   --refresh_natural_earth=true \
   \
+  --osm_lazy_reads=false \
   --osm_url="$DOWNLOAD_URL" \
   --osm_path="$TEMP_DIR/download.osm.pbf" \
   --refresh_osm=true \

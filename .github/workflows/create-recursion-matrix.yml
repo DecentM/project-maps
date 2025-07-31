@@ -7,6 +7,14 @@ on:
         required: true
         type: string
 
+      current_depth:
+        required: true
+        type: number
+
+      max_depth:
+        required: true
+        type: number
+
     outputs:
       matrix:
         description: The recursion matrix for vector tiles.
@@ -49,4 +57,4 @@ jobs:
         working-directory: packages/map-tiles
         run: |
           set -exu
-          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts ${{ inputs.url }})" >> $GITHUB_OUTPUT
+          echo "matrix=$(pnpm tsx bin/get-geofabrik-matrix.ts ${{ inputs.url }} ${{ inputs.current_depth }} ${{ inputs.max_depth }})" >> $GITHUB_OUTPUT

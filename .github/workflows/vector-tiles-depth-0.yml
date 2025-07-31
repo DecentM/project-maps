@@ -79,6 +79,8 @@ jobs:
     uses: ./.github/workflows/create-recursion-matrix.yml
     with:
       url: https://download.geofabrik.de/
+      current_depth: 0
+      max_depth: 2
 
   depth-0:
     needs:

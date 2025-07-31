@@ -26,6 +26,8 @@ jobs:
     uses: ./.github/workflows/create-recursion-matrix.yml
     with:
       url: ${{ inputs.url }}
+      current_depth: 2
+      max_depth: 2
 
   depth-2:
     needs:

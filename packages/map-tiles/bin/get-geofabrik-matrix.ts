@@ -8,12 +8,14 @@ const cmd = program
   .name('get-geofabrik-matrix')
   .description('Fetches the Geofabrik matrix and outputs it as JSON')
   .argument('<url>', 'URL of the Geofabrik index')
+  .argument('<current-depth>', 'Current recursion depth')
+  .argument('<max-depth>', 'Maximum recursion depth')
   .parse()
 
 const print = (message: string | object) =>
   process.stdout.write(`${typeof message === 'string' ? message : JSON.stringify(message)}\n`)
 
-const [url] = cmd.args
+const [url, currentDepth, maxDepth] = cmd.args
 
 const response = await got.get(url, { responseType: 'text' })
 
@@ -81,7 +83,7 @@ for (const subregion of subregions$) {
     }
   }
 
-  const isLeaf = shape$ !== null || sizeAcceptable
+  const isLeaf = shape$ !== null || sizeAcceptable || currentDepth === maxDepth
 
   const url$ = subregion.querySelector(isLeaf ? 'a[href$=".osm.pbf"]' : 'a[href$=".html"]')
   const href = url$?.getAttribute('href')
