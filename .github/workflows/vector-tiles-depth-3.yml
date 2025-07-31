@@ -93,3 +93,18 @@ jobs:
           if-no-files-found: error
           retention-days: 7
           overwrite: 'true'
+
+  rerun-on-failure:
+    runs-on: ubuntu-latest
+
+    needs:
+      - build
+
+    if: failure() && fromJSON(github.run_attempt) < 3
+
+    steps:
+      - run: gh workflow run rerun.yml -r ${{ github.head_ref || github.ref_name }} -F run_id=${{ github.run_id }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api

@@ -44,6 +44,21 @@ jobs:
       ocean_url: ${{ inputs.ocean_url }}
       admin_points_url: ${{ inputs.admin_points_url }}
 
+  rerun-on-failure:
+    runs-on: ubuntu-latest
+
+    needs:
+      - depth-2
+
+    if: failure() && fromJSON(github.run_attempt) < 3
+
+    steps:
+      - run: gh workflow run rerun.yml -r ${{ github.head_ref || github.ref_name }} -F run_id=${{ github.run_id }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+
   build:
     if: contains(inputs.url, '.osm.pbf')
 
