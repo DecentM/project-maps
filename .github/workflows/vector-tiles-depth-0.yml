@@ -63,7 +63,7 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: lock-${{ hashFiles('pnpm-lock.yaml') }}c
+          key: lock-${{ hashFiles('pnpm-lock.yaml') }}
           lookup-only: true
 
       - name: Install dependencies
