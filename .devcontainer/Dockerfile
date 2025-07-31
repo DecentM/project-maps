@@ -1,6 +1,7 @@
 FROM quay.io/toolbx/arch-toolbox:latest
 
 RUN pacman -S --needed git base-devel
+RUN wget https://github.com/concourse/concourse/releases/download/v7.13.2/fly-7.13.2-linux-amd64.tgz -qO- | tar xzv && mv fly /usr/local/bin/fly && chmod +x /usr/local/bin/fly
 
 RUN useradd -G wheel -m user
 
@@ -9,7 +10,6 @@ WORKDIR /home/user
 
 RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg --noconfirm -si && cd - && rm -rf yay && yay -Sy
 
-RUN yay -S --noconfirm --removemake concourse-fly-cli=7.13.1-1 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake spreet=0.12.1-1 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake jre-openjdk=24.0.2.u12-1 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake jq=1.8.1-1 && yay -Sc --noconfirm
