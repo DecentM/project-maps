@@ -4,11 +4,11 @@ services:
     network_mode: host
     volumes:
       - ..:/workspace:cached
-      - ${HOME}/.ssh:/root/.ssh:ro
-      - ${HOME}/.gitconfig:/root/.gitconfig:ro
-      - ${HOME}/.npmrc:/root/.npmrc:ro
-      - ${HOME}/.gnupg:/root/.gnupg
-      - ${HOME}/.bashrc:/root/.bashrc_user:ro
+      - ${HOME}/.ssh:/home/user/.ssh:ro
+      - ${HOME}/.gitconfig:/home/user/.gitconfig:ro
+      - ${HOME}/.npmrc:/home/user/.npmrc:ro
+      - ${HOME}/.gnupg:/home/user/.gnupg
+      - ${HOME}/.bashrc:/home/user/.bashrc_user:ro
     env_file:
       - ../.env
     command: sleep infinity
