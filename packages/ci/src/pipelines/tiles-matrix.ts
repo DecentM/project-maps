@@ -5,6 +5,8 @@ import * as AutoPipeline from '@decentm/concourse-ts-recipe-auto-pipeline';
 import * as Git from '@decentm/concourse-ts-resource-git';
 import * as RegistryImage from '@decentm/concourse-ts-resource-registry-image';
 
+import { devcontainer_tools } from '../commands/devcontainer-tools.js';
+
 const registry_image_type: RegistryImage.ResourceType = new ConcourseTs.ResourceType('registry_image', (rt) => {
   rt.set_check_every({ hours: 24 })
   rt.set_type('registry-image')
@@ -74,13 +76,24 @@ export default () => new ConcourseTs.Pipeline(pipeline_name, auto_pipeline((pipe
         task.platform = 'linux'
         task.set_image_resource(devcontainer as unknown as ConcourseTs.Resource)
 
-        task.run = new ConcourseTs.Command((command) => {
-          command.path = '/bin/sh'
-          command.add_arg('-exuc')
+        const create_matrix_command = new ConcourseTs.Command((command) => {
+          command.path = '/root/.asdf/shims/pnpm'
 
-          command.dir = 'packages/map-tiles'
-          command.add_arg(`pnpm tsx bin/get-geofabrik-matrix.ts https://download.geofabrik.de/ 0 1)`)
+          command.add_arg('tsx')
+          command.add_arg('bin/get-geofabrik-matrix.ts')
+          command.add_arg('https://download.geofabrik.de/')
+          command.add_arg('0')
+          command.add_arg('1')
         })
+
+        task.run = ConcourseTs.Utils.join_commands((args, command) => {
+          const shell = args.join(' && ')
+
+          command.path = '/bin/sh'
+
+          command.add_arg('-exuc')
+          command.add_arg(shell)
+        }, devcontainer_tools, create_matrix_command)
       }).as_task_step()
     )
   }), 'matrix')
