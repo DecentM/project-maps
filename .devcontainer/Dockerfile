@@ -2,7 +2,6 @@ FROM quay.io/toolbx/arch-toolbox:latest
 
 RUN pacman -S --needed git base-devel
 
-# Dependencies
 RUN useradd -G wheel -m user
 
 USER user

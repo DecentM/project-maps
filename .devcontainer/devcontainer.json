@@ -1,12 +1,46 @@
 {
+  "$schema": "vscode://schemas/settings/user",
+  //
   "name": "Project Maps",
-
   "dockerComposeFile": "docker-compose.yml",
   "service": "devcontainer",
+  //
   "workspaceFolder": "/workspace/",
-
   "forwardPorts": [],
-
+  //
   "postCreateCommand": ".devcontainer/scripts/post-create.sh",
-  "postStartCommand": ".devcontainer/scripts/post-start.sh"
+  "postStartCommand": ".devcontainer/scripts/post-start.sh",
+  //
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "mikestead.dotenv",
+        "EditorConfig.EditorConfig",
+        "dbaeumer.vscode-eslint",
+        "sleistner.vscode-fileutils",
+        "eamodio.gitlens",
+        "npxms.hide-gitignored",
+        "wengerk.highlight-bad-chars",
+        "jasonlhy.hungry-delete",
+        "kisstkondoros.vscode-gutter-preview",
+        "oderwat.indent-rainbow",
+        "htwx.json-and-jsonc",
+        "tqdv.overpassql-syntax",
+        "christian-kohler.path-intellisense",
+        "earshinov.permute-lines",
+        "YoavBls.pretty-ts-errors",
+        "timonwong.shellcheck",
+        "ow.vscode-subword-navigation",
+        "wayou.vscode-todo-highlight",
+        "jock.svg",
+        "shardulm94.trailing-spaces",
+        "pflannery.vscode-versionlens",
+        "zxh404.vscode-proto3",
+        "Vue.volar",
+        "dariofuzinato.vue-peek",
+        "redhat.vscode-yaml"
+      ]
+    }
+  }
 }
