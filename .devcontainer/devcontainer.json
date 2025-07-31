@@ -7,5 +7,6 @@
 
   "forwardPorts": [],
 
-  "postCreateCommand": "asdf install"
+  "postCreateCommand": ".devcontainer/scripts/post-create.sh",
+  "postStartCommand": ".devcontainer/scripts/post-start.sh"
 }

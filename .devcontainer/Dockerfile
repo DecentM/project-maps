@@ -10,7 +10,6 @@ RUN su yay -c 'yay -S --noconfirm jq fzf unzip asdf-vm'
 RUN su yay -c 'yay -S --noconfirm spreet gdal'
 RUN su yay -c 'yay -S --noconfirm python python-pip python-rasterio python-pillow'
 RUN su yay -c 'yay -S --noconfirm tippecanoe'
-RUN userdel yay
 
 RUN pip install rio-mucho mercantile --break-system-packages
 
@@ -29,3 +28,5 @@ RUN echo 'export PATH="$HOME/mbutil/:$PATH"' >>~/.bashrc
 RUN pacman -S --noconfirm jre-openjdk
 RUN wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -O ~/planetiler.jar
 RUN echo 'alias planetiler="java -Xmx4g -jar ~/planetiler.jar"' >>~/.bashrc
+
+RUN echo 'if [ -f /root/.bashrc_user ]; then . /root/.bashrc_user; fi' >>~/.bashrc

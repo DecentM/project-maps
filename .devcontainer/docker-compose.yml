@@ -4,12 +4,19 @@ services:
     network_mode: host
     volumes:
       - ..:/workspace:cached
+      - ${HOME}/.ssh:/root/.ssh:ro
+      - ${HOME}/.gitconfig:/root/.gitconfig:ro
+      - ${HOME}/.npmrc:/root/.npmrc:ro
+      - ${HOME}/.gnupg:/root/.gnupg:ro
+      - ${HOME}/.bashrc:/root/.bashrc_user:ro
+    env_file:
+      - ../.env
     command: sleep infinity
     deploy:
       resources:
         limits:
           cpus: '4'
-          memory: 8g
+          memory: 7g
 
   envoy:
     image: envoyproxy/envoy:v1.33-latest
