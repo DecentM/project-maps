@@ -14,6 +14,7 @@ RUN yay -S --noconfirm unzip=6.0-23
 RUN yay -S --noconfirm asdf-vm=0.18.0-1
 RUN yay -S --noconfirm spreet=0.12.1-1
 RUN yay -S --noconfirm jre-openjdk=24.0.2.u12-1
+RUN yay -S --noconfirm concourse-fly-cli=7.13.1-1
 
 RUN echo 'export PATH="$PATH:${ASDF_DATA_DIR:-$HOME/.asdf}/shims" && . <(asdf completion bash)' >>~/.bashrc
 
