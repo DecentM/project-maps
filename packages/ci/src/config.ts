@@ -12,8 +12,6 @@ ConcourseTs.Job.customise((job) => {
   }
 
   job.max_in_flight = 2
-  job.interruptible = true
-  job.public = false
 })
 
 ConcourseTs.Resource.customise((resource) => {
@@ -33,6 +31,7 @@ ConcourseTs.Task.customise((task) => {
 ConcourseTs.GetStep.customise((get_step) => {
   get_step.attempts = 2
   get_step.trigger = true
+  get_step.version = 'latest'
   get_step.set_timeout({ hours: 1 })
 })
 

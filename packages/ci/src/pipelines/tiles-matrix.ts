@@ -35,7 +35,7 @@ const git_type: Git.ResourceType = new ConcourseTs.ResourceType('git', (rt) => {
 const git_ci_only: Git.Resource = new ConcourseTs.Resource('git_ci_only', git_type, (r) => {
   r.source = {
     branch: 'main',
-    paths: [ Config.output_path ],
+    paths: [ Config.package_path ],
     uri: 'https://github.com/DecentM/project-maps',
     username: 'concourse',
   }
