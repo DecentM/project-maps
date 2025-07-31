@@ -24,4 +24,4 @@ RUN echo 'export PATH=$PATH:$HOME/.local/bin' >>~/.bashrc
 RUN curl -s https://ohmyposh.dev/install.sh | bash -s
 RUN $HOME/.local/bin/oh-my-posh init bash --config https://raw.githubusercontent.com/DecentM/dotfiles/refs/heads/main/home/dot_dotfiles/theme.omp.json >>~/.bashrc
 
-RUN echo '\nif [ -f ~/.bashrc_user ]; then . ~/.bashrc_user; fi' >>~/.bashrc
+RUN echo >>~/.bashrc && echo "if [ -f ~/.bashrc_user ]; then . ~/.bashrc_user; fi" >>~/.bashrc
