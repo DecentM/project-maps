@@ -1,0 +1,99 @@
+# Generated with concourse-ts
+#
+# jobs: 2
+# groups: 2
+# resource_types: 2
+# resources: 2
+# var_sources: 0
+
+jobs:
+  - name: tiles-matrix
+    plan:
+      - attempts: 2
+        timeout: 1h
+        get: git
+        trigger: true
+        version: latest
+      - attempts: 3
+        timeout: 6h
+        task: tiles-matrix
+        config:
+          image_resource:
+            source:
+              repository: ghcr.io/decentm/project-maps-devcontainer
+              tag: latest
+            type: registry_image
+          platform: linux
+          run:
+            path: /bin/sh
+            args:
+              - -exuc
+              - /bin/sh "-exuc" "/usr/sbin/asdf \"install\" &&
+                /root/.asdf/shims/pnpm \"install\" \"--frozen-lockfile\"" &&
+                /root/.asdf/shims/pnpm "tsx" "bin/get-geofabrik-matrix.ts"
+                "https://download.geofabrik.de/" "0" "1"
+          container_limits:
+            cpu: 2
+            memory: 2000000000
+    build_log_retention:
+      builds: 15
+      days: 30
+      minimum_succeeded_builds: 5
+    max_in_flight: 2
+  - name: auto-pipeline
+    plan:
+      - attempts: 2
+        timeout: 1h
+        get: git_ci_only
+        trigger: true
+        version: latest
+      - attempts: 2
+        timeout: 1m
+        set_pipeline: tiles-matrix
+        file: git_ci_only/packages/ci/dist/tiles-matrix.yml
+    build_log_retention:
+      builds: 15
+      days: 30
+      minimum_succeeded_builds: 5
+    max_in_flight: 2
+display:
+  background_image: https://bing.biturl.top/?resolution=1920&format=image
+groups:
+  - name: matrix
+    jobs:
+      - tiles-matrix
+  - name: ci
+    jobs:
+      - auto-pipeline
+resource_types:
+  - name: git
+    type: registry_image
+    source:
+      repository: concourse/git-resource
+      tag: 1.17.0-20250129
+    check_every: 24h
+  - name: registry_image
+    type: registry-image
+    source:
+      repository: concourse/registry-image-resource
+      tag: 1.13.2-20250730
+    check_every: 24h
+resources:
+  - name: git
+    type: git
+    source:
+      branch: main
+      paths:
+        - packages/map-tiles
+      uri: https://github.com/DecentM/project-maps
+      username: concourse
+    check_every: 5m
+  - name: git_ci_only
+    type: git
+    source:
+      branch: main
+      paths:
+        - packages/ci
+      uri: https://github.com/DecentM/project-maps
+      username: concourse
+    check_every: 5m
