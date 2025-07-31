@@ -3,7 +3,7 @@
 # jobs: 2
 # groups: 2
 # resource_types: 2
-# resources: 2
+# resources: 3
 # var_sources: 0
 
 jobs:
@@ -11,7 +11,36 @@ jobs:
     plan:
       - attempts: 2
         timeout: 1h
-        get: git
+        get: git_tooling
+        trigger: true
+        version: latest
+      - attempts: 3
+        timeout: 6h
+        task: tooling
+        config:
+          image_resource:
+            source: &a1
+              repository: ghcr.io/decentm/project-maps-devcontainer
+              tag: latest
+            type: registry_image
+          platform: linux
+          run:
+            path: /usr/sbin/asdf
+            args:
+              - install
+          caches:
+            - path: /root/.asdf
+          container_limits:
+            cpu: 2
+            memory: 2000000000
+          inputs:
+            - name: git_tooling
+          outputs:
+            - name: asdf
+              path: /root/.asdf
+      - attempts: 2
+        timeout: 1h
+        get: git_tiles
         trigger: true
         version: latest
       - attempts: 3
@@ -19,22 +48,22 @@ jobs:
         task: tiles-matrix
         config:
           image_resource:
-            source:
-              repository: ghcr.io/decentm/project-maps-devcontainer
-              tag: latest
+            source: *a1
             type: registry_image
           platform: linux
           run:
             path: /bin/sh
             args:
               - -exuc
-              - /bin/sh "-exuc" "/usr/sbin/asdf \"install\" &&
-                /root/.asdf/shims/pnpm \"install\" \"--frozen-lockfile\"" &&
-                /root/.asdf/shims/pnpm "tsx" "bin/get-geofabrik-matrix.ts"
-                "https://download.geofabrik.de/" "0" "1"
+              - find /root
+            dir: git_tiles/packages/map-tiles
           container_limits:
             cpu: 2
             memory: 2000000000
+          inputs:
+            - name: git_tiles
+            - name: asdf
+              path: /root/.asdf
     build_log_retention:
       builds: 15
       days: 30
@@ -50,7 +79,7 @@ jobs:
       - attempts: 2
         timeout: 1m
         set_pipeline: tiles-matrix
-        file: git_ci_only/packages/ci/dist/tiles-matrix.yml
+        file: git_ci_only/packages/ci/dist/pipeline/tiles-matrix.yml
     build_log_retention:
       builds: 15
       days: 30
@@ -79,7 +108,16 @@ resource_types:
       tag: 1.13.2-20250730
     check_every: 24h
 resources:
-  - name: git
+  - name: git_tooling
+    type: git
+    source:
+      branch: main
+      paths:
+        - .tool-versions
+      uri: https://github.com/DecentM/project-maps
+      username: concourse
+    check_every: 5m
+  - name: git_tiles
     type: git
     source:
       branch: main
