@@ -1,0 +1,18 @@
+project:
+  name: ci
+  description: 'CI configuration'
+
+tasks:
+  pre-commit:
+    inputs:
+      - src
+    outputs:
+      - dist
+    command: pnpm
+    args:
+      - concourse-ts
+      - compile
+    options:
+      cache: true
+      persistent: false
+      outputStyle: stream

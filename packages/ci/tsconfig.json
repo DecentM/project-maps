@@ -1,0 +1,20 @@
+{
+  "extends": "tsconfig-moon/tsconfig.projects.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "checkJs": false,
+    "strict": true,
+    "target": "ES6",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "verbatimModuleSyntax": false,
+    "emitDeclarationOnly": false,
+    "sourceMap": true,
+    "noUnusedLocals": false,
+    "rootDir": "src",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "allowJs": false,
+    "noImplicitOverride": false,
+    "outDir": "dist",
+  }
+}

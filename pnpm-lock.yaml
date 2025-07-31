@@ -14,6 +14,9 @@ importers:
       '@moonrepo/cli':
         specifier: ^1.30.5
         version: 1.30.5
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       tsconfig-moon:
         specifier: ^1.3.0
         version: 1.3.0
@@ -309,6 +312,39 @@ importers:
       tsx:
         specifier: ^4.19.0
         version: 4.19.0
+
+  packages/ci:
+    devDependencies:
+      '@decentm/concourse-ts':
+        specifier: ^0.19.1
+        version: 0.19.1(typescript@5.7.2)
+      '@decentm/concourse-ts-cli':
+        specifier: ^0.15.5
+        version: 0.15.5(@decentm/concourse-ts@0.19.1(typescript@5.7.2))(typescript@5.7.2)
+      '@decentm/concourse-ts-recipe-auto-pipeline':
+        specifier: ^0.2.1
+        version: 0.2.1(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-resource-curl':
+        specifier: ^0.2.4
+        version: 0.2.4(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-resource-git':
+        specifier: ^0.3.1
+        version: 0.3.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-resource-registry-image':
+        specifier: ^0.3.0
+        version: 0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-resource-time':
+        specifier: ^0.2.1
+        version: 0.2.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@types/node':
+        specifier: ^24.1.0
+        version: 24.1.0
+      tsconfig-moon:
+        specifier: ^1.3.0
+        version: 1.3.0
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
 
   packages/logging:
     dependencies:
@@ -652,6 +688,73 @@ packages:
   '@csstools/css-tokenizer@3.0.4':
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
+
+  '@decentm/concourse-ts-cli@0.15.5':
+    resolution: {integrity: sha512-e821NA6ripr7wUnv5qyccCCV9+VwFIy91lKPMgVWJ+YYtrdfAb27jQCpU5DtkJgqhFORcRgNrrClU2oz8Za3/Q==}
+    hasBin: true
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+      typescript: ^5.5.4
+
+  '@decentm/concourse-ts-recipe-auto-pipeline@0.1.0':
+    resolution: {integrity: sha512-+omxGMadzBfGz4VzrZW6THnzgc/OL39mmKpgKQuqu7arRxAYlfGK1tum3+QJCaZORk1cacC+xLJ61zsT9nYfaA==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+
+  '@decentm/concourse-ts-recipe-auto-pipeline@0.2.1':
+    resolution: {integrity: sha512-z7+R/SVn/fgU8FJOVvkLS1cwTEvxSJbfqRuKhojitJU1BHgbYpdp0zhByUeBwjnloGcqGfLT8h8EH03o1ORt+g==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+
+  '@decentm/concourse-ts-recipe-npm-dependencies@0.1.1':
+    resolution: {integrity: sha512-rVUZC9ngtyzIMlNBdBidUAxxO/+6i9jrROgjebTYXu29fSEvKHYGbNMeXk3ffN2m3yC9dGeD6CwkVT9Szi9Ugw==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+      '@decentm/concourse-ts-resource-npm': 0.x
+
+  '@decentm/concourse-ts-recipe-oci-build@0.1.1':
+    resolution: {integrity: sha512-yHvcPP/adP4bbObQE0vnReZny9Kh+g+nZ4ACWCHekd/+LJkAxVUGuEezcpbZmscd/EzHSXMiJvvrWK+pKEJF1w==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+
+  '@decentm/concourse-ts-resource-curl@0.2.4':
+    resolution: {integrity: sha512-3bma1xweLKuqE1X0C2mqel/MNq37/VbmVFJIn8Pq65D64FeK2S/+l7bdGm/rXw/5p41sk7vY/EPLnO2rgODCDA==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+      '@decentm/concourse-ts-resource-registry-image': 0.x
+
+  '@decentm/concourse-ts-resource-git@0.3.1':
+    resolution: {integrity: sha512-UD48h8icpvGMerY+OqnByrjVxXIvRCgxWLc41PpAaLIio/ff5tE0IpYKYtW45B6u0nvdhoaWIfQ5k7lKmhJqlg==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+      '@decentm/concourse-ts-resource-registry-image': 0.x
+
+  '@decentm/concourse-ts-resource-npm@0.2.1':
+    resolution: {integrity: sha512-5ewl1FiR2PbVF+zsRfSB4GxgU7xBjSo1Vn7pzAxOOvmZnywyQ/lOroW8W60Gh5AjWAGg0BObsxtbm9i1Th9fgw==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+      '@decentm/concourse-ts-resource-registry-image': 0.x
+
+  '@decentm/concourse-ts-resource-registry-image@0.2.2':
+    resolution: {integrity: sha512-aOmwvdViJHj/3N8e8PwSvlix354d5dNKDJBms8yHUhRwNSmJf0Reb4F+8P1Y2o8XjtgfkaAdXLa+F57zrrIUHg==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+
+  '@decentm/concourse-ts-resource-registry-image@0.3.0':
+    resolution: {integrity: sha512-gTeuC8D2uUPpqbPqGP04UZ01ajLwC8zMSjtITwW/ZrNLnVPuiSjYh7xD9bvY65vg61ltpGiYAebSqntwd29gsA==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+
+  '@decentm/concourse-ts-resource-time@0.2.1':
+    resolution: {integrity: sha512-/8NWmip9dftd/26VGPUsdrMKkQkPAwVK7eOSCH42hZ/I0tXFUyCCW8GRYN6t3OvKgDBZIXmJzYBK+tGm7faI4w==}
+    peerDependencies:
+      '@decentm/concourse-ts': 0.x
+      '@decentm/concourse-ts-resource-registry-image': 0.x
+
+  '@decentm/concourse-ts@0.19.1':
+    resolution: {integrity: sha512-7eR5mnTg32SZepZMIOz1K9hutVYA0r7fsBlWTMhgdpvb3tj116FSmHDFIDsmpe2ctGysGoUj+qL1QKQoNeRm/A==}
+    peerDependencies:
+      typescript: ^5.5.4
 
   '@edge-runtime/primitives@4.1.0':
     resolution: {integrity: sha512-Vw0lbJ2lvRUqc7/soqygUX216Xb8T3WBZ987oywz6aJqRxcwSVWwr9e+Nqo2m9bxobA9mdbWNNoRY6S9eko1EQ==}
@@ -2063,6 +2166,9 @@ packages:
   '@types/node@20.16.5':
     resolution: {integrity: sha512-VwYCweNo3ERajwy0IUlqqcyZ8/A7Zwa9ZP3MnENWcB11AejO+tLy3pu850goUW2FC/IJMdZUfKpX/yxL1gymCA==}
 
+  '@types/node@22.17.0':
+    resolution: {integrity: sha512-bbAKTCqX5aNVryi7qXVMi+OkB3w/OyblodicMbvE38blyAz7GxXf6XYhklokijuPwwVg9sDLKRxt0ZHXQwZVfQ==}
+
   '@types/node@24.1.0':
     resolution: {integrity: sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w==}
 
@@ -2703,6 +2809,10 @@ packages:
     resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
     engines: {node: '>= 10.0'}
 
+  clean-stack@5.2.0:
+    resolution: {integrity: sha512-TyUIUJgdFnCISzG5zu3291TAsE77ddchd0bepon1VVQrKLGKFED4iXFEDQ24mIPdPBbyE16PK3F8MYE1CmcBEQ==}
+    engines: {node: '>=14.16'}
+
   cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
     engines: {node: '>=10'}
@@ -2774,6 +2884,10 @@ packages:
   commander@10.0.1:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
+
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
+    engines: {node: '>=18'}
 
   commander@14.0.0:
     resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
@@ -2872,6 +2986,23 @@ packages:
   cors@2.8.5:
     resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
     engines: {node: '>= 0.10'}
+
+  cosmiconfig-typescript-loader@6.1.0:
+    resolution: {integrity: sha512-tJ1w35ZRUiM5FeTzT7DtYWAFFv37ZLqSRkGi2oeCK1gPhvaWjkAtfXvLmvE1pRfxxp9aQo6ba/Pvg1dKj05D4g==}
+    engines: {node: '>=v18'}
+    peerDependencies:
+      '@types/node': '*'
+      cosmiconfig: '>=9'
+      typescript: '>=5'
+
+  cosmiconfig@9.0.0:
+    resolution: {integrity: sha512-itvL5h8RETACmOTFc4UfIyB2RfEHi71Ax6E/PivVxq9NseKbOWpeyHEOIbmAw1rs8Ak0VursQNww7lf7YtUwzg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      typescript: '>=4.9.5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   crc-32@1.2.2:
     resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
@@ -3194,6 +3325,10 @@ packages:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
     engines: {node: '>=0.12'}
 
+  env-paths@2.2.1:
+    resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
+    engines: {node: '>=6'}
+
   errno@0.1.8:
     resolution: {integrity: sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A==}
     hasBin: true
@@ -3245,6 +3380,10 @@ packages:
   escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+
+  escape-string-regexp@5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
 
   escodegen@1.9.1:
     resolution: {integrity: sha512-6hTjO1NAWkHnDk3OqQ4YrCuwwmGHL9S3nPlzBOUG/R44rda3wLNrfvQ5fkSGjyhHFKM7ALPKcKGrwvCLe0lC7Q==}
@@ -3385,6 +3524,10 @@ packages:
 
   fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
+    engines: {node: '>=8.6.0'}
+
+  fast-glob@3.3.3:
+    resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
     engines: {node: '>=8.6.0'}
 
   fast-json-stable-stringify@2.1.0:
@@ -3830,6 +3973,11 @@ packages:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
 
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -4110,6 +4258,10 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
+  jiti@2.5.1:
+    resolution: {integrity: sha512-twQoecYPiVA5K/h6SxtORw/Bs3ar+mLUtoPSc7iMXzQzK8d7eJ/R09wmTwAjiamETn1cXYPGfNnu7DMoHgu12w==}
+    hasBin: true
+
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -4256,6 +4408,9 @@ packages:
 
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
+
+  lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
 
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
@@ -4481,6 +4636,11 @@ packages:
 
   mkdirp@1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  mkdirp@3.0.1:
+    resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -5698,9 +5858,16 @@ packages:
     resolution: {integrity: sha512-WMi/OQ2axVTf/ykqCQgXiIct+mSQDFdH2fkwhPwgEwvJ1kSzZRiinb0zF2Xb8u4+OqPChmyI6MEu4EezNJz+FQ==}
     hasBin: true
 
+  tmp-promise@3.0.3:
+    resolution: {integrity: sha512-RwM7MoPojPxsOBYnyd2hy0bxtIlVrihNs9pj5SUvY8Zz1sQcQG2tG1hSr8PDxfgEB8RNKDhqbIlroIarSNDNsQ==}
+
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
     engines: {node: '>=0.6.0'}
+
+  tmp@0.2.3:
+    resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
+    engines: {node: '>=14.14'}
 
   to-buffer@1.1.1:
     resolution: {integrity: sha512-lx9B5iv7msuFYE3dytT+KE5tap+rNYw+K4jVkb9R/asAb+pbBSM17jtunHplhBe6RRJdZx3Pn2Jph24O32mOVg==}
@@ -5754,6 +5921,10 @@ packages:
     peerDependencies:
       typescript: '>=4.2.0'
 
+  ts-deepmerge@7.0.3:
+    resolution: {integrity: sha512-Du/ZW2RfwV/D4cmA5rXafYjBQVuvu4qGiEEla4EmEHVHgRdx68Gftx7i66jn2bzHPwSVZY36Ae6OuDn9el4ZKA==}
+    engines: {node: '>=14.13.1'}
+
   ts-essentials@9.4.2:
     resolution: {integrity: sha512-mB/cDhOvD7pg3YCLk2rOtejHjjdSi9in/IBYE13S+8WA5FBSraYf4V/ws55uvs0IvQ/l0wBOlXy5yBNZ9Bl8ZQ==}
     peerDependencies:
@@ -5778,8 +5949,16 @@ packages:
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
   tsx@4.19.0:
     resolution: {integrity: sha512-bV30kM7bsLZKZIOCHeMNVMJ32/LuJzLVajkQI/qf92J2Qr08ueLQvW00PUZGiuLPP760UINwupgUj8qrSCPUKg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
+  tsx@4.20.3:
+    resolution: {integrity: sha512-qjbnuR9Tr+FJOMBqJCW5ehvIo/buZq7vH7qD7JziU98h6l3qGy0a/yPFjwO+y0/T7GFpNgNAvEcPPVfyT8rrPQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -5825,6 +6004,10 @@ packages:
   type-fest@2.19.0:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
+
+  type-fest@3.13.1:
+    resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
+    engines: {node: '>=14.16'}
 
   type-fest@4.26.0:
     resolution: {integrity: sha512-OduNjVJsFbifKb57UqZ2EMP1i4u64Xwow3NYXUtBbD4vIwJdQd4+xl8YDou1dlm4DVrtwT/7Ky8z8WyCULVfxw==}
@@ -5880,6 +6063,9 @@ packages:
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
@@ -6309,6 +6495,11 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
+  yaml@2.8.0:
+    resolution: {integrity: sha512-4lLa/EcQCB0cJkyts+FpIRx5G/llPxfP6VQU5KByHEhLxY3IJCH0f0Hy1MHI8sClTvsIb8qwRJ6R/ZdlDJ/leQ==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
   yargs-parser@20.2.9:
     resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}
     engines: {node: '>=10'}
@@ -6526,6 +6717,88 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.4
 
   '@csstools/css-tokenizer@3.0.4': {}
+
+  '@decentm/concourse-ts-cli@0.15.5(@decentm/concourse-ts@0.19.1(typescript@5.7.2))(typescript@5.7.2)':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+      '@types/node': 22.17.0
+      clean-stack: 5.2.0
+      commander: 13.1.0
+      cosmiconfig: 9.0.0(typescript@5.7.2)
+      cosmiconfig-typescript-loader: 6.1.0(@types/node@22.17.0)(cosmiconfig@9.0.0(typescript@5.7.2))(typescript@5.7.2)
+      fast-glob: 3.3.3
+      mkdirp: 3.0.1
+      tmp-promise: 3.0.3
+      ts-deepmerge: 7.0.3
+      tsx: 4.20.3
+      typescript: 5.7.2
+      verror: 1.10.1
+    optionalDependencies:
+      '@decentm/concourse-ts-recipe-auto-pipeline': 0.1.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-recipe-npm-dependencies': 0.1.1(@decentm/concourse-ts-resource-npm@0.2.1(@decentm/concourse-ts-resource-registry-image@0.2.2(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-recipe-oci-build': 0.1.1(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-resource-npm': 0.2.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      '@decentm/concourse-ts-resource-registry-image': 0.2.2(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+
+  '@decentm/concourse-ts-recipe-auto-pipeline@0.1.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+    optional: true
+
+  '@decentm/concourse-ts-recipe-auto-pipeline@0.2.1(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+
+  '@decentm/concourse-ts-recipe-npm-dependencies@0.1.1(@decentm/concourse-ts-resource-npm@0.2.1(@decentm/concourse-ts-resource-registry-image@0.2.2(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+      '@decentm/concourse-ts-resource-npm': 0.2.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+      type-fest: 3.13.1
+    optional: true
+
+  '@decentm/concourse-ts-recipe-oci-build@0.1.1(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+    optional: true
+
+  '@decentm/concourse-ts-resource-curl@0.2.4(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+      '@decentm/concourse-ts-resource-registry-image': 0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+
+  '@decentm/concourse-ts-resource-git@0.3.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+      '@decentm/concourse-ts-resource-registry-image': 0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+
+  '@decentm/concourse-ts-resource-npm@0.2.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+      '@decentm/concourse-ts-resource-registry-image': 0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+    optional: true
+
+  '@decentm/concourse-ts-resource-registry-image@0.2.2(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+    optional: true
+
+  '@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+
+  '@decentm/concourse-ts-resource-time@0.2.1(@decentm/concourse-ts-resource-registry-image@0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2)))(@decentm/concourse-ts@0.19.1(typescript@5.7.2))':
+    dependencies:
+      '@decentm/concourse-ts': 0.19.1(typescript@5.7.2)
+      '@decentm/concourse-ts-resource-registry-image': 0.3.0(@decentm/concourse-ts@0.19.1(typescript@5.7.2))
+
+  '@decentm/concourse-ts@0.19.1(typescript@5.7.2)':
+    dependencies:
+      lodash.clonedeep: 4.5.0
+      tslib: 2.8.1
+      tsx: 4.20.3
+      typescript: 5.7.2
+      verror: 1.10.1
+      yaml: 2.8.0
 
   '@edge-runtime/primitives@4.1.0':
     optional: true
@@ -8360,7 +8633,7 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
 
   '@types/chrome@0.0.262':
     dependencies:
@@ -8383,7 +8656,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.5':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
       '@types/qs': 6.9.15
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -8413,7 +8686,7 @@ snapshots:
 
   '@types/got@9.6.12':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.1
 
@@ -8425,7 +8698,7 @@ snapshots:
 
   '@types/http-proxy@1.17.15':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
 
   '@types/jsdom@21.1.7':
     dependencies:
@@ -8470,6 +8743,10 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
+  '@types/node@22.17.0':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@24.1.0':
     dependencies:
       undici-types: 7.8.0
@@ -8495,7 +8772,7 @@ snapshots:
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
       '@types/send': 0.17.4
 
   '@types/supercluster@7.1.3':
@@ -8504,7 +8781,7 @@ snapshots:
 
   '@types/through2@2.0.41':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
 
   '@types/tough-cookie@4.0.5': {}
 
@@ -8778,9 +9055,9 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  acorn-jsx@5.3.2(acorn@8.12.1):
+  acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
-      acorn: 8.12.1
+      acorn: 8.14.0
 
   acorn-node@1.8.2:
     dependencies:
@@ -9340,6 +9617,10 @@ snapshots:
     dependencies:
       source-map: 0.6.1
 
+  clean-stack@5.2.0:
+    dependencies:
+      escape-string-regexp: 5.0.0
+
   cli-boxes@3.0.0: {}
 
   cli-cursor@3.1.0:
@@ -9408,6 +9689,8 @@ snapshots:
       delayed-stream: 1.0.0
 
   commander@10.0.1: {}
+
+  commander@13.1.0: {}
 
   commander@14.0.0: {}
 
@@ -9511,6 +9794,22 @@ snapshots:
     dependencies:
       object-assign: 4.1.1
       vary: 1.1.2
+
+  cosmiconfig-typescript-loader@6.1.0(@types/node@22.17.0)(cosmiconfig@9.0.0(typescript@5.7.2))(typescript@5.7.2):
+    dependencies:
+      '@types/node': 22.17.0
+      cosmiconfig: 9.0.0(typescript@5.7.2)
+      jiti: 2.5.1
+      typescript: 5.7.2
+
+  cosmiconfig@9.0.0(typescript@5.7.2):
+    dependencies:
+      env-paths: 2.2.1
+      import-fresh: 3.3.0
+      js-yaml: 4.1.0
+      parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 5.7.2
 
   crc-32@1.2.2: {}
 
@@ -9863,6 +10162,8 @@ snapshots:
 
   entities@6.0.1: {}
 
+  env-paths@2.2.1: {}
+
   errno@0.1.8:
     dependencies:
       prr: 1.0.1
@@ -9970,6 +10271,8 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
+  escape-string-regexp@5.0.0: {}
+
   escodegen@1.9.1:
     dependencies:
       esprima: 3.1.3
@@ -10039,8 +10342,8 @@ snapshots:
 
   espree@9.6.1:
     dependencies:
-      acorn: 8.12.1
-      acorn-jsx: 5.3.2(acorn@8.12.1)
+      acorn: 8.14.0
+      acorn-jsx: 5.3.2(acorn@8.14.0)
       eslint-visitor-keys: 3.4.3
 
   esprima@3.1.3: {}
@@ -10189,6 +10492,14 @@ snapshots:
   fast-fifo@1.3.2: {}
 
   fast-glob@3.3.2:
+    dependencies:
+      '@nodelib/fs.stat': 2.0.5
+      '@nodelib/fs.walk': 1.2.8
+      glob-parent: 5.1.2
+      merge2: 1.4.1
+      micromatch: 4.0.8
+
+  fast-glob@3.3.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.5
       '@nodelib/fs.walk': 1.2.8
@@ -10694,6 +11005,8 @@ snapshots:
 
   human-signals@5.0.0: {}
 
+  husky@9.1.7: {}
+
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -10919,6 +11232,8 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
+  jiti@2.5.1: {}
+
   joycon@3.1.1: {}
 
   js-tokens@4.0.0: {}
@@ -10960,8 +11275,7 @@ snapshots:
 
   json-buffer@3.0.1: {}
 
-  json-parse-even-better-errors@2.3.1:
-    optional: true
+  json-parse-even-better-errors@2.3.1: {}
 
   json-schema-traverse@0.4.1: {}
 
@@ -11082,8 +11396,7 @@ snapshots:
     dependencies:
       immediate: 3.0.6
 
-  lines-and-columns@1.2.4:
-    optional: true
+  lines-and-columns@1.2.4: {}
 
   local-pkg@0.5.0:
     dependencies:
@@ -11104,6 +11417,8 @@ snapshots:
       p-locate: 5.0.0
 
   lodash.camelcase@4.3.0: {}
+
+  lodash.clonedeep@4.5.0: {}
 
   lodash.debounce@4.0.8: {}
 
@@ -11342,6 +11657,8 @@ snapshots:
   mkdirp-classic@0.5.3: {}
 
   mkdirp@1.0.4: {}
+
+  mkdirp@3.0.1: {}
 
   mlly@1.7.1:
     dependencies:
@@ -11670,7 +11987,6 @@ snapshots:
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
-    optional: true
 
   parse5@7.3.0:
     dependencies:
@@ -11872,7 +12188,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.16.5
+      '@types/node': 24.1.0
       long: 5.2.3
 
   protoc-gen-grpc-web@1.5.0:
@@ -12714,9 +13030,15 @@ snapshots:
     dependencies:
       tldts-core: 6.1.86
 
+  tmp-promise@3.0.3:
+    dependencies:
+      tmp: 0.2.3
+
   tmp@0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
+
+  tmp@0.2.3: {}
 
   to-buffer@1.1.1: {}
 
@@ -12759,6 +13081,8 @@ snapshots:
     dependencies:
       typescript: 5.6.2
 
+  ts-deepmerge@7.0.3: {}
+
   ts-essentials@9.4.2(typescript@5.6.2):
     optionalDependencies:
       typescript: 5.6.2
@@ -12785,9 +13109,18 @@ snapshots:
 
   tslib@2.7.0: {}
 
+  tslib@2.8.1: {}
+
   tsx@4.19.0:
     dependencies:
       esbuild: 0.23.1
+      get-tsconfig: 4.8.0
+    optionalDependencies:
+      fsevents: 2.3.3
+
+  tsx@4.20.3:
+    dependencies:
+      esbuild: 0.25.4
       get-tsconfig: 4.8.0
     optionalDependencies:
       fsevents: 2.3.3
@@ -12820,6 +13153,9 @@ snapshots:
   type-fest@1.4.0: {}
 
   type-fest@2.19.0: {}
+
+  type-fest@3.13.1:
+    optional: true
 
   type-fest@4.26.0: {}
 
@@ -12864,6 +13200,8 @@ snapshots:
   undefsafe@2.0.5: {}
 
   undici-types@6.19.8: {}
+
+  undici-types@6.21.0: {}
 
   undici-types@7.8.0: {}
 
@@ -13276,6 +13614,8 @@ snapshots:
   yallist@2.1.2: {}
 
   yallist@4.0.0: {}
+
+  yaml@2.8.0: {}
 
   yargs-parser@20.2.9:
     optional: true
