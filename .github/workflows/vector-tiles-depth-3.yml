@@ -71,14 +71,14 @@ jobs:
         id: cache-planetiler-data
         with:
           path: |
-            /home/runner/planetiler-cache
+            /home/runner/work/project-maps/project-maps/planetiler-cache
           key: planetiler-data-${{ github.run_id }}
 
       - name: Build
         working-directory: packages/map-tiles
         run: |
           set -exu
-          bin/build_planetiles.sh "${{ inputs.url }}" "${{ inputs.ocean_url }}" "${{ inputs.admin_points_url }}" dist/vector /home/runner/planetiler.jar /home/runner/planetiler-cache
+          bin/build_planetiles.sh "${{ inputs.url }}" "${{ inputs.ocean_url }}" "${{ inputs.admin_points_url }}" dist/vector /home/runner/work/project-maps/project-maps/planetiler-cache
 
       - name: Zip Vector Tiles
         working-directory: packages/map-tiles
