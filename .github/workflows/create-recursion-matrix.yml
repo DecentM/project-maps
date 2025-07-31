@@ -10,10 +10,10 @@ on:
     outputs:
       matrix:
         description: The recursion matrix for vector tiles.
-        value: ${{ jobs.create-recursion-matrix.outputs.matrix }}
+        value: ${{ jobs.create-matrix.outputs.matrix }}
 
 jobs:
-  create-recursion-matrix:
+  create-matrix:
     runs-on: ubuntu-latest
 
     outputs:

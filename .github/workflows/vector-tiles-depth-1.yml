@@ -20,22 +20,22 @@ on:
         type: string
 
 jobs:
-  create-recursion-matrix:
+  depth-1-plan:
     if: contains(inputs.url, '.html')
 
     uses: ./.github/workflows/create-recursion-matrix.yml
     with:
       url: ${{ inputs.url }}
 
-  recurse:
+  depth-1:
     needs:
-      - create-recursion-matrix
+      - depth-1-plan
 
     strategy:
       fail-fast: false
       max-parallel: 5
       matrix:
-        pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
+        pbf: ${{ fromJson(needs.depth-1-plan.outputs.matrix) }}
 
     uses: ./.github/workflows/vector-tiles-depth-2.yml
     with:

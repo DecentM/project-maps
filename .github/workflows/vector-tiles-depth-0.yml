@@ -72,7 +72,7 @@ jobs:
           set -exu
           pnpm install --frozen-lockfile
 
-  create-recursion-matrix:
+  depth-0-plan:
     needs:
       - dependencies
 
@@ -80,16 +80,16 @@ jobs:
     with:
       url: https://download.geofabrik.de/
 
-  recurse:
+  depth-0:
     needs:
       - dependencies
-      - create-recursion-matrix
+      - depth-0-plan
 
     strategy:
       fail-fast: false
       max-parallel: 5
       matrix:
-        pbf: ${{ fromJson(needs.create-recursion-matrix.outputs.matrix) }}
+        pbf: ${{ fromJson(needs.depth-0-plan.outputs.matrix) }}
         ocean_url:
           - https://osmdata.openstreetmap.de/download/simplified-water-polygons-split-3857.zip
         admin_points_url:
@@ -104,6 +104,6 @@ jobs:
 
   merge:
     needs:
-      - recurse
+      - depth-0
 
     uses: ./.github/workflows/vector-tiles-merge.yml
