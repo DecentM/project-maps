@@ -18,7 +18,7 @@ RUN wget https://github.com/onthegomap/planetiler/releases/latest/download/plane
 RUN echo 'alias planetiler="java -Xmx4g -jar ~/planetiler.jar"' >>~/.bashrc
 
 RUN curl -s https://ohmyposh.dev/install.sh | bash -s
-RUN eval "$(oh-my-posh init bash --config https://raw.githubusercontent.com/DecentM/dotfiles/refs/heads/main/home/dot_dotfiles/theme.omp.json)"
+RUN eval "$(oh-my-posh init bash --config https://raw.githubusercontent.com/DecentM/dotfiles/refs/heads/main/home/dot_dotfiles/theme.omp.json)" >>~/.bashrc
 RUN echo 'export PATH=$PATH:$HOME/.local/bin' >>~/.bashrc
 
 RUN echo 'if [ -f ~/.bashrc_user ]; then . ~/.bashrc_user; fi' >>~/.bashrc
