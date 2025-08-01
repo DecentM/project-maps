@@ -47,15 +47,6 @@ const git_ci_only: Git.Resource = new ConcourseTs.Resource('git_ci_only', git_ty
   })
 })
 
-const git_repo_name = 'git_repo'
-const git_repo: Git.Resource = new ConcourseTs.Resource(git_repo_name, git_type, (r) => {
-  r.set_source({
-    branch: 'main',
-    uri: 'https://github.com/DecentM/project-maps',
-    username: 'concourse',
-  })
-})
-
 const git_tiles_name = 'git_tiles'
 const git_tiles: Git.Resource = new ConcourseTs.Resource(git_tiles_name, git_type, (r) => {
   r.set_source({
@@ -70,7 +61,7 @@ const git_tooling_name = 'git_tooling'
 const git_tooling: Git.Resource = new ConcourseTs.Resource(git_tooling_name, git_type, (r) => {
   r.set_source({
     branch: 'main',
-    paths: ['.tool-versions'],
+    paths: ['.tool-versions', '.devcontainer', 'pnpm-lock.yaml'],
     uri: 'https://github.com/DecentM/project-maps',
     username: 'concourse',
   })
@@ -92,28 +83,26 @@ export default () =>
     auto_pipeline((pipeline) => {
       pipeline.add_job(
         new ConcourseTs.Job('tiles-matrix', (job) => {
-          // const tooling_step = new ConcourseTs.Task('tooling', (task) => {
-          //   task.add_input({
-          //     name: git_tooling_name,
-          //   })
+          const tooling_step = new ConcourseTs.Task('tooling', (task) => {
+            task.add_input({
+              name: git_tooling_name,
+            })
 
-          //   task.add_output({
-          //     name: 'asdf',
-          //     path: '/root/.asdf',
-          //   })
+            task.add_output({
+              name: 'asdf',
+              path: '/root/.asdf',
+            })
 
-          //   task.set_platform('linux')
-          //   task.set_image_resource(devcontainer)
+            task.set_platform('linux')
+            task.set_image_resource(devcontainer)
 
-          //   task.set_run(DevcontainerTools.asdf_install(git_tooling_name))
-          // }).as_task_step()
+            task.set_run(DevcontainerTools.asdf_install(git_tooling_name))
+          }).as_task_step()
 
-          // job.add_steps(git_tooling.as_get_step({ trigger: true }), tooling_step)
+          job.add_steps(git_tooling.as_get_step({ trigger: true }), tooling_step)
 
           job.add_steps(
-            git_tooling.as_get_step({ trigger: true }),
             git_tiles.as_get_step({ trigger: true }),
-            git_repo.as_get_step({ trigger: false }),
 
             new ConcourseTs.Task('tiles-matrix', (task) => {
               task.add_input(
@@ -124,7 +113,8 @@ export default () =>
                   name: git_tooling_name,
                 },
                 {
-                  name: git_repo_name,
+                  name: 'asdf',
+                  path: '/root/.asdf',
                 }
               )
 
@@ -136,7 +126,7 @@ export default () =>
 
                 command.add_args(
                   'tsx',
-                  'bin/get-geofabrik-matrix-all.ts',
+                  'bin/get-geofabrik-matrix-full.ts',
                   'https://download.geofabrik.de/',
                   '3'
                 )
@@ -152,7 +142,6 @@ export default () =>
 
                     command.add_args('-exuc', shell)
                   },
-                  DevcontainerTools.asdf_install(git_repo_name),
                   DevcontainerTools.install_dependencies,
                   create_matrix_command
                 )
