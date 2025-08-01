@@ -1,5 +1,6 @@
-link-workspace-packages: true
-
 packages:
   - 'packages/*'
   - 'apps/*'
+
+dedupeDirectDeps: true
+sharedWorkspaceLockfile: true
