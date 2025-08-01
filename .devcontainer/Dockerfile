@@ -17,19 +17,20 @@ RUN yay -S --noconfirm --removemake unzip=6.0-23 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake asdf-vm=0.18.0-1 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake python=3.13.5-1 python-pip=25.1.1-1 && yay -Sc --noconfirm
 
-# asdf plugins
-ENV PATH="$HOME/.asdf/shims:/root/.asdf/shims:/root/.local/bin:$HOME/.local/bin:$HOME/mbutil:$PATH"
-RUN echo '. <(asdf completion bash)' >>~/.bashrc
-
 # Planetiler
 RUN wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -q -O ~/planetiler.jar
 RUN echo 'alias planetiler="java -Xmx4g -jar ~/planetiler.jar"' >>~/.bashrc
 
-# oh-my-posh
-RUN curl -s https://ohmyposh.dev/install.sh | bash -s
-RUN $HOME/.local/bin/oh-my-posh init bash --config https://raw.githubusercontent.com/DecentM/dotfiles/refs/heads/main/home/dot_dotfiles/theme.omp.json >>~/.bashrc && echo "\n" >>~/.bashrc
+# asdf plugins
+ENV PATH="/home/user/.asdf/shims:/root/.asdf/shims:/root/.local/bin:/home/user/.local/bin:/home/user/mbutil:$PATH"
+RUN echo '. <(asdf completion bash)' >>~/.bashrc
 
 # mb-util
 RUN git clone https://github.com/mapbox/mbutil.git
 
-RUN echo >>~/.bashrc && echo "if [ -f ~/.bashrc_user ]; then . ~/.bashrc_user; fi" >>~/.bashrc
+RUN echo "if [ -f ~/.bashrc_user ]; then . ~/.bashrc_user; fi" >>~/.bashrc
+
+# oh-my-posh
+RUN curl -s https://ohmyposh.dev/install.sh | bash -s
+RUN $HOME/.local/bin/oh-my-posh init bash --config https://raw.githubusercontent.com/DecentM/dotfiles/refs/heads/main/home/dot_dotfiles/theme.omp.json >>~/.bashrc
+
