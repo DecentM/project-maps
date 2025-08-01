@@ -1,0 +1,15 @@
+project:
+  name: opening-hours
+  description: 'Opening hours'
+
+tasks:
+  build:
+    inputs:
+      - src
+    outputs:
+      - dist
+    command:
+      - tsc
+    options:
+      cache: true
+      persistent: false
