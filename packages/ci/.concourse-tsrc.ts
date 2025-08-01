@@ -5,5 +5,5 @@ export default rc({
     input: 'src/pipelines/*.ts',
     clean: true,
     output: 'dist',
-  }
+  },
 })

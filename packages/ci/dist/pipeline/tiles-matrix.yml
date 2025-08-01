@@ -3,7 +3,7 @@
 # jobs: 2
 # groups: 2
 # resource_types: 2
-# resources: 3
+# resources: 4
 # var_sources: 0
 
 jobs:
@@ -14,56 +14,42 @@ jobs:
         get: git_tooling
         trigger: true
         version: latest
-      - attempts: 3
-        timeout: 6h
-        task: tooling
-        config:
-          image_resource:
-            source: &a1
-              repository: ghcr.io/decentm/project-maps-devcontainer
-              tag: latest
-            type: registry_image
-          platform: linux
-          run:
-            path: /usr/sbin/asdf
-            args:
-              - install
-          caches:
-            - path: /root/.asdf
-          container_limits:
-            cpu: 2
-            memory: 2000000000
-          inputs:
-            - name: git_tooling
-          outputs:
-            - name: asdf
-              path: /root/.asdf
       - attempts: 2
         timeout: 1h
         get: git_tiles
         trigger: true
+        version: latest
+      - attempts: 2
+        timeout: 1h
+        get: git_repo
         version: latest
       - attempts: 3
         timeout: 6h
         task: tiles-matrix
         config:
           image_resource:
-            source: *a1
+            source:
+              repository: ghcr.io/decentm/project-maps-devcontainer
+              tag: latest
             type: registry_image
           platform: linux
           run:
             path: /bin/sh
             args:
               - -exuc
-              - find /root
+              - .devcontainer/scripts/post-create.sh  && pnpm "install"
+                "--frozen-lockfile" && pnpm "tsx"
+                "bin/get-geofabrik-matrix-all.ts"
+                "https://download.geofabrik.de/" "3"
             dir: git_tiles/packages/map-tiles
+            user: root
           container_limits:
             cpu: 2
             memory: 2000000000
           inputs:
             - name: git_tiles
-            - name: asdf
-              path: /root/.asdf
+            - name: git_tooling
+            - name: git_repo
     build_log_retention:
       builds: 15
       days: 30
@@ -123,6 +109,13 @@ resources:
       branch: main
       paths:
         - packages/map-tiles
+      uri: https://github.com/DecentM/project-maps
+      username: concourse
+    check_every: 5m
+  - name: git_repo
+    type: git
+    source:
+      branch: main
       uri: https://github.com/DecentM/project-maps
       username: concourse
     check_every: 5m

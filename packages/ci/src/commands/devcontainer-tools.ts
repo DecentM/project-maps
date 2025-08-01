@@ -1,14 +1,13 @@
 import * as ConcourseTs from '@decentm/concourse-ts'
 
-export const asdf_install = new ConcourseTs.Command((command) => {
-  command.path = '/usr/sbin/asdf'
-
-  command.add_arg('install')
-})
+export const asdf_install = (dir: string) =>
+  new ConcourseTs.Command((command) => {
+    command.set_path('.devcontainer/scripts/post-create.sh')
+    command.set_dir(dir)
+  })
 
 export const install_dependencies = new ConcourseTs.Command((command) => {
-  command.path = '/root/.asdf/shims/pnpm'
+  command.set_path('pnpm')
 
-  command.add_arg('install')
-  command.add_arg('--frozen-lockfile')
+  command.add_args('install', '--frozen-lockfile')
 })
