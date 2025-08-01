@@ -16,12 +16,12 @@ RUN yay -S --noconfirm --removemake jq=1.8.1-1 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake unzip=6.0-23 && yay -Sc --noconfirm
 RUN yay -S --noconfirm --removemake asdf-vm=0.18.0-1 && yay -Sc --noconfirm
 
-RUN echo 'export PATH="$PATH:${ASDF_DATA_DIR:-$HOME/.asdf}/shims" && . <(asdf completion bash)' >>~/.bashrc
+ENV PATH="/home/user/.asdf/shims:/root/.asdf/shims:/root/.local/bin:/home/user/.local/bin:$PATH"
+RUN echo '. <(asdf completion bash)' >>~/.bashrc
 
 RUN wget https://github.com/onthegomap/planetiler/releases/latest/download/planetiler.jar -q -O ~/planetiler.jar
 RUN echo 'alias planetiler="java -Xmx4g -jar ~/planetiler.jar"' >>~/.bashrc
 
-RUN echo 'export PATH=$PATH:$HOME/.local/bin' >>~/.bashrc
 RUN curl -s https://ohmyposh.dev/install.sh | bash -s
 RUN $HOME/.local/bin/oh-my-posh init bash --config https://raw.githubusercontent.com/DecentM/dotfiles/refs/heads/main/home/dot_dotfiles/theme.omp.json >>~/.bashrc
 
