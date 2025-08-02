@@ -3,7 +3,7 @@ services:
     image: ghcr.io/decentm/project-maps-devcontainer:latest
     network_mode: host
     volumes:
-      - ..:/workspace:cached
+      - ..:/workspace
       - ${HOME}/.ssh:/home/user/.ssh:ro
       - ${HOME}/.gitconfig:/home/user/.gitconfig:ro
       - ${HOME}/.npmrc:/home/user/.npmrc:ro

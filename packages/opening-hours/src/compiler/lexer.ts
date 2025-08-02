@@ -1,6 +1,47 @@
-type Token = unknown
+type NumberToken = {
+  type: 'number'
+  value: string
+}
 
-const defaultInput = 'Mon-Fri 12:00-23:30'
+type ColonToken = {
+  type: 'colon'
+}
+
+type DashToken = {
+  type: 'dash'
+}
+
+type WordToken = {
+  type: 'word'
+  value: string
+}
+
+type SemicolonToken = {
+  type: 'semicolon'
+}
+
+type NewlineToken = {
+  type: 'newline'
+}
+
+type SquareBracketToken = {
+  type: 'squareBracket'
+  value: 'open' | 'close'
+}
+
+type SlashToken = {
+  type: 'slash'
+}
+
+export type Token =
+  | NumberToken
+  | ColonToken
+  | DashToken
+  | WordToken
+  | SemicolonToken
+  | NewlineToken
+  | SquareBracketToken
+  | SlashToken
 
 export const lex = (input: string): Token[] => {
   let cursor = 0
@@ -9,6 +50,10 @@ export const lex = (input: string): Token[] => {
     let temp = ''
 
     while (test(input[cursor])) {
+      if (cursor >= input.length) {
+        break
+      }
+
       temp += input[cursor]
       cursor++
     }
@@ -24,25 +69,77 @@ export const lex = (input: string): Token[] => {
     const current = input[cursor]
 
     if (/\d/.test(current)) {
-      result.push(consumeWhile((char) => char !== ':' && /\d/.test(char)))
+      result.push({
+        type: 'number',
+        value: consumeWhile((char) => /\d/.test(char)),
+      })
       cursor++
       continue
     }
 
     if (/[a-zA-Z]/.test(current)) {
-      result.push(consumeWhile((char) => /[a-zA-Z]/.test(char)))
+      result.push({
+        type: 'word',
+        value: consumeWhile((char) => /[a-zA-Z]/.test(char)),
+      })
       cursor++
       continue
     }
 
     if (current === '-') {
-      result.push('-')
+      result.push({
+        type: 'dash',
+      })
       cursor++
       continue
     }
 
     if (current === ':') {
-      result.push(':')
+      result.push({
+        type: 'colon',
+      })
+      cursor++
+      continue
+    }
+
+    if (current === ';') {
+      result.push({
+        type: 'semicolon',
+      })
+      cursor++
+      continue
+    }
+
+    if (current === '\n') {
+      result.push({
+        type: 'newline',
+      })
+      cursor++
+      continue
+    }
+
+    if (current === '[') {
+      result.push({
+        type: 'squareBracket',
+        value: 'open',
+      })
+      cursor++
+      continue
+    }
+
+    if (current === ']') {
+      result.push({
+        type: 'squareBracket',
+        value: 'close',
+      })
+      cursor++
+      continue
+    }
+
+    if (current === '/') {
+      result.push({
+        type: 'slash',
+      })
       cursor++
       continue
     }
@@ -52,5 +149,3 @@ export const lex = (input: string): Token[] => {
 
   return result
 }
-
-console.log(lex(defaultInput))
