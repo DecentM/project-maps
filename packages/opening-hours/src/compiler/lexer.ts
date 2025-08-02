@@ -1,36 +1,44 @@
-type NumberToken = {
+export type NumberToken = {
   type: 'number'
   value: string
 }
 
-type ColonToken = {
+export type ColonToken = {
   type: 'colon'
 }
 
-type DashToken = {
+export type DashToken = {
   type: 'dash'
 }
 
-type WordToken = {
+export type WordToken = {
   type: 'word'
   value: string
 }
 
-type SemicolonToken = {
+export type SemicolonToken = {
   type: 'semicolon'
 }
 
-type NewlineToken = {
+export type NewlineToken = {
   type: 'newline'
 }
 
-type SquareBracketToken = {
+export type SquareBracketToken = {
   type: 'squareBracket'
   value: 'open' | 'close'
 }
 
-type SlashToken = {
+export type SlashToken = {
   type: 'slash'
+}
+
+export type SpaceToken = {
+  type: 'space'
+}
+
+export type CommaToken = {
+  type: 'comma'
 }
 
 export type Token =
@@ -42,6 +50,8 @@ export type Token =
   | NewlineToken
   | SquareBracketToken
   | SlashToken
+  | SpaceToken
+  | CommaToken
 
 export const lex = (input: string): Token[] => {
   let cursor = 0
@@ -65,86 +75,98 @@ export const lex = (input: string): Token[] => {
 
   const result: Token[] = []
 
+  const parseNumber = (): NumberToken => {
+    try {
+      return {
+        type: 'number',
+        value: consumeWhile((char) => /\d/.test(char)),
+      }
+    } finally {
+      cursor++
+    }
+  }
+
+  const parseWord = (): WordToken => {
+    try {
+      return {
+        type: 'word',
+        value: consumeWhile((char) => /[a-zA-Z]/.test(char)),
+      }
+    } finally {
+      cursor++
+    }
+  }
+
+  const parseSquareBracket = (value: '[' | ']'): SquareBracketToken => {
+    try {
+      return {
+        type: 'squareBracket',
+        value: value === '[' ? 'open' : 'close',
+      }
+    } finally {
+      cursor++
+    }
+  }
+
   while (cursor < input.length) {
     const current = input[cursor]
 
-    if (/\d/.test(current)) {
-      result.push({
-        type: 'number',
-        value: consumeWhile((char) => /\d/.test(char)),
-      })
-      cursor++
-      continue
-    }
+    switch (true) {
+      case /\d/.test(current):
+        result.push(parseNumber())
+        break
 
-    if (/[a-zA-Z]/.test(current)) {
-      result.push({
-        type: 'word',
-        value: consumeWhile((char) => /[a-zA-Z]/.test(char)),
-      })
-      cursor++
-      continue
-    }
+      case /[a-zA-Z]/.test(current):
+        result.push(parseWord())
+        break
 
-    if (current === '-') {
-      result.push({
-        type: 'dash',
-      })
-      cursor++
-      continue
-    }
+      case current === '-':
+        result.push({ type: 'dash' })
+        cursor++
+        break
 
-    if (current === ':') {
-      result.push({
-        type: 'colon',
-      })
-      cursor++
-      continue
-    }
+      case current === ':':
+        result.push({ type: 'colon' })
+        cursor++
+        break
 
-    if (current === ';') {
-      result.push({
-        type: 'semicolon',
-      })
-      cursor++
-      continue
-    }
+      case current === ';':
+        result.push({ type: 'semicolon' })
+        cursor++
+        break
 
-    if (current === '\n') {
-      result.push({
-        type: 'newline',
-      })
-      cursor++
-      continue
-    }
+      case current === '\n':
+        result.push({ type: 'newline' })
+        cursor++
+        break
 
-    if (current === '[') {
-      result.push({
-        type: 'squareBracket',
-        value: 'open',
-      })
-      cursor++
-      continue
-    }
+      case current === '[':
+        result.push(parseSquareBracket('['))
+        break
 
-    if (current === ']') {
-      result.push({
-        type: 'squareBracket',
-        value: 'close',
-      })
-      cursor++
-      continue
-    }
+      case current === ']':
+        result.push(parseSquareBracket(']'))
+        break
 
-    if (current === '/') {
-      result.push({
-        type: 'slash',
-      })
-      cursor++
-      continue
-    }
+      case current === '/':
+        result.push({ type: 'slash' })
+        cursor++
+        break
 
-    cursor++
+      case current === ' ':
+        result.push({ type: 'space' })
+        cursor++
+        break
+
+      case current === ',':
+        result.push({ type: 'comma' })
+        cursor++
+        break
+
+      default:
+        cursor++
+        break
+    }
   }
 
   return result

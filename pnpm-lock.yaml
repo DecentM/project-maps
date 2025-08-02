@@ -195,6 +195,9 @@ importers:
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
+      opening_hours:
+        specifier: ^3.9.0
+        version: 3.9.0(typescript@5.9.2)
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
@@ -488,6 +491,10 @@ packages:
     resolution: {integrity: sha512-trGdfBdbD0l1ZPmcJ83eNxB9rbEax4ALFTF7fN386TMYbeCQbyme5cOEXQhbGXKebwGaB/J52w1mrklMcbgy6Q==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  '@babel/runtime@7.28.2':
+    resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/types@7.25.6':
     resolution: {integrity: sha512-/l42B1qxpG6RdfYf343Uw1vmDjeNhneUXtzhojE7pDgfpEypmRhI6j1kr17XCVv4Cgl9HdAiQY2x0GwKm7rWCw==}
@@ -3836,6 +3843,17 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  i18next-browser-languagedetector@8.2.0:
+    resolution: {integrity: sha512-P+3zEKLnOF0qmiesW383vsLdtQVyKtCNA9cjSoKCppTKPQVfKd2W8hbVo5ZhNJKDqeM7BOcvNoKJOjpHh4Js9g==}
+
+  i18next@24.2.3:
+    resolution: {integrity: sha512-lfbf80OzkocvX7nmZtu7nSTNbrTYR52sLWxPtlXX1zAhVw8WEnFk4puUkCR4B1dNQwbSpEHHHemcZu//7EcB7A==}
+    peerDependencies:
+      typescript: ^5
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -4688,6 +4706,10 @@ packages:
   open@9.1.0:
     resolution: {integrity: sha512-OS+QTnw1/4vrf+9hh1jc1jnYjzSG4ttTBB8UxOwAnInG3Uo4ssetzC1ihqaIHjLJnA5GGlRl6QlZXOTQhRBUvg==}
     engines: {node: '>=14.16'}
+
+  opening_hours@3.9.0:
+    resolution: {integrity: sha512-ns8FNny8a3pzOznl9w3AdtleEeIKqCIWhVDfiprNRWuAa1biKkkluP3wRuBMFwroDC6jIjWlVLE+zIa/ONWd0w==}
+    engines: {node: '>=12'}
 
   optionator@0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
@@ -5582,6 +5604,9 @@ packages:
   subarg@1.0.0:
     resolution: {integrity: sha512-RIrIdRY0X1xojthNcVtgT9sjpOGagEUKpZdgBUi054OEPFo282yg+zE+t1Rj3+RqKq2xStL7uUHhY+AjbC4BXg==}
 
+  suncalc@1.9.0:
+    resolution: {integrity: sha512-vMJ8Byp1uIPoj+wb9c1AdK4jpkSKVAywgHX0lqY7zt6+EWRRC3Z+0Ucfjy/0yxTVO1hwwchZe4uoFNqrIC24+A==}
+
   supercluster@8.0.1:
     resolution: {integrity: sha512-IiOea5kJ9iqzD2t7QJq/cREyLHTtSmUT6gQsweojg9WH2sYJqZK9SswTu6jrscO6D1G5v5vYZ9ru/eq85lXeZQ==}
 
@@ -6379,6 +6404,8 @@ snapshots:
   '@babel/parser@7.25.6':
     dependencies:
       '@babel/types': 7.25.6
+
+  '@babel/runtime@7.28.2': {}
 
   '@babel/types@7.25.6':
     dependencies:
@@ -10718,6 +10745,16 @@ snapshots:
 
   husky@9.1.7: {}
 
+  i18next-browser-languagedetector@8.2.0:
+    dependencies:
+      '@babel/runtime': 7.28.2
+
+  i18next@24.2.3(typescript@5.9.2):
+    dependencies:
+      '@babel/runtime': 7.28.2
+    optionalDependencies:
+      typescript: 5.9.2
+
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -11562,6 +11599,14 @@ snapshots:
       define-lazy-prop: 3.0.0
       is-inside-container: 1.0.0
       is-wsl: 2.2.0
+
+  opening_hours@3.9.0(typescript@5.9.2):
+    dependencies:
+      i18next: 24.2.3(typescript@5.9.2)
+      i18next-browser-languagedetector: 8.2.0
+      suncalc: 1.9.0
+    transitivePeerDependencies:
+      - typescript
 
   optionator@0.8.3:
     dependencies:
@@ -12567,6 +12612,8 @@ snapshots:
   subarg@1.0.0:
     dependencies:
       minimist: 1.2.8
+
+  suncalc@1.9.0: {}
 
   supercluster@8.0.1:
     dependencies:
