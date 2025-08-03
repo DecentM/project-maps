@@ -29,6 +29,7 @@ macro(
         end: {
           hour: 16,
           minute: 0,
+          isNextDay: false,
         },
         endAmbiguous: false,
       },
@@ -45,6 +46,7 @@ macro(
         end: {
           hour: 12,
           minute: 0,
+          isNextDay: false,
         },
         endAmbiguous: false,
       },
@@ -72,6 +74,7 @@ macro(
         end: {
           hour: 16,
           minute: 0,
+          isNextDay: false,
         },
         endAmbiguous: true,
       },
@@ -88,6 +91,7 @@ macro(
         end: {
           hour: 14,
           minute: 0,
+          isNextDay: false,
         },
         endAmbiguous: false,
       },
@@ -140,7 +144,23 @@ macro('Wd-Wd hh:mm-hh:mm', 'Mon-Fri 12:00-23:30', {
     {
       type: 'timeRange',
       start: { hour: 12, minute: 0 },
-      end: { hour: 23, minute: 30 },
+      end: { hour: 23, minute: 30, isNextDay: false },
+      endAmbiguous: false,
+    },
+  ],
+})
+
+macro('Wd hh:mm-hh:mm (next day end)', 'Mon 12:00-26:30', {
+  type: 'root',
+  children: [
+    {
+      type: 'singleDay',
+      day: 'Mo',
+    },
+    {
+      type: 'timeRange',
+      start: { hour: 12, minute: 0 },
+      end: { hour: 2, minute: 30, isNextDay: true },
       endAmbiguous: false,
     },
   ],

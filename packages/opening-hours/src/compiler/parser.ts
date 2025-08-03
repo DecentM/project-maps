@@ -78,6 +78,7 @@ type TimeRange = {
     | {
         hour: number
         minute: number
+        isNextDay?: boolean
       }
   endAmbiguous?: boolean
 }
@@ -183,6 +184,7 @@ class WipNode {
         end: {
           hour: this.timeEndHour,
           minute: this.timeEndMinute,
+          isNextDay: this.timeEndIsNextDay ?? false,
         },
         endAmbiguous: this.endAmbiguous ?? false,
       }
@@ -286,26 +288,20 @@ class WipNode {
 
   private timeEndHour: Hour | null = null
 
-  public setTimeEndHour(hour: string) {
-    const number = Number.parseInt(hour, 10)
+  public setTimeEndHour(hour: Hour) {
+    this.timeEndHour = hour
+  }
 
-    if (!isHour(number)) {
-      return
-    }
+  private timeEndIsNextDay: boolean | null = null
 
-    this.timeEndHour = number
+  public setTimeEndIsNextDay() {
+    this.timeEndIsNextDay = true
   }
 
   private timeEndMinute: Minute | null = null
 
-  public setTimeEndMinute(minute: string) {
-    const number = Number.parseInt(minute, 10)
-
-    if (!isMinute(number)) {
-      return
-    }
-
-    this.timeEndMinute = number
+  public setTimeEndMinute(minute: Minute) {
+    this.timeEndMinute = minute
   }
 
   private endAmbiguous: boolean | null = null
@@ -605,7 +601,12 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       )
     }
 
-    const hour = Number.parseInt(current.value, 10)
+    let hour = Number.parseInt(current.value, 10)
+
+    if (hour >= 24) {
+      wipNode.setTimeEndIsNextDay()
+      hour = hour % 24
+    }
 
     if (!isHour(hour)) {
       throw new ParsingError(
@@ -613,7 +614,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       )
     }
 
-    wipNode.setTimeEndHour(current.value)
+    wipNode.setTimeEndHour(hour)
   }
 
   const onTimeLastMinute = (current: Lexer.Token) => {
@@ -640,7 +641,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       )
     }
 
-    wipNode.setTimeEndMinute(current.value)
+    wipNode.setTimeEndMinute(minute)
   }
 
   const onTwentyFourSeven = (current: Lexer.Token) => {
@@ -988,7 +989,6 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       number: () => ParsingState.DayFirst,
       space: () => ParsingState.Empty,
       dash: () => ParsingState.DayLast,
-      comma: () => ParsingState.DayFirst,
       squareBracket: dayfirst_squarebracket,
     },
     [ParsingState.DayLast]: {
