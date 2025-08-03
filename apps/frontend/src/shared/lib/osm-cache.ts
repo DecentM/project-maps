@@ -1,6 +1,6 @@
 import type { Element } from '@project-maps/proto/lib/openstreetmap/web'
-import { LocalforageCache } from './localforage-cache'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
+import { LocalforageCache } from './localforage-cache'
 
 const key = (type: Element['result']['case'], id: string | number) => {
   return `${type}:${id}`

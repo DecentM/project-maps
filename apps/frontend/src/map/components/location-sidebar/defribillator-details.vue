@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
-import type { Defibrillator, MetadataItem } from '@project-maps/proto/metadata/web'
 import { Access, Indoor } from '@project-maps/proto/lib/openstreetmap/web'
+import type { Defibrillator, MetadataItem } from '@project-maps/proto/metadata/web'
 
 import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
 

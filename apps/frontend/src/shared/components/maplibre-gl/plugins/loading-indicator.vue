@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
 import type { Map as MaplibreGl } from 'maplibre-gl'
+import { type ShallowRef, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const map = inject<ShallowRef<MaplibreGl>>('map')
 

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { shallowRef } from 'vue'
 
-import { useMap } from './use-map'
 import type { MapOptions } from 'maplibre-gl'
+import { useMap } from './use-map'
 
 const props = defineProps<Pick<MapOptions, 'minPitch' | 'maxPitch'>>()
 

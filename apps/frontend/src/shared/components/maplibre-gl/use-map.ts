@@ -1,4 +1,5 @@
 import {
+  type ShallowRef,
   markRaw,
   nextTick,
   onMounted,
@@ -6,10 +7,9 @@ import {
   provide,
   ref,
   shallowRef,
-  type ShallowRef,
 } from 'vue'
 
-import { Map as MaplibreGl, type MapOptions } from 'maplibre-gl'
+import { type MapOptions, Map as MaplibreGl } from 'maplibre-gl'
 
 import { type StyleConfig, createStyle } from '@project-maps/map-style'
 

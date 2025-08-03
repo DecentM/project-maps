@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 
-import type { MetadataItem, Address } from '@project-maps/proto/metadata/web'
+import type { Address, MetadataItem } from '@project-maps/proto/metadata/web'
 
 import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
 

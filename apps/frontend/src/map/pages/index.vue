@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { useRoute, useRouter } from 'vue-router'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
+import { useRoute, useRouter } from 'vue-router'
 
-import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panzoom-tracker.vue'
-import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
-import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-control.vue'
 import GeolocateControlPlugin from 'src/shared/components/maplibre-gl/plugins/geolocate-control.vue'
+import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-control.vue'
+import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
 import NavigationControlPlugin from 'src/shared/components/maplibre-gl/plugins/navigation-control.vue'
+import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panzoom-tracker.vue'
 
 const router = useRouter()
 const route = useRoute()

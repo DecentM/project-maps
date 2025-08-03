@@ -1,13 +1,13 @@
 <script lang="ts" setup>
+import { usePreferredReducedMotion } from '@vueuse/core'
+import type { QuasarComponents } from 'quasar'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { QuasarComponents } from 'quasar'
-import { usePreferredReducedMotion } from '@vueuse/core'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
-import { metadataClient } from 'src/shared/lib/rpc'
 import { getImageUrl } from 'src/shared/lib/get-image-url'
+import { metadataClient } from 'src/shared/lib/rpc'
 
 import { getImageSize } from 'src/shared/lib/get-image-size'
 import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'

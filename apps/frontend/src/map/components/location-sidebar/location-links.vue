@@ -3,9 +3,9 @@ import { computed } from 'vue'
 
 import type { Attribution, Link, MetadataItem } from '@project-maps/proto/metadata/web'
 
-import { sameUrls } from 'src/shared/lib/urls'
-import WebUrl from 'src/shared/components/web-url/web-url.vue'
 import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
+import WebUrl from 'src/shared/components/web-url/web-url.vue'
+import { sameUrls } from 'src/shared/lib/urls'
 
 const props = defineProps<{
   metadata: MetadataItem[]

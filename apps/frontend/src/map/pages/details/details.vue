@@ -1,15 +1,15 @@
 <script lang="ts" setup>
+import { usePreferredReducedMotion } from '@vueuse/core'
+import type { MapGeoJSONFeature } from 'maplibre-gl'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { MapGeoJSONFeature } from 'maplibre-gl'
-import { usePreferredReducedMotion } from '@vueuse/core'
 
 import LocationSidebar from 'src/map/components/location-sidebar/location-sidebar.vue'
 
-import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panzoom-tracker.vue'
-import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
 import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-control.vue'
+import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
 import NavigationControlPlugin from 'src/shared/components/maplibre-gl/plugins/navigation-control.vue'
+import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panzoom-tracker.vue'
 
 const router = useRouter()
 const route = useRoute()

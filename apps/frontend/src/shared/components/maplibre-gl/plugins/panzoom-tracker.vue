@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { Map as MaplibreGl, MapMouseEvent } from 'maplibre-gl'
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
+import type { MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
+import { type ShallowRef, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 export type PanZoom = {

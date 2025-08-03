@@ -4,20 +4,20 @@ import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
+import { useOsmCache } from 'src/shared/lib/osm-cache'
 import { metadataClient } from 'src/shared/lib/rpc'
 import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'
-import { useOsmCache } from 'src/shared/lib/osm-cache'
 
-import LocationMetadata from 'src/map/components/location-sidebar/location-metadata.vue'
+import DefibrillatorDetails from 'src/map/components/location-sidebar/defribillator-details.vue'
 import LocationComments from 'src/map/components/location-sidebar/location-comments.vue'
 import LocationLinks from 'src/map/components/location-sidebar/location-links.vue'
+import LocationMetadata from 'src/map/components/location-sidebar/location-metadata.vue'
 import LocationOpeningHours from 'src/map/components/location-sidebar/location-opening-hours.vue'
-import DefibrillatorDetails from 'src/map/components/location-sidebar/defribillator-details.vue'
 
-import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderers/image-renderer.vue'
 import DescriptionRenderer from 'src/map/components/location-sidebar/metadata-renderers/description-renderer.vue'
-import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
+import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderers/image-renderer.vue'
 import LogoRenderer from 'src/map/components/location-sidebar/metadata-renderers/logo-renderer.vue'
+import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
 
 const props = defineProps<{
   poiOsmId?: string

@@ -14,8 +14,10 @@ tasks:
     command: pnpm
     args:
       - biome
-      - format
-      - --write
+      - check
+      - --fix
+      - --unsafe
+      - .
     options:
       cache: false
       persistent: false

@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import type { MapGeoJSONFeature, MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
 import { useOsmCache } from 'src/shared/lib/osm-cache'
-import { inject, onBeforeUnmount, onMounted, ref, watch, type ShallowRef } from 'vue'
+import { type ShallowRef, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const map = inject<ShallowRef<MaplibreGl>>('map')
 
