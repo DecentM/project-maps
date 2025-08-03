@@ -2,27 +2,5 @@ project:
   name: opening-hours
   description: 'Opening hours'
 
-tasks:
-  build:
-    inputs:
-      - src
-    outputs:
-      - dist
-    command:
-      - tsc
-    options:
-      cache: true
-      persistent: false
-
-  test:
-    inputs:
-      - src
-    command: c8
-    args:
-      - --100
-      - tsx
-      - --test
-      - src/**/*.spec.ts
-    options:
-      cache: true
-      persistent: false
+tags:
+  - testable

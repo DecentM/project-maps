@@ -19,3 +19,27 @@ tasks:
     options:
       cache: false
       persistent: false
+
+  build:
+    inputs:
+      - src
+    outputs:
+      - dist
+    command:
+      - tsc
+    options:
+      cache: true
+      persistent: false
+
+  test:
+    inputs:
+      - src
+    command: c8
+    args:
+      - --100
+      - tsx
+      - --test
+      - src/**/*.spec.ts
+    options:
+      cache: true
+      persistent: false
