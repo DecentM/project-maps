@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@moonrepo/cli": "^1.39.3",
     "husky": "^9.1.7",
     "tsconfig-moon": "^1.4.1",

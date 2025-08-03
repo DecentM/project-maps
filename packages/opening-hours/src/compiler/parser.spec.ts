@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert'
 
-import { Ast, parse } from './parser.js'
+import { type Ast, parse } from './parser.js'
 import { lex } from './lexer.js'
 
 const macro = (name: string, value: string, expected: Ast) => {
@@ -10,120 +10,124 @@ const macro = (name: string, value: string, expected: Ast) => {
   })
 }
 
-macro('kitchensink', 'Mo 08:00-16:00; Mo[-2] 08:00-12:00;\n Dec 12 off;PH 08:00-16:00+; SH 10:00-14:00;Jan 12-14 24/7; Aug sunrise-sunset; easter -2 days off', {
-  "type": "root",
-  "children": [
-    {
-      "type": "singleDay",
-      "day": "Mo"
-    },
-    {
-      "type": "timeRange",
-      "start": {
-        "hour": 8,
-        "minute": 0
+macro(
+  'kitchensink',
+  'Mo 08:00-16:00; Mo[-2] 08:00-12:00;\n Dec 12 off;PH 08:00-16:00+; SH 10:00-14:00;Jan 12-14 24/7; Aug sunrise-sunset; easter -2 days off',
+  {
+    type: 'root',
+    children: [
+      {
+        type: 'singleDay',
+        day: 'Mo',
       },
-      "end": {
-        "hour": 16,
-        "minute": 0
+      {
+        type: 'timeRange',
+        start: {
+          hour: 8,
+          minute: 0,
+        },
+        end: {
+          hour: 16,
+          minute: 0,
+        },
+        endAmbiguous: false,
       },
-      "endAmbiguous": false
-    },
-    {
-      "type": "singleDay",
-      "day": "Mo"
-    },
-    {
-      "type": "timeRange",
-      "start": {
-        "hour": 8,
-        "minute": 0
+      {
+        type: 'singleDay',
+        day: 'Mo',
       },
-      "end": {
-        "hour": 12,
-        "minute": 0
+      {
+        type: 'timeRange',
+        start: {
+          hour: 8,
+          minute: 0,
+        },
+        end: {
+          hour: 12,
+          minute: 0,
+        },
+        endAmbiguous: false,
       },
-      "endAmbiguous": false
-    },
-    {
-      "type": "singleMonth",
-      "month": "Dec"
-    },
-    {
-      "type": "singleDay",
-      "day": 12
-    },
-    {
-      "type": "off"
-    },
-    {
-      "type": "singleDay",
-      "day": "PH"
-    },
-    {
-      "type": "timeRange",
-      "start": {
-        "hour": 8,
-        "minute": 0
+      {
+        type: 'singleMonth',
+        month: 'Dec',
       },
-      "end": {
-        "hour": 16,
-        "minute": 0
+      {
+        type: 'singleDay',
+        day: 12,
       },
-      "endAmbiguous": true
-    },
-    {
-      "type": "singleDay",
-      "day": "SH"
-    },
-    {
-      "type": "timeRange",
-      "start": {
-        "hour": 10,
-        "minute": 0
+      {
+        type: 'off',
       },
-      "end": {
-        "hour": 14,
-        "minute": 0
+      {
+        type: 'singleDay',
+        day: 'PH',
       },
-      "endAmbiguous": false
-    },
-    {
-      "type": "singleMonth",
-      "month": "Jan"
-    },
-    {
-      "type": "dayRange",
-      "start": 12,
-      "end": 14
-    },
-    {
-      "type": "twentyFourSeven"
-    },
-    {
-      "type": "singleMonth",
-      "month": "Aug"
-    },
-    {
-      "type": "timeRange",
-      "start": "sunrise",
-      "end": "sunset",
-      "endAmbiguous": false
-    },
-    {
-      "type": "fest",
-      "value": "easter"
-    },
-    {
-      "type": "offset",
-      "value": -2,
-      "unit": "days"
-    },
-    {
-      "type": "off"
-    }
-  ]
-})
+      {
+        type: 'timeRange',
+        start: {
+          hour: 8,
+          minute: 0,
+        },
+        end: {
+          hour: 16,
+          minute: 0,
+        },
+        endAmbiguous: true,
+      },
+      {
+        type: 'singleDay',
+        day: 'SH',
+      },
+      {
+        type: 'timeRange',
+        start: {
+          hour: 10,
+          minute: 0,
+        },
+        end: {
+          hour: 14,
+          minute: 0,
+        },
+        endAmbiguous: false,
+      },
+      {
+        type: 'singleMonth',
+        month: 'Jan',
+      },
+      {
+        type: 'dayRange',
+        start: 12,
+        end: 14,
+      },
+      {
+        type: 'twentyFourSeven',
+      },
+      {
+        type: 'singleMonth',
+        month: 'Aug',
+      },
+      {
+        type: 'timeRange',
+        start: 'sunrise',
+        end: 'sunset',
+        endAmbiguous: false,
+      },
+      {
+        type: 'fest',
+        value: 'easter',
+      },
+      {
+        type: 'offset',
+        value: -2,
+        unit: 'days',
+      },
+      {
+        type: 'off',
+      },
+    ],
+  }
+)
 
 macro('Wd-Wd hh:mm-hh:mm', 'Mon-Fri 12:00-23:30', {
   type: 'root',

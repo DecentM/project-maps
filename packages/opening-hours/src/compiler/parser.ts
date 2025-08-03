@@ -1,6 +1,17 @@
 import * as Lexer from './lexer.js'
 
-import { Day, DayOfMonth, Hour, isDay, isDayOfMonth, isHour, isMinute, isMonth, Minute, Month } from '../opening-hours.js'
+import {
+  Day,
+  DayOfMonth,
+  Hour,
+  isDay,
+  isDayOfMonth,
+  isHour,
+  isMinute,
+  isMonth,
+  Minute,
+  Month,
+} from '../opening-hours.js'
 import { ParsingError } from './errors.js'
 
 export type Ast = {
@@ -45,10 +56,10 @@ const OffsetUnit = [
   'month',
   'months',
   'year',
-  'years'
+  'years',
 ] as const
 
-type OffsetUnit = typeof OffsetUnit[number]
+type OffsetUnit = (typeof OffsetUnit)[number]
 
 const isOffsetUnit = (input: unknown): input is OffsetUnit => {
   return OffsetUnit.includes(input as OffsetUnit)
@@ -56,14 +67,18 @@ const isOffsetUnit = (input: unknown): input is OffsetUnit => {
 
 type TimeRange = {
   type: 'timeRange'
-  start: CustomTime | {
-    hour: number
-    minute: number
-  },
-  end?: CustomTime | {
-    hour: number
-    minute: number
-  },
+  start:
+    | CustomTime
+    | {
+        hour: number
+        minute: number
+      }
+  end?:
+    | CustomTime
+    | {
+        hour: number
+        minute: number
+      }
   endAmbiguous?: boolean
 }
 
@@ -154,10 +169,10 @@ class WipNode {
     }
 
     if (
-      this.timeStartHour !== null
-      && this.timeStartMinute !== null
-      && this.timeEndHour !== null
-      && this.timeEndMinute !== null
+      this.timeStartHour !== null &&
+      this.timeStartMinute !== null &&
+      this.timeEndHour !== null &&
+      this.timeEndMinute !== null
     ) {
       return {
         type: 'timeRange',
@@ -271,7 +286,6 @@ class WipNode {
 
   private timeEndHour: Hour | null = null
 
-
   public setTimeEndHour(hour: string) {
     const number = Number.parseInt(hour, 10)
 
@@ -353,10 +367,10 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   let _cursor = 0
 
   const cursor = {
-    get value () {
+    get value() {
       return _cursor
     },
-    set value (value: number) {
+    set value(value: number) {
       debug(`Cursor change! ${_cursor} -> ${value}`)
 
       if (value < 0 || value >= input.length) {
@@ -364,21 +378,21 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       }
 
       _cursor = value
-    }
+    },
   }
 
   let _state: ParsingState = ParsingState.Empty
 
   const state = {
-    get value () {
+    get value() {
       return _state
     },
-    set value (value: ParsingState) {
+    set value(value: ParsingState) {
       debug('State change!', _state, '->', value)
       const oldState = _state
       _state = value
       onStateChange(value, oldState)
-    }
+    },
   }
 
   // //////////////////////////////////////
@@ -391,7 +405,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
   const result: Ast = {
     type: 'root',
-    children: []
+    children: [],
   }
 
   let wipNode = new WipNode()
@@ -457,14 +471,18 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       const dayString = current.value.substring(0, 2)
 
       if (!isDay(dayString)) {
-        throw new ParsingError(`onDayFirst: Expected a day, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onDayFirst: Expected a day, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       day = dayString
     }
 
     if (!day) {
-      throw new ParsingError(`onDayFirst: Expected a word or number, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onDayFirst: Expected a word or number, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setDayStart(day)
@@ -482,7 +500,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       const dayOfMonth = Number.parseInt(current.value, 10)
 
       if (!isDayOfMonth(dayOfMonth)) {
-        throw new ParsingError(`onDayLast: Expected a valid day of month, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onDayLast: Expected a valid day of month, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       day = dayOfMonth
@@ -492,14 +512,18 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       const dayString = current.value.substring(0, 2)
 
       if (!isDay(dayString)) {
-        throw new ParsingError(`onDayLast: Expected a day, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onDayLast: Expected a day, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       day = dayString
     }
 
     if (!day) {
-      throw new ParsingError(`onDayLast: Expected a word, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onDayLast: Expected a word, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setDayEnd(day)
@@ -508,7 +532,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   const onTimeFirstHour = (current: Lexer.Token) => {
     if (current.type === 'word') {
       if (!isCustomTime(current.value)) {
-        throw new ParsingError(`onTimeFirstHour: Expected a custom time, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onTimeFirstHour: Expected a custom time, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       wipNode.setTimeStartCustom(current.value)
@@ -516,13 +542,17 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'number') {
-      throw new ParsingError(`onTimeFirstHour: Expected a number, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeFirstHour: Expected a number, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     const hour = Number.parseInt(current.value, 10)
 
     if (!isHour(hour)) {
-      throw new ParsingError(`onTimeFirstHour: Expected a valid hour, got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeFirstHour: Expected a valid hour, got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     debug('Setting time start hour', hour)
@@ -535,13 +565,17 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'number') {
-      throw new ParsingError(`onTimeFirstMinute: Expected a number, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeFirstMinute: Expected a number, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     const minute = Number.parseInt(current.value, 10)
 
     if (!isMinute(minute)) {
-      throw new ParsingError(`onTimeFirstMinute: Expected a valid minute, got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeFirstMinute: Expected a valid minute, got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     debug('Setting time start minute', minute)
@@ -556,7 +590,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
     if (current.type === 'word') {
       if (!isCustomTime(current.value)) {
-        throw new ParsingError(`onTimeFirstHour: Expected a custom time, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onTimeFirstHour: Expected a custom time, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       wipNode.setTimeEndCustom(current.value)
@@ -564,13 +600,17 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'number') {
-      throw new ParsingError(`onTimeLastHour: Expected a number, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeLastHour: Expected a number, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     const hour = Number.parseInt(current.value, 10)
 
     if (!isHour(hour)) {
-      throw new ParsingError(`onTimeLastHour: Expected a valid hour, got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeLastHour: Expected a valid hour, got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setTimeEndHour(current.value)
@@ -587,13 +627,17 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'number') {
-      throw new ParsingError(`onTimeLastMinute: Expected a number, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeLastMinute: Expected a number, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     const minute = Number.parseInt(current.value, 10)
 
     if (!isMinute(minute)) {
-      throw new ParsingError(`onTimeLastMinute: Expected a valid minute, got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTimeLastMinute: Expected a valid minute, got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setTimeEndMinute(current.value)
@@ -601,11 +645,15 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
   const onTwentyFourSeven = (current: Lexer.Token) => {
     if (current.type !== 'number' && current.type !== 'slash') {
-      throw new ParsingError(`onTwentyFourSeven: Expected a number or slash, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTwentyFourSeven: Expected a number or slash, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     if (current.type === 'number' && current.value !== '24' && current.value !== '7') {
-      throw new ParsingError(`onTwentyFourSeven: Expected '24', got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onTwentyFourSeven: Expected '24', got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setTwentyFourSeven()
@@ -613,11 +661,15 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
   const onMonthFirst = (current: Lexer.Token) => {
     if (current.type !== 'word') {
-      throw new ParsingError(`onMonthFirst: Expected a word, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onMonthFirst: Expected a word, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     if (!isMonth(current.value)) {
-      throw new ParsingError(`onMonthFirst: Expected a month, got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onMonthFirst: Expected a month, got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setMonthStart(current.value)
@@ -631,11 +683,15 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'word') {
-      throw new ParsingError(`onMonthLast: Expected a word, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onMonthLast: Expected a word, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     if (!isMonth(current.value)) {
-      throw new ParsingError(`onMonthLast: Expected a month, got ${current.value} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onMonthLast: Expected a month, got ${current.value} (${JSON.stringify(current)})`
+      )
     }
 
     wipNode.setMonthEnd(current.value)
@@ -664,7 +720,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'word') {
-      throw new ParsingError(`onFest: Expected a word, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onFest: Expected a word, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     if (isCustomFest(current.value)) {
@@ -676,7 +734,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       return
     }
 
-    throw new ParsingError(`onFest: Expected a custom fest, got ${current.value} (${JSON.stringify(current)})`)
+    throw new ParsingError(
+      `onFest: Expected a custom fest, got ${current.value} (${JSON.stringify(current)})`
+    )
   }
 
   const onOffset = (current: Lexer.Token) => {
@@ -690,14 +750,18 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type !== 'number' && current.type !== 'word') {
-      throw new ParsingError(`onOffset: Expected a number or word, got ${current.type} (${JSON.stringify(current)})`)
+      throw new ParsingError(
+        `onOffset: Expected a number or word, got ${current.type} (${JSON.stringify(current)})`
+      )
     }
 
     if (current.type === 'number') {
       const value = Number.parseInt(current.value, 10)
 
       if (Number.isNaN(value)) {
-        throw new ParsingError(`onOffset: Expected a valid number, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onOffset: Expected a valid number, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       wipNode.setOffsetNumber(value)
@@ -706,7 +770,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
     if (current.type === 'word') {
       if (!isOffsetUnit(current.value)) {
-        throw new ParsingError(`onOffset: Expected a valid offset unit, got ${current.value} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `onOffset: Expected a valid offset unit, got ${current.value} (${JSON.stringify(current)})`
+        )
       }
 
       wipNode.setOffsetUnit(current.value)
@@ -727,37 +793,37 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
           break
         case ParsingState.TimeFirstHour:
           onTimeFirstHour(current)
-          break;
+          break
         case ParsingState.TimeFirstMinute:
           onTimeFirstMinute(current)
-          break;
+          break
         case ParsingState.TimeLastHour:
           onTimeLastHour(current)
-          break;
+          break
         case ParsingState.TimeLastMinute:
           onTimeLastMinute(current)
-          break;
+          break
         case ParsingState.TwentyFourSeven:
           onTwentyFourSeven(current)
-          break;
+          break
         case ParsingState.MonthFirst:
           onMonthFirst(current)
-          break;
+          break
         case ParsingState.MonthLast:
           onMonthLast(current)
-          break;
+          break
         case ParsingState.Off:
           onOff(current)
-          break;
+          break
         case ParsingState.Empty:
           onEmpty(current, oldState)
-          break;
+          break
         case ParsingState.Fest:
           onFest(current)
-          break;
+          break
         case ParsingState.Offset:
           onOffset(current)
-          break;
+          break
         default:
           throw new ParsingError(`Unhandled state: ${newState}`)
       }
@@ -780,7 +846,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       }
 
       if (current.type !== 'number') {
-        throw new ParsingError(`Expected a number, got ${current.type} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `Expected a number, got ${current.type} (${JSON.stringify(current)})`
+        )
       }
 
       switch (next.type) {
@@ -795,10 +863,14 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
             return ParsingState.TwentyFourSeven
           }
 
-          throw new ParsingError(`Unexpected token after number and slash: ${next.type} (${JSON.stringify(next)})`)
+          throw new ParsingError(
+            `Unexpected token after number and slash: ${next.type} (${JSON.stringify(next)})`
+          )
         }
         default:
-          throw new ParsingError(`Unexpected token after number: ${next.type} (${JSON.stringify(next)})`)
+          throw new ParsingError(
+            `Unexpected token after number: ${next.type} (${JSON.stringify(next)})`
+          )
       }
     } catch (error) {
       throw new ParsingError(error, 'empty_number')
@@ -848,7 +920,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       const current = peekCurrentToken()
 
       if (current.type !== 'squareBracket') {
-        throw new ParsingError(`Expected a square bracket, got ${current.type} (${JSON.stringify(current)})`)
+        throw new ParsingError(
+          `Expected a square bracket, got ${current.type} (${JSON.stringify(current)})`
+        )
       }
 
       if (current.value === 'close') {
@@ -881,13 +955,13 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
   const offset_space: ParsingStateFunction = () => {
     try {
-     const next = peekNextToken()
+      const next = peekNextToken()
 
-     if (next?.type === 'word' && isOffsetUnit(next.value)) {
-       return ParsingState.Offset
-     }
+      if (next?.type === 'word' && isOffsetUnit(next.value)) {
+        return ParsingState.Offset
+      }
 
-     return ParsingState.Empty
+      return ParsingState.Empty
     } catch (error) {
       throw new ParsingError(error, 'offset_space')
     }
@@ -897,7 +971,10 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   // State Machine
   // //////////////////////////////////////
 
-  const parsingStateMachine: Record<ParsingState, Partial<Record<Lexer.Token['type'], ParsingStateFunction>>> = {
+  const parsingStateMachine: Record<
+    ParsingState,
+    Partial<Record<Lexer.Token['type'], ParsingStateFunction>>
+  > = {
     [ParsingState.Empty]: {
       number: empty_number,
       word: empty_word,
@@ -953,15 +1030,14 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       dash: () => ParsingState.MonthLast,
       comma: () => ParsingState.MonthFirst,
     },
-    [ParsingState.MonthLast]: {
-    },
+    [ParsingState.MonthLast]: {},
     [ParsingState.Off]: {
       semicolon: () => ParsingState.Empty,
     },
     [ParsingState.Fest]: {
       space: () => ParsingState.Empty,
       word: fest_word,
-    }
+    },
   }
 
   const getNewState = (token: Lexer.Token): ParsingState => {
@@ -969,7 +1045,9 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       const stateFunction = parsingStateMachine[state.value][token.type]
 
       if (!stateFunction) {
-        throw new ParsingError(`No state function found for state ${state.value} and token type ${token.type}`)
+        throw new ParsingError(
+          `No state function found for state ${state.value} and token type ${token.type}`
+        )
       }
 
       debug('State resolution!', token.type, '->', `${stateFunction.name}()`)

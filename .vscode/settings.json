@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///home/brookeb/.vscode/extensions/atlassian.atlascode-3.0.6/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://raw.githubusercontent.com/moonrepo/moon/master/website/static/schemas/project.json": "file:///workspace/.moon/tasks/node.yml"
+    }
+}

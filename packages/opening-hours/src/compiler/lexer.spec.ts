@@ -17,7 +17,7 @@ test('lexer', () => {
     { value: { type: 'dash' }, start: 13, length: 1 },
     { value: { type: 'number', value: '23' }, start: 16, length: 2 },
     { value: { type: 'colon' }, start: 16, length: 1 },
-    { value: { type: 'number', value: '30' }, start: 19, length: 2 }
+    { value: { type: 'number', value: '30' }, start: 19, length: 2 },
   ]
 
   assert.deepEqual(lex(input), expected)
@@ -108,7 +108,7 @@ test('kitchensink', () => {
     { value: { type: 'space' }, start: 125, length: 1 },
     { value: { type: 'word', value: 'days' }, start: 130, length: 4 },
     { value: { type: 'space' }, start: 130, length: 1 },
-    { value: { type: 'word', value: 'off' }, start: 134, length: 3 }
+    { value: { type: 'word', value: 'off' }, start: 134, length: 3 },
   ]
 
   assert.deepEqual(lex(input), expected)

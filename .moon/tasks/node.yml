@@ -1,0 +1,21 @@
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+tasks:
+  format-check:
+    command: pnpm
+    args:
+      - biome
+      - check
+    options:
+      cache: false
+      persistent: false
+
+  format-fix:
+    command: pnpm
+    args:
+      - biome
+      - format
+      - --write
+    options:
+      cache: false
+      persistent: false

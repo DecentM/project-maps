@@ -1,4 +1,4 @@
-import { LexingError } from "./errors.js"
+import { LexingError } from './errors.js'
 
 export type NumberToken = {
   type: 'number'
@@ -66,7 +66,7 @@ export type TokenSource = {
 }
 
 export type TokenEnvelope = TokenSource & {
-  value: Token,
+  value: Token
 }
 
 export const lex = (input: string): TokenEnvelope[] => {
@@ -239,10 +239,14 @@ export const lex = (input: string): TokenEnvelope[] => {
         break
 
       default:
-        throw new LexingError(`Unexpected character: "${current}" at position ${cursor}`, undefined, {
-          start: cursor,
-          content: input.slice(cursor, cursor + 1),
-        })
+        throw new LexingError(
+          `Unexpected character: "${current}" at position ${cursor}`,
+          undefined,
+          {
+            start: cursor,
+            content: input.slice(cursor, cursor + 1),
+          }
+        )
     }
   }
 

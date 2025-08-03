@@ -4,13 +4,12 @@
     "enabled": true
   },
   "linter": {
+    "enabled": false
+  },
+  "vcs": {
+    "clientKind": "git",
     "enabled": true,
-    "rules": {
-      "recommended": true,
-      "style": {
-        "noNonNullAssertion": "off"
-      }
-    }
+    "useIgnoreFile": true
   },
   "formatter": {
     "enabled": true,

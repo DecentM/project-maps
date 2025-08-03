@@ -23,8 +23,6 @@
 .DS_Store
 Thumbs.db
 
-coverage/
-
 # moon
 .moon/cache
 .moon/docker
