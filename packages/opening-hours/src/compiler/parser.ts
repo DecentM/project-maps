@@ -86,18 +86,13 @@ type Off = {
   type: 'off'
 }
 
-type TimeDayException = {
-  type: 'timeDayException'
-  number: number
-}
-
 type Fest = {
   type: 'fest'
   value: CustomFest
 }
 
-type OffsetNumber = {
-  type: 'offsetNumber'
+type Offset = {
+  type: 'offset'
   value: number
   unit?: OffsetUnit
 }
@@ -110,9 +105,8 @@ export type Node =
   | SingleMonth
   | MonthRange
   | Off
-  | TimeDayException
   | Fest
-  | OffsetNumber
+  | Offset
 
 // //////////////////////////////////////
 // WIP Node
@@ -128,7 +122,7 @@ class WipNode {
       }
     }
 
-    if (this.dayStart && !this.timeDayException) {
+    if (this.dayStart) {
       return {
         type: 'singleDay',
         day: this.dayStart,
@@ -191,13 +185,6 @@ class WipNode {
       }
     }
 
-    if (this.timeDayException !== null) {
-      return {
-        type: 'timeDayException',
-        number: this.timeDayException,
-      }
-    }
-
     if (this.fest) {
       return {
         type: 'fest',
@@ -207,20 +194,25 @@ class WipNode {
 
     if (this.offsetNumber !== null) {
       return {
-        type: 'offsetNumber',
-        value: this.offsetNumber,
+        type: 'offset',
+        value: this.offsetNegative ? -this.offsetNumber : this.offsetNumber,
         unit: this.offsetUnit ?? undefined,
       }
     }
 
-    console.log(this)
-    throw new ParsingError('WIP Node is incomplete, cannot finalise')
+    throw new ParsingError('WIP Node is incomplete, cannot finalise', JSON.stringify(this, null, 2))
   }
 
   private offsetNumber: number | null = null
 
   public setOffsetNumber(value: number) {
     this.offsetNumber = value
+  }
+
+  private offsetNegative: boolean | null = null
+
+  public setOffsetNegative() {
+    this.offsetNegative = true
   }
 
   private offsetUnit: OffsetUnit | null = null
@@ -320,12 +312,6 @@ class WipNode {
     this.off = true
   }
 
-  private timeDayException: number | null = null
-
-  public setTimeDayException(number: number) {
-    this.timeDayException = number
-  }
-
   private fest: CustomFest | null = null
 
   public setFest(value: CustomFest) {
@@ -345,7 +331,6 @@ enum ParsingState {
   TimeFirstMinute = 'timeFirstMinute',
   TimeLastHour = 'timeLastHour',
   TimeLastMinute = 'timeLastMinute',
-  TimeDayException = 'timeDayException',
   TwentyFourSeven = 'twentyFourSeven',
   MonthFirst = 'monthFirst',
   MonthLast = 'monthLast',
@@ -401,7 +386,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   // //////////////////////////////////////
 
   const debug = (...messages: Array<string | undefined | number>) => {
-    console.log(`${messages.join(' ')} (cursor: ${cursor.value}, state: ${state.value})`)
+    // console.log(`${messages.join(' ')} (cursor: ${cursor.value}, state: ${state.value})`)
   }
 
   const result: Ast = {
@@ -673,25 +658,6 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     state.value = getNewState(current)
   }
 
-  const onTimeDayException = (current: Lexer.Token) => {
-    if (current.type === 'squareBracket' || current.type === 'dash' || current.type === 'space') {
-      return
-    }
-
-    if (current.type !== 'number') {
-      throw new ParsingError(`onTimeDayException: Expected a number, got ${current.type} (${JSON.stringify(current)})`)
-    }
-
-    let number = Number.parseInt(current.value, 10)
-    const prev = peekPreviousToken()
-
-    if (prev?.type === 'dash') {
-      number = -number
-    }
-
-    wipNode.setTimeDayException(number)
-  }
-
   const onFest = (current: Lexer.Token) => {
     if (current.type === 'space') {
       return
@@ -714,6 +680,15 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   }
 
   const onOffset = (current: Lexer.Token) => {
+    if (current.type === 'squareBracket' || current.type === 'space') {
+      return
+    }
+
+    if (current.type === 'dash') {
+      wipNode.setOffsetNegative()
+      return
+    }
+
     if (current.type !== 'number' && current.type !== 'word') {
       throw new ParsingError(`onOffset: Expected a number or word, got ${current.type} (${JSON.stringify(current)})`)
     }
@@ -776,9 +751,6 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
           break;
         case ParsingState.Empty:
           onEmpty(current, oldState)
-          break;
-        case ParsingState.TimeDayException:
-          onTimeDayException(current)
           break;
         case ParsingState.Fest:
           onFest(current)
@@ -871,43 +843,6 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
   }
 
-  const timedayexception_squarebracket: ParsingStateFunction = () => {
-    try {
-      const current = peekCurrentToken()
-
-      if (current.type !== 'squareBracket') {
-        throw new ParsingError(`Expected a square bracket, got ${current.type} (${JSON.stringify(current)})`)
-      }
-
-      if (current.value === 'close') {
-        return ParsingState.Empty
-      }
-
-      return ParsingState.TimeDayException
-    } catch (error) {
-      throw new ParsingError(error, 'timedayexception_squarebracket')
-    }
-  }
-
-  const timedayexception_space: ParsingStateFunction = () => {
-    try {
-      const current = peekCurrentToken()
-      const next = peekNextToken()
-
-      if (!next) {
-        return ParsingState.Empty
-      }
-
-      if (next.type === 'word' && isOffsetUnit(next.value)) {
-        return ParsingState.TimeDayException
-      }
-
-      return ParsingState.Empty
-    } catch (error) {
-      throw new ParsingError(error, 'timedayexception_space')
-    }
-  }
-
   const dayfirst_squarebracket: ParsingStateFunction = () => {
     try {
       const current = peekCurrentToken()
@@ -920,7 +855,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
         throw new ParsingError('Unexpected closing square bracket in or after day range')
       }
 
-      return ParsingState.TimeDayException
+      return ParsingState.Offset
     } catch (error) {
       throw new ParsingError(error, 'dayfirst_squarebracket')
     }
@@ -970,7 +905,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       semicolon: () => ParsingState.Empty,
       squareBracket: () => ParsingState.Empty,
       newline: () => ParsingState.Empty,
-      dash: () => ParsingState.TimeDayException,
+      dash: () => ParsingState.Offset,
     },
     [ParsingState.DayFirst]: {
       number: () => ParsingState.DayFirst,
@@ -1000,15 +935,12 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       semicolon: () => ParsingState.Empty,
       plus: () => ParsingState.TimeLastMinute,
     },
-    [ParsingState.TimeDayException]: {
-      dash: () => ParsingState.TimeDayException,
-      number: () => ParsingState.TimeDayException,
-      squareBracket: timedayexception_squarebracket,
-      space: timedayexception_space,
-      word: () => ParsingState.Offset,
-    },
     [ParsingState.Offset]: {
       space: offset_space,
+      dash: () => ParsingState.Offset,
+      number: () => ParsingState.Offset,
+      squareBracket: () => ParsingState.Offset,
+      word: () => ParsingState.Offset,
     },
     [ParsingState.TwentyFourSeven]: {
       slash: () => ParsingState.TwentyFourSeven,
@@ -1060,8 +992,6 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
       cursor.value++
     } catch (error) {
-      // console.log('fatal', JSON.stringify(result, null, 2))
-
       throw new ParsingError(error, 'parse', input[cursor.value])
     }
   }
@@ -1070,15 +1000,3 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
   return result
 }
-
-const input = [
-  'Mo 08:00-16:00; Mo[-2] 08:00-12:00;\n Dec 12 off;PH 08:00-16:00+;',
-  'SH 10:00-14:00;Jan 12-14 24/7; Aug sunrise-sunset; easter -2 days off'
-].join(' ')
-const tokens = Lexer.lex(input)
-const ast = parse(tokens)
-
-console.log('\n===========================\n')
-console.log(tokens)
-console.log('\n===========================\n')
-console.log(JSON.stringify(ast, null, 2))
