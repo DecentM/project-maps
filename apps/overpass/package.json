@@ -5,7 +5,7 @@
   "type": "module",
   "author": "",
   "dependencies": {
-    "@grpc/grpc-js": "^1.11.2",
+    "@grpc/grpc-js": "1.13.4",
     "@project-maps/logging": "workspace:*",
     "@project-maps/proto": "workspace:*",
     "emittery": "^1.0.3",

@@ -10,10 +10,10 @@
     "emitDeclarationOnly": false,
     "sourceMap": true,
     "noUnusedLocals": false,
-    "rootDir": "dist",
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "rootDir": "dist_old",
+    "tsBuildInfoFile": "dist_old/.tsbuildinfo",
     "allowJs": false,
     "noImplicitOverride": false,
-    "outDir": "dist",
+    "outDir": "dist_old",
   }
 }

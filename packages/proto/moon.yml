@@ -17,58 +17,18 @@ tasks:
       cache: false
       persistent: true
 
-  prepare:
-    command:
-      - sh
-      - -c
-      - mkdir -p dist/web dist/node
-    options:
-      cache: false
-      persistent: false
-
-  generate_node:
-    deps:
-      - prepare
-    inputs:
-      - src/**/*.proto
-      - package.json
-    outputs:
-      - dist
-    options:
-      runFromWorkspaceRoot: true
-      cache: true
-      persistent: false
-    command:
-      - packages/proto/node_modules/.bin/grpc_tools_node_protoc
-      - --ts_out=packages/proto/dist/node
-      - --ts_opt=no_namespace
-      - --ts_opt=unary_rpc_promise=true
-      - --ts_opt=target=node
-      - -I=packages/proto/src
-      - packages/proto/src/**/*.proto
-
-  generate_web:
-    deps:
-      - prepare
-    inputs:
-      - src/**/*.proto
-      - package.json
-    outputs:
-      - dist
-    options:
-      cache: true
-      persistent: false
-    command:
-      - grpc_tools_node_protoc
-      - --es_out dist/web
-      - --es_opt target=ts
-      - -I=src
-      - src/**/*.proto
-
   build:
-    deps:
-      - generate_node
-      - generate_web
+    inputs:
+      - src/**/*.proto
+      - package.json
+      - buf.yaml
+      - buf.gen.yaml
+    outputs:
+      - dist
+    command: pnpm
+    args:
+      - buf
+      - generate
     options:
       cache: true
       persistent: false

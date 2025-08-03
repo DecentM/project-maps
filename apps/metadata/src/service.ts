@@ -6,8 +6,8 @@ import { log } from '@project-maps/logging'
 import {
   type GetPoiMetadataInput,
   type MetadataItem,
-  UnimplementedMetadataService,
   type GetAreaMetadataInput,
+  UnimplementedMetadataService,
 } from '@project-maps/proto/metadata/node'
 
 import type { Events, MetadataSource } from 'src/declarations/metadata-source'
