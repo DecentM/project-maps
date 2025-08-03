@@ -1,6 +1,10 @@
 dist
 .ignored/
 .pnpm-store
+generated
+
+.quasar
+quasar.config.*.temporary.compiled*
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
