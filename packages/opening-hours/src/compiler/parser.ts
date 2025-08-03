@@ -4,13 +4,13 @@ import {
   Day,
   DayOfMonth,
   Hour,
+  Minute,
+  Month,
   isDay,
   isDayOfMonth,
   isHour,
   isMinute,
   isMonth,
-  Minute,
-  Month,
 } from '../opening-hours.js'
 import { ParsingError } from './errors.js'
 
@@ -170,10 +170,10 @@ class WipNode {
     }
 
     if (
-      this.timeStartHour !== null &&
-      this.timeStartMinute !== null &&
-      this.timeEndHour !== null &&
-      this.timeEndMinute !== null
+      this.timeStartHour !== undefined &&
+      this.timeStartMinute !== undefined &&
+      this.timeEndHour !== undefined &&
+      this.timeEndMinute !== undefined
     ) {
       return {
         type: 'timeRange',
@@ -209,7 +209,7 @@ class WipNode {
       }
     }
 
-    if (this.offsetNumber !== null) {
+    if (this.offsetNumber !== undefined) {
       return {
         type: 'offset',
         value: this.offsetNegative ? -this.offsetNumber : this.offsetNumber,
@@ -217,112 +217,115 @@ class WipNode {
       }
     }
 
-    throw new ParsingError('WIP Node is incomplete, cannot finalise', JSON.stringify(this, null, 2))
+    throw new ParsingError(
+      'WIP Node is incomplete, cannot finalise',
+      JSON.stringify(this, undefined, 2)
+    )
   }
 
-  private offsetNumber: number | null = null
+  private offsetNumber?: number
 
   public setOffsetNumber(value: number) {
     this.offsetNumber = value
   }
 
-  private offsetNegative: boolean | null = null
+  private offsetNegative?: boolean
 
   public setOffsetNegative() {
     this.offsetNegative = true
   }
 
-  private offsetUnit: OffsetUnit | null = null
+  private offsetUnit?: OffsetUnit
 
   public setOffsetUnit(value: OffsetUnit) {
     this.offsetUnit = value
   }
 
-  private dayStart: Day | DayOfMonth | null = null
+  private dayStart?: Day | DayOfMonth
 
   public setDayStart(day: Day | DayOfMonth) {
     this.dayStart = day
   }
 
-  private dayEnd: Day | DayOfMonth | null = null
+  private dayEnd?: Day | DayOfMonth
 
   public setDayEnd(day: Day | DayOfMonth) {
     this.dayEnd = day
   }
 
-  private monthStart: Month | null = null
+  private monthStart?: Month
 
   public setMonthStart(month: Month) {
     this.monthStart = month
   }
 
-  private monthEnd: Month | null = null
+  private monthEnd?: Month
 
   public setMonthEnd(month: Month) {
     this.monthEnd = month
   }
 
-  private timeStartHour: Hour | null = null
+  private timeStartHour?: Hour
 
   public setTimeStartHour(hour: Hour) {
     this.timeStartHour = hour
   }
 
-  private timeStartMinute: Minute | null = null
+  private timeStartMinute?: Minute
 
   public setTimeStartMinute(minute: Minute) {
     this.timeStartMinute = minute
   }
 
-  private timeStartCustom: CustomTime | null = null
+  private timeStartCustom?: CustomTime
 
   public setTimeStartCustom(value: CustomTime) {
     this.timeStartCustom = value
   }
 
-  private timeEndCustom: CustomTime | null = null
+  private timeEndCustom?: CustomTime
 
   public setTimeEndCustom(value: CustomTime) {
     this.timeEndCustom = value
   }
 
-  private timeEndHour: Hour | null = null
+  private timeEndHour?: Hour
 
   public setTimeEndHour(hour: Hour) {
     this.timeEndHour = hour
   }
 
-  private timeEndIsNextDay: boolean | null = null
+  private timeEndIsNextDay?: boolean
 
   public setTimeEndIsNextDay() {
     this.timeEndIsNextDay = true
   }
 
-  private timeEndMinute: Minute | null = null
+  private timeEndMinute?: Minute
 
   public setTimeEndMinute(minute: Minute) {
     this.timeEndMinute = minute
   }
 
-  private endAmbiguous: boolean | null = null
+  private endAmbiguous?: boolean
 
   public setEndAmbiguous() {
     this.endAmbiguous = true
   }
 
-  private twentyFourSeven: boolean | null = null
+  private twentyFourSeven?: boolean
 
   public setTwentyFourSeven() {
     this.twentyFourSeven = true
   }
 
-  private off: boolean | null = null
+  private off?: boolean
 
   public setOff() {
     this.off = true
   }
 
-  private fest: CustomFest | null = null
+  private fest?: CustomFest
 
   public setFest(value: CustomFest) {
     this.fest = value
@@ -354,6 +357,11 @@ type ParsingStateFunction = () => ParsingState
 // //////////////////////////////////////
 // Parser
 // //////////////////////////////////////
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const debug = (...messages: Array<string | undefined | number>) => {
+  // console.log(`${messages.join(' ')} (cursor: ${cursor.value}, state: ${state.value})`)
+}
 
 export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   // //////////////////////////////////////
@@ -395,10 +403,6 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   // Utils
   // //////////////////////////////////////
 
-  const debug = (...messages: Array<string | undefined | number>) => {
-    // console.log(`${messages.join(' ')} (cursor: ${cursor.value}, state: ${state.value})`)
-  }
-
   const result: Ast = {
     type: 'root',
     children: [],
@@ -409,7 +413,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   const finaliseWipNode = () => {
     const node = wipNode.create()
 
-    debug('Finalising WIP Node', JSON.stringify(node, null, 2))
+    debug('Finalising WIP Node', JSON.stringify(node, undefined, 2))
 
     if (node) {
       result.children.push(node)
@@ -428,18 +432,10 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
 
   const peekNextToken = () => {
     if (cursor.value >= input.length) {
-      return null
+      return
     }
 
-    return input[cursor.value + 1].value ?? null
-  }
-
-  const peekPreviousToken = () => {
-    if (cursor.value <= 0) {
-      return null
-    }
-
-    return input[cursor.value - 1].value ?? null
+    return input[cursor.value + 1].value
   }
 
   // //////////////////////////////////////
@@ -451,7 +447,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       return
     }
 
-    let day: Day | DayOfMonth | null = null
+    let day: Day | DayOfMonth | undefined
 
     if (current.type === 'number') {
       const dayOfMonth = Number.parseInt(current.value, 10)
@@ -464,7 +460,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type === 'word') {
-      const dayString = current.value.substring(0, 2)
+      const dayString = current.value.slice(0, 2)
 
       if (!isDay(dayString)) {
         throw new ParsingError(
@@ -490,7 +486,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       current = peekCurrentToken()
     }
 
-    let day: Day | DayOfMonth | null = null
+    let day: Day | DayOfMonth | undefined
 
     if (current.type === 'number') {
       const dayOfMonth = Number.parseInt(current.value, 10)
@@ -505,7 +501,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
     }
 
     if (current.type === 'word') {
-      const dayString = current.value.substring(0, 2)
+      const dayString = current.value.slice(0, 2)
 
       if (!isDay(dayString)) {
         throw new ParsingError(
@@ -890,7 +886,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
         throw new ParsingError(`Expected a word, got ${current.type} (${JSON.stringify(current)})`)
       }
 
-      if (isDay(current.value.substring(0, 2))) {
+      if (isDay(current.value.slice(0, 2))) {
         return ParsingState.DayFirst
       }
 

@@ -1,8 +1,8 @@
-import test from 'node:test'
 import assert from 'node:assert'
+import test from 'node:test'
 
-import { type Ast, parse } from './parser.js'
 import { lex } from './lexer.js'
+import { type Ast, parse } from './parser.js'
 
 const macro = (name: string, value: string, expected: Ast) => {
   test(name, () => {
