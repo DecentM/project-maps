@@ -165,3 +165,21 @@ macro('Wd hh:mm-hh:mm (next day end)', 'Mon 12:00-26:30', {
     },
   ],
 })
+
+macro('Wd,Wd,Wd', 'Mo,Tu,We', {
+  type: 'root',
+  children: [
+    {
+      type: 'singleDay',
+      day: 'Mo',
+    },
+    {
+      type: 'singleDay',
+      day: 'Tu',
+    },
+    {
+      type: 'singleDay',
+      day: 'We',
+    },
+  ],
+})

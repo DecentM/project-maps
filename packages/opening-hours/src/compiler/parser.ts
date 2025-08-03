@@ -447,7 +447,7 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   // //////////////////////////////////////
 
   const onDayFirst = (current: Lexer.Token) => {
-    if (current.type === 'dash') {
+    if (current.type === 'dash' || current.type === 'comma') {
       return
     }
 
@@ -984,12 +984,14 @@ export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
       squareBracket: () => ParsingState.Empty,
       newline: () => ParsingState.Empty,
       dash: () => ParsingState.Offset,
+      comma: () => ParsingState.Empty,
     },
     [ParsingState.DayFirst]: {
       number: () => ParsingState.DayFirst,
       space: () => ParsingState.Empty,
       dash: () => ParsingState.DayLast,
       squareBracket: dayfirst_squarebracket,
+      comma: () => ParsingState.Empty,
     },
     [ParsingState.DayLast]: {
       space: () => ParsingState.Empty,
