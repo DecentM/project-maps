@@ -1,6 +1,13 @@
 packages:
-  - 'packages/*'
-  - 'apps/*'
+  - packages/*
+  - apps/*
 
 dedupeDirectDeps: true
+
+ignoredBuiltDependencies:
+  - '@bufbuild/buf'
+
 sharedWorkspaceLockfile: true
+
+publicHoistPattern:
+  - 'eslint' # So we can use the cli in all packages

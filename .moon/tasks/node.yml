@@ -45,3 +45,30 @@ tasks:
     options:
       cache: true
       persistent: false
+
+  lint:
+    inputs:
+      - src
+    command: eslint
+    args:
+      - --cache
+      - --cache-location
+      - node_modules/.eslintcache
+      - .
+    options:
+      cache: true
+      persistent: false
+
+  lint-fix:
+    inputs:
+      - src
+    command: eslint
+    args:
+      - --cache
+      - --cache-location
+      - node_modules/.eslintcache
+      - --fix
+      - .
+    options:
+      cache: true
+      persistent: false
