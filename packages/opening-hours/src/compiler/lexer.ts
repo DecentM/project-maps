@@ -1,3 +1,5 @@
+import { LexingError } from "./errors.js"
+
 export type NumberToken = {
   type: 'number'
   value: string
@@ -41,6 +43,10 @@ export type CommaToken = {
   type: 'comma'
 }
 
+export type PlusToken = {
+  type: 'plus'
+}
+
 export type Token =
   | NumberToken
   | ColonToken
@@ -52,8 +58,15 @@ export type Token =
   | SlashToken
   | SpaceToken
   | CommaToken
+  | PlusToken
 
-export const lex = (input: string): Token[] => {
+export type TokenEnvelope = {
+  value: Token,
+  start: number,
+  length: number,
+}
+
+export const lex = (input: string): TokenEnvelope[] => {
   let cursor = 0
 
   const consumeWhile = (test: (char: string) => boolean) => {
@@ -73,7 +86,7 @@ export const lex = (input: string): Token[] => {
     return temp
   }
 
-  const result: Token[] = []
+  const result: TokenEnvelope[] = []
 
   const parseNumber = (): NumberToken => {
     try {
@@ -112,60 +125,118 @@ export const lex = (input: string): Token[] => {
     const current = input[cursor]
 
     switch (true) {
-      case /\d/.test(current):
-        result.push(parseNumber())
-        break
+      case /\d/.test(current): {
+        const token = parseNumber()
 
-      case /[a-zA-Z]/.test(current):
-        result.push(parseWord())
+        result.push({
+          value: token,
+          start: cursor,
+          length: token.value.length,
+        })
         break
+      }
+
+      case /[a-zA-Z]/.test(current): {
+        const token = parseWord()
+
+        result.push({
+          value: token,
+          start: cursor,
+          length: token.value.length,
+        })
+        break
+      }
 
       case current === '-':
-        result.push({ type: 'dash' })
+        result.push({
+          value: { type: 'dash' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       case current === ':':
-        result.push({ type: 'colon' })
+        result.push({
+          value: { type: 'colon' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       case current === ';':
-        result.push({ type: 'semicolon' })
+        result.push({
+          value: { type: 'semicolon' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       case current === '\n':
-        result.push({ type: 'newline' })
+        result.push({
+          value: { type: 'newline' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       case current === '[':
-        result.push(parseSquareBracket('['))
+        result.push({
+          value: parseSquareBracket('['),
+          start: cursor,
+          length: 1,
+        })
         break
 
       case current === ']':
-        result.push(parseSquareBracket(']'))
+        result.push({
+          value: parseSquareBracket(']'),
+          start: cursor,
+          length: 1,
+        })
         break
 
       case current === '/':
-        result.push({ type: 'slash' })
+        result.push({
+          value: { type: 'slash' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       case current === ' ':
-        result.push({ type: 'space' })
+        result.push({
+          value: { type: 'space' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       case current === ',':
-        result.push({ type: 'comma' })
+        result.push({
+          value: { type: 'comma' },
+          start: cursor,
+          length: 1,
+        })
+        cursor++
+        break
+
+      case current === '+':
+        result.push({
+          value: { type: 'plus' },
+          start: cursor,
+          length: 1,
+        })
         cursor++
         break
 
       default:
-        cursor++
-        break
+        throw new LexingError(`Unexpected character: "${current}" at position ${cursor}`)
     }
   }
 

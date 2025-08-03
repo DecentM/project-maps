@@ -1,8 +1,8 @@
-import type * as Lexer from './lexer.js'
+import * as Lexer from './lexer.js'
 
 import { Day, Hour, isDay, isHour, isMinute, isMonth, Minute, Month } from '../opening-hours.js'
 
-type Ast = {
+export type Ast = {
   type: 'root'
   children: Node[]
 }
@@ -49,7 +49,7 @@ type Off = {
   type: 'off'
 }
 
-type Node = DayRange | TimeRange | TwentyFourSeven | SingleDay | SingleMonth | MonthRange | Off
+export type Node = DayRange | TimeRange | TwentyFourSeven | SingleDay | SingleMonth | MonthRange | Off
 
 // //////////////////////////////////////
 // WIP Node
@@ -213,7 +213,7 @@ type ParsingStateFunction = () => ParsingState
 // Parser
 // //////////////////////////////////////
 
-export const parse = (input: Lexer.Token[]): Ast => {
+export const parse = (input: Lexer.TokenEnvelope[]): Ast => {
   // //////////////////////////////////////
   // State
   // //////////////////////////////////////
@@ -243,8 +243,9 @@ export const parse = (input: Lexer.Token[]): Ast => {
     },
     set value (value: ParsingState) {
       debug('State change!', _state, '->', value)
+      const oldState = _state
       _state = value
-      onStateChange(value)
+      onStateChange(value, oldState)
     }
   }
 
@@ -253,7 +254,7 @@ export const parse = (input: Lexer.Token[]): Ast => {
   // //////////////////////////////////////
 
   const debug = (...messages: Array<string | undefined | number>) => {
-    // console.log(`${messages.join(' ')} (cursor: ${cursor.value}, state: ${state.value})`)
+    console.log(`${messages.join(' ')} (cursor: ${cursor.value}, state: ${state.value})`)
   }
 
   const result: Ast = {
@@ -280,7 +281,7 @@ export const parse = (input: Lexer.Token[]): Ast => {
       throw new Error('[PARSING ERROR] Unexpected end of input while parsing current token')
     }
 
-    return input[cursor.value]
+    return input[cursor.value].value
   }
 
   const peekNextToken = () => {
@@ -288,7 +289,7 @@ export const parse = (input: Lexer.Token[]): Ast => {
       return null
     }
 
-    return input[cursor.value + 1] ?? null
+    return input[cursor.value + 1].value ?? null
   }
 
   const peekPreviousToken = () => {
@@ -296,7 +297,7 @@ export const parse = (input: Lexer.Token[]): Ast => {
       return null
     }
 
-    return input[cursor.value - 1] ?? null
+    return input[cursor.value - 1].value ?? null
   }
 
   // //////////////////////////////////////
@@ -458,12 +459,16 @@ export const parse = (input: Lexer.Token[]): Ast => {
     wipNode.setOff()
   }
 
-  const onEmpty = (current: Lexer.Token) => {
+  const onEmpty = (current: Lexer.Token, oldState: ParsingState) => {
+    if (oldState === ParsingState.Empty) {
+      return
+    }
+
     finaliseWipNode()
     state.value = getNewState(current)
   }
 
-  const onStateChange = (newState: ParsingState) => {
+  const onStateChange = (newState: ParsingState, oldState: ParsingState) => {
     const current = peekCurrentToken()
 
     switch (newState) {
@@ -498,7 +503,7 @@ export const parse = (input: Lexer.Token[]): Ast => {
         onOff(current)
         break;
       case ParsingState.Empty:
-        onEmpty(current)
+        onEmpty(current, oldState)
         break;
       default:
         throw new Error(`[PARSING ERROR] onStateChange: Unhandled state: ${newState}`)
@@ -645,3 +650,12 @@ export const parse = (input: Lexer.Token[]): Ast => {
 
   return result
 }
+
+const input = 'Fr 08:30-20:00'
+const tokens = Lexer.lex(input)
+const ast = parse(tokens)
+
+console.log('\n===========================\n')
+console.log(tokens)
+console.log('\n===========================\n')
+console.log(JSON.stringify(ast, null, 2))
