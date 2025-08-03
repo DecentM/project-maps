@@ -2,21 +2,21 @@ import test from 'node:test'
 import assert from 'node:assert'
 
 import { Ast, parse } from './parser.js'
-import { TokenEnvelope } from './lexer.js'
+import { Token, lex } from './lexer.js'
 
 test('parser', () => {
-  const input: TokenEnvelope[] = [
-    { value: { type: 'word', value: 'Mon' }, start: 3, length: 3 },
-    { value: { type: 'dash' }, start: 3, length: 1 },
-    { value: { type: 'word', value: 'Fri' }, start: 7, length: 3 },
-    { value: { type: 'space' }, start: 7, length: 1 },
-    { value: { type: 'number', value: '12' }, start: 10, length: 2 },
-    { value: { type: 'colon' }, start: 10, length: 1 },
-    { value: { type: 'number', value: '00' }, start: 13, length: 2 },
-    { value: { type: 'dash' }, start: 13, length: 1 },
-    { value: { type: 'number', value: '23' }, start: 16, length: 2 },
-    { value: { type: 'colon' }, start: 16, length: 1 },
-    { value: { type: 'number', value: '30' }, start: 19, length: 2 }
+  const input: Token[] = [
+    { type: 'word', value: 'Mon' },
+    { type: 'dash' },
+    { type: 'word', value: 'Fri' },
+    { type: 'space' },
+    { type: 'number', value: '12' },
+    { type: 'colon' },
+    { type: 'number', value: '00' },
+    { type: 'dash' },
+    { type: 'number', value: '23' },
+    { type: 'colon' },
+    { type: 'number', value: '30' },
   ]
 
   const expected: Ast = {
@@ -35,5 +35,5 @@ test('parser', () => {
     ],
   }
 
-  assert.deepEqual(parse(input), expected)
+  assert.deepEqual(parse(lex('Mon-Fri 12:00-23:30')), expected)
 })

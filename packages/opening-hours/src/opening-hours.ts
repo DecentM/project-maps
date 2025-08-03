@@ -73,3 +73,13 @@ export const isMonth = (input: unknown): input is Month => {
 
   return Object.values(Month).includes(input as Month)
 }
+
+export type DayOfMonth = Range<1, 32>
+
+export const isDayOfMonth = (input: unknown): input is DayOfMonth => {
+  if (typeof input !== 'number') {
+    return false
+  }
+
+  return input >= 1 && input <= 31
+}

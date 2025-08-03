@@ -60,10 +60,13 @@ export type Token =
   | CommaToken
   | PlusToken
 
-export type TokenEnvelope = {
+export type TokenSource = {
+  start: number
+  content: string
+}
+
+export type TokenEnvelope = TokenSource & {
   value: Token,
-  start: number,
-  length: number,
 }
 
 export const lex = (input: string): TokenEnvelope[] => {
@@ -131,7 +134,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: token,
           start: cursor,
-          length: token.value.length,
+          content: token.value,
         })
         break
       }
@@ -142,7 +145,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: token,
           start: cursor,
-          length: token.value.length,
+          content: token.value,
         })
         break
       }
@@ -151,7 +154,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'dash' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -160,7 +163,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'colon' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -169,7 +172,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'semicolon' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -178,7 +181,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'newline' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -187,7 +190,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: parseSquareBracket('['),
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         break
 
@@ -195,7 +198,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: parseSquareBracket(']'),
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         break
 
@@ -203,7 +206,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'slash' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -212,7 +215,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'space' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -221,7 +224,7 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'comma' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
@@ -230,13 +233,16 @@ export const lex = (input: string): TokenEnvelope[] => {
         result.push({
           value: { type: 'plus' },
           start: cursor,
-          length: 1,
+          content: input.slice(cursor, cursor + 1),
         })
         cursor++
         break
 
       default:
-        throw new LexingError(`Unexpected character: "${current}" at position ${cursor}`)
+        throw new LexingError(`Unexpected character: "${current}" at position ${cursor}`, undefined, {
+          start: cursor,
+          content: input.slice(cursor, cursor + 1),
+        })
     }
   }
 
