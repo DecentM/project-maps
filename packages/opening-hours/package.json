@@ -15,7 +15,9 @@
     "tsx": "^4.19.0"
   },
   "dependencies": {
+    "@types/luxon": "^3.4.2",
     "@types/verror": "^1.10.10",
+    "luxon": "^3.5.0",
     "verror": "^1.10.1"
   }
 }

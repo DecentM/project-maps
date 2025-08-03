@@ -12,6 +12,7 @@ import {
   isMinute,
   isMonth,
 } from '../opening-hours.js'
+
 import { ParsingError } from './errors.js'
 
 export type Ast = {
@@ -19,30 +20,30 @@ export type Ast = {
   children: Node[]
 }
 
-type SingleDay = {
+export type SingleDay = {
   type: 'singleDay'
   day: Day | DayOfMonth
 }
 
-type DayRange = {
+export type DayRange = {
   type: 'dayRange'
   start: Day | DayOfMonth
   end: Day | DayOfMonth
 }
 
-type CustomTime = 'sunrise' | 'sunset'
+export type CustomTime = 'sunrise' | 'sunset'
 
-const isCustomTime = (input: unknown): input is CustomTime => {
+export const isCustomTime = (input: unknown): input is CustomTime => {
   return input === 'sunrise' || input === 'sunset'
 }
 
-type CustomFest = 'easter'
+export type CustomFest = 'easter'
 
-const isCustomFest = (input: unknown): input is CustomFest => {
+export const isCustomFest = (input: unknown): input is CustomFest => {
   return input === 'easter'
 }
 
-const OffsetUnit = [
+export const OffsetUnit = [
   'second',
   'seconds',
   'minute',
@@ -59,13 +60,13 @@ const OffsetUnit = [
   'years',
 ] as const
 
-type OffsetUnit = (typeof OffsetUnit)[number]
+export type OffsetUnit = (typeof OffsetUnit)[number]
 
-const isOffsetUnit = (input: unknown): input is OffsetUnit => {
+export const isOffsetUnit = (input: unknown): input is OffsetUnit => {
   return OffsetUnit.includes(input as OffsetUnit)
 }
 
-type TimeRange = {
+export type TimeRange = {
   type: 'timeRange'
   start:
     | CustomTime
@@ -79,35 +80,35 @@ type TimeRange = {
         hour: number
         minute: number
         isNextDay?: boolean
+        isAmbiguous?: boolean
       }
-  endAmbiguous?: boolean
 }
 
-type SingleMonth = {
+export type SingleMonth = {
   type: 'singleMonth'
   month: Month
 }
 
-type MonthRange = {
+export type MonthRange = {
   type: 'monthRange'
   start: Month
   end: Month
 }
 
-type TwentyFourSeven = {
+export type TwentyFourSeven = {
   type: 'twentyFourSeven'
 }
 
-type Off = {
+export type Off = {
   type: 'off'
 }
 
-type Fest = {
+export type Fest = {
   type: 'fest'
   value: CustomFest
 }
 
-type Offset = {
+export type Offset = {
   type: 'offset'
   value: number
   unit?: OffsetUnit
@@ -165,7 +166,6 @@ class WipNode {
         type: 'timeRange',
         start: this.timeStartCustom,
         end: this.timeEndCustom,
-        endAmbiguous: this.endAmbiguous ?? false,
       }
     }
 
@@ -185,8 +185,8 @@ class WipNode {
           hour: this.timeEndHour,
           minute: this.timeEndMinute,
           isNextDay: this.timeEndIsNextDay ?? false,
+          isAmbiguous: this.endAmbiguous ?? false,
         },
-        endAmbiguous: this.endAmbiguous ?? false,
       }
     }
 

@@ -7,7 +7,7 @@ type Enumerate<
 
 type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
 
-export const Day = {
+export const DayOfWeek = {
   Monday: 'Mo',
   Tuesday: 'Tu',
   Wednesday: 'We',
@@ -15,6 +15,20 @@ export const Day = {
   Friday: 'Fr',
   Saturday: 'Sa',
   Sunday: 'Su',
+} as const
+
+export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek]
+
+export const isDayOfWeek = (input: unknown): input is DayOfWeek => {
+  if (typeof input !== 'string') {
+    return false
+  }
+
+  return Object.values(DayOfWeek).includes(input as DayOfWeek)
+}
+
+export const Day = {
+  ...DayOfWeek,
   Everyday: 'e',
   Weekend: 'we',
   Weekday: 'wd',

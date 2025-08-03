@@ -459,9 +459,15 @@ importers:
 
   packages/opening-hours:
     dependencies:
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.4.2
       '@types/verror':
         specifier: ^1.10.10
         version: 1.10.10
+      luxon:
+        specifier: ^3.5.0
+        version: 3.5.0
       verror:
         specifier: ^1.10.1
         version: 1.10.1

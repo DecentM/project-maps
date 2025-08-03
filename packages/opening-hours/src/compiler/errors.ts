@@ -55,3 +55,11 @@ export class LexingError extends CompilerError {
     this.name = 'LexingError'
   }
 }
+
+export class TransformationError extends CompilerError {
+  constructor(cause: unknown, message: string = 'Transformation error', source?: TokenSource) {
+    super(cause, message, source)
+
+    this.name = 'TransformationError'
+  }
+}

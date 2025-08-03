@@ -30,8 +30,8 @@ macro(
           hour: 16,
           minute: 0,
           isNextDay: false,
+          isAmbiguous: false,
         },
-        endAmbiguous: false,
       },
       {
         type: 'singleDay',
@@ -47,8 +47,8 @@ macro(
           hour: 12,
           minute: 0,
           isNextDay: false,
+          isAmbiguous: false,
         },
-        endAmbiguous: false,
       },
       {
         type: 'singleMonth',
@@ -75,8 +75,8 @@ macro(
           hour: 16,
           minute: 0,
           isNextDay: false,
+          isAmbiguous: true,
         },
-        endAmbiguous: true,
       },
       {
         type: 'singleDay',
@@ -92,8 +92,8 @@ macro(
           hour: 14,
           minute: 0,
           isNextDay: false,
+          isAmbiguous: false,
         },
-        endAmbiguous: false,
       },
       {
         type: 'singleMonth',
@@ -115,7 +115,6 @@ macro(
         type: 'timeRange',
         start: 'sunrise',
         end: 'sunset',
-        endAmbiguous: false,
       },
       {
         type: 'fest',
@@ -144,8 +143,7 @@ macro('Wd-Wd hh:mm-hh:mm', 'Mon-Fri 12:00-23:30', {
     {
       type: 'timeRange',
       start: { hour: 12, minute: 0 },
-      end: { hour: 23, minute: 30, isNextDay: false },
-      endAmbiguous: false,
+      end: { hour: 23, minute: 30, isNextDay: false, isAmbiguous: false },
     },
   ],
 })
@@ -160,8 +158,7 @@ macro('Wd hh:mm-hh:mm (next day end)', 'Mon 12:00-26:30', {
     {
       type: 'timeRange',
       start: { hour: 12, minute: 0 },
-      end: { hour: 2, minute: 30, isNextDay: true },
-      endAmbiguous: false,
+      end: { hour: 2, minute: 30, isNextDay: true, isAmbiguous: false },
     },
   ],
 })
