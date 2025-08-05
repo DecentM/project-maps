@@ -16,6 +16,7 @@ import VError from 'verror'
 import { parseAccess } from 'src/lib/parse-access'
 import { parseIndoor } from 'src/lib/parse-indoor'
 import { parseLocked } from 'src/lib/parse-locked'
+import { parseOpeningHours } from 'src/lib/opening-hours'
 
 export class OverpassSource extends MetadataSource {
   private static requestedTags = [
@@ -189,6 +190,15 @@ export class OverpassSource extends MetadataSource {
     }
 
     if (item.tags?.opening_hours) {
+      const oh = parseOpeningHours(item.tags.opening_hours, {
+        address: {
+          country_code: item.tags?.['addr:country'] || '',
+          state: item.tags?.['addr:state'] || '',
+        },
+        lat: element.node?.lat || 0,
+        lon: element.node?.lon || 0,
+      })
+
       onItem(
         MetadataItem.fromObject({
           attribution: {
@@ -199,7 +209,26 @@ export class OverpassSource extends MetadataSource {
               : 'https://www.openstreetmap.org/',
             name: String(item.id ?? 'OpenStreetMap'),
           },
-          openingHours: item.tags.opening_hours,
+          openingHours: {
+            fallback: item.tags.opening_hours || '',
+            tz: oh?.tz,
+            intervals: oh?.intervals.map((interval) => ({
+              comment: interval.comment,
+              uncertain: interval.uncertain,
+              from: {
+                millis: interval.from.toMillis(),
+              },
+              to: {
+                millis: interval.to.toMillis(),
+              },
+            })),
+            isCurrentlyOpen: oh?.isCurrentlyOpen,
+            isWeekStable: oh?.isWeekStable,
+            nextChange: {
+              millis: oh?.nextChange?.toMillis(),
+            },
+            is247: oh?.is247,
+          },
         })
       )
     }

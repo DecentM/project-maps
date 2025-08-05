@@ -121,6 +121,23 @@ message Defibrillator {
   string cabinet = 11;
 }
 
+message OpeningHoursInterval {
+  DateTime.Timestamp from = 1;
+  DateTime.Timestamp to = 2;
+  bool uncertain = 3;
+  string comment = 4;
+}
+
+message OpeningHours {
+  repeated OpeningHoursInterval intervals = 1;
+  bool isWeekStable = 2;
+  bool isCurrentlyOpen = 3;
+  DateTime.Timestamp nextChange = 4;
+  string fallback = 5;
+  string tz = 6;
+  bool is247 = 7;
+}
+
 message MetadataItem {
   Attribution attribution = 1;
 
@@ -132,7 +149,7 @@ message MetadataItem {
     Geospatial.Coordinates coordinates = 6;
     ImageUrl logo = 7;
     Links links = 8;
-    string openingHours = 10;
+    OpeningHours openingHours = 10;
     string wikidataId = 11;
     Defibrillator defibrillator = 12;
   }

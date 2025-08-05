@@ -1,5 +1,4 @@
-[out:csv(::id, ::type, ::lat, ::lon, {{tags}}; false; "🅰")]
-[timeout:30];
+[out:csv(::id, ::type, ::lat, ::lon, {{tags}}; false; "🅰")];
 
 (
   node
