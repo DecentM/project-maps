@@ -10,7 +10,7 @@ const startServer = (server: Server): Promise<void> => {
     server.bindAsync(
       `${config.grpcServer.host}:${config.grpcServer.port}`,
       ServerCredentials.createInsecure(),
-      (error, port) => {
+      (error) => {
         if (error) return reject(error)
         return resolve()
       }
@@ -26,6 +26,8 @@ startServer(server)
   .then(() => {
     log.info(config.grpcServer, 'Server listening')
   })
+  // TODO ESM
+  // eslint-disable-next-line unicorn/prefer-top-level-await
   .catch((error) => {
     console.error('Failed to start server:', error)
   })

@@ -1,24 +1,15 @@
 import type Emittery from 'emittery'
-import { isEntityId, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
+import { isEntityId, type SimplifiedEntity } from 'wikibase-sdk'
 
-import {
-  MetadataItem,
-  AttributionSource,
-  type GetAreaMetadataInput,
-  type GetPoiMetadataInput,
-} from '@project-maps/proto/metadata/node'
-import { QueryParameters, type WikidataId } from '@project-maps/proto/overpass/node'
+import { MetadataItem, AttributionSource } from '@project-maps/proto/metadata/node'
 
 import { WikidataClient } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
-import { OverpassClient } from 'src/clients/overpass'
 import { ClaimId, getClaims } from 'src/lib/wikidata-claim'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
 
 export class WikidataSource extends MetadataSource {
-  private overpassClient = new OverpassClient()
-
   private processEntity(entity: SimplifiedEntity, onItem: (item: MetadataItem) => void) {
     try {
       if (!entity || entity.type !== 'item') {
@@ -260,103 +251,39 @@ export class WikidataSource extends MetadataSource {
 
   private client = new WikidataClient()
 
-  override handlesLocation(): boolean {
-    return true // Handles all locations
-  }
-
-  public async getAreaMetadata(
-    params: GetAreaMetadataInput,
-    events: Emittery<Events>
-  ): Promise<void> {
-    const ids = this.overpassClient.WikidataIdsInRange(
-      QueryParameters.fromObject({
-        range: params.radiusMeters,
-        coordinates: params.coordinates,
-        tags: ['wikidata', 'brand:wikidata'],
-      })
-    )
-
-    const requestedIds: EntityId[] = []
-
-    ids.on('data', (data: WikidataId) => {
-      if (isEntityId(data.id)) {
-        requestedIds.push(data.id)
-      }
-    })
-
-    ids.on('end', async () => {
-      if (requestedIds.length === 0) {
+  override listen(events: Emittery<Events>): () => void {
+    const handleItem = async (data: MetadataItem) => {
+      if (!data.has_wikidataId || !isEntityId(data.wikidataId)) {
         return
       }
 
+      events.emit('start')
+
       try {
-        const entities = await this.client.getEntities({
-          ids: requestedIds,
-        })
+        const entities = await this.client.getEntities({ ids: [data.wikidataId] })
 
-        for (const requestedId of requestedIds) {
-          const entity = entities[requestedId]
+        if (!entities || Object.keys(entities).length === 0) return
 
+        for (const entity of Object.values(entities)) {
           this.processEntity(entity, (item) => {
-            events.emit('item', item)
+            events.emit('metadata', item)
           })
         }
       } catch (error) {
         if (error instanceof Error) {
-          log.error(new VError(error, 'WikidataSource.getAreaMetadata'))
+          log.error(new VError(error, 'GeographUKImageSource.listen'))
+        } else {
+          log.error(new Error('GeographUKImageSource.listen'))
         }
-
-        log.error(error, 'WikidataSource.getAreaMetadata')
-      }
-    })
-
-    ids.on('error', (error: Error) => {
-      log.error(new VError(error, 'WikidataSource.getAreaMetadata'))
-    })
-  }
-
-  override getPoiMetadata(request: GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
-    let foundWikidataId = false
-
-    return new Promise((resolve, reject) => {
-      events.once('overpass-end').then(() => {
-        if (!foundWikidataId) resolve()
-      })
-
-      const handleItem = async (item: MetadataItem) => {
-        if (!item.wikidataId || !isEntityId(item.wikidataId)) {
-          return
-        }
-
-        foundWikidataId = true
-        events.off('item', handleItem)
-
-        try {
-          const entities = await this.client.getEntities({ ids: [item.wikidataId] })
-
-          if (!entities || Object.keys(entities).length === 0) return
-
-          for (const entity of Object.values(entities)) {
-            this.processEntity(entity, (item) => {
-              events.emit('item', item)
-            })
-          }
-
-          resolve()
-        } catch (error) {
-          if (error instanceof Error) {
-            log.error(new VError(error, 'WikidataSource.getPoiMetadata'))
-            reject(new VError(error, 'WikidataSource.getPoiMetadata'))
-          }
-
-          log.error(error, 'WikidataSource.getPoiMetadata')
-          reject(new Error('WikidataSource.getPoiMetadata'))
-        }
-
-        resolve()
       }
 
-      events.on('item', handleItem)
-    })
+      events.emit('stop')
+    }
+
+    events.on('metadata', handleItem)
+
+    return () => {
+      events.off('metadata', handleItem)
+    }
   }
 }

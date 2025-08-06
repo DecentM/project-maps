@@ -1,20 +1,15 @@
 import type Emittery from 'emittery'
-import type {
-  GetAreaMetadataInput,
-  GetPoiMetadataInput,
-  MetadataItem,
-} from '@project-maps/proto/metadata/node'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
+import type { GetPoiMetadataInput, MetadataItem } from '@project-maps/proto/metadata/node'
 
 export type Events = {
-  item: MetadataItem
-  'overpass-end': undefined
+  osm: GetPoiMetadataInput
+  start: undefined
+  stop: undefined
+  metadata: MetadataItem
 }
 
+type StopFunction = () => void
+
 export abstract class MetadataSource {
-  abstract handlesLocation(location: Coordinates): boolean
-
-  abstract getAreaMetadata(request: GetAreaMetadataInput, events: Emittery<Events>): Promise<void>
-
-  abstract getPoiMetadata(request: GetPoiMetadataInput, events: Emittery<Events>): Promise<void>
+  abstract listen(events: Emittery<Events>): StopFunction
 }

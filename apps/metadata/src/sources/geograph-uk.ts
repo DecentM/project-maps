@@ -1,12 +1,7 @@
 import type Emittery from 'emittery'
 import { DateTime } from 'luxon'
 
-import {
-  MetadataItem,
-  GetAreaMetadataInput,
-  AttributionSource,
-  type GetPoiMetadataInput,
-} from '@project-maps/proto/metadata/node'
+import { MetadataItem, AttributionSource } from '@project-maps/proto/metadata/node'
 import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 import { GeographClient } from 'src/clients/geograph'
@@ -16,7 +11,7 @@ import VError from 'verror'
 import { log } from '@project-maps/logging'
 
 export class GeographUKImageSource extends MetadataSource {
-  override handlesLocation(location: Coordinates): boolean {
+  private handlesLocation(location: Coordinates): boolean {
     if (!location || !location.lat || !location.lng) return false
 
     // Geograph UK only supports locations within the UK
@@ -34,104 +29,76 @@ export class GeographUKImageSource extends MetadataSource {
     config.clients.geographUK.apiKey
   )
 
-  public async getAreaMetadata(
-    request: GetAreaMetadataInput,
-    events: Emittery<Events>
-  ): Promise<void> {
-    try {
-      const parameters = request.toObject()
-
-      const response = await this.client.syndicator({
-        q: `${parameters.coordinates?.lat},${parameters.coordinates?.lng}`,
-        perpage: Math.min(Math.max(parameters.maxImages ?? 10, 1), 20),
-        distance: (parameters.radiusMeters ?? 10) / 1000, // convert meters to kilometers
-      })
-
-      for (const item of response.items) {
-        const details = await this.client.photo(item.guid)
-
-        const downloadKey =
-          details.geograph.img.src.split('/').pop()?.split('_')[1].split('.')[0] ?? ''
-
-        const canonicalUrl = downloadKey
-          ? `${config.clients.geographUK.baseUrl}/reuse.php?id=${item.guid}&download=${downloadKey}&size=original`
-          : undefined
-
-        events.emit(
-          'item',
-          MetadataItem.fromObject({
-            attribution: {
-              name: details.geograph.user['#text'],
-              license: item.licence,
-              url: item.link,
-              source: AttributionSource.GeographUK,
-            },
-            image: {
-              url: {
-                canonical: canonicalUrl,
-                medium: details.geograph.img.src,
-                small: details.geograph.thumbnail,
-              },
-              coordinates: {
-                lat: Number.parseFloat(item.lat),
-                lng: Number.parseFloat(item.long),
-              },
-              createdAt: {
-                seconds: Math.round(DateTime.fromMillis(item.date).toSeconds()),
-              },
-            },
-          })
-        )
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new VError(error, 'GeographUKImageSource.getAreaMetadata')
+  override listen(events: Emittery<Events>): () => void {
+    const handleItem = async (data: MetadataItem) => {
+      if (!data.has_coordinates) {
+        return
       }
 
-      throw new Error('GeographUKImageSource.getAreaMetadata')
-    }
-  }
+      if (!this.handlesLocation(data.coordinates)) {
+        return
+      }
 
-  public async getPoiMetadata(
-    request: GetPoiMetadataInput,
-    events: Emittery<Events>
-  ): Promise<void> {
-    let foundCoordinates = false
+      events.emit('start')
 
-    return new Promise((resolve) => {
-      events.once('overpass-end').then(() => {
-        if (!foundCoordinates) resolve()
-      })
+      try {
+        const response = await this.client.syndicator({
+          q: `${data.coordinates.lat},${data.coordinates.lng}`,
+          perpage: 5,
+          distance: 8 / 1000, // convert meters to kilometers
+        })
 
-      const handleItem = async (item: MetadataItem) => {
-        if (!item.coordinates) {
-          return
-        }
+        for (const item of response.items) {
+          const details = await this.client.photo(item.guid)
 
-        foundCoordinates = true
-        events.off('item', handleItem)
+          const downloadKey =
+            details.geograph.img.src.split('/').pop()?.split('_')[1].split('.')[0] ?? ''
 
-        try {
-          await this.getAreaMetadata(
-            GetAreaMetadataInput.fromObject({
-              coordinates: item.coordinates.toObject(),
-              radiusMeters: 8,
-              maxImages: Math.min(Math.max(request.maxImages ?? 10, 1), 20),
-            }),
-            events
+          const canonicalUrl = downloadKey
+            ? `${config.clients.geographUK.baseUrl}/reuse.php?id=${item.guid}&download=${downloadKey}&size=original`
+            : undefined
+
+          events.emit(
+            'metadata',
+            MetadataItem.fromObject({
+              attribution: {
+                name: details.geograph.user['#text'],
+                license: item.licence,
+                url: item.link,
+                source: AttributionSource.GeographUK,
+              },
+              image: {
+                url: {
+                  canonical: canonicalUrl,
+                  medium: details.geograph.img.src,
+                  small: details.geograph.thumbnail,
+                },
+                coordinates: {
+                  lat: Number.parseFloat(item.lat),
+                  lng: Number.parseFloat(item.long),
+                },
+                createdAt: {
+                  seconds: Math.round(DateTime.fromMillis(item.date).toSeconds()),
+                },
+              },
+            })
           )
-        } catch (error) {
-          if (error instanceof Error) {
-            log.error(new VError(error, 'GeographUKImageSource.getPoiMetadata'))
-          }
-
-          log.error(new Error('GeographUKImageSource.getPoiMetadata'))
         }
-
-        resolve()
+      } catch (error) {
+        if (error instanceof Error) {
+          log.error(new VError(error, 'GeographUKImageSource.listen'))
+        } else {
+          log.error(new Error('GeographUKImageSource.listen'))
+        }
       }
 
-      events.on('item', handleItem)
-    })
+      events.emit('stop')
+    }
+
+    events.on('metadata', handleItem)
+
+    return () => {
+      events.off('metadata', handleItem)
+    }
   }
 }

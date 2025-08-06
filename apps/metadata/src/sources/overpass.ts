@@ -3,11 +3,10 @@ import type Emittery from 'emittery'
 import type { Element, Node, Way, Relation } from '@project-maps/proto/lib/openstreetmap/node'
 import {
   AttributionSource,
+  GetPoiMetadataInput,
   MetadataItem,
-  type GetAreaMetadataInput,
-  type GetPoiMetadataInput,
 } from '@project-maps/proto/metadata/node'
-import { QueryParameters, PoiMetadataParameters } from '@project-maps/proto/overpass/node'
+import { PoiMetadataParameters } from '@project-maps/proto/overpass/node'
 
 import { OverpassClient } from 'src/clients/overpass'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
@@ -17,6 +16,7 @@ import { parseAccess } from 'src/lib/parse-access'
 import { parseIndoor } from 'src/lib/parse-indoor'
 import { parseLocked } from 'src/lib/parse-locked'
 import { parseOpeningHours } from 'src/lib/opening-hours'
+import { maybeParseJsonString } from 'src/lib/maybe-parse-json-string'
 
 export class OverpassSource extends MetadataSource {
   private static requestedTags = [
@@ -115,14 +115,15 @@ export class OverpassSource extends MetadataSource {
           },
           defibrillator: {
             access: parseAccess(item.tags?.access),
-            location:
-              item.tags?.['defibrillator:location'] || item.tags?.['defibrillator:location:en'],
+            location: maybeParseJsonString(
+              item.tags?.['defibrillator:location'] || item.tags?.['defibrillator:location:en']
+            ),
             indoor: parseIndoor(item.tags?.indoor),
             phone: item.tags?.['emergency:phone'],
             code: item.tags?.['defibrillator:code'],
             locked: parseLocked(item.tags?.locked, item.tags?.['locked:conditional']),
             level: item.tags?.level ? Number.parseInt(item.tags.level, 10) : undefined,
-            description: item.tags?.description,
+            description: maybeParseJsonString(item.tags?.description),
             manufacturer: item.tags?.manufacturer,
             model: item.tags?.model,
             cabinet: item.tags?.cabinet,
@@ -131,7 +132,7 @@ export class OverpassSource extends MetadataSource {
       )
     }
 
-    if (item.tags?.wikidata || item.tags?.['brand:wikidata'] || item.tags?.['subject:wikidata']) {
+    if (item.tags?.wikidata) {
       onItem(
         MetadataItem.fromObject({
           attribution: {
@@ -142,8 +143,39 @@ export class OverpassSource extends MetadataSource {
               : 'https://www.openstreetmap.org/',
             name: String(item.id ?? 'OpenStreetMap'),
           },
-          wikidataId:
-            item.tags.wikidata || item.tags['brand:wikidata'] || item.tags['subject:wikidata'],
+          wikidataId: item.tags.wikidata,
+        })
+      )
+    }
+
+    if (item.tags?.['brand:wikidata']) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          wikidataId: item.tags['brand:wikidata'],
+        })
+      )
+    }
+
+    if (item.tags?.['subject:wikidata']) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          wikidataId: item.tags['subject:wikidata'],
         })
       )
     }
@@ -167,7 +199,7 @@ export class OverpassSource extends MetadataSource {
       )
     }
 
-    if (item.tags?.website || item.tags?.['contact:website']) {
+    if (item.tags?.website) {
       onItem(
         MetadataItem.fromObject({
           attribution: {
@@ -181,7 +213,29 @@ export class OverpassSource extends MetadataSource {
           links: {
             list: [
               {
-                url: item.tags.website || item.tags['contact:website'],
+                url: item.tags.website,
+              },
+            ],
+          },
+        })
+      )
+    }
+
+    if (item.tags?.['contact:website']) {
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
+          links: {
+            list: [
+              {
+                url: item.tags['contact:website'],
               },
             ],
           },
@@ -236,73 +290,64 @@ export class OverpassSource extends MetadataSource {
 
   private client = new OverpassClient()
 
-  override handlesLocation(): boolean {
-    return true // Handles all locations
-  }
+  private promisifyOverpassResponse(
+    overpassResponse: NodeJS.ReadableStream,
+    onItem: (item: MetadataItem) => void
+  ): Promise<void> {
+    const handleData = (response: Element) => {
+      OverpassSource.processElement(response, onItem)
+    }
 
-  public getAreaMetadata(request: GetAreaMetadataInput, events: Emittery<Events>): Promise<void> {
+    overpassResponse.on('data', handleData)
+
     return new Promise((resolve, reject) => {
-      const overpassResponse = this.client.ShortRangeNamed(
-        QueryParameters.fromObject({
-          coordinates: request.coordinates.toObject(),
-          range: request.radiusMeters,
-          tags: OverpassSource.requestedTags,
-        })
-      )
-
-      const handleData = (response: Element) => {
-        OverpassSource.processElement(response, (item) => {
-          events.emit('item', item)
-        })
-      }
-
-      overpassResponse.on('data', handleData)
-
       overpassResponse.once('end', () => {
         overpassResponse.off('data', handleData)
-        events.emit('overpass-end')
         resolve()
       })
 
       overpassResponse.once('error', (error: Error) => {
         overpassResponse.off('data', handleData)
-        events.emit('overpass-end')
         log.error(new VError(error, 'OverpassSource.getPoiMetadata'))
         reject(error)
       })
     })
   }
 
-  public getPoiMetadata(request: GetPoiMetadataInput, events: Emittery<Events>): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const overpassResponse = this.client.PoiMetadata(
-        PoiMetadataParameters.fromObject({
-          id: request.id,
-          type: request.osmType,
-          tags: OverpassSource.requestedTags,
-        })
-      )
-
-      const handleData = (response: Element) => {
-        OverpassSource.processElement(response, (item) => {
-          events.emit('item', item)
-        })
+  override listen(events: Emittery<Events>): () => void {
+    const handleOsm = async (data: GetPoiMetadataInput) => {
+      if (!data.id || !data.osmType) {
+        return
       }
 
-      overpassResponse.on('data', handleData)
+      events.emit('start')
 
-      overpassResponse.once('end', () => {
-        overpassResponse.off('data', handleData)
-        events.emit('overpass-end')
-        resolve()
-      })
+      try {
+        await this.promisifyOverpassResponse(
+          this.client.PoiMetadata(
+            PoiMetadataParameters.fromObject({
+              id: data.id,
+              type: data.osmType,
+              tags: OverpassSource.requestedTags,
+            })
+          ),
+          (item: MetadataItem) => events.emit('metadata', item)
+        )
+      } catch (error) {
+        if (error instanceof Error) {
+          log.error(new VError(error, 'OverpassSource.listen'))
+        } else {
+          log.error(new Error('OverpassSource.listen'))
+        }
+      }
 
-      overpassResponse.once('error', (error: Error) => {
-        overpassResponse.off('data', handleData)
-        events.emit('overpass-end')
-        log.error(new VError(error, 'OverpassSource.getPoiMetadata'))
-        reject(error)
-      })
-    })
+      events.emit('stop')
+    }
+
+    events.on('osm', handleOsm)
+
+    return () => {
+      events.off('osm', handleOsm)
+    }
   }
 }

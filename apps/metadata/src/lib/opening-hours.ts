@@ -2,6 +2,7 @@ import { log } from '@project-maps/logging'
 import OpeningHours, { type nominatim_object as Nominatim } from 'opening_hours'
 import { DateTime } from 'luxon'
 import GeoTz from 'geo-tz'
+import { maybeParseJsonString } from './maybe-parse-json-string'
 
 type OpeningHourInterval = {
   from: DateTime
@@ -36,11 +37,7 @@ export const parseOpeningHours = (
       }
     }
 
-    if (openingHours.startsWith('"') && openingHours.endsWith('"')) {
-      openingHours = openingHours.slice(1, -1)
-    }
-
-    const oh = new OpeningHours(openingHours, nominatim)
+    const oh = new OpeningHours(maybeParseJsonString(openingHours), nominatim)
     const now = DateTime.now()
 
     const ranges = oh.getOpenIntervals(now.startOf('week').toJSDate(), now.endOf('week').toJSDate())
