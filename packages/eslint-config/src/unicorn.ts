@@ -12,6 +12,7 @@ export const unicornConfig: Linter.Config = {
     'unicorn/no-nested-ternary': 'off',
     'unicorn/number-literal-case': 'off',
     'unicorn/prevent-abbreviations': 'off',
+    'unicorn/no-array-reduce': 'off',
 
     // Does not check if the function is from a library... e.g. a library that
     // exports a "find" function gets flagged as well, not just Array.prototype.find

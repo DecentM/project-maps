@@ -18,9 +18,11 @@ import DescriptionRenderer from 'src/map/components/location-sidebar/metadata-re
 import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderers/image-renderer.vue'
 import LogoRenderer from 'src/map/components/location-sidebar/metadata-renderers/logo-renderer.vue'
 import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
+import { Member_Type } from '@project-maps/proto/lib/openstreetmap/web'
 
 const props = defineProps<{
-  poiOsmId?: string
+  poiOsmId: string
+  poiOsmType: 'node' | 'way' | 'relation'
 }>()
 
 const metadata = ref<MetadataItem[]>([])
@@ -29,10 +31,10 @@ const loading = ref(false)
 
 const osmCache = useOsmCache()
 
-const performSearch = async (osmId: string) => {
+const performSearch = async (osmId: string, osmType: 'node' | 'way' | 'relation') => {
   metadata.value = []
 
-  const cached = await osmCache.get('node', osmId)
+  const cached = await osmCache.get(props.poiOsmType, osmId)
 
   if (cached?.case) {
     metadata.value.push({
@@ -57,6 +59,12 @@ const performSearch = async (osmId: string) => {
   try {
     const response = metadataClient.getPoiMetadata({
       id: BigInt(osmId),
+      osmType:
+        props.poiOsmType === 'node'
+          ? Member_Type.MEMBER_TYPE_NODE
+          : props.poiOsmType === 'way'
+            ? Member_Type.MEMBER_TYPE_WAY
+            : Member_Type.MEMBER_TYPE_RELATION,
       maxImages: 1,
     })
 
@@ -71,10 +79,10 @@ const performSearch = async (osmId: string) => {
 }
 
 watch(
-  () => props.poiOsmId,
-  (newPoiOsmId) => {
+  () => [props.poiOsmId, props.poiOsmType] as const,
+  ([newPoiOsmId, newPoiOsmType]) => {
     if (newPoiOsmId) {
-      performSearch(newPoiOsmId)
+      performSearch(newPoiOsmId, newPoiOsmType)
     } else {
       metadata.value = []
     }
@@ -82,8 +90,8 @@ watch(
 )
 
 onMounted(() => {
-  if (props.poiOsmId) {
-    performSearch(props.poiOsmId)
+  if (props.poiOsmId && props.poiOsmType) {
+    performSearch(props.poiOsmId, props.poiOsmType)
   } else {
     metadata.value = []
   }

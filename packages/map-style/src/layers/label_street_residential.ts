@@ -14,7 +14,7 @@ export const label_street_residential = (config: StyleConfig) => ({
       ['get', 'name:latin'],
       ['get', 'name'],
     ],
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
     'symbol-placement': 'line',
     'text-anchor': 'center',
     'text-size': {

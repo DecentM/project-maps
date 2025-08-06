@@ -5,6 +5,7 @@ import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from
 import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import { Member_Type } from '@project-maps/proto/lib/openstreetmap/web'
 
 import { getImageUrl } from 'src/shared/lib/get-image-url'
 import { metadataClient } from 'src/shared/lib/rpc'
@@ -22,6 +23,10 @@ const id = computed(() => {
   return route.params.id as string
 })
 
+const type = computed(() => {
+  return route.params.type as 'node' | 'way' | 'relation'
+})
+
 const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
@@ -37,6 +42,12 @@ const performSearch = async (osmId: string) => {
     const response = metadataClient.getPoiMetadata({
       id: BigInt(osmId),
       maxImages: 20,
+      osmType:
+        type.value === 'node'
+          ? Member_Type.MEMBER_TYPE_NODE
+          : type.value === 'way'
+            ? Member_Type.MEMBER_TYPE_WAY
+            : Member_Type.MEMBER_TYPE_RELATION,
     })
 
     for await (const item of response) {
@@ -76,7 +87,7 @@ const images = computed(() => {
     .filter((image) => image.item.case === 'image' && image.item.value.url !== undefined)
     .map((image) => {
       const url = image.item.case === 'image' ? image.item.value.url : undefined
-      if (!url) return null
+      if (!url) return
 
       return {
         url,
@@ -135,11 +146,11 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', handleKeydown)
+  globalThis.addEventListener('keydown', handleKeydown)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleKeydown)
+  globalThis.removeEventListener('keydown', handleKeydown)
 })
 </script>
 
@@ -162,8 +173,8 @@ onBeforeUnmount(() => {
       next-icon="mdi-chevron-right"
       prev-icon="mdi-chevron-left"
       :model-value="Array.isArray(route.params.index) ? route.params.index[0] : (route.params.index || '0')"
-      @update:model-value="handleCarouselChange"
       navigation-position="top"
+      @update:model-value="handleCarouselChange"
     >
       <q-carousel-slide
         v-for="(image, index) in images"
@@ -172,12 +183,13 @@ onBeforeUnmount(() => {
         class="q-pa-none"
       >
         <q-img
+          v-if="image"
           class="fit"
           :src="useFallbackImage ? getImageUrl(image.url, 'medium') : getImageUrl(image.url, 'canonical')"
           fit="contain"
-          @load="(src) => handleCanonicalUrlLoaded(src)"
           :no-transition="reducedMotion === 'reduce'"
           :no-spinner="reducedMotion === 'reduce'"
+          @load="(src) => handleCanonicalUrlLoaded(src)"
         >
           <attribution-notice
             v-if="image.attribution"

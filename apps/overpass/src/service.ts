@@ -5,7 +5,7 @@ import {
   WikidataId,
   type PoiMetadataParameters,
 } from '@project-maps/proto/overpass/node'
-import { Element } from '@project-maps/proto/lib/openstreetmap/node'
+import { Element, MemberType } from '@project-maps/proto/lib/openstreetmap/node'
 
 import { OverpassClient } from './clients/overpass'
 import { config } from './config'
@@ -102,7 +102,7 @@ export class OverpassService extends UnimplementedOverpassService {
     let partialLine = ''
 
     stream.on('data', (chunk: Buffer) => {
-      response += chunk.toString('utf-8')
+      response += chunk.toString('utf8')
       const responseLines = response.split('\n')
       const firstResponseLine = responseLines.shift()
       const lastResponseLine = responseLines.pop()
@@ -143,7 +143,7 @@ export class OverpassService extends UnimplementedOverpassService {
         const line = lines.shift()
         if (!line) continue
 
-        const [, , , , ...columns] = line.split('🅰')
+        const columns = line.split('🅰').slice(4)
 
         if (columns.length < requestedTags.length) {
           throw new Error('Not enough columns in the response')
@@ -168,7 +168,7 @@ export class OverpassService extends UnimplementedOverpassService {
     let partialLine = ''
 
     stream.on('data', (chunk: Buffer) => {
-      response += chunk.toString('utf-8')
+      response += chunk.toString('utf8')
       const responseLines = response.split('\n')
       const firstResponseLine = responseLines.shift()
       const lastResponseLine = responseLines.pop()
@@ -188,13 +188,19 @@ export class OverpassService extends UnimplementedOverpassService {
   override PoiMetadata(call: ServerWritableStream<PoiMetadataParameters, Element>): void {
     const parameters = call.request.toObject()
 
-    if (!parameters.ids || parameters.ids.length === 0) {
+    if (!parameters.id) {
       call.end()
       return
     }
 
     const stream = client.poiMetadataStreaming({
-      ids: parameters.ids,
+      id: parameters.id,
+      type:
+        parameters.type === MemberType.MEMBER_TYPE_NODE
+          ? 'node'
+          : parameters.type === MemberType.MEMBER_TYPE_WAY
+            ? 'way'
+            : 'relation',
       tags: parameters.tags ?? [],
     })
 
@@ -204,7 +210,7 @@ export class OverpassService extends UnimplementedOverpassService {
     let partialLine = ''
 
     stream.on('data', (chunk: Buffer) => {
-      response += chunk.toString('utf-8')
+      response += chunk.toString('utf8')
       const responseLines = response.split('\n')
       const firstResponseLine = responseLines.shift()
       const lastResponseLine = responseLines.pop()
@@ -226,13 +232,13 @@ export class OverpassService extends UnimplementedOverpassService {
   override PoiWikidataId(call: ServerWritableStream<PoiMetadataParameters, WikidataId>): void {
     const parameters = call.request.toObject()
 
-    if (!parameters.ids || parameters.ids.length === 0) {
+    if (!parameters.id) {
       call.end()
       return
     }
 
     const stream = client.poiWikidataIdStreaming({
-      ids: parameters.ids,
+      ids: [parameters.id],
       tags: parameters.tags ?? [],
     })
 
@@ -246,7 +252,7 @@ export class OverpassService extends UnimplementedOverpassService {
         const line = lines.shift()
         if (!line) continue
 
-        const [, , , , ...columns] = line.split('🅰')
+        const columns = line.split('🅰').slice(4)
 
         if (columns.length < requestedTags.length) {
           throw new Error('Not enough columns in the response')
@@ -271,7 +277,7 @@ export class OverpassService extends UnimplementedOverpassService {
     let partialLine = ''
 
     stream.on('data', (chunk: Buffer) => {
-      response += chunk.toString('utf-8')
+      response += chunk.toString('utf8')
       const responseLines = response.split('\n')
       const firstResponseLine = responseLines.shift()
       const lastResponseLine = responseLines.pop()

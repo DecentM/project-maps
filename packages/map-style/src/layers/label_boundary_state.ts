@@ -14,7 +14,7 @@ export const label_boundary_state = (config: StyleConfig) => ({
       ['get', 'name:latin'],
       ['get', 'name'],
     ],
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
     'text-transform': 'uppercase',
     'text-anchor': 'top',
     'text-offset': [0, 0.2],

@@ -14,7 +14,7 @@ export const label_place_town = (config: StyleConfig) => ({
       ['get', 'name:latin'],
       ['get', 'name'],
     ],
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
     'text-size': {
       stops: [
         [8, 11],

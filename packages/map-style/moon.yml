@@ -4,7 +4,19 @@ platform: node
 type: library
 
 tasks:
+  build_icons:
+    command: bin/build_icons.sh
+    args:
+      - ./dist/sprites
+    options:
+      cache: false
+      persistent: false
+      outputStyle: stream
+      envFile: /.env
+
   build:
+    deps:
+      - build_icons
     command:
       - tsc
     inputs:

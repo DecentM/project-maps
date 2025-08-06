@@ -12,7 +12,7 @@ const router = useRouter()
 const route = useRoute()
 
 const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
-  if (!poi || poi.geometry.type !== 'Point' || !poi.properties || !poi.properties.osm_id) {
+  if (!poi?.properties?.osm_id || !poi?.properties?.osm_type) {
     return
   }
 
@@ -21,6 +21,7 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     query: route.query,
     params: {
       id: poi.properties.osm_id,
+      type: poi.properties.osm_type,
     },
   })
 }

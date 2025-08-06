@@ -16,7 +16,7 @@ import VError from 'verror'
 import { log } from '@project-maps/logging'
 
 export class GeographUKImageSource extends MetadataSource {
-  override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
+  override handlesLocation(location: Coordinates): boolean {
     if (!location || !location.lat || !location.lng) return false
 
     // Geograph UK only supports locations within the UK
@@ -98,7 +98,7 @@ export class GeographUKImageSource extends MetadataSource {
   ): Promise<void> {
     let foundCoordinates = false
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       events.once('overpass-end').then(() => {
         if (!foundCoordinates) resolve()
       })

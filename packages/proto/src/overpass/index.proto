@@ -19,8 +19,9 @@ message QueryParameters {
 }
 
 message PoiMetadataParameters {
-  repeated int64 ids = 1;
+  int64 id = 1;
   repeated string tags = 2;
+  OpenStreetMap.Member.Type type = 3;
 }
 
 message WikidataId {

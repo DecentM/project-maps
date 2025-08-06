@@ -7,7 +7,6 @@ import {
   AttributionSource,
   type GetPoiMetadataInput,
 } from '@project-maps/proto/metadata/node'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
 import { MapillaryClient } from 'src/clients/mapillary'
 import { config } from 'src/config'
@@ -15,7 +14,7 @@ import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { createBBox } from 'src/lib/bbox'
 import { log } from '@project-maps/logging'
 export class MapillarySource extends MetadataSource {
-  override handlesLocation(location: ReturnType<Coordinates['toObject']>): boolean {
+  override handlesLocation(): boolean {
     return true // Handles all locations
   }
 
@@ -98,7 +97,7 @@ export class MapillarySource extends MetadataSource {
   ): Promise<void> {
     let foundCoordinates = false
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       events.once('overpass-end').then(() => {
         if (!foundCoordinates) resolve()
       })

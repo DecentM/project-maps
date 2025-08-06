@@ -28,7 +28,7 @@ export const marking_oneway = (config: StyleConfig) => ({
     'icon-padding': 5,
     'symbol-avoid-edges': true,
     'icon-image': 'mdi:arrow-up-thin',
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
   },
   minzoom: 16,
   paint: {

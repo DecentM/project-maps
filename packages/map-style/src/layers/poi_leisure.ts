@@ -17,7 +17,7 @@ export const poi_leisure = (config: StyleConfig) => ({
     },
     'symbol-placement': 'point',
     'icon-optional': true,
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
     'text-field': [
       'coalesce',
       ['get', 'name_int'],

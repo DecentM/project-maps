@@ -7,7 +7,6 @@ import {
   MetadataItem,
   AttributionSource,
 } from '@project-maps/proto/metadata/node'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 import { log } from '@project-maps/logging'
 
 import { WikimapiaClient } from 'src/clients/wikimapia'
@@ -20,7 +19,7 @@ export class WikimapiaSource extends MetadataSource {
     config.clients.wikimapia.apiKey
   )
 
-  override handlesLocation(coordinates: Coordinates): boolean {
+  override handlesLocation(): boolean {
     return true // Handles all locations
   }
 
@@ -112,7 +111,7 @@ export class WikimapiaSource extends MetadataSource {
   ): Promise<void> {
     let foundCoordinates = false
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       events.once('overpass-end').then(() => {
         if (!foundCoordinates) resolve()
       })

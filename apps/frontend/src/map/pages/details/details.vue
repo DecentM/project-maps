@@ -18,8 +18,12 @@ const id = computed(() => {
   return route.params.id as string
 })
 
+const type = computed(() => {
+  return route.params.type as 'node' | 'way' | 'relation'
+})
+
 const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
-  if (!poi || poi.geometry.type !== 'Point' || !poi.properties || !poi.properties.osm_id) {
+  if (!poi?.properties?.osm_id || !poi?.properties?.osm_type) {
     return
   }
 
@@ -28,6 +32,7 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     query: route.query,
     params: {
       id: poi.properties.osm_id,
+      type: poi.properties.osm_type,
     },
   })
 }
@@ -44,12 +49,12 @@ const reducedMotion = usePreferredReducedMotion()
   >
     <transition v-if="reducedMotion === 'no-preference'" name="fade-up" mode="out-in">
       <div :key="id" class="q-pa-sm fit">
-        <location-sidebar :poi-osm-id="id" />
+        <location-sidebar :poi-osm-id="id" :poi-osm-type="type" />
       </div>
     </transition>
 
     <div v-else class="row q-pa-sm">
-      <location-sidebar :poi-osm-id="id" />
+      <location-sidebar :poi-osm-id="id" :poi-osm-type="type" />
     </div>
 
     <hover-tracker-plugin @poi-click="handlePoiClick" />

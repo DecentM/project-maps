@@ -12,7 +12,7 @@ export type Events = {
 }
 
 export abstract class MetadataSource {
-  abstract handlesLocation(location: ReturnType<(typeof Coordinates)['toObject']>): boolean
+  abstract handlesLocation(location: Coordinates): boolean
 
   abstract getAreaMetadata(request: GetAreaMetadataInput, events: Emittery<Events>): Promise<void>
 

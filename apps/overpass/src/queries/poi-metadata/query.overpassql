@@ -1,14 +1,8 @@
 [out:csv(::id, ::type, ::lat, ::lon, {{tags}}; false; "🅰")];
 
 (
-  node
-    (id:{{ids}});
-
-  way
-  	(id:{{ids}});
-
-  relation
-  	(id:{{ids}});
+  {{type}}
+    (id:{{id}});
 );
 
 out body 10;

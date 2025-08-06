@@ -8,7 +8,7 @@ export const label_address_housenumber = (config: StyleConfig) => ({
   filter: ['has', 'housenumber'],
   layout: {
     'text-field': '{housenumber}',
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
     'symbol-placement': 'point',
     'text-anchor': 'center',
     'text-size': {

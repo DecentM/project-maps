@@ -7,7 +7,6 @@ import {
   type GetAreaMetadataInput,
   type GetPoiMetadataInput,
 } from '@project-maps/proto/metadata/node'
-import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 import { QueryParameters, type WikidataId } from '@project-maps/proto/overpass/node'
 
 import { WikidataClient } from 'src/clients/wikidata'
@@ -49,7 +48,7 @@ export class WikidataSource extends MetadataSource {
         ClaimId.WinterView,
       ])
 
-      if (image && image.length !== 0) {
+      if (image && image.length > 0) {
         for (const imageClaim of image) {
           onItem(
             MetadataItem.fromObject({
@@ -261,7 +260,7 @@ export class WikidataSource extends MetadataSource {
 
   private client = new WikidataClient()
 
-  override handlesLocation(coordinates: Coordinates): boolean {
+  override handlesLocation(): boolean {
     return true // Handles all locations
   }
 

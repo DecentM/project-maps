@@ -277,7 +277,8 @@ export class OverpassSource extends MetadataSource {
     return new Promise((resolve, reject) => {
       const overpassResponse = this.client.PoiMetadata(
         PoiMetadataParameters.fromObject({
-          ids: [request.id],
+          id: request.id,
+          type: request.osmType,
           tags: OverpassSource.requestedTags,
         })
       )

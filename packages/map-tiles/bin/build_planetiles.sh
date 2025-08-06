@@ -60,7 +60,6 @@ cd "$CACHE_DIR"
 
 java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --force \
-  --tmpdir="$TEMP_DIR" \
   \
   --ocean_url="$OCEAN_URL" \
   --admin_points_url="$ADMIN_POINTS_URL" \
@@ -74,9 +73,9 @@ java -Xmx4g -jar "$PLANETILER_JAR" "$WORKDIR/src/vector/shortbread.yml" \
   --maxzoom=14 \
   --render_maxzoom=14 \
   --skip_filled_tiles=true \
+  --tile_compression=none \
   \
   --osm_url="$DOWNLOAD_URL" \
-  --osm_path="$TEMP_DIR/download.osm.pbf" \
   --free_osm_after_read=true \
   --output="$WORKDIR/$OUTPUT_DIR/{z}/{x}/{y}.pbf"
 

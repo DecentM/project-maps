@@ -17,6 +17,7 @@ message GetPoiMetadataInput {
   Geospatial.Coordinates coordinates = 2;
   string name = 3;
   int32 maxImages = 4;
+  OpenStreetMap.Member.Type osmType = 5;
 }
 
 service Metadata {

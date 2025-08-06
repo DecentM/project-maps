@@ -22,7 +22,7 @@ export const symbol_transit_bus = (config: StyleConfig) => ({
     },
     'symbol-placement': 'point',
     'icon-keep-upright': true,
-    'text-font': ['Noto Sans Regular'],
+    'text-font': ['NotoSans-Regular'],
     'text-size': 10,
     'icon-anchor': 'bottom',
     'text-anchor': 'top',
