@@ -1,7 +1,9 @@
-import got, { type Method } from 'got'
+import { type Method } from 'got'
 import { XMLParser } from 'fast-xml-parser'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
+
+import { http } from 'src/lib/http'
 
 /**
  * Geograph API client
@@ -80,6 +82,7 @@ const isSyndicationResponse = (response: unknown): response is SyndicatorRespons
 }
 
 export type PhotoResponse = {
+  // eslint-disable-next-line unicorn/text-encoding-identifier-case
   '?xml': { version: '1.0'; encoding: 'UTF-8' }
   geograph: {
     status: { state: string }
@@ -114,6 +117,7 @@ const isPhotoResponse = (response: unknown): response is PhotoResponse => {
     'version' in response['?xml'] &&
     'encoding' in response['?xml'] &&
     response['?xml'].version === '1.0' &&
+    // eslint-disable-next-line unicorn/text-encoding-identifier-case
     response['?xml'].encoding === 'UTF-8' &&
     'geograph' in response &&
     typeof response.geograph === 'object' &&
@@ -140,18 +144,13 @@ export class GeographClient {
     private apiKey: string
   ) {}
 
+  private got = http()
+
   private fetch = (method: Method, path: string, query: Record<string, string | number>) => {
     log.trace({ base: this.baseUrl, path, query }, 'GeographClient.fetch')
 
-    return got(`${this.baseUrl}${path}`, {
+    return this.got(`${this.baseUrl}${path}`, {
       method,
-      retry: {
-        limit: 3,
-        statusCodes: [408, 429, 500, 502, 503, 504],
-        calculateDelay({ attemptCount }) {
-          return Math.min(attemptCount * 250, 2500)
-        },
-      },
       headers: {
         Accept: 'application/json',
       },

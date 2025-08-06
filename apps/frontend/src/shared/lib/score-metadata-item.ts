@@ -13,37 +13,22 @@ const getRawScore = (item: MetadataItem): number => {
 
   good(item.attribution)
 
-  bad(item.attribution?.source === Attribution_Source.Unknown) // Unknown source
-  bad(item.attribution?.source === Attribution_Source.Mapillary) // Mapillary - global, so we should prefer local sources
-  bad(item.attribution?.source === Attribution_Source.OpenStreetMap) // OSM - global
-
-  good(item.attribution?.source === Attribution_Source.Wikidata) // Wikidata
+  switch (item.item.case) {
+    case 'image':
+      good(item.attribution?.source === Attribution_Source.Wikidata)
+      bad(item.attribution?.source === Attribution_Source.Mapillary) // Mapillary is global, we should prefer local sources
+      bad(item.attribution?.source === Attribution_Source.Unknown)
+    default:
+      good(item.attribution?.source === Attribution_Source.Wikidata)
+      bad(item.attribution?.source === Attribution_Source.Unknown)
+  }
 
   return points
 }
 
 export const sortMetadataItems = (items: Array<MetadataItem>): Array<MetadataItem> => {
-  const result: number[] = []
-
-  let maxPoints = 0
-  let minPoints = 0
-
-  // Two step process, because we need to know the extremities before we can normalise
-  for (const item of items) {
-    const rawScore = getRawScore(item)
-
-    maxPoints = Math.min(maxPoints ?? rawScore, rawScore)
-    minPoints = Math.max(minPoints ?? rawScore, rawScore)
-  }
-
-  for (const item of items) {
-    const rawScore = getRawScore(item)
-
-    result.push((rawScore - minPoints) / (maxPoints - minPoints || 0.001)) // Avoid division by zero
-  }
-
   return items
-    .map((item, index) => ({ item, score: result[index] }))
+    .map((item) => ({ item, score: getRawScore(item) }))
     .sort((a, b) => a.score - b.score)
     .map((item) => item.item)
 }

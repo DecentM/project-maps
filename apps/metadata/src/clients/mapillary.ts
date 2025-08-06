@@ -1,8 +1,9 @@
 import VError from 'verror'
-import got, { type Method } from 'got'
+import { type Method } from 'got'
 
 import type { StringArrayCombinations } from 'src/declarations/tuple-union'
 import { log } from '@project-maps/logging'
+import { http } from 'src/lib/http'
 
 type ImagesFilter = {
   bbox?: string
@@ -81,6 +82,8 @@ export class MapillaryClient {
     private apiKey: string
   ) {}
 
+  private got = http()
+
   private fetch<T>(
     method: Method,
     path: string,
@@ -88,14 +91,7 @@ export class MapillaryClient {
   ) {
     log.trace({ method, path, base: this.baseUrl, query }, 'MapillaryClient.fetch')
 
-    return got(`${this.baseUrl}${path}`, {
-      retry: {
-        limit: 3,
-        statusCodes: [408, 429, 500, 502, 503, 504],
-        calculateDelay({ attemptCount }) {
-          return Math.min(attemptCount * 250, 2500)
-        },
-      },
+    return this.got(`${this.baseUrl}${path}`, {
       method,
       headers: {
         Accept: 'application/json',

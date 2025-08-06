@@ -42,22 +42,22 @@ const attributionString = computed(() => {
   if (!props.attribution) return 'No attribution available'
 
   const imageSource = imageSourceString(props.attribution.source)
-
   if (!imageSource) return `Source: ${props.attribution.name}`
+
+  const license = licenseUrlToString(props.attribution.license)
+  if (!license) return `Source: ${props.attribution.name} - ${imageSource}`
 
   return `Source: ${props.attribution.name} - ${imageSource} (${licenseUrlToString(props.attribution.license)})`
 })
 
 const attributionMap: { [key in Attribution_Source]: string } = {
-  [Attribution_Source.Flickr]: 'si-flickr',
-  [Attribution_Source.GeographDE]: 'mdi-rhombus-medium',
   [Attribution_Source.GeographUK]: 'mdi-rhombus-medium',
   [Attribution_Source.Wikimapia]: 'mdi-rhombus-medium',
   [Attribution_Source.Unknown]: 'mdi-rhombus-medium',
   [Attribution_Source.Mapillary]: 'si-mapillary',
   [Attribution_Source.OpenStreetMap]: 'si-openstreetmap',
   [Attribution_Source.Wikidata]: 'si-wikidata',
-  [Attribution_Source.WikimediaCommons]: 'si-wikimediacommons',
+  [Attribution_Source.Website]: 'mdi-web',
 }
 
 const attributionLogo = computed(() => {

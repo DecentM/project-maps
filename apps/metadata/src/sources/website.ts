@@ -25,12 +25,8 @@ export class WebsiteSource extends MetadataSource {
       return url
     }
 
-    if (url.startsWith('http://')) {
-      return url.replace('http://', 'https://')
-    }
-
     if (!url.startsWith('http')) {
-      return `https://${url}`
+      return `http://${url}`
     }
 
     return url
@@ -62,7 +58,7 @@ export class WebsiteSource extends MetadataSource {
             onItem(
               MetadataItem.fromObject({
                 attribution: {
-                  source: AttributionSource.Unknown,
+                  source: AttributionSource.Website,
                   name: source.hostname,
                   license: undefined,
                   url: source.href,
@@ -81,7 +77,7 @@ export class WebsiteSource extends MetadataSource {
               onItem(
                 MetadataItem.fromObject({
                   attribution: {
-                    source: AttributionSource.Unknown,
+                    source: AttributionSource.Website,
                     name: item.name || source.hostname,
                     license: undefined,
                     url: item.url || source.href,
@@ -97,7 +93,7 @@ export class WebsiteSource extends MetadataSource {
               onItem(
                 MetadataItem.fromObject({
                   attribution: {
-                    source: AttributionSource.Unknown,
+                    source: AttributionSource.Website,
                     name: item.name || source.hostname,
                     license: undefined,
                     url: item.url || source.href,
@@ -141,7 +137,7 @@ export class WebsiteSource extends MetadataSource {
         imageUrl.includes('logo')
           ? MetadataItem.fromObject({
               attribution: {
-                source: AttributionSource.Unknown,
+                source: AttributionSource.Website,
                 name: source.hostname,
                 license: undefined,
                 url: ogUrl?.getAttribute('content') || source.href,
@@ -152,7 +148,7 @@ export class WebsiteSource extends MetadataSource {
             })
           : MetadataItem.fromObject({
               attribution: {
-                source: AttributionSource.Unknown,
+                source: AttributionSource.Website,
                 name: source.hostname,
                 license: undefined,
                 url: ogUrl?.getAttribute('content') || source.href,
@@ -172,7 +168,7 @@ export class WebsiteSource extends MetadataSource {
       onItem(
         MetadataItem.fromObject({
           attribution: {
-            source: AttributionSource.Unknown,
+            source: AttributionSource.Website,
             name: source.hostname,
             license: undefined,
             url: ogUrl?.getAttribute('content') || source.href,
@@ -231,9 +227,7 @@ export class WebsiteSource extends MetadataSource {
 
           processedLinks.add(url.href)
 
-          console.log(`Processing link: ${url.href}`)
           await WebsiteSource.processLink(url.href, onItem)
-          console.log(`Finished processing link: ${url.href}`)
         }
       } catch (error) {
         if (error instanceof Error) {

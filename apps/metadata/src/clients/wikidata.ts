@@ -1,7 +1,8 @@
 import { log } from '@project-maps/logging'
-import { got } from 'got'
 import VError from 'verror'
 import { WBK, type Entities, type EntityId, type SimplifiedEntity } from 'wikibase-sdk'
+
+import { http } from 'src/lib/http'
 
 type GetEntitiesParams = {
   ids: EntityId[]
@@ -15,17 +16,12 @@ export class WikidataClient {
     sparqlEndpoint: 'https://query.wikidata.org/sparql',
   })
 
+  private got = http()
+
   private fetch<T>(url: string) {
     log.trace({ url }, 'WikidataClient.fetch')
 
-    return got(url, {
-      retry: {
-        limit: 3,
-        statusCodes: [408, 429, 500, 502, 503, 504],
-        calculateDelay({ attemptCount }) {
-          return Math.min(attemptCount * 250, 2500)
-        },
-      },
+    return this.got(url, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

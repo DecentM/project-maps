@@ -1,24 +1,19 @@
-import type { Attribution_Source } from '@project-maps/proto/metadata/web'
+import { Attribution_Source } from '@project-maps/proto/metadata/web'
 
-// TODO: Use enum instead of number, once the grpc readable issue was resolved
 export const imageSourceString = (source: Attribution_Source): string | undefined => {
   switch (source) {
-    case 1:
+    case Attribution_Source.GeographUK:
       return 'Geograph UK'
-    case 2:
+    case Attribution_Source.Mapillary:
       return 'Mapillary'
-    case 3:
-      return 'Flickr'
-    case 4:
-      return 'Wikimedia Commons'
-    case 5:
-      return 'Geograph DE'
-    case 6:
+    case Attribution_Source.Wikimapia:
       return 'Wikimapia'
-    case 7:
+    case Attribution_Source.Wikidata:
       return 'Wikidata'
-    case 8:
+    case Attribution_Source.OpenStreetMap:
       return 'OpenStreetMap'
+    case Attribution_Source.Website:
+      return 'Web'
     default:
       return undefined
   }

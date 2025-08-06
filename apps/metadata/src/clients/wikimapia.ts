@@ -1,8 +1,9 @@
 import VError from 'verror'
-import got, { type Method } from 'got'
+import { type Method } from 'got'
 
 import type { StringArrayCombinations } from 'src/declarations/tuple-union'
 import { log } from '@project-maps/logging'
+import { http } from 'src/lib/http'
 
 type Pagination = {
   page: number
@@ -228,17 +229,12 @@ export class WikimapiaClient {
     private apiKey: string
   ) {}
 
+  private got = http()
+
   private fetch(method: Method, path: string, query: Record<string, string | number | undefined>) {
     log.trace({ base: this.baseUrl, method, path, query }, 'WikimapiaClient.fetch')
 
-    return got(`${this.baseUrl}${path}`, {
-      retry: {
-        limit: 3,
-        statusCodes: [408, 429, 500, 502, 503, 504],
-        calculateDelay({ attemptCount }) {
-          return Math.min(attemptCount * 250, 2500)
-        },
-      },
+    return this.got(`${this.baseUrl}${path}`, {
       method,
       headers: {
         Accept: 'application/json',
@@ -259,7 +255,7 @@ export class WikimapiaClient {
   /**
    * @deprecated This endpoint is broken. See http://wikimapia.org/forum/viewtopic.php?f=12&t=15031
    */
-  public async Place_GetByArea(params: never): Promise<never> {
+  public async Place_GetByArea(): Promise<never> {
     return undefined as never
   }
 

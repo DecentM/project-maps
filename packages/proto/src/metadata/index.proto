@@ -30,12 +30,10 @@ message Attribution {
     Unknown = 0;
     GeographUK = 1;
     Mapillary = 2;
-    Flickr = 3;
-    WikimediaCommons = 4;
-    GeographDE = 5;
     Wikimapia = 6;
     Wikidata = 7;
     OpenStreetMap = 8;
+    Website = 9;
   }
 
   string name = 1;
