@@ -50,7 +50,7 @@ export class WebsiteSource extends MetadataSource {
 
       const graph = JSON.parse(ldGraph.textContent)
 
-      if (!('@context' in graph) || graph['@context'] !== 'https://schema.org') {
+      if (!('@type' in graph) || graph['@type'] !== 'WebPage') {
         return undefined
       }
 
