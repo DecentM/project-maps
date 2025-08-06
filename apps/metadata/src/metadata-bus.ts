@@ -9,6 +9,7 @@ import type { Events, MetadataSource } from './declarations/metadata-source'
 import { MapillarySource } from './sources/mapillary'
 import { WikidataSource } from './sources/wikidata'
 import { WikimapiaSource } from './sources/wikimapia'
+import { WebsiteSource } from './sources/website'
 
 export class MetadataBus {
   private static sources: MetadataSource[] = [
@@ -17,6 +18,7 @@ export class MetadataBus {
     new MapillarySource(),
     new WikidataSource(),
     new WikimapiaSource(),
+    new WebsiteSource(),
   ]
 
   private inProgress = 0

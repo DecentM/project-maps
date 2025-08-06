@@ -204,12 +204,21 @@ importers:
       got:
         specifier: ^14.4.2
         version: 14.4.2
+      http2-wrapper:
+        specifier: ^2.2.1
+        version: 2.2.1
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
       opening_hours:
         specifier: ^3.9.0
         version: 3.9.0(typescript@5.9.2)
+      tough-cookie:
+        specifier: ^5.1.2
+        version: 5.1.2
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
@@ -223,6 +232,9 @@ importers:
       '@types/got':
         specifier: ^9.6.12
         version: 9.6.12
+      '@types/jsdom':
+        specifier: ^21.1.7
+        version: 21.1.7
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2

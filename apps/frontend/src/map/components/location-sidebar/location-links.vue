@@ -27,7 +27,7 @@ const links = computed<LinkWithAttribution[]>(() => {
     }
 
     return item.value.list.map((link) => ({
-      link,
+      link: link.url.startsWith('http') ? link : { ...link, url: `https://${link.url}` },
       attribution,
     }))
   })

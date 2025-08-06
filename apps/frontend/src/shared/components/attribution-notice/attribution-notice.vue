@@ -41,7 +41,11 @@ watch(open, updatePosition)
 const attributionString = computed(() => {
   if (!props.attribution) return 'No attribution available'
 
-  return `Source: ${props.attribution.name} - ${imageSourceString(props.attribution.source)} (${licenseUrlToString(props.attribution.license)})`
+  const imageSource = imageSourceString(props.attribution.source)
+
+  if (!imageSource) return `Source: ${props.attribution.name}`
+
+  return `Source: ${props.attribution.name} - ${imageSource} (${licenseUrlToString(props.attribution.license)})`
 })
 
 const attributionMap: { [key in Attribution_Source]: string } = {

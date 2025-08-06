@@ -13,8 +13,8 @@ import LocationComments from 'src/map/components/location-sidebar/location-comme
 import LocationLinks from 'src/map/components/location-sidebar/location-links.vue'
 import LocationMetadata from 'src/map/components/location-sidebar/location-metadata.vue'
 import LocationOpeningHours from 'src/map/components/location-sidebar/location-opening-hours.vue'
+import DescriptionRenderer from 'src/map/components/location-sidebar/description-renderer.vue'
 
-import DescriptionRenderer from 'src/map/components/location-sidebar/metadata-renderers/description-renderer.vue'
 import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderers/image-renderer.vue'
 import LogoRenderer from 'src/map/components/location-sidebar/metadata-renderers/logo-renderer.vue'
 import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
@@ -140,15 +140,14 @@ const handleImageClick = () => {
         <q-item-label>
           <name-renderer class="text-h6" :metadata="sortedMetadata" />
         </q-item-label>
-        <q-item-label caption>
-          <description-renderer class="text-body2" :metadata="sortedMetadata" />
-        </q-item-label>
       </q-item-section>
 
       <q-item-section avatar>
         <logo-renderer :metadata="sortedMetadata" width="75px" />
       </q-item-section>
     </q-item>
+
+    <description-renderer class="text-body2" :metadata="sortedMetadata" />
 
     <q-scroll-area class="col">
       <div class="scroll-limiter">

@@ -25,4 +25,6 @@ export const config = {
     host: process.env.GRPC_METADATA_HOST ?? 'fixme',
     port: Number.parseFloat(process.env.GRPC_METADATA_PORT ?? 'fixme'),
   },
+
+  userAgent: process.env.OUTGOING_USER_AGENT,
 } as const
