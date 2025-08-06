@@ -59,14 +59,20 @@ const openingHours = computed(() => {
           <q-item-label
             v-if="!openingHours.nextChange"
             caption
-            :class="[{'text-positive': openingHours.isCurrentlyOpen, 'text-negative': !openingHours.isCurrentlyOpen}]"
           >
-            <span v-if="openingHours.is247">
+            <span v-if="openingHours.is247" class="text-positive">
               Open 24/7
             </span>
 
-            <span v-else>
+            <span
+              v-else-if="openingHours.intervals && openingHours.intervals.length > 0"
+              :class="[{'text-positive': openingHours.isCurrentlyOpen, 'text-negative': !openingHours.isCurrentlyOpen}]"
+            >
               {{ openingHours.isCurrentlyOpen ? 'Open now' : 'Currently closed' }}
+            </span>
+
+            <span v-else class="text-primary">
+              {{ openingHours.fallback }}
             </span>
           </q-item-label>
 
