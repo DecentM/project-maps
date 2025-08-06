@@ -1,7 +1,3 @@
-<template>
-  <slot />
-</template>
-
 <script lang="ts" setup>
 import type { MapGeoJSONFeature, MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
 import { useOsmCache } from 'src/shared/lib/osm-cache'
@@ -9,7 +5,7 @@ import { type ShallowRef, inject, onBeforeUnmount, onMounted, ref, watch } from 
 
 const map = inject<ShallowRef<MaplibreGl>>('map')
 
-const emit = defineEmits<(event: 'poi-click', poi: MapGeoJSONFeature | null) => void>()
+const emit = defineEmits<(event: 'poi-click', poi?: MapGeoJSONFeature) => void>()
 
 const CLICKABLE_LAYERS = [
   'poi-amenity',
@@ -30,8 +26,8 @@ const handlePoiClick = async (event: MapMouseEvent) => {
       layers: [...CLICKABLE_LAYERS],
     }) ?? []
 
-  if (!features.length) {
-    emit('poi-click', null)
+  if (features.length === 0) {
+    emit('poi-click')
     return
   }
 
@@ -107,3 +103,7 @@ if (map) {
 
 onBeforeUnmount(() => dispose())
 </script>
+
+<template>
+  <slot />
+</template>

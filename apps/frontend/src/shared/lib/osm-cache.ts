@@ -12,12 +12,12 @@ export const useOsmCache = () => {
   const get = async (
     type: Element['result']['case'],
     id: string | number
-  ): Promise<Element['result'] | null> => {
+  ): Promise<Element['result'] | undefined> => {
     try {
-      return await cache.get(key(type, id))
+      return (await cache.get(key(type, id))) ?? undefined
     } catch (error) {
       console.error(error)
-      return null
+      return
     }
   }
 

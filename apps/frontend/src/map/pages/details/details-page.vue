@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { usePreferredReducedMotion } from '@vueuse/core'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import GeolocateControlPlugin from 'src/shared/components/maplibre-gl/plugins/geolocate-control.vue'
+import LocationSidebar from 'src/map/components/location-sidebar/location-sidebar.vue'
+
 import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-control.vue'
 import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
 import NavigationControlPlugin from 'src/shared/components/maplibre-gl/plugins/navigation-control.vue'
@@ -11,7 +14,15 @@ import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panz
 const router = useRouter()
 const route = useRoute()
 
-const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
+const id = computed(() => {
+  return route.params.id as string
+})
+
+const type = computed(() => {
+  return route.params.type as 'node' | 'way' | 'relation'
+})
+
+const handlePoiClick = (poi?: MapGeoJSONFeature) => {
   if (!poi?.properties?.osm_id || !poi?.properties?.osm_type) {
     return
   }
@@ -25,32 +36,30 @@ const handlePoiClick = (poi: MapGeoJSONFeature | null) => {
     },
   })
 }
+
+const reducedMotion = usePreferredReducedMotion()
 </script>
 
-<style lang="scss" scoped>
-.sidebar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.poi {
-  transform-origin: top center;
-  max-width: 128px;
-
-  &-avatar {
-    outline: 1px solid lightgrey;
-  }
-}
-</style>
-
 <template>
-  <div>
+  <q-drawer
+    model-value
+    behavior="desktop"
+    side="left"
+    :width="400"
+  >
+    <transition v-if="reducedMotion === 'no-preference'" name="fade-up" mode="out-in">
+      <div :key="id" class="q-pa-sm fit">
+        <location-sidebar :poi-osm-id="id" :poi-osm-type="type" />
+      </div>
+    </transition>
+
+    <div v-else class="row q-pa-sm">
+      <location-sidebar :poi-osm-id="id" :poi-osm-type="type" />
+    </div>
+
     <hover-tracker-plugin @poi-click="handlePoiClick" />
     <globe-control-plugin />
     <panzoom-tracker-plugin />
-    <geolocate-control-plugin />
     <navigation-control-plugin />
-  </div>
+  </q-drawer>
 </template>

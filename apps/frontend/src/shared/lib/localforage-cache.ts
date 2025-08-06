@@ -35,7 +35,7 @@ export class LocalforageCache<T> {
   }
 
   private evictLRU = async (): Promise<void> => {
-    let lru: { diffSeconds: number; key: string } | null = null
+    let lru: { diffSeconds: number; key: string } | undefined = undefined
 
     await this.instance.iterate<CachedItem<T>, void>(async (value, key) => {
       const usedAt = DateTime.fromSeconds(value.usedAt)
@@ -62,11 +62,11 @@ export class LocalforageCache<T> {
     await this.instance.removeItem(key)
   }
 
-  public async get(id: string): Promise<T | null> {
+  public async get(id: string): Promise<T | undefined> {
     const item = await this.instance.getItem<CachedItem<T>>(this.key(id))
 
     if (!item) {
-      return null
+      return
     }
 
     // Store it to update the usedAt timestamp

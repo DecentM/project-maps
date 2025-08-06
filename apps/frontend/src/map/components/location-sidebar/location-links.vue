@@ -47,10 +47,10 @@ const deduplicatedLinks = computed<LinkWithAttribution[]>(() => {
 </script>
 
 <template>
-  <q-list v-if="deduplicatedLinks.length">
+  <q-list v-if="deduplicatedLinks.length > 0">
     <q-separator />
 
-    <q-item v-for="{ link, attribution } in deduplicatedLinks" :href="link.url" target="_blank" rel="noopener">
+    <q-item v-for="{ link, attribution } in deduplicatedLinks" :key="link.url" :href="link.url" target="_blank" rel="noopener">
       <q-item-section side>
         <q-icon name="mdi-web" color="primary" size="md" />
       </q-item-section>

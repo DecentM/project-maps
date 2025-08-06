@@ -7,10 +7,9 @@ const props = defineProps<{
 }>()
 
 const descriptionItem = computed(() => {
-  const result =
-    props.metadata.findLast(({ item }) => item.case === 'description' && item.value) ?? null
+  const result = props.metadata.findLast(({ item }) => item.case === 'description' && item.value)
 
-  if (!result || !result.item.value || result.item.case !== 'description') return null
+  if (!result || !result.item.value || result.item.case !== 'description') return
 
   return result.item.value
 })

@@ -8,6 +8,9 @@ import { configure } from 'quasar/wrappers'
 
 export default configure((ctx) => {
   return {
+    sourceFiles: {
+      rootComponent: 'src/app-root.vue',
+    },
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
@@ -73,7 +76,7 @@ export default configure((ctx) => {
             ssr: ctx.modeName === 'ssr',
 
             // you need to set i18n resource including paths !
-            include: [fileURLToPath(new URL('./src/i18n', import.meta.url))],
+            include: [fileURLToPath(new URL('src/i18n', import.meta.url))],
           },
         ],
         [

@@ -109,37 +109,37 @@ const locked = computed(() => {
             <span>Access: </span>
             <span class="text-bold">{{ access }}, {{ locked }}</span>
             <span v-if="defibrillator.data.code"> (code: {{ defibrillator.data.code }})</span>
-            <br />
+            <br >
           </template>
 
           <template v-if="defibrillator.data?.level">
             <span>Level: </span>
             <span class="text-bold">{{ defibrillator.data.level }}</span>
-            <br />
+            <br >
           </template>
 
           <template v-if="defibrillator.data?.indoor">
             <span>Location: </span>
             <span class="text-bold">{{ indoor }}</span>
-            <br />
+            <br >
           </template>
 
           <template v-if="defibrillator.data?.cabinet">
             <span>Cabinet: </span>
             <span class="text-bold">{{ defibrillator.data.cabinet }}</span>
-            <br />
+            <br >
           </template>
 
           <template v-if="defibrillator.data?.manufacturer || defibrillator.data?.model">
             <span>Device: </span>
             <span class="text-bold">{{ defibrillator.data.manufacturer }} {{ defibrillator.data.model }}</span>
-            <br />
+            <br >
           </template>
 
           <template v-if="defibrillator.data?.phone">
             <span>Phone: </span>
             <span class="text-bold">{{ defibrillator.data.phone }}</span>
-            <br />
+            <br >
           </template>
         </q-item-label>
       </q-item-section>

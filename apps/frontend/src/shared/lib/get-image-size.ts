@@ -3,13 +3,13 @@ export const getImageSize = (url: string): Promise<{ width: number; height: numb
   return new Promise((resolve, reject) => {
     const img = new Image()
 
-    img.onload = () => {
+    img.addEventListener('load', () => {
       resolve({ width: img.width, height: img.height })
-    }
+    })
 
-    img.onerror = (err) => {
+    img.addEventListener('error', (err) => {
       reject(err)
-    }
+    })
 
     img.src = url
   })

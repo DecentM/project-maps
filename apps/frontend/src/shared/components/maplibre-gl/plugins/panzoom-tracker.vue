@@ -1,7 +1,3 @@
-<template>
-  <slot />
-</template>
-
 <script lang="ts" setup>
 import type { MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
 import { type ShallowRef, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -136,3 +132,7 @@ if (map) {
 
 onBeforeUnmount(() => dispose())
 </script>
+
+<template>
+  <slot />
+</template>

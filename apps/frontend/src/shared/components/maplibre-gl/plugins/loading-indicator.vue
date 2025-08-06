@@ -1,12 +1,3 @@
-<template>
-  <transition name="fade-down" mode="out-in">
-    <q-chip v-if="isLoading && loadingForSeconds > 0.4" color="primary" text-color="white">
-      <q-spinner indeterminate class="q-mr-sm" />
-      Loading - {{ loadingPercent }}%
-    </q-chip>
-  </transition>
-</template>
-
 <script lang="ts" setup>
 import type { Map as MaplibreGl } from 'maplibre-gl'
 import { type ShallowRef, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -91,3 +82,12 @@ if (map) {
 
 onBeforeUnmount(() => dispose())
 </script>
+
+<template>
+  <transition name="fade-down" mode="out-in">
+    <q-chip v-if="isLoading && loadingForSeconds > 0.4" color="primary" text-color="white">
+      <q-spinner indeterminate class="q-mr-sm" />
+      Loading - {{ loadingPercent }}%
+    </q-chip>
+  </transition>
+</template>

@@ -14,6 +14,8 @@ const props = withDefaults(
     href?: string
   }>(),
   {
+    attribution: undefined,
+    href: undefined,
     static: false,
     side: 'right',
     openWidth: '350px',

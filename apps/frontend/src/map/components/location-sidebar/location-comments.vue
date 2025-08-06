@@ -28,7 +28,7 @@ const commentItems = computed<Comment[]>(() => {
       :default-opened="index === 0"
     >
       <template #header>
-        <q-item-section avatar v-if="item?.author?.avatarUrl">
+        <q-item-section v-if="item?.author?.avatarUrl" avatar>
           <q-avatar>
             <img :src="item.author.avatarUrl">
           </q-avatar>

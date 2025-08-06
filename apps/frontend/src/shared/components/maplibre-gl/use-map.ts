@@ -18,7 +18,7 @@ export const useMap = (
   styleConfig: StyleConfig,
   options: Omit<MapOptions, 'container'> = {}
 ) => {
-  const map = shallowRef<MaplibreGl | null>(null)
+  const map = shallowRef<MaplibreGl | undefined>()
   const style = createStyle(styleConfig)
 
   const loading = ref(true)
@@ -57,7 +57,7 @@ export const useMap = (
 
     // destroy map
     map.value.remove()
-    map.value = null
+    map.value = undefined
   }
 
   const restart = () => {

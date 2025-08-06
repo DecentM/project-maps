@@ -30,7 +30,7 @@ const { loading } = useMap(
 
 <template>
   <div>
-    <div v-show="!loading" ref="container" class="fit absolute-top-left"></div>
+    <div v-show="!loading" ref="container" class="fit absolute-top-left"/>
     <div v-if="loading" class="absolute-top-left fit column justify-center">
       <q-spinner color="primary" size="4rem" class="self-center" indeterminate />
     </div>

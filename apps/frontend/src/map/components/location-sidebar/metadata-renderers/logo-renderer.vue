@@ -12,7 +12,7 @@ const props = defineProps<{
 const logo = computed(() => {
   const result = props.metadata.findLast(({ item }) => item.case === 'logo' && item.value)
 
-  if (!result || !result.item.value || result.item.case !== 'logo') return null
+  if (!result || !result.item.value || result.item.case !== 'logo') return
 
   return getImageUrl(result.item.value, 'small')
 })

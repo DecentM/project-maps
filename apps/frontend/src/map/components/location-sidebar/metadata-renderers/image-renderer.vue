@@ -13,15 +13,15 @@ const props = defineProps<{
 const firstItem = computed(() => {
   const result = props.metadata.find(({ item }) => item.case === 'image' && item.value)
 
-  if (!result || !result.item || result.item.case !== 'image') return null
+  if (!result || !result.item || result.item.case !== 'image') return
 
   return result
 })
 
 const firstImageUrl = computed(() => {
-  if (firstItem.value?.item.case !== 'image') return null
+  if (firstItem.value?.item.case !== 'image') return
 
-  if (!firstItem.value.item.value?.url) return null
+  if (!firstItem.value.item.value?.url) return
 
   return getImageUrl(firstItem.value.item.value.url, 'medium')
 })

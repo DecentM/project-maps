@@ -19,7 +19,7 @@ const reducedMotion = usePreferredReducedMotion()
   >
     <q-layout view="lHh lpR fFf">
       <q-header class="transparent">
-        <router-view v-if="reducedMotion === 'no-preference'" name="Toolbar" v-slot="{ Component }">
+        <router-view v-if="reducedMotion === 'no-preference'" v-slot="{ Component }" name="Toolbar">
           <transition name="fade-up" mode="out-in">
             <component :is="Component" />
           </transition>
@@ -28,7 +28,7 @@ const reducedMotion = usePreferredReducedMotion()
         <router-view v-else name="Toolbar" />
       </q-header>
 
-      <router-view v-if="reducedMotion === 'no-preference'" name="Sidebar" v-slot="{ Component }">
+      <router-view v-if="reducedMotion === 'no-preference'" v-slot="{ Component }" name="Sidebar">
         <transition name="fade-up" mode="out-in">
           <component :is="Component" />
         </transition>
@@ -43,13 +43,13 @@ const reducedMotion = usePreferredReducedMotion()
               <component :is="Component" />
             </transition>
 
-            <component v-else :is="Component" />
+            <component :is="Component" v-else />
           </q-page>
         </q-page-container>
       </router-view>
 
       <q-footer bordered>
-        <router-view v-if="reducedMotion === 'no-preference'" name="Footer" v-slot="{ Component }">
+        <router-view v-if="reducedMotion === 'no-preference'" v-slot="{ Component }" name="Footer">
           <transition name="fade-up" mode="out-in">
             <component :is="Component" />
           </transition>

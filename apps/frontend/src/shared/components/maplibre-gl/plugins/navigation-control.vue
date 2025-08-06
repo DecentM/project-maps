@@ -1,7 +1,3 @@
-<template>
-  <slot />
-</template>
-
 <script lang="ts" setup>
 import { type Map as MaplibreGl, NavigationControl } from 'maplibre-gl'
 import { type ShallowRef, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -52,3 +48,7 @@ if (map) {
 
 onBeforeUnmount(() => dispose())
 </script>
+
+<template>
+  <slot />
+</template>

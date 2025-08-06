@@ -89,14 +89,14 @@ const handleResultClick = (result: SearchResult) => {
     <q-card>
       <q-input
         :model-value="query"
-        @update:model-value="handleSearch"
         outlined
         placeholder="Search..."
         dense
-        debounce="300" />
+        debounce="300"
+        @update:model-value="handleSearch" />
     </q-card>
 
-    <q-card v-if="query && searchResults.length">
+    <q-card v-if="query && searchResults.length > 0">
       <q-list class="search-results-list">
         <q-item
           v-for="(result, index) in searchResults"

@@ -24,7 +24,7 @@ const addressCount = (address: Address) => {
 const textMetadata = computed(() => {
   const result = props.metadata.findLast(({ item }) => item.case === 'metadata' && item.value)
 
-  if (!result || !result.item || result.item.case !== 'metadata') return null
+  if (!result || !result.item || result.item.case !== 'metadata') return
 
   return {
     data: result.item.value,
@@ -34,7 +34,7 @@ const textMetadata = computed(() => {
 </script>
 
 <template>
-  <div class="relative-position" v-if="textMetadata">
+  <div v-if="textMetadata" class="relative-position">
     <q-separator />
 
     <template v-if="textMetadata.data.address && addressCount(textMetadata.data.address) > 0">
@@ -47,33 +47,33 @@ const textMetadata = computed(() => {
           <q-item-label :lines="addressCount(textMetadata.data.address)">
             <template v-if="textMetadata.data.address.country">
               <span>{{ textMetadata.data.address.country }}</span>
-              <br />
+              <br >
             </template>
 
             <template v-if="textMetadata.data.address.state">
               <span>{{ textMetadata.data.address.state }}</span>
-              <br />
+              <br >
             </template>
 
             <template v-if="textMetadata.data.address.city">
               <span>{{ textMetadata.data.address.city }}</span>
-              <br />
+              <br >
             </template>
 
             <template v-if="textMetadata.data.address.street">
               <span>{{ textMetadata.data.address.street }}</span>
-              <br v-if="!textMetadata.data.address.housenumber" />
+              <br v-if="!textMetadata.data.address.housenumber" >
               <span v-else>&nbsp;</span>
             </template>
 
             <template v-if="textMetadata.data.address.housenumber">
               <span>{{ textMetadata.data.address.housenumber }}</span>
-              <br />
+              <br >
             </template>
 
             <template v-if="textMetadata.data.address.postcode">
               <span>{{ textMetadata.data.address.postcode }}</span>
-              <br />
+              <br >
             </template>
           </q-item-label>
           <q-item-label caption>Address</q-item-label>
