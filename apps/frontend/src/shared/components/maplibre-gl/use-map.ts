@@ -32,6 +32,7 @@ export const useMap = (
 
     const rawMap = new MaplibreGl({
       container: container.value,
+      cancelPendingTileRequestsWhileZooming: false,
       ...options,
     })
 
