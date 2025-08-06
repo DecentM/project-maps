@@ -133,7 +133,12 @@ const isPhotoResponse = (response: unknown): response is PhotoResponse => {
   )
 }
 
-export class GeographClient {
+export type Geograph = {
+  syndicator: (request: SyndicatorRequest) => Promise<SyndicatorResponse>
+  photo: (guid: string) => Promise<PhotoResponse>
+}
+
+export class GeographClient implements Geograph {
   private xmlParser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: '',

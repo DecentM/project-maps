@@ -3,15 +3,19 @@ import { type Method } from 'got'
 import VError from 'verror'
 import { http } from 'src/lib/http'
 
-export class WebsiteClient {
-  constructor(private baseUrl: string) {}
+export type Website = {
+  getText: (url: string) => Promise<string>
+}
+
+export class WebsiteClient implements Website {
+  constructor() {}
 
   private got = http()
 
   private async fetch(method: Method, url: string): Promise<string> {
-    log.trace({ url: `${this.baseUrl}${url}` }, 'WebsiteClient.fetch')
+    log.trace({ url }, 'WebsiteClient.fetch')
 
-    const inProgressResponse = this.got(new URL(url, this.baseUrl), {
+    const inProgressResponse = this.got(new URL(url), {
       method,
       headers: {
         Accept:
@@ -20,9 +24,9 @@ export class WebsiteClient {
     })
 
     const timeout = setTimeout(() => {
-      log.warn({ url: `${this.baseUrl}${url}` }, 'WebsiteClient.fetch: Request timed out')
+      log.warn({ url }, 'WebsiteClient.fetch: Request timed out')
       inProgressResponse.cancel('timeout')
-    }, 5000)
+    }, 15_000)
 
     const response = await inProgressResponse
 
@@ -42,7 +46,7 @@ export class WebsiteClient {
     }
   }
 
-  public async getText(url = ''): Promise<string> {
+  public async getText(url: string): Promise<string> {
     try {
       return await this.get(url)
     } catch (error) {

@@ -31,57 +31,71 @@ const textMetadata = computed(() => {
     attribution: result.attribution,
   }
 })
+
+const address = computed(() => {
+  const result = props.metadata.findLast(({ item }) => item.case === 'address' && item.value)
+
+  if (!result || !result.item || result.item.case !== 'address') return
+
+  return {
+    data: result.item.value,
+    attribution: result.attribution,
+  }
+})
 </script>
 
 <template>
   <div v-if="textMetadata" class="relative-position">
     <q-separator />
 
-    <template v-if="textMetadata.data.address && addressCount(textMetadata.data.address) > 0">
+    <template v-if="address?.data && addressCount(address.data) > 0">
       <q-item>
         <q-item-section side>
           <q-icon name="mdi-map-marker" color="primary" size="md" />
         </q-item-section>
 
         <q-item-section>
-          <q-item-label :lines="addressCount(textMetadata.data.address)">
-            <template v-if="textMetadata.data.address.country">
-              <span>{{ textMetadata.data.address.country }}</span>
+          <q-item-label :lines="addressCount(address.data)">
+            <template v-if="address.data.country || address.data.state">
+              <span
+                v-if="address.data.country && address.data.state"
+              >
+                {{ address.data.country }}, {{ address.data.state }}
+              </span>
+
+              <span v-else-if="address.data.country">{{ address.data.country }}</span>
+              <span v-else="address.data.state">{{ address.data.state }}</span>
+
               <br >
             </template>
 
-            <template v-if="textMetadata.data.address.state">
-              <span>{{ textMetadata.data.address.state }}</span>
+            <template v-if="address.data.city">
+              <span>{{ address.data.city }}</span>
               <br >
             </template>
 
-            <template v-if="textMetadata.data.address.city">
-              <span>{{ textMetadata.data.address.city }}</span>
-              <br >
-            </template>
-
-            <template v-if="textMetadata.data.address.street">
-              <span>{{ textMetadata.data.address.street }}</span>
-              <br v-if="!textMetadata.data.address.housenumber" >
+            <template v-if="address.data.street">
+              <span>{{ address.data.street }}</span>
+              <br v-if="!address.data.housenumber" >
               <span v-else>&nbsp;</span>
             </template>
 
-            <template v-if="textMetadata.data.address.housenumber">
-              <span>{{ textMetadata.data.address.housenumber }}</span>
+            <template v-if="address.data.housenumber">
+              <span>{{ address.data.housenumber }}</span>
               <br >
             </template>
 
-            <template v-if="textMetadata.data.address.postcode">
-              <span>{{ textMetadata.data.address.postcode }}</span>
+            <template v-if="address.data.postcode">
+              <span>{{ address.data.postcode }}</span>
               <br >
             </template>
           </q-item-label>
           <q-item-label caption>Address</q-item-label>
         </q-item-section>
 
-        <q-item-section v-if="textMetadata.attribution" side>
+        <q-item-section v-if="address.attribution" side>
           <q-item-label>
-            <attribution-notice :attribution="textMetadata.attribution" />
+            <attribution-notice :attribution="address.attribution" />
           </q-item-label>
         </q-item-section>
       </q-item>

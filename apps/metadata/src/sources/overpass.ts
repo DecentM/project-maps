@@ -8,7 +8,7 @@ import {
 } from '@project-maps/proto/metadata/node'
 import { PoiMetadataParameters } from '@project-maps/proto/overpass/node'
 
-import { OverpassClient } from 'src/clients/overpass'
+import { type Overpass } from 'src/clients/overpass'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { log } from '@project-maps/logging'
 import VError from 'verror'
@@ -19,6 +19,10 @@ import { parseOpeningHours } from 'src/lib/opening-hours'
 import { maybeParseJsonString } from 'src/lib/maybe-parse-json-string'
 
 export class OverpassSource extends MetadataSource {
+  constructor(private client: Overpass) {
+    super()
+  }
+
   private static requestedTags = [
     'addr:city',
     'addr:housenumber',
@@ -88,6 +92,29 @@ export class OverpassSource extends MetadataSource {
         },
         metadata: {
           name: item.tags?.name || '',
+          phone: item.tags?.phone || '',
+          amenity: item.tags?.amenity || '',
+        },
+      })
+    )
+
+    if (
+      item.tags?.['addr:city'] ||
+      item.tags?.['addr:housenumber'] ||
+      item.tags?.['addr:postcode'] ||
+      item.tags?.['addr:state'] ||
+      item.tags?.['addr:street']
+    )
+      onItem(
+        MetadataItem.fromObject({
+          attribution: {
+            source: AttributionSource.OpenStreetMap,
+            license: 'ODbL',
+            url: item.id
+              ? `https://www.openstreetmap.org/${Object.keys(element)[0]}/${item.id}`
+              : 'https://www.openstreetmap.org/',
+            name: String(item.id ?? 'OpenStreetMap'),
+          },
           address: {
             city: item.tags?.['addr:city'] || '',
             country: item.tags?.['addr:country'] || '',
@@ -96,11 +123,8 @@ export class OverpassSource extends MetadataSource {
             state: item.tags?.['addr:state'] || '',
             street: item.tags?.['addr:street'] || '',
           },
-          phone: item.tags?.phone || '',
-          amenity: item.tags?.amenity || '',
-        },
-      })
-    )
+        })
+      )
 
     if (item.tags?.emergency === 'defibrillator') {
       onItem(
@@ -287,8 +311,6 @@ export class OverpassSource extends MetadataSource {
       )
     }
   }
-
-  private client = new OverpassClient()
 
   private promisifyOverpassResponse(
     overpassResponse: NodeJS.ReadableStream,

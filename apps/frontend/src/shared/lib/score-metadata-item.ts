@@ -14,6 +14,8 @@ const getRawScore = (item: MetadataItem): number => {
   good(item.attribution)
 
   switch (item.item.case) {
+    case 'address':
+      good(item.attribution?.source === Attribution_Source.OpenStreetMap)
     case 'image':
       good(item.attribution?.source === Attribution_Source.Wikidata)
       bad(item.attribution?.source === Attribution_Source.Mapillary) // Mapillary is global, we should prefer local sources

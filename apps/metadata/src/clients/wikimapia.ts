@@ -223,7 +223,12 @@ type Place_GetbyidResponse = {
   >
 }
 
-export class WikimapiaClient {
+export type Wikimapia = {
+  Place_Getnearest: (params: Place_GetnearestParams) => Promise<Place_GetnearestResponse>
+  Place_Getbyid: (params: Place_GetbyidParams) => Promise<Place_GetbyidResponse>
+}
+
+export class WikimapiaClient implements Wikimapia {
   public constructor(
     private baseUrl: string,
     private apiKey: string

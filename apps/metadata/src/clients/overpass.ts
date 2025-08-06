@@ -9,7 +9,14 @@ import { credentials } from '@grpc/grpc-js'
 
 import { config } from '../config'
 
-export class OverpassClient {
+export type Overpass = {
+  ShortRangeNamed: (params: QueryParameters) => NodeJS.ReadableStream
+  WikidataIdsInRange: (params: QueryParameters) => NodeJS.ReadableStream
+  PoiMetadata: (params: PoiMetadataParameters) => NodeJS.ReadableStream
+  PoiWikidataId: (params: PoiMetadataParameters) => NodeJS.ReadableStream
+}
+
+export class OverpassClient implements Overpass {
   private static client = new GRPCOverpassClient(
     `${config.clients.overpassInterpreter.host}:${config.clients.overpassInterpreter.port}`,
     credentials.createInsecure()

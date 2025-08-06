@@ -4,15 +4,13 @@ import VError from 'verror'
 import { MetadataItem, AttributionSource } from '@project-maps/proto/metadata/node'
 import { log } from '@project-maps/logging'
 
-import { WikimapiaClient } from 'src/clients/wikimapia'
-import { config } from 'src/config'
+import { type Wikimapia } from 'src/clients/wikimapia'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 
 export class WikimapiaSource extends MetadataSource {
-  private client = new WikimapiaClient(
-    config.clients.wikimapia.baseUrl,
-    config.clients.wikimapia.apiKey
-  )
+  constructor(private client: Wikimapia) {
+    super()
+  }
 
   override listen(events: Emittery<Events>): () => void {
     const handleItem = async (data: MetadataItem) => {

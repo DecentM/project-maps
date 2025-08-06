@@ -7,7 +7,7 @@ import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
 
-import { WebsiteClient } from 'src/clients/website'
+import { type Website } from 'src/clients/website'
 
 const createBlacklist = () => [
   /^([a-z]{0,2}\.)?wikipedia.org/giu,
@@ -20,6 +20,10 @@ const createBlacklist = () => [
 ]
 
 export class WebsiteSource extends MetadataSource {
+  constructor(private client: Website) {
+    super()
+  }
+
   private static fixupUrl(url: string): string {
     if (url.startsWith('https://')) {
       return url
@@ -30,6 +34,97 @@ export class WebsiteSource extends MetadataSource {
     }
 
     return url
+  }
+
+  private static processLDJsonFragment(
+    item: unknown,
+    source: URL,
+    onItem: (data: MetadataItem) => void
+  ): void {
+    if (typeof item !== 'object' || item === null || !('@type' in item)) {
+      return
+    }
+
+    switch (item['@type']) {
+      case 'WebPage':
+        if ('description' in item && typeof item.description === 'string')
+          onItem(
+            MetadataItem.fromObject({
+              attribution: {
+                source: AttributionSource.Website,
+                name: source.hostname,
+                license: undefined,
+                url: source.href,
+              },
+              description: {
+                text: item.description,
+              },
+            })
+          )
+
+        if ('thumbnailUrl' in item && typeof item.thumbnailUrl === 'string')
+          onItem(
+            MetadataItem.fromObject({
+              attribution: {
+                source: AttributionSource.Website,
+                name: source.hostname,
+                license: undefined,
+                url: source.href,
+              },
+              logo: {
+                small: item.thumbnailUrl,
+              },
+            })
+          )
+
+        break
+
+      case 'ImageObject':
+        if (
+          ('contentUrl' in item && typeof item.contentUrl === 'string') ||
+          ('url' in item && typeof item.url === 'string')
+        ) {
+          const url = ('contentUrl' in item ? item.contentUrl : 'url' in item ? item.url : '') as
+            | string
+            | undefined
+
+          onItem(
+            url?.includes('logo')
+              ? MetadataItem.fromObject({
+                  attribution: {
+                    source: AttributionSource.Website,
+                    name: source.hostname,
+                    license: undefined,
+                    url: source.href,
+                  },
+                  logo: {
+                    canonical: url,
+                  },
+                })
+              : MetadataItem.fromObject({
+                  attribution: {
+                    source: AttributionSource.Website,
+                    name: source.hostname,
+                    license: undefined,
+                    url: source.href,
+                  },
+                  image: {
+                    url: {
+                      canonical: url,
+                    },
+                  },
+                })
+          )
+        }
+        break
+
+      case 'Organization': {
+        if ('logo' in item) WebsiteSource.processLDJsonFragment(item.logo, source, onItem)
+        if ('image' in item) WebsiteSource.processLDJsonFragment(item.image, source, onItem)
+
+        break
+      }
+    }
   }
 
   private static processLDJson(
@@ -46,69 +141,14 @@ export class WebsiteSource extends MetadataSource {
 
       const graph = JSON.parse(ldGraph.textContent)
 
-      if (!('@type' in graph) || graph['@type'] !== 'WebPage') {
+      if (!('@graph' in graph) || !Array.isArray(graph['@graph'])) {
         return undefined
       }
 
       const source = new URL(WebsiteSource.fixupUrl(url))
 
       for (const item of graph['@graph'] || []) {
-        switch (item['@type']) {
-          case 'ImageObject':
-            onItem(
-              MetadataItem.fromObject({
-                attribution: {
-                  source: AttributionSource.Website,
-                  name: source.hostname,
-                  license: undefined,
-                  url: source.href,
-                },
-                image: {
-                  url: {
-                    canonical: item.contentUrl,
-                  },
-                },
-              })
-            )
-            break
-
-          case 'Organization': {
-            if (item.logo?.contentUrl) {
-              onItem(
-                MetadataItem.fromObject({
-                  attribution: {
-                    source: AttributionSource.Website,
-                    name: item.name || source.hostname,
-                    license: undefined,
-                    url: item.url || source.href,
-                  },
-                  logo: {
-                    canonical: item.logo?.contentUrl,
-                  },
-                })
-              )
-            }
-
-            if (item.image?.url) {
-              onItem(
-                MetadataItem.fromObject({
-                  attribution: {
-                    source: AttributionSource.Website,
-                    name: item.name || source.hostname,
-                    license: undefined,
-                    url: item.url || source.href,
-                  },
-                  image: {
-                    url: {
-                      canonical: item.image?.url,
-                    },
-                  },
-                })
-              )
-            }
-            break
-          }
-        }
+        WebsiteSource.processLDJsonFragment(item, source, onItem)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -181,12 +221,8 @@ export class WebsiteSource extends MetadataSource {
     }
   }
 
-  private static async processLink(
-    url: string,
-    onItem: (data: MetadataItem) => void
-  ): Promise<void> {
-    const client = new WebsiteClient(url)
-    const html = await client.getText()
+  private async processLink(url: string, onItem: (data: MetadataItem) => void): Promise<void> {
+    const html = await this.client.getText(url)
 
     if (!html) {
       return
@@ -227,7 +263,7 @@ export class WebsiteSource extends MetadataSource {
 
           processedLinks.add(url.href)
 
-          await WebsiteSource.processLink(url.href, onItem)
+          await this.processLink(url.href, onItem)
         }
       } catch (error) {
         if (error instanceof Error) {

@@ -58,6 +58,7 @@ const attributionMap: { [key in Attribution_Source]: string } = {
   [Attribution_Source.OpenStreetMap]: 'si-openstreetmap',
   [Attribution_Source.Wikidata]: 'si-wikidata',
   [Attribution_Source.Website]: 'mdi-web',
+  [Attribution_Source.Nominatim]: 'mdi-book-outline',
 }
 
 const attributionLogo = computed(() => {

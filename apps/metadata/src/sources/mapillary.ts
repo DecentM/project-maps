@@ -4,15 +4,13 @@ import VError from 'verror'
 import { MetadataItem, AttributionSource } from '@project-maps/proto/metadata/node'
 import { log } from '@project-maps/logging'
 
-import { MapillaryClient } from 'src/clients/mapillary'
-import { config } from 'src/config'
+import { type Mapillary } from 'src/clients/mapillary'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { createBBox } from 'src/lib/bbox'
 export class MapillarySource extends MetadataSource {
-  private client = new MapillaryClient(
-    config.clients.mapillary.baseUrl,
-    config.clients.mapillary.apiKey
-  )
+  constructor(private client: Mapillary) {
+    super()
+  }
 
   override listen(events: Emittery<Events>): () => void {
     const handleItem = async (data: MetadataItem) => {

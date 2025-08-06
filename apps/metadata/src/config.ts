@@ -19,6 +19,10 @@ export const config = {
       baseUrl: 'https://graph.mapillary.com',
       apiKey: process.env.MAPILLARY_CLIENT_TOKEN ?? 'fixme',
     },
+
+    nominatim: {
+      endpoint: process.env.SEARCH_NOMINATIM_ENDPOINT || 'fixme',
+    },
   },
 
   grpcServer: {

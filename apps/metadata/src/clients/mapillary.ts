@@ -76,7 +76,12 @@ type ImagesResponse = {
   data: Array<ImageResponse>
 }
 
-export class MapillaryClient {
+export type Mapillary = {
+  images: (params: ImagesParams) => Promise<ImagesResponse>
+  image: (params: ImageParams) => Promise<ImageResponse>
+}
+
+export class MapillaryClient implements Mapillary {
   public constructor(
     private baseUrl: string,
     private apiKey: string

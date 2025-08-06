@@ -10,7 +10,12 @@ type GetEntitiesParams = {
 
 type GetEntitiesResponse = Record<string, SimplifiedEntity>
 
-export class WikidataClient {
+export type Wikidata = {
+  getEntities: (params: GetEntitiesParams) => Promise<GetEntitiesResponse>
+  getImageUrl: (filename: string) => string | undefined
+}
+
+export class WikidataClient implements Wikidata {
   private readonly wbk = WBK({
     instance: 'https://www.wikidata.org',
     sparqlEndpoint: 'https://query.wikidata.org/sparql',

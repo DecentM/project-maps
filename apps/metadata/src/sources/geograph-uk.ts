@@ -4,13 +4,17 @@ import { DateTime } from 'luxon'
 import { MetadataItem, AttributionSource } from '@project-maps/proto/metadata/node'
 import type { Coordinates } from '@project-maps/proto/lib/geospatial/node'
 
-import { GeographClient } from 'src/clients/geograph'
+import { type Geograph } from 'src/clients/geograph'
 import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
 
 export class GeographUKImageSource extends MetadataSource {
+  constructor(private client: Geograph) {
+    super()
+  }
+
   private handlesLocation(location: Coordinates): boolean {
     if (!location || !location.lat || !location.lng) return false
 
@@ -23,11 +27,6 @@ export class GeographUKImageSource extends MetadataSource {
       location.lng <= 1.77
     )
   }
-
-  private client = new GeographClient(
-    config.clients.geographUK.baseUrl,
-    config.clients.geographUK.apiKey
-  )
 
   override listen(events: Emittery<Events>): () => void {
     const handleItem = async (data: MetadataItem) => {

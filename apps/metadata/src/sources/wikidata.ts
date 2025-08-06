@@ -3,13 +3,17 @@ import { isEntityId, type SimplifiedEntity } from 'wikibase-sdk'
 
 import { MetadataItem, AttributionSource } from '@project-maps/proto/metadata/node'
 
-import { WikidataClient } from 'src/clients/wikidata'
+import { type Wikidata } from 'src/clients/wikidata'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { ClaimId, getClaims } from 'src/lib/wikidata-claim'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
 
 export class WikidataSource extends MetadataSource {
+  constructor(private client: Wikidata) {
+    super()
+  }
+
   private processEntity(entity: SimplifiedEntity, onItem: (item: MetadataItem) => void) {
     try {
       if (!entity || entity.type !== 'item') {
@@ -248,8 +252,6 @@ export class WikidataSource extends MetadataSource {
       throw new Error('WikidataSource.processEntity')
     }
   }
-
-  private client = new WikidataClient()
 
   override listen(events: Emittery<Events>): () => void {
     const handleItem = async (data: MetadataItem) => {

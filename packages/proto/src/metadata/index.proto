@@ -34,6 +34,7 @@ message Attribution {
     Wikidata = 7;
     OpenStreetMap = 8;
     Website = 9;
+    Nominatim = 10;
   }
 
   string name = 1;
@@ -66,7 +67,6 @@ message Address {
 
 message TextMetadata {
   string name = 1;
-  Address address = 2;
   string phone = 3;
   string amenity = 5;
 }
@@ -151,5 +151,6 @@ message MetadataItem {
     OpeningHours openingHours = 10;
     string wikidataId = 11;
     Defibrillator defibrillator = 12;
+    Address address = 13;
   }
 }

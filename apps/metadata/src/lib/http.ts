@@ -22,10 +22,6 @@ export const http = () => {
     cookieJar,
     retry: {
       limit: 3,
-      statusCodes: [408, 429, 500, 502, 503, 504],
-      calculateDelay({ attemptCount }) {
-        return Math.min(attemptCount * 250, 2500)
-      },
     },
     headers: {
       'User-Agent': config.userAgent,
