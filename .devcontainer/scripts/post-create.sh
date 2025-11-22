@@ -2,11 +2,6 @@
 
 echo "Preparing development container..."
 
-# if the user has set DEVCONTAINER_PACKAGES, install them
-if [ -n "$DEVCONTAINER_PACKAGES" ]; then
-  yay -S --noconfirm $DEVCONTAINER_PACKAGES
-fi
-
 set -u
 
 # Install asdf plugins if they are defined in .tool-versions. "asdf plugin add" accepts only one plugin at a time
