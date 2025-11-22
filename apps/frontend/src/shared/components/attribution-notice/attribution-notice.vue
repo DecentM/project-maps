@@ -59,6 +59,7 @@ const attributionMap: { [key in Attribution_Source]: string } = {
   [Attribution_Source.Wikidata]: 'si-wikidata',
   [Attribution_Source.Website]: 'mdi-web',
   [Attribution_Source.Nominatim]: 'mdi-book-outline',
+  [Attribution_Source.BBC]: 'mdi-newspaper', // si is missing the BBC logo, see https://github.com/simple-icons/simple-icons/issues/10831
 }
 
 const attributionLogo = computed(() => {

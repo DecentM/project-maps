@@ -61,11 +61,6 @@ export type ReverseParams = {
   namedetails?: 0 | 1
   zoom?: number
   layer?: string
-  polygon_geojson?: 0 | 1
-  polygon_kml?: 0 | 1
-  polygon_svg?: 0 | 1
-  polygon_text?: 0 | 1
-  email?: string
 }
 
 export type ReverseResult = {
@@ -96,12 +91,26 @@ export type ReverseResult = {
     country: string
     country_code: string
   }
+  extratags?: Record<string, string>
   boundingbox: [string, string, string, string]
 }
+
+export type OsmId = `N${string}` | `W${string}` | `R${string}`
+
+export type LookupParams = {
+  osm_ids: OsmId[]
+  addressdetails?: 0 | 1
+  extratags?: 0 | 1
+  namedetails?: 0 | 1
+  'accept-language'?: string
+}
+
+export type LookupResult = Array<ReverseResult>
 
 export type Nominatim = {
   search: (params: SearchParams) => Promise<SearchResult[]>
   reverse: (params: ReverseParams) => Promise<ReverseResult>
+  lookup: (params: LookupParams) => Promise<LookupResult>
 }
 
 export class NominatimClient implements Nominatim {
@@ -139,5 +148,9 @@ export class NominatimClient implements Nominatim {
 
   public reverse = async (params: ReverseParams) => {
     return this.get<ReverseResult>('/reverse', NominatimClient.objectToParams(params))
+  }
+
+  public lookup = async (params: LookupParams) => {
+    return this.get<LookupResult>('/lookup', NominatimClient.objectToParams(params))
   }
 }

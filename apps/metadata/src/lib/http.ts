@@ -1,5 +1,4 @@
-import got, { type RequestFunction } from 'got'
-import http2wrapper from 'http2-wrapper'
+import got from 'got'
 import { CookieJar } from 'tough-cookie'
 
 import { config } from 'src/config'
@@ -10,14 +9,13 @@ export const http = () => {
 
   return got.extend({
     followRedirect: true,
-    request: http2wrapper.auto as RequestFunction,
     timeout: {
-      lookup: 250,
-      connect: 100,
-      secureConnect: 100,
-      socket: 1000,
+      lookup: 1000,
+      connect: 1000,
+      secureConnect: 1000,
+      socket: 2000,
       send: 10_000,
-      response: 2000,
+      response: 5000,
     },
     cookieJar,
     retry: {

@@ -6,6 +6,7 @@ import { log } from '@project-maps/logging'
 
 import { type Wikimapia } from 'src/clients/wikimapia'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
+import { nextTick } from 'src/lib/delay'
 
 export class WikimapiaSource extends MetadataSource {
   constructor(private client: Wikimapia) {
@@ -38,58 +39,60 @@ export class WikimapiaSource extends MetadataSource {
           data_blocks: 'location,photos,comments',
         })
 
-        for (const photo of place.photos) {
-          events.emit(
-            'metadata',
-            MetadataItem.fromObject({
-              attribution: {
-                source: AttributionSource.Wikimapia,
-                license: 'CC-BY SA',
-                name: photo.user_name,
-                url: `https://wikimapia.org/user/${photo.user_id}`,
-              },
-              image: {
-                url: {
-                  canonical: photo.big_url,
-                  small: photo.thumbnail_url,
-                  medium: photo['960_url'],
-                  large: photo['1280_url'],
+        if (place.photos && Array.isArray(place.photos))
+          for (const photo of place.photos) {
+            events.emit(
+              'metadata',
+              MetadataItem.fromObject({
+                attribution: {
+                  source: AttributionSource.Wikimapia,
+                  license: 'CC-BY SA',
+                  name: photo.user_name,
+                  url: `https://wikimapia.org/user/${photo.user_id}`,
                 },
-                createdAt: {
-                  seconds: photo.time,
+                image: {
+                  url: {
+                    canonical: photo.big_url,
+                    small: photo.thumbnail_url,
+                    medium: photo['960_url'],
+                    large: photo['1280_url'],
+                  },
+                  createdAt: {
+                    seconds: photo.time,
+                  },
                 },
-              },
-            })
-          )
-        }
+              })
+            )
+          }
 
-        for (const comment of place.comments) {
-          events.emit(
-            'metadata',
-            MetadataItem.fromObject({
-              attribution: {
-                source: AttributionSource.Wikimapia,
-                license: 'CC-BY SA',
-                name: comment.name,
-                url: `https://wikimapia.org/user/${comment.user_id}`,
-              },
-              comment: {
-                author: {
+        if (place.comments && Array.isArray(place.comments))
+          for (const comment of place.comments) {
+            events.emit(
+              'metadata',
+              MetadataItem.fromObject({
+                attribution: {
+                  source: AttributionSource.Wikimapia,
+                  license: 'CC-BY SA',
                   name: comment.name,
-                  avatarUrl: comment.user_photo
-                    ? `https://wikimapia.org/${comment.user_photo}`
-                    : 'https://wikimapia.org/img/nofoto_50.png',
-                  profileUrl: `https://wikimapia.org/user/${comment.user_id}`,
+                  url: `https://wikimapia.org/user/${comment.user_id}`,
                 },
-                text: comment.message,
-                createdAt: {
-                  seconds: comment.date,
+                comment: {
+                  author: {
+                    name: comment.name,
+                    avatarUrl: comment.user_photo
+                      ? `https://wikimapia.org/${comment.user_photo}`
+                      : 'https://wikimapia.org/img/nofoto_50.png',
+                    profileUrl: `https://wikimapia.org/user/${comment.user_id}`,
+                  },
+                  text: comment.message,
+                  createdAt: {
+                    seconds: comment.date,
+                  },
+                  replies: [],
                 },
-                replies: [],
-              },
-            })
-          )
-        }
+              })
+            )
+          }
       } catch (error) {
         if (error instanceof Error) {
           log.error(new VError(error, 'WikimapiaSource.listen'))
@@ -98,6 +101,7 @@ export class WikimapiaSource extends MetadataSource {
         }
       }
 
+      await nextTick()
       events.emit('stop')
     }
 

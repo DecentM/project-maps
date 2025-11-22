@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
+import { Member_Type } from '@project-maps/proto/lib/openstreetmap/web'
 
 import { useOsmCache } from 'src/shared/lib/osm-cache'
 import { metadataClient } from 'src/shared/lib/rpc'
@@ -14,11 +15,11 @@ import LocationLinks from 'src/map/components/location-sidebar/location-links.vu
 import LocationMetadata from 'src/map/components/location-sidebar/location-metadata.vue'
 import LocationOpeningHours from 'src/map/components/location-sidebar/location-opening-hours.vue'
 import DescriptionRenderer from 'src/map/components/location-sidebar/description-renderer.vue'
+import LocationNews from 'src/map/components/location-sidebar/location-news.vue'
 
 import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderers/image-renderer.vue'
 import LogoRenderer from 'src/map/components/location-sidebar/metadata-renderers/logo-renderer.vue'
 import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
-import { Member_Type } from '@project-maps/proto/lib/openstreetmap/web'
 
 const props = defineProps<{
   poiOsmId: string
@@ -155,6 +156,7 @@ const handleImageClick = () => {
         <location-metadata :metadata="sortedMetadata" />
         <location-comments :metadata="sortedMetadata" />
         <location-opening-hours :metadata="sortedMetadata" />
+        <location-news :metadata="sortedMetadata" />
         <location-links :metadata="sortedMetadata" />
       </div>
     </q-scroll-area>

@@ -9,6 +9,7 @@ import { config } from 'src/config'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
+import { nextTick } from 'src/lib/delay'
 
 export class GeographUKImageSource extends MetadataSource {
   constructor(private client: Geograph) {
@@ -91,6 +92,7 @@ export class GeographUKImageSource extends MetadataSource {
         }
       }
 
+      await nextTick()
       events.emit('stop')
     }
 

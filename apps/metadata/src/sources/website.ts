@@ -8,6 +8,7 @@ import VError from 'verror'
 import { log } from '@project-maps/logging'
 
 import { type Website } from 'src/clients/website'
+import { nextTick } from 'src/lib/delay'
 
 const createBlacklist = () => [
   /^([a-z]{0,2}\.)?wikipedia.org/giu,
@@ -273,6 +274,7 @@ export class WebsiteSource extends MetadataSource {
         }
       }
 
+      await nextTick()
       events.emit('stop')
     }
 

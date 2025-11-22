@@ -6,22 +6,16 @@ import "lib/openstreetmap.proto";
 
 package Metadata;
 
-message GetAreaMetadataInput {
-  Geospatial.Coordinates coordinates = 1;
-  int64 radiusMeters = 2;
-  int32 maxImages = 3;
-}
-
 message GetPoiMetadataInput {
   int64 id = 1;
   Geospatial.Coordinates coordinates = 2;
   string name = 3;
   int32 maxImages = 4;
   OpenStreetMap.Member.Type osmType = 5;
+  map<string, string> tags = 6;
 }
 
 service Metadata {
-  rpc GetAreaMetadata(GetAreaMetadataInput) returns (stream MetadataItem);
   rpc GetPoiMetadata(GetPoiMetadataInput) returns (stream MetadataItem);
 }
 
@@ -35,6 +29,7 @@ message Attribution {
     OpenStreetMap = 8;
     Website = 9;
     Nominatim = 10;
+    BBC = 11;
   }
 
   string name = 1;
@@ -120,6 +115,26 @@ message Defibrillator {
   string cabinet = 11;
 }
 
+message NewsThumbnail {
+  string src = 1;
+  string srcset = 2;
+}
+
+message NewsItem {
+  enum Publisher {
+    Unknown = 0;
+    BBC = 1;
+  }
+
+  string id = 1;
+  string title = 2;
+  string blurb = 3;
+  DateTime.Timestamp publishedAt = 4;
+  string url = 5;
+  NewsThumbnail thumbnail = 6;
+  Publisher publisher = 7;
+}
+
 message OpeningHoursInterval {
   DateTime.Timestamp from = 1;
   DateTime.Timestamp to = 2;
@@ -152,5 +167,6 @@ message MetadataItem {
     string wikidataId = 11;
     Defibrillator defibrillator = 12;
     Address address = 13;
+    NewsItem newsItem = 14;
   }
 }

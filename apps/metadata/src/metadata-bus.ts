@@ -6,28 +6,27 @@ import { config } from './config'
 
 import type { Events, MetadataSource } from './declarations/metadata-source'
 
-import { OverpassSource } from './sources/overpass'
 import { GeographUKImageSource } from './sources/geograph-uk'
 import { MapillarySource } from './sources/mapillary'
 import { WikidataSource } from './sources/wikidata'
 import { WikimapiaSource } from './sources/wikimapia'
 import { WebsiteSource } from './sources/website'
 import { NominatimSource } from './sources/nominatim'
+import { BBCSource } from './sources/bbc'
 
 import { GeographClient } from './clients/geograph'
 import { MapillaryClient } from './clients/mapillary'
-import { OverpassClient } from './clients/overpass'
 import { WikidataClient } from './clients/wikidata'
 import { WikimapiaClient } from './clients/wikimapia'
 import { WebsiteClient } from './clients/website'
 import { NominatimClient } from './clients/nominatim'
+import { BBCClient } from './clients/bbc'
 
 export class MetadataBus {
   private static sources: MetadataSource[] = [
     new GeographUKImageSource(
       new GeographClient(config.clients.geographUK.baseUrl, config.clients.geographUK.apiKey)
     ),
-    new OverpassSource(new OverpassClient()),
     new MapillarySource(
       new MapillaryClient(config.clients.mapillary.baseUrl, config.clients.mapillary.apiKey)
     ),
@@ -37,18 +36,19 @@ export class MetadataBus {
     ),
     new WebsiteSource(new WebsiteClient()),
     new NominatimSource(new NominatimClient()),
+    new BBCSource(new BBCClient()),
   ]
 
   private inProgress = 0
 
   public getPoiMetadata(request: GetPoiMetadataInput, emitter: Emittery<Events>): Promise<void> {
-    return new Promise((resolve) => {
-      // Cannot move to calss scope because of binding
-      // eslint-disable-next-line unicorn/consistent-function-scoping
-      const handleStart = () => {
-        this.inProgress++
-      }
+    // Cannot move to class because then we'd have to .bind(this)
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const handleStart = () => {
+      this.inProgress++
+    }
 
+    return new Promise((resolve) => {
       const stops: Array<() => void> = []
 
       const teardown = () => {

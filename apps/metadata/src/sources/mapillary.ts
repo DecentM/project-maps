@@ -7,6 +7,7 @@ import { log } from '@project-maps/logging'
 import { type Mapillary } from 'src/clients/mapillary'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { createBBox } from 'src/lib/bbox'
+import { nextTick } from 'src/lib/delay'
 export class MapillarySource extends MetadataSource {
   constructor(private client: Mapillary) {
     super()
@@ -70,6 +71,7 @@ export class MapillarySource extends MetadataSource {
         }
       }
 
+      await nextTick()
       events.emit('stop')
     }
 

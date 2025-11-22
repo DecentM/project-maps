@@ -15,22 +15,13 @@ export class WebsiteClient implements Website {
   private async fetch(method: Method, url: string): Promise<string> {
     log.trace({ url }, 'WebsiteClient.fetch')
 
-    const inProgressResponse = this.got(new URL(url), {
+    const response = await this.got(new URL(url), {
       method,
       headers: {
         Accept:
           'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
       },
     })
-
-    const timeout = setTimeout(() => {
-      log.warn({ url }, 'WebsiteClient.fetch: Request timed out')
-      inProgressResponse.cancel('timeout')
-    }, 15_000)
-
-    const response = await inProgressResponse
-
-    clearTimeout(timeout)
 
     return response.body
   }

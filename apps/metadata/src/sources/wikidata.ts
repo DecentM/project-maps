@@ -8,6 +8,7 @@ import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { ClaimId, getClaims } from 'src/lib/wikidata-claim'
 import VError from 'verror'
 import { log } from '@project-maps/logging'
+import { nextTick } from 'src/lib/delay'
 
 export class WikidataSource extends MetadataSource {
   constructor(private client: Wikidata) {
@@ -273,12 +274,13 @@ export class WikidataSource extends MetadataSource {
         }
       } catch (error) {
         if (error instanceof Error) {
-          log.error(new VError(error, 'GeographUKImageSource.listen'))
+          log.error(new VError(error, 'WikidataSource.listen'))
         } else {
-          log.error(new Error('GeographUKImageSource.listen'))
+          log.error(new Error('WikidataSource.listen'))
         }
       }
 
+      await nextTick()
       events.emit('stop')
     }
 

@@ -5,11 +5,6 @@ export const config = {
       apiKey: process.env.GEOGRAPH_UK_API_KEY ?? 'fixme',
     },
 
-    overpassInterpreter: {
-      host: process.env.GRPC_OVERPASS_INTERPRETER_HOST ?? 'fixme',
-      port: Number.parseFloat(process.env.GRPC_OVERPASS_INTERPRETER_PORT ?? 'fixme'),
-    },
-
     wikimapia: {
       baseUrl: 'http://api.wikimapia.org',
       apiKey: process.env.WIKIMAPIA_API_KEY ?? 'fixme',

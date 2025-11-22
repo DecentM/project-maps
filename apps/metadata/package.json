@@ -13,7 +13,6 @@
     "geo-tz": "^8.1.1",
     "google-protobuf": "^3.21.4",
     "got": "^14.4.2",
-    "http2-wrapper": "^2.2.1",
     "jsdom": "^26.1.0",
     "luxon": "^3.5.0",
     "opening_hours": "^3.9.0",
