@@ -20,6 +20,7 @@ export const http = () => {
     cookieJar,
     retry: {
       limit: 3,
+      statusCodes: [408, 413, 429, 500, 502, 503, 504],
     },
     headers: {
       'User-Agent': config.userAgent,

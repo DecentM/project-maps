@@ -42,12 +42,12 @@ const attributionString = computed(() => {
   if (!props.attribution) return 'No attribution available'
 
   const imageSource = imageSourceString(props.attribution.source)
-  if (!imageSource) return `Source: ${props.attribution.name}`
+  if (!imageSource) return props.attribution.name
 
   const license = licenseUrlToString(props.attribution.license)
-  if (!license) return `Source: ${props.attribution.name} - ${imageSource}`
+  if (!license) return `${props.attribution.name} - ${imageSource}`
 
-  return `Source: ${props.attribution.name} - ${imageSource} (${licenseUrlToString(props.attribution.license)})`
+  return `${props.attribution.name} - ${imageSource} (${licenseUrlToString(props.attribution.license)})`
 })
 
 const attributionMap: { [key in Attribution_Source]: string } = {
@@ -59,7 +59,26 @@ const attributionMap: { [key in Attribution_Source]: string } = {
   [Attribution_Source.Wikidata]: 'si-wikidata',
   [Attribution_Source.Website]: 'mdi-web',
   [Attribution_Source.Nominatim]: 'mdi-book-outline',
-  [Attribution_Source.BBC]: 'mdi-newspaper', // si is missing the BBC logo, see https://github.com/simple-icons/simple-icons/issues/10831
+
+  // News sites
+  [Attribution_Source.BBC]: 'mdi-newspaper',
+  [Attribution_Source.ChannelNewsAsia]: 'mdi-newspaper',
+  [Attribution_Source.DagensNyheter]: 'mdi-newspaper',
+  [Attribution_Source.DerSpiegel]: 'si-derspiegel',
+  [Attribution_Source.ERR]: 'mdi-newspaper',
+  [Attribution_Source.Eska]: 'mdi-newspaper',
+  [Attribution_Source.Euronews]: 'mdi-newspaper',
+  [Attribution_Source.France24]: 'mdi-newspaper',
+  [Attribution_Source.HindustanTimes]: 'mdi-newspaper',
+  [Attribution_Source.ITV]: 'mdi-newspaper',
+  [Attribution_Source.NYPost]: 'mdi-newspaper',
+  [Attribution_Source.NYTimes]: 'si-newyorktimes',
+  [Attribution_Source.Omni]: 'mdi-newspaper',
+  [Attribution_Source.Postimees]: 'mdi-newspaper',
+  [Attribution_Source.TheGuardian]: 'si-theguardian',
+  [Attribution_Source.TheIndependent]: 'mdi-newspaper',
+  [Attribution_Source.TheSun]: 'mdi-newspaper',
+  [Attribution_Source.YLE]: 'mdi-newspaper',
 }
 
 const attributionLogo = computed(() => {

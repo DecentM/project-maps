@@ -42,7 +42,7 @@ export class WebsiteClient implements Website {
       return await this.get(url)
     } catch (error) {
       if (error instanceof Error) {
-        log.error({ name: error.name, message: error.message }, 'WebsiteClient.getText')
+        log.error({ name: error.name, message: error.message, url }, 'WebsiteClient.getText')
       }
       return ''
     }

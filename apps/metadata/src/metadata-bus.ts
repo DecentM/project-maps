@@ -13,6 +13,7 @@ import { WikimapiaSource } from './sources/wikimapia'
 import { WebsiteSource } from './sources/website'
 import { NominatimSource } from './sources/nominatim'
 import { BBCSource } from './sources/bbc'
+import { TheIndependentSource } from './sources/the-independent'
 
 import { GeographClient } from './clients/geograph'
 import { MapillaryClient } from './clients/mapillary'
@@ -21,6 +22,7 @@ import { WikimapiaClient } from './clients/wikimapia'
 import { WebsiteClient } from './clients/website'
 import { NominatimClient } from './clients/nominatim'
 import { BBCClient } from './clients/bbc'
+import { TheIndependentClient } from './clients/the-independent'
 
 export class MetadataBus {
   private static sources: MetadataSource[] = [
@@ -37,6 +39,7 @@ export class MetadataBus {
     new WebsiteSource(new WebsiteClient()),
     new NominatimSource(new NominatimClient()),
     new BBCSource(new BBCClient()),
+    new TheIndependentSource(new TheIndependentClient()),
   ]
 
   private inProgress = 0

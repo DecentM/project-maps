@@ -3,6 +3,7 @@ syntax = "proto3";
 import "lib/datetime.proto";
 import "lib/geospatial.proto";
 import "lib/openstreetmap.proto";
+import "lib/i18n.proto";
 
 package Metadata;
 
@@ -30,6 +31,23 @@ message Attribution {
     Website = 9;
     Nominatim = 10;
     BBC = 11;
+    TheGuardian = 12;
+    TheSun = 13;
+    Postimees = 14;
+    Omni = 15;
+    NYPost = 16;
+    NYTimes = 17;
+    ITV = 18;
+    HindustanTimes = 19;
+    Eska = 20;
+    Euronews = 21;
+    ERR = 22;
+    DerSpiegel = 23;
+    DagensNyheter = 24;
+    YLE = 25;
+    TheIndependent = 26;
+    France24 = 27;
+    ChannelNewsAsia = 28;
   }
 
   string name = 1;
@@ -120,19 +138,21 @@ message NewsThumbnail {
   string srcset = 2;
 }
 
-message NewsItem {
-  enum Publisher {
-    Unknown = 0;
-    BBC = 1;
+message News {
+  message Item {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    DateTime.Timestamp publishedAt = 4;
+    string url = 5;
+    NewsThumbnail thumbnail = 6;
+    I18n.Language language = 7;
   }
 
-  string id = 1;
-  string title = 2;
-  string blurb = 3;
-  DateTime.Timestamp publishedAt = 4;
-  string url = 5;
-  NewsThumbnail thumbnail = 6;
-  Publisher publisher = 7;
+  message TopicReference {
+    string id = 1;
+    Attribution.Source publisher = 2;
+  }
 }
 
 message OpeningHoursInterval {
@@ -167,6 +187,7 @@ message MetadataItem {
     string wikidataId = 11;
     Defibrillator defibrillator = 12;
     Address address = 13;
-    NewsItem newsItem = 14;
+    News.Item newsItem = 14;
+    News.TopicReference newsTopicReference = 15;
   }
 }

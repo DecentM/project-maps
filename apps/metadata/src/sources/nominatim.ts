@@ -163,12 +163,18 @@ export class NominatimSource extends MetadataSource {
       )
     }
 
-    if (item.extratags?.opening_hours) {
+    if (item.extratags?.opening_hours && item.address) {
+      const address = Object.assign({}, item.address, {
+        road: item.extratags?.['addr:street'] || '',
+        city: item.extratags?.['addr:city'] || '',
+        state: item.extratags?.['addr:state'] || '',
+        country: item.extratags?.['addr:country'] || '',
+        postcode: item.extratags?.['addr:postcode'] || '',
+        housenumber: item.extratags?.['addr:housenumber'] || '',
+      })
+
       const oh = parseOpeningHours(item.extratags.opening_hours, {
-        address: {
-          country_code: item.extratags?.['addr:country'] || '',
-          state: item.extratags?.['addr:state'] || '',
-        },
+        address,
         lat: Number.parseFloat(item.lat),
         lon: Number.parseFloat(item.lon),
       })
@@ -207,20 +213,20 @@ export class NominatimSource extends MetadataSource {
 
   override listen(events: Emittery<Events>): () => void {
     const handleItem = async (data: MetadataItem) => {
-      if (!data.has_coordinates) {
+      if (!data.has_coordinates || !data.coordinates) {
         return
       }
 
       events.emit('start')
 
       try {
-        const response = await this.client.reverse({
+        const nominatim = await this.client.reverse({
           lat: String(data.coordinates.lat),
-          lon: String(data.coordinates.lng!),
+          lon: String(data.coordinates.lng),
           addressdetails: 1,
         })
 
-        if (!response.address) {
+        if (!nominatim.address) {
           events.emit('stop')
           return
         }
@@ -231,16 +237,16 @@ export class NominatimSource extends MetadataSource {
             attribution: {
               name: 'OpenStreetMap Nominatim',
               url: 'https://www.openstreetmap.org/copyright',
-              license: response.licence,
+              license: nominatim.licence,
               source: AttributionSource.Nominatim,
             },
             address: {
-              city: response.address.city,
-              state: response.address.state,
-              country: response.address.country,
-              postcode: response.address.postcode,
-              housenumber: response.address.house_number,
-              street: response.address.road,
+              city: nominatim.address.city,
+              state: nominatim.address.state,
+              country: nominatim.address.country,
+              postcode: nominatim.address.postcode,
+              housenumber: nominatim.address.house_number,
+              street: nominatim.address.road,
             },
           })
         )

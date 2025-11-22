@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { DateTime } from 'luxon'
 
-import type { NewsItem, MetadataItem } from '@project-maps/proto/metadata/web'
+import type { News_Item, MetadataItem } from '@project-maps/proto/metadata/web'
 
 import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
 
@@ -13,7 +13,7 @@ const props = defineProps<{
 const newsItems = computed(() => {
   return props.metadata
     .filter(({ item }) => item.case === 'newsItem')
-    .map(({ item, attribution }) => ({ ...(item.value as NewsItem), attribution }))
+    .map(({ item, attribution }) => ({ ...(item.value as News_Item), attribution }))
     .map((newsItem) => ({
       ...newsItem,
       attribution: newsItem.attribution,
@@ -21,6 +21,12 @@ const newsItems = computed(() => {
         ? DateTime.fromMillis(Number(newsItem.publishedAt.value.value))
         : undefined,
     }))
+    .sort((a, b) => {
+      const aTime = a.publishedAt ? a.publishedAt.toMillis() : 0
+      const bTime = b.publishedAt ? b.publishedAt.toMillis() : 0
+      return bTime - aTime
+    })
+    .slice(0, 10)
 })
 </script>
 
@@ -50,7 +56,7 @@ const newsItems = computed(() => {
             </q-card-section>
 
             <q-card-section class="q-pt-none">
-              {{ item.blurb }}
+              {{ item.description }}
             </q-card-section>
           </q-scroll-area>
 

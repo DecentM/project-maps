@@ -4,20 +4,20 @@ import VError from 'verror'
 import { AttributionSource, MetadataItem } from '@project-maps/proto/metadata/node'
 import { log } from '@project-maps/logging'
 
-import type { BBCClient } from 'src/clients/bbc'
+import type { TheIndependentClient } from 'src/clients/the-independent'
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import { nextTick } from 'src/lib/delay'
 
-export class BBCSource extends MetadataSource {
-  constructor(private client: BBCClient) {
+export class TheIndependentSource extends MetadataSource {
+  constructor(private client: TheIndependentClient) {
     super()
   }
 
   override listen(events: Emittery<Events>): () => void {
     const handleItem = async (data: MetadataItem) => {
       if (
-        !data.has_newsTopicReference &&
-        data.newsTopicReference?.publisher !== AttributionSource.BBC
+        !data.has_newsTopicReference ||
+        data.newsTopicReference?.publisher !== AttributionSource.TheIndependent
       ) {
         return
       }
@@ -49,9 +49,9 @@ export class BBCSource extends MetadataSource {
             MetadataItem.fromObject({
               attribution: {
                 license: 'Unspecified',
-                url: `https://www.bbc.com/news/topics/${topic.id}`,
-                name: `BBC News - ${topic.name}`,
-                source: AttributionSource.BBC,
+                url: `https://www.independent.co.uk/${topic.id}.html`,
+                name: `The Independent - ${topic.name}`,
+                source: AttributionSource.TheIndependent,
               },
               newsItem: {
                 id: article.id,
@@ -71,9 +71,9 @@ export class BBCSource extends MetadataSource {
         }
       } catch (error) {
         if (error instanceof Error) {
-          log.error(new VError(error, 'BBCSource.listen'))
+          log.error(new VError(error, 'TheIndependentSource.listen'))
         } else {
-          log.error(new Error('BBCSource.listen'))
+          log.error(new Error('TheIndependentSource.listen'))
         }
       }
 

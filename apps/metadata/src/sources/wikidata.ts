@@ -181,26 +181,45 @@ export class WikidataSource extends MetadataSource {
 
       const bbcNewsTopicId = getClaims(entity, [ClaimId.BBCNewsTopicId])
 
-      if (bbcNewsTopicId?.length)
-        onItem(
-          MetadataItem.fromObject({
-            attribution: {
-              source: AttributionSource.Wikidata,
-              license: 'CC0',
-              name: entity.id,
-              url: `https://www.wikidata.org/wiki/${entity.id}`,
-            },
-            links: {
-              list: bbcNewsTopicId?.length
-                ? bbcNewsTopicId
-                    .map((item) => ({
-                      url: `https://www.bbc.co.uk/news/topics/${item}`,
-                    }))
-                    .filter((link) => link !== null)
-                : undefined,
-            },
-          })
-        )
+      if (bbcNewsTopicId?.length) {
+        for (const item of bbcNewsTopicId) {
+          onItem(
+            MetadataItem.fromObject({
+              attribution: {
+                source: AttributionSource.Wikidata,
+                license: 'CC0',
+                name: entity.id,
+                url: `https://www.wikidata.org/wiki/${entity.id}`,
+              },
+              newsTopicReference: {
+                publisher: AttributionSource.BBC,
+                id: item.toString(),
+              },
+            })
+          )
+        }
+      }
+
+      const theIndependentTopicId = getClaims(entity, [ClaimId.TheIndependentTopicId])
+
+      if (theIndependentTopicId?.length) {
+        for (const item of theIndependentTopicId) {
+          onItem(
+            MetadataItem.fromObject({
+              attribution: {
+                source: AttributionSource.Wikidata,
+                license: 'CC0',
+                name: entity.id,
+                url: `https://www.wikidata.org/wiki/${entity.id}`,
+              },
+              newsTopicReference: {
+                publisher: AttributionSource.TheIndependent,
+                id: item.toString(),
+              },
+            })
+          )
+        }
+      }
 
       const logo = getClaims(entity, [ClaimId.LogoImage])
       const smallLogo = getClaims(entity, [ClaimId.SmallLogo])

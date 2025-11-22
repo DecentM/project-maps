@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package I18n;
+
+enum Language {
+  LANGUAGE_UNSPECIFIED = 0;
+  EN = 1;
+  FR = 2;
+  DE = 3;
+  EE = 4;
+  FI = 5;
+}
