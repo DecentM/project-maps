@@ -48,7 +48,7 @@ RUN echo 'alias planetiler="java -Xmx4g -jar /usr/local/bin/planetiler.jar"' >>~
 # asdf plugins
 RUN echo '. <(asdf completion bash)' >>~/.bashrc
 RUN echo 'export PATH="$HOME/.asdf/bin:$HOME/.asdf/shims:/usr/local/mbutil:$PATH"' >>~/.bashrc
-COPY --chmod=755 --chown=user .devcontainer/scripts/ /home/user/scripts/
+COPY --chmod=755 --chown=user ./.devcontainer/scripts/ /home/user/scripts/
 COPY --chown=user .tool-versions /home/user/.tool-versions
 RUN /home/user/scripts/post-create.sh
 
@@ -61,7 +61,7 @@ RUN $HOME/.local/bin/oh-my-posh init bash --config https://raw.githubusercontent
 # supervisord
 ARG SUPERVISOR_VERSION=4.2.5-4
 RUN yay -S --noconfirm --removemake supervisor=${SUPERVISOR_VERSION} && yay -Sc --noconfirm
-COPY --chown=user:user .devcontainer/supervisord.conf /home/user/supervisord.conf
+COPY --chown=user:user ./.devcontainer/supervisord.conf /home/user/supervisord.conf
 
 ENTRYPOINT supervisord
 CMD ["-c", "/home/user/supervisord.conf"]
