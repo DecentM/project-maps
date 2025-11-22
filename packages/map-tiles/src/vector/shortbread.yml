@@ -36,9 +36,6 @@ definitions:
   - &name_en
     key: name_en
     tag_value: name:en
-  - &name_de
-    key: name_de
-    tag_value: name:de
   - &poi_filter
     amenity: &poi_filter_amenity
       - arts_centre
@@ -236,7 +233,6 @@ layers:
       type: match_value
     - *name
     - *name_en
-    - *name_de
     - key: way_area # area in square meter (Mercator Projection)
       value: "${ feature.area('m2') }"
 
@@ -306,7 +302,6 @@ layers:
       type: match_value
     - *name
     - *name_en
-    - *name_de
     - *attr_tunnel
     - *attr_bridge
 
@@ -409,8 +404,6 @@ layers:
       tag_value: NAME
     - key: name_en
       tag_value: NAME_EN
-    - key: name_de
-      tag_value: NAME_DE
 
 - id: place_labels
   features:
@@ -464,7 +457,6 @@ layers:
               capital: '4'
     - *name
     - *name_en
-    - *name_de
     - key: population
       type: integer
       value:
@@ -850,7 +842,6 @@ layers:
       type: match_value
     - *name
     - *name_en
-    - *name_de
     # TODO use ref var to avoid duplicating logic
     - key: ref
       exclude_when: &missing_ref
@@ -886,7 +877,6 @@ layers:
       type: match_value
     - *name
     - *name_en
-    - *name_de
 
 - id: street_labels_points
   features:
@@ -901,7 +891,6 @@ layers:
     - key: ref
     - *name
     - *name_en
-    - *name_de
 
 - id: bridges
   features:
@@ -951,7 +940,6 @@ layers:
       type: match_value
     - *name
     - *name_en
-    - *name_de
 
 ##  Points of Interest
 - id: public_transport
@@ -988,7 +976,6 @@ layers:
         - "aerialway_station"
     - *name
     - *name_en
-    - *name_de
     - key: iata
   - source: osm
     geometry: polygon_point_on_surface
@@ -1036,7 +1023,6 @@ layers:
     - *osm_type
     - *name
     - *name_en
-    - *name_de
     - key: housename
       tag_value: addr:housename
     - key: housenumber
