@@ -33,6 +33,9 @@ that's easy to remember.
     prebuilt container manually:  
     `docker run -v ./project-maps:/workspace:cached -it -w /workspace
     ghcr.io/decentm/project-maps-devcontainer:latest`
+  - If your editor is running in an isolated environment like Flatpak, you
+    can run `docker compose up -d` in `.devcontainer`, and ssh to localhost:2222,
+    which also works with remote development solutions.
 - Run the devcontainer and open a terminal in it
 - Run `pnpm i`
 - Copy the `.env.example` file and name it `.env`. Fill out the empty fields.
