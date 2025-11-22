@@ -1,6 +1,6 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
-pwd
+echo "Preparing development container..."
 
 # if the user has set DEVCONTAINER_PACKAGES, install them
 if [ -n "$DEVCONTAINER_PACKAGES" ]; then

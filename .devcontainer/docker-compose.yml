@@ -1,6 +1,10 @@
 services:
   devcontainer:
-    image: ghcr.io/decentm/project-maps-devcontainer:latest
+    build:
+      cache_from:
+        - ghcr.io/decentm/project-maps-devcontainer:latest
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     network_mode: host
     volumes:
       - ..:/workspace
@@ -15,7 +19,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
+          cpus: "4"
           memory: 7g
 
   envoy:
@@ -26,7 +30,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 128m
 
   nginx:
@@ -40,43 +44,24 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 128m
 
   nominatim:
-    image: mediagis/nominatim:5.1
+    build:
+      context: ../packages/nominatim
+      dockerfile: Dockerfile
     ports:
       - 9099:8080
     environment:
       PBF_URL: https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf
-      PROJECT_DIR: /nominatim
     volumes:
       - nominatim_data:/var/lib/postgresql
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 4g
-
-  overpass:
-    image: wiktorn/overpass-api
-    ports:
-      - 9098:80
-    environment:
-      OVERPASS_META: 'yes'
-      OVERPASS_MODE: 'init'
-      OVERPASS_PLANET_URL: https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.bz2
-      OVERPASS_RULES_LOAD: '50'
-      OVERPASS_STOP_AFTER_INIT: 'false'
-      OVERPASS_ALLOW_DUPLICATE_QUERIES: 'yes'
-    volumes:
-      - overpass_data:/db
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
+          cpus: "2"
           memory: 4g
 
 volumes:
-  overpass_data:
   nominatim_data:

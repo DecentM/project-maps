@@ -8,9 +8,6 @@
   "workspaceFolder": "/workspace/",
   "forwardPorts": [],
   //
-  "postCreateCommand": ".devcontainer/scripts/post-create.sh",
-  "postStartCommand": ".devcontainer/scripts/post-start.sh",
-  //
   "customizations": {
     "vscode": {
       "extensions": [
