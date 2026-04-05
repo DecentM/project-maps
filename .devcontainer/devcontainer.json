@@ -1,6 +1,10 @@
 {
   "$schema": "vscode://schemas/settings/user",
   //
+  // Flatpak Compatibility Note:
+  // This devcontainer configuration works with Flatpak VS Code when the
+  // appropriate filesystem permissions are granted. See FLATPAK.md for details.
+  //
   "name": "Project Maps",
   "dockerComposeFile": "docker-compose.yml",
   "service": "devcontainer",
