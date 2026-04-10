@@ -20,6 +20,8 @@ RUN useradd -G wheel -m user
 ARG SSH_PASSWORD=user
 RUN echo "user:${SSH_PASSWORD}" | chpasswd
 
+RUN pacman -Syy
+
 USER user
 WORKDIR /home/user
 
