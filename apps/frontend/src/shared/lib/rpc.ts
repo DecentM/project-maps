@@ -1,5 +1,4 @@
 import { Metadata } from '@project-maps/proto/metadata/web'
-import { Overpass } from '@project-maps/proto/overpass/web'
 import { Search } from '@project-maps/proto/search/web'
 
 import { createClient } from '@connectrpc/connect'
@@ -14,5 +13,4 @@ const createTransport = (prefix: string) => {
 }
 
 export const metadataClient = createClient(Metadata, createTransport('metadata'))
-export const overpassClient = createClient(Overpass, createTransport('overpass'))
 export const searchClient = createClient(Search, createTransport('search'))

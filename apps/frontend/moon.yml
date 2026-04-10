@@ -15,8 +15,6 @@ tasks:
 
   build:
     deps:
-      - map-style:build
-      - map-tiles:build_vector
       - proto:build
     command: quasar
     args:

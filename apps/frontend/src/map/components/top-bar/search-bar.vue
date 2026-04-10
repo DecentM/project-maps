@@ -61,7 +61,9 @@ const performSearch = async (query: string | undefined) => {
 
 watch(query, (newQuery) => performSearch(newQuery))
 
-onMounted(() => performSearch(query.value))
+onMounted(() => {
+  if (query.value) performSearch(query.value)
+})
 
 const handleSearch = (query?: string | number | null) => {
   router.push({

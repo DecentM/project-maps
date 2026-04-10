@@ -8,24 +8,12 @@ const props = defineProps<Pick<MapOptions, 'minPitch' | 'maxPitch'>>()
 
 const container = shallowRef<HTMLDivElement>()
 
-const { loading } = useMap(
-  container,
-  {
-    variant: 'light',
-    tileMetadataUrl: process.env.WEB_TILE_METADATA_URL || 'fixme',
-    tileUrlPattern: process.env.WEB_TILE_URL_PATTERN || 'fixme',
-    spritesUrl: process.env.WEB_SPRITES_URL || 'fixme',
-    fontsUrlPattern: process.env.WEB_FONTS_URL_PATTERN || 'fixme',
-    tintsMetadataUrl: process.env.WEB_TINTS_METADATA_URL || 'fixme',
-    tintsUrlPattern: process.env.WEB_TINTS_URL_PATTERN || 'fixme',
-  },
-  {
-    hash: false,
-    attributionControl: false,
-    minPitch: props.minPitch,
-    maxPitch: props.maxPitch,
-  }
-)
+const { loading } = useMap(container, process.env.WEB_MAP_STYLE || 'fixme', {
+  hash: false,
+  attributionControl: false,
+  minPitch: props.minPitch,
+  maxPitch: props.maxPitch,
+})
 </script>
 
 <template>

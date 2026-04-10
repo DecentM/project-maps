@@ -1,5 +1,0 @@
-dist/*
-!dist/.gitkeep
-
-# Planetiler state files
-/data

@@ -8,14 +8,18 @@ const map = inject<ShallowRef<MaplibreGl>>('map')
 const emit = defineEmits<(event: 'poi-click', poi?: MapGeoJSONFeature) => void>()
 
 const CLICKABLE_LAYERS = [
-  'poi-amenity',
-  'poi-emergency',
-  'poi-historic',
-  'poi-leisure',
-  'poi-man_made',
-  'poi-office',
-  'poi-shop',
-  'poi-tourism',
+  'poi_r20',
+  'poi_r7',
+  'poi_r1',
+  'poi_transit',
+  'label_village',
+  'label_town',
+  'label_state',
+  'label_city',
+  'label_city_capital',
+  'label_country_3',
+  'label_country_2',
+  'label_country_1',
 ] as const
 
 const osmCache = useOsmCache()

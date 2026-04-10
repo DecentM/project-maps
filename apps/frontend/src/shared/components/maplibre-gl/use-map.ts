@@ -11,15 +11,12 @@ import {
 
 import { type MapOptions, Map as MaplibreGl } from 'maplibre-gl'
 
-import { type StyleConfig, createStyle } from '@project-maps/map-style'
-
 export const useMap = (
   container: ShallowRef<HTMLDivElement | undefined>,
-  styleConfig: StyleConfig,
+  style: string,
   options: Omit<MapOptions, 'container'> = {}
 ) => {
   const map = shallowRef<MaplibreGl | undefined>()
-  const style = createStyle(styleConfig)
 
   const loading = ref(true)
 
