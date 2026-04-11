@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { usePreferredReducedMotion } from '@vueuse/core'
+import { useMemoize, usePreferredReducedMotion } from '@vueuse/core'
 import type { MapGeoJSONFeature } from 'maplibre-gl'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { getQueryParam } from 'src/shared/lib/urls'
-import { MapState } from 'src/shared/lib/map-state-serialiser'
+import { SelectionState } from 'src/shared/lib/map-selection-serialiser'
 
 import LocationSidebar from 'src/map/components/location-sidebar/location-sidebar.vue'
 
@@ -18,18 +18,21 @@ import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panz
 const router = useRouter()
 const route = useRoute()
 
-const mapState = computed(() => MapState.fromString(getQueryParam(route.query.map)))
+const getSelectionState = useMemoize((selection: string) => SelectionState.fromString(selection))
+
+const selectionState = computed(() => getSelectionState(getQueryParam(route.query.selection)))
 
 const handlePoiClick = (poi?: MapGeoJSONFeature) => {
   if (poi?.geometry.type !== 'Point') return
 
-  const oldMapState = MapState.fromString(getQueryParam(route.query.map))
+  const oldSelectionState = SelectionState.fromString(getQueryParam(route.query.selection))
 
   router.push({
     name: 'DetailsPage',
     query: {
-      map: MapState.toString({
-        ...oldMapState,
+      ...route.query,
+      selection: SelectionState.toString({
+        ...oldSelectionState,
         coords: {
           lat: poi.geometry.coordinates[1],
           lng: poi.geometry.coordinates[0],
@@ -44,20 +47,20 @@ const reducedMotion = usePreferredReducedMotion()
 
 <template>
   <q-drawer
-    v-if="mapState"
+    v-if="selectionState"
     model-value
     behavior="desktop"
     side="left"
     :width="400"
   >
-    <transition v-if="reducedMotion === 'no-preference'" name="fade-up" mode="out-in">
-      <div :key="String(mapState.coords.lat) + String(mapState.coords.lng)" class="q-pa-sm fit">
-        <location-sidebar :coords="mapState.coords" :zoom="mapState.zoom" />
+    <transition v-if="reducedMotion !== 'reduce'" name="fade-up" mode="out-in">
+      <div :key="`${selectionState.coords.lat}${selectionState.coords.lng}`" class="q-pa-sm fit">
+        <location-sidebar :coords="selectionState.coords" :zoom="selectionState.zoom" />
       </div>
     </transition>
 
     <div v-else class="row q-pa-sm">
-      <location-sidebar :coords="mapState.coords" :zoom="mapState.zoom" />
+      <location-sidebar :key="`${selectionState.coords.lat}${selectionState.coords.lng}`" :coords="selectionState.coords" :zoom="selectionState.zoom" />
     </div>
 
     <hover-tracker-plugin @poi-click="handlePoiClick" />

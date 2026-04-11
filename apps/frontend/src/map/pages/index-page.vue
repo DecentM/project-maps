@@ -2,7 +2,7 @@
 import type { MapGeoJSONFeature } from 'maplibre-gl'
 import { useRoute, useRouter } from 'vue-router'
 
-import { MapState } from 'src/shared/lib/map-state-serialiser'
+import { SelectionState } from 'src/shared/lib/map-selection-serialiser'
 import { getQueryParam } from 'src/shared/lib/urls'
 
 import GeolocateControlPlugin from 'src/shared/components/maplibre-gl/plugins/geolocate-control.vue'
@@ -10,6 +10,7 @@ import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-
 import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
 import NavigationControlPlugin from 'src/shared/components/maplibre-gl/plugins/navigation-control.vue'
 import PanzoomTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/panzoom-tracker.vue'
+import { MapState } from 'src/shared/lib/map-state-serialiser'
 
 const router = useRouter()
 const route = useRoute()
@@ -17,16 +18,17 @@ const route = useRoute()
 const handlePoiClick = (poi?: MapGeoJSONFeature) => {
   if (poi?.geometry.type !== 'Point') return
 
-  const oldMapState = MapState.fromString(getQueryParam(route.query.map))
+  const mapState = MapState.fromString(getQueryParam(route.query.map))
 
   router.push({
     name: 'DetailsPage',
     query: {
-      map: MapState.toString({
-        ...oldMapState,
+      ...route.query,
+      selection: SelectionState.toString({
+        zoom: mapState?.zoom ?? 1,
         coords: {
-          lat: poi.geometry.coordinates[1],
-          lng: poi.geometry.coordinates[0],
+          lat: poi.geometry.coordinates[0],
+          lng: poi.geometry.coordinates[1],
         },
       }),
     },
