@@ -27,7 +27,7 @@ export abstract class ScrapingClient {
       if (error instanceof Error) {
         throw new VError(error, `${this.constructor.name}.get`)
       }
-      throw new Error(`${this.constructor.name}.get`)
+      throw new VError(`${this.constructor.name}.get`)
     }
   }
 }

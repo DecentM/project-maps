@@ -5,7 +5,7 @@ type Offset = {
   degree: number
 }
 
-const EARTH_RADIUS = 6378137
+const EARTH_RADIUS = 6_378_137
 
 export const offsetLngLat = (coords: LngLat, offset: Offset): LngLat => {
   const { lng, lat } = coords;

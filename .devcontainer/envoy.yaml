@@ -25,11 +25,6 @@ static_resources:
                             cluster: metadata
                             prefix_rewrite: "/"
                         - match:
-                            prefix: "/overpass/"
-                          route:
-                            cluster: overpass
-                            prefix_rewrite: "/"
-                        - match:
                             prefix: "/search/"
                           route:
                             cluster: search
@@ -58,23 +53,8 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: 127.0.0.1
+                      address: devcontainer
                       port_value: 9051
-
-    - name: overpass
-      connect_timeout: 0.25s
-      type: logical_dns
-      lb_policy: round_robin
-      http2_protocol_options: {}
-      load_assignment:
-        cluster_name: overpass
-        endpoints:
-          - lb_endpoints:
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: 127.0.0.1
-                      port_value: 9052
 
     - name: search
       connect_timeout: 0.25s
@@ -88,5 +68,5 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: 127.0.0.1
+                      address: devcontainer
                       port_value: 9053

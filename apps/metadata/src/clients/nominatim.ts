@@ -91,6 +91,9 @@ export type ReverseResult = {
     country: string
     country_code: string
   }
+  namedetails?: {
+    name: string
+  }
   extratags?: Record<string, string>
   boundingbox: [string, string, string, string]
 }
@@ -133,7 +136,7 @@ export class NominatimClient implements Nominatim {
   private got = http()
 
   private get = <T>(path: string, params: URLSearchParams) => {
-    params.append('format', 'json') // or jsonv2
+    params.append('format', 'json') // or jsonv2, geojson, geocodejson
 
     return this.got
       .get(`${config.clients.nominatim.endpoint}${path}`, {

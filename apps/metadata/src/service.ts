@@ -22,7 +22,13 @@ export class MetadataService extends UnimplementedMetadataService {
       call.write(item)
     })
 
-    await bus.getPoiMetadata(call.request, emitter)
+    await bus.getPoiMetadata(
+      {
+        coords: call.request.coordinates,
+        zoom: call.request.zoom,
+      },
+      emitter
+    )
 
     call.end()
   }

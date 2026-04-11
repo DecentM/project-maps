@@ -6,7 +6,7 @@ import { createGrpcWebTransport } from '@connectrpc/connect-web'
 
 const createTransport = (prefix: string) => {
   return createGrpcWebTransport({
-    baseUrl: `${process.env.WEB_BACKEND_URL}/${prefix}`,
+    baseUrl: `/api/${prefix}`,
     useBinaryFormat: true,
     fetch: (i, init) => fetch(i, { ...init, credentials: 'include' }),
   })

@@ -9,6 +9,6 @@ export const parseLocked = (locked?: string | null, locked_conditional?: string 
 
   return Locked.fromObject({
     value: false,
-    conditional: locked_conditional ? locked_conditional : undefined,
+    conditional: locked_conditional ?? undefined,
   })
 }

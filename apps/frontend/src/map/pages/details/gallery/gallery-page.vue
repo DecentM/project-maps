@@ -5,7 +5,6 @@ import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from
 import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
-import { Member_Type } from '@project-maps/proto/lib/openstreetmap/web'
 
 import { getImageUrl } from 'src/shared/lib/get-image-url'
 import { metadataClient } from 'src/shared/lib/rpc'
@@ -14,40 +13,37 @@ import { getImageSize } from 'src/shared/lib/get-image-size'
 import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'
 
 import AttributionNotice from 'src/shared/components/attribution-notice/attribution-notice.vue'
+import { getQueryParam } from 'src/shared/lib/urls'
 
 const router = useRouter()
 const route = useRoute()
 const reducedMotion = usePreferredReducedMotion()
 
-const id = computed(() => {
-  return route.params.id as string
-})
+const coords = computed<{
+  lat: number
+  lng: number
+}>(() => {
+  const lat = Number.parseFloat(getQueryParam(route.query.lat))
+  const lng = Number.parseFloat(getQueryParam(route.query.lng))
 
-const type = computed(() => {
-  return route.params.type as 'node' | 'way' | 'relation'
+  return { lat, lng }
 })
 
 const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
-const performSearch = async (osmId: string) => {
+const performSearch = async (coords: {
+  lat: number
+  lng: number
+}) => {
   metadata.value = []
-
-  if (!osmId) return
-
   loading.value = true
 
   try {
     const response = metadataClient.getPoiMetadata({
-      id: BigInt(osmId),
+      coordinates: coords,
       maxImages: 20,
-      osmType:
-        type.value === 'node'
-          ? Member_Type.MEMBER_TYPE_NODE
-          : type.value === 'way'
-            ? Member_Type.MEMBER_TYPE_WAY
-            : Member_Type.MEMBER_TYPE_RELATION,
     })
 
     for await (const item of response) {
@@ -66,17 +62,9 @@ const performSearch = async (osmId: string) => {
   loading.value = false
 }
 
-watch(id, (newPoiOsmId) => {
-  if (newPoiOsmId) {
-    performSearch(newPoiOsmId)
-  } else {
-    metadata.value = []
-  }
-})
-
-onMounted(() => {
-  if (id.value) {
-    performSearch(id.value)
+watch(coords, (newCoords) => {
+  if (newCoords) {
+    performSearch(newCoords)
   } else {
     metadata.value = []
   }

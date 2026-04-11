@@ -54,6 +54,5 @@ come eventually. You're welcome to help in this department if you'd like!
 
 - [MapLibre](https://maplibre.org/) for their great canvas renderer, forked from
   Mapbox GL JS
-- [OpenStreetMap](https://www.openstreetmap.org/) and
-  [Overpass-Turbo](https://overpass-turbo.eu/) for map data and POI metadata
-- [JAXA](https://earth.jaxa.jp/en/) for terrain heightmaps
+- [OpenStreetMap](https://www.openstreetmap.org/) for map data and POI metadata
+- [OpenFreeMap](https://openfreemap.org/) for generous tile hosting

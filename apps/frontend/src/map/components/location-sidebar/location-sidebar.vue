@@ -3,70 +3,49 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
-import { Member_Type } from '@project-maps/proto/lib/openstreetmap/web'
 
-import { useOsmCache } from 'src/shared/lib/osm-cache'
 import { metadataClient } from 'src/shared/lib/rpc'
 import { sortMetadataItems } from 'src/shared/lib/score-metadata-item'
 
 import DefibrillatorDetails from 'src/map/components/location-sidebar/defribillator-details.vue'
+import DescriptionRenderer from 'src/map/components/location-sidebar/description-renderer.vue'
 import LocationComments from 'src/map/components/location-sidebar/location-comments.vue'
 import LocationLinks from 'src/map/components/location-sidebar/location-links.vue'
 import LocationMetadata from 'src/map/components/location-sidebar/location-metadata.vue'
-import LocationOpeningHours from 'src/map/components/location-sidebar/location-opening-hours.vue'
-import DescriptionRenderer from 'src/map/components/location-sidebar/description-renderer.vue'
 import LocationNews from 'src/map/components/location-sidebar/location-news.vue'
+import LocationOpeningHours from 'src/map/components/location-sidebar/location-opening-hours.vue'
 
 import ImageRenderer from 'src/map/components/location-sidebar/metadata-renderers/image-renderer.vue'
 import LogoRenderer from 'src/map/components/location-sidebar/metadata-renderers/logo-renderer.vue'
 import NameRenderer from 'src/map/components/location-sidebar/metadata-renderers/name-renderer.vue'
 
 const props = defineProps<{
-  poiOsmId: string
-  poiOsmType: 'node' | 'way' | 'relation'
+  coords: {
+    lat: number
+    lng: number
+  }
+  zoom: number
 }>()
 
 const metadata = ref<MetadataItem[]>([])
 
 const loading = ref(false)
 
-const osmCache = useOsmCache()
-
-const performSearch = async (osmId: string, osmType: 'node' | 'way' | 'relation') => {
+const performSearch = async (coords: {
+  lat: number
+  lng: number
+}) => {
   metadata.value = []
 
-  const cached = await osmCache.get(props.poiOsmType, osmId)
-
-  if (cached?.case) {
-    metadata.value.push({
-      $typeName: 'Metadata.MetadataItem',
-      item: {
-        case: 'metadata',
-        value: {
-          $typeName: 'Metadata.TextMetadata',
-          name: cached.value.tags.name,
-          amenity: cached.value.tags.amenity || '',
-          phone: cached.value.tags.phone || '',
-          ...cached.value.tags,
-        },
-      },
-    })
-  }
-
-  if (!osmId) return
+  if (!coords) return
 
   loading.value = true
 
   try {
     const response = metadataClient.getPoiMetadata({
-      id: BigInt(osmId),
-      osmType:
-        props.poiOsmType === 'node'
-          ? Member_Type.MEMBER_TYPE_NODE
-          : props.poiOsmType === 'way'
-            ? Member_Type.MEMBER_TYPE_WAY
-            : Member_Type.MEMBER_TYPE_RELATION,
+      coordinates: coords,
       maxImages: 1,
+      zoom: props.zoom,
     })
 
     for await (const item of response) {
@@ -80,19 +59,20 @@ const performSearch = async (osmId: string, osmType: 'node' | 'way' | 'relation'
 }
 
 watch(
-  () => [props.poiOsmId, props.poiOsmType] as const,
-  ([newPoiOsmId, newPoiOsmType]) => {
-    if (newPoiOsmId) {
-      performSearch(newPoiOsmId, newPoiOsmType)
+  () => props.coords,
+  (newCoords) => {
+    if (newCoords) {
+      performSearch(newCoords)
     } else {
       metadata.value = []
     }
-  }
+  },
+  { immediate: true }
 )
 
 onMounted(() => {
-  if (props.poiOsmId && props.poiOsmType) {
-    performSearch(props.poiOsmId, props.poiOsmType)
+  if (props.coords) {
+    performSearch(props.coords)
   } else {
     metadata.value = []
   }

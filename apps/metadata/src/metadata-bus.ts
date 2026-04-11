@@ -1,7 +1,5 @@
 import Emittery from 'emittery'
 
-import type { GetPoiMetadataInput } from '@project-maps/proto/metadata/node'
-
 import { config } from './config'
 
 import type { Events, MetadataSource } from './declarations/metadata-source'
@@ -24,6 +22,14 @@ import { NominatimClient } from './clients/nominatim'
 import { BBCClient } from './clients/bbc'
 import { TheIndependentClient } from './clients/the-independent'
 
+export type MetadataBusGetPoiMetadataInput = {
+  coords: {
+    lat: number
+    lng: number
+  },
+  zoom: number
+}
+
 export class MetadataBus {
   private static sources: MetadataSource[] = [
     new GeographUKImageSource(
@@ -44,7 +50,10 @@ export class MetadataBus {
 
   private inProgress = 0
 
-  public getPoiMetadata(request: GetPoiMetadataInput, emitter: Emittery<Events>): Promise<void> {
+  public getPoiMetadata(
+    request: MetadataBusGetPoiMetadataInput,
+    emitter: Emittery<Events>
+  ): Promise<void> {
     // Cannot move to class because then we'd have to .bind(this)
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const handleStart = () => {

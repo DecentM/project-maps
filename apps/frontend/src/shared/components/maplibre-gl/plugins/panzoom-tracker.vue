@@ -10,6 +10,15 @@ export type PanZoom = {
   bearing: string
 }
 
+const props = withDefaults(
+  defineProps<{
+    readonly?: boolean
+  }>(),
+  {
+    readonly: false,
+  }
+)
+
 const map = inject<ShallowRef<MaplibreGl>>('map')
 
 const route = useRoute()
@@ -29,6 +38,8 @@ const panzoom = computed<PanZoom>(() => {
 })
 
 const handlePanzoomChange = async (newPanzoom: PanZoom) => {
+  if (props.readonly) return
+
   await router.push({
     name: route.name,
     query: {

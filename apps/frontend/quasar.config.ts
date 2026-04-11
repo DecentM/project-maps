@@ -107,15 +107,9 @@ export default configure((ctx) => {
 
       proxy: {
         '/api': {
-          target: 'http://localhost:9081',
+          target: 'http://envoy:9081',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-
-        '/static': {
-          target: 'http://localhost:9080',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/static/, ''),
         },
       },
     },

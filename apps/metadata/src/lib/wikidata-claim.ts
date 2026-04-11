@@ -35,6 +35,7 @@ export const ClaimId = {
   ImageOfInterior: 'P5775',
   PlaqueImage: 'P1801',
   WinterView: 'P5252',
+  FlagImage: 'P41',
   YoutubeChannelId: 'P2397',
   BBCNewsTopicId: 'P6200',
   TheSunTopicId: 'P13634',

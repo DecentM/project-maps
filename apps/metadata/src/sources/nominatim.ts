@@ -4,19 +4,18 @@ import VError from 'verror'
 import { log } from '@project-maps/logging'
 import {
   AttributionSource,
-  GetPoiMetadataInput,
   MetadataItem,
 } from '@project-maps/proto/metadata/node'
 
 import { MetadataSource, type Events } from 'src/declarations/metadata-source'
 import type { Nominatim, ReverseResult } from 'src/clients/nominatim'
-import { MemberType } from '@project-maps/proto/lib/openstreetmap/node'
 import { parseAccess } from 'src/lib/parse-access'
 import { maybeParseJsonString } from 'src/lib/maybe-parse-json-string'
 import { parseIndoor } from 'src/lib/parse-indoor'
 import { parseLocked } from 'src/lib/parse-locked'
 import { parseOpeningHours } from 'src/lib/opening-hours'
 import { nextTick } from 'src/lib/delay'
+import type { MetadataBusGetPoiMetadataInput } from 'src/metadata-bus'
 
 export class NominatimSource extends MetadataSource {
   private static processElement(item: ReverseResult, onItem: (item: MetadataItem) => void): void {
@@ -33,9 +32,9 @@ export class NominatimSource extends MetadataSource {
       MetadataItem.fromObject({
         attribution,
         metadata: {
-          name: item.extratags?.name || '',
+          name: item.namedetails?.name || item.extratags?.name || item.name || '',
           phone: item.extratags?.phone || '',
-          amenity: item.extratags?.amenity || '',
+          amenity: item.extratags?.amenity || item.type || item.class || '',
         },
       })
     )
@@ -263,26 +262,28 @@ export class NominatimSource extends MetadataSource {
 
     events.on('metadata', handleItem)
 
-    const handleOsm = async (data: GetPoiMetadataInput) => {
-      if (!data.id || !data.osmType) {
-        return
-      }
-
+    const handleOsm = async (data: MetadataBusGetPoiMetadataInput) => {
       events.emit('start')
 
       try {
-        const response = await this.client.lookup({
-          osm_ids: [
-            `${data.osmType === MemberType.MEMBER_TYPE_NODE ? 'N' : data.osmType === MemberType.MEMBER_TYPE_WAY ? 'W' : 'R'}${data.id}`,
-          ],
+        const reversed = await this.client.reverse({
+          lat: String(data.coords.lat),
+          lon: String(data.coords.lng),
+          zoom: Math.round(Math.min(Math.max(data.zoom, 3), 18)),
           extratags: 1,
+          addressdetails: 1,
+          namedetails: 1,
+          layer: 'address'
         })
 
-        for (const item of response) {
-          NominatimSource.processElement(item, (metadataItem) => {
-            events.emit('metadata', metadataItem)
-          })
+        if ('error' in reversed || !reversed.osm_id) {
+          events.emit('stop')
+          return
         }
+
+        NominatimSource.processElement(reversed, (metadataItem) => {
+          events.emit('metadata', metadataItem)
+        })
       } catch (error) {
         if (error instanceof Error) {
           log.error(new VError(error, 'NominatimSource.listen'))

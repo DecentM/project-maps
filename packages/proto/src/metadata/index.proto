@@ -8,12 +8,9 @@ import "lib/i18n.proto";
 package Metadata;
 
 message GetPoiMetadataInput {
-  int64 id = 1;
-  Geospatial.Coordinates coordinates = 2;
-  string name = 3;
-  int32 maxImages = 4;
-  OpenStreetMap.Member.Type osmType = 5;
-  map<string, string> tags = 6;
+  Geospatial.Coordinates coordinates = 1;
+  int32 maxImages = 2;
+  float zoom = 3;
 }
 
 service Metadata {

@@ -1,3 +1,5 @@
+import { LocationQueryValue } from 'vue-router'
+
 export const prettifyUrl = (url: string) => {
   try {
     const parsedUrl = new URL(url)
@@ -33,4 +35,10 @@ export const sameUrls = (url1?: string, url2?: string) => {
   } catch {
     return url1 === url2
   }
+}
+
+export const getQueryParam = (input: LocationQueryValue | LocationQueryValue[]): string => {
+  const first = Array.isArray(input) ? input[0] : input
+
+  return first?.concat('') ?? ''
 }

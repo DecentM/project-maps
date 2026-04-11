@@ -1,8 +1,9 @@
 import type Emittery from 'emittery'
-import type { GetPoiMetadataInput, MetadataItem } from '@project-maps/proto/metadata/node'
+import type { MetadataItem } from '@project-maps/proto/metadata/node'
+import type { MetadataBusGetPoiMetadataInput } from 'src/metadata-bus'
 
 export type Events = {
-  osm: GetPoiMetadataInput
+  osm: MetadataBusGetPoiMetadataInput
   start: undefined
   stop: undefined
   metadata: MetadataItem

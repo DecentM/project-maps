@@ -16,7 +16,7 @@ export const mapRoutes: RouteRecordRaw[] = [
       },
       {
         name: 'DetailsPage',
-        path: 'details/:type/:id',
+        path: 'details',
         components: {
           Sidebar: () => import('src/map/pages/details/details-page.vue'),
           Toolbar: () => import('src/map/layout/toolbar/map-toolbar.vue'),
@@ -25,7 +25,7 @@ export const mapRoutes: RouteRecordRaw[] = [
       },
       {
         name: 'GalleryPage',
-        path: 'details/:type/:id/gallery/:index?',
+        path: 'details/gallery',
         components: {
           default: () => import('src/map/pages/details/gallery/gallery-page.vue'),
           Sidebar: () => import('src/map/pages/details/details-page.vue'),

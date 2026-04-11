@@ -5,7 +5,10 @@ services:
         - ghcr.io/decentm/project-maps-devcontainer:latest
       context: ..
       dockerfile: .devcontainer/Dockerfile
-    network_mode: host
+    ports:
+      - 9000:9000
+    networks:
+      - grpc
     volumes:
       - ..:/workspace
       - ${HOME}/.ssh:/home/user/.ssh:ro
@@ -13,8 +16,6 @@ services:
       - ${HOME}/.npmrc:/home/user/.npmrc:ro
       - ${HOME}/.gnupg:/home/user/.gnupg
       - ${HOME}/.bashrc:/home/user/.bashrc_user:ro
-    env_file:
-      - ../.env
     command: sleep infinity
     deploy:
       resources:
@@ -24,20 +25,10 @@ services:
 
   envoy:
     image: envoyproxy/envoy:v1.33-latest
-    network_mode: host
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 128m
-
-  nginx:
-    image: nginx:1.29.0-alpine
-    network_mode: host
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - grpc
     deploy:
       resources:
         limits:
@@ -48,10 +39,10 @@ services:
     build:
       context: ../packages/nominatim
       dockerfile: Dockerfile
-    ports:
-      - 9099:8080
+    networks:
+      - grpc
     environment:
-      PBF_URL: https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf
+      PBF_URL: https://download.geofabrik.de/europe/estonia-latest.osm.pbf
     volumes:
       - nominatim_data:/var/lib/postgresql
     deploy:
@@ -62,3 +53,7 @@ services:
 
 volumes:
   nominatim_data:
+
+networks:
+  grpc:
+    driver: bridge
