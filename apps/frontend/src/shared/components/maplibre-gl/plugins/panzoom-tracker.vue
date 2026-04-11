@@ -1,14 +1,9 @@
 <script lang="ts" setup>
 import type { MapMouseEvent, Map as MaplibreGl } from 'maplibre-gl'
+import { MapState, MapStateInput } from 'src/shared/lib/map-state-serialiser'
+import { getQueryParam } from 'src/shared/lib/urls'
 import { type ShallowRef, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-export type PanZoom = {
-  center: [string, string]
-  zoom: string
-  pitch: string
-  bearing: string
-}
 
 const props = withDefaults(
   defineProps<{
@@ -24,39 +19,32 @@ const map = inject<ShallowRef<MaplibreGl>>('map')
 const route = useRoute()
 const router = useRouter()
 
-const panzoom = computed<PanZoom>(() => {
-  return {
-    center: [
-      (Array.isArray(route.query.lng) ? route.query.lng[0] : route.query.lng) || '0',
-      (Array.isArray(route.query.lat) ? route.query.lat[0] : route.query.lat) || '0',
-    ],
-    zoom: (Array.isArray(route.query.zoom) ? route.query.zoom[0] : route.query.zoom) || '1',
-    pitch: (Array.isArray(route.query.pitch) ? route.query.pitch[0] : route.query.pitch) || '0',
-    bearing:
-      (Array.isArray(route.query.bearing) ? route.query.bearing[0] : route.query.bearing) || '0',
-  }
-})
+const mapState = computed(() => MapState.fromString(getQueryParam(route.query.map)))
 
-const handlePanzoomChange = async (newPanzoom: PanZoom) => {
+// const panzoom = computed<PanZoom>(() => {
+//   return {
+//     center: [
+//       (Array.isArray(route.query.lng) ? route.query.lng[0] : route.query.lng) || '0',
+//       (Array.isArray(route.query.lat) ? route.query.lat[0] : route.query.lat) || '0',
+//     ],
+//     zoom: (Array.isArray(route.query.zoom) ? route.query.zoom[0] : route.query.zoom) || '1',
+//     pitch: (Array.isArray(route.query.pitch) ? route.query.pitch[0] : route.query.pitch) || '0',
+//     bearing:
+//       (Array.isArray(route.query.bearing) ? route.query.bearing[0] : route.query.bearing) || '0',
+//   }
+// })
+
+const handleMapStateChange = async (newMapState: MapStateInput) => {
   if (props.readonly) return
 
   await router.push({
     name: route.name,
     query: {
       ...route.query,
-      lng: newPanzoom.center[0],
-      lat: newPanzoom.center[1],
-      zoom: newPanzoom.zoom,
-      pitch: newPanzoom.pitch,
-      bearing: newPanzoom.bearing,
+      map: MapState.toString(newMapState),
     },
   })
 }
-
-const ZOOM_ACCURACY = 4
-const CENTER_ACCURACY = 5
-const PITCH_ACCURACY = 2
-const BEARING_ACCURACY = 0
 
 const handleMoveEnd = async (event: MapMouseEvent) => {
   const newCenter = event.target.getCenter()
@@ -65,19 +53,19 @@ const handleMoveEnd = async (event: MapMouseEvent) => {
   const newBearing = event.target.getBearing()
 
   if (
-    newCenter.lat.toFixed(CENTER_ACCURACY) === panzoom.value?.center[1] &&
-    newCenter.lng.toFixed(CENTER_ACCURACY) === panzoom.value?.center[0] &&
-    newZoom.toFixed(ZOOM_ACCURACY) === panzoom.value.zoom &&
-    newPitch.toFixed(PITCH_ACCURACY) === panzoom.value.pitch &&
-    newBearing.toFixed(BEARING_ACCURACY) === panzoom.value.bearing
+    newCenter.lat === mapState.value?.coords.lat &&
+    newCenter.lng === mapState.value?.coords.lng &&
+    newZoom === mapState.value?.zoom &&
+    newPitch === mapState.value?.pitch &&
+    newBearing === mapState.value?.bearing
   )
     return
 
-  await handlePanzoomChange({
-    center: [newCenter.lng.toFixed(CENTER_ACCURACY), newCenter.lat.toFixed(CENTER_ACCURACY)],
-    zoom: newZoom.toFixed(ZOOM_ACCURACY),
-    pitch: newPitch.toFixed(PITCH_ACCURACY),
-    bearing: newBearing.toFixed(BEARING_ACCURACY),
+  await handleMapStateChange({
+    coords: newCenter,
+    zoom: newZoom,
+    pitch: newPitch,
+    bearing: newBearing,
   })
 }
 
@@ -98,15 +86,12 @@ const handleDragstart = (event: MapMouseEvent) => {
 }
 
 const init = (map: MaplibreGl) => {
-  if (initialised.value) return
+  if (initialised.value || !mapState.value) return
 
-  map.setZoom(Number.parseFloat(panzoom.value.zoom))
-  map.setCenter({
-    lng: Number.parseFloat(panzoom.value.center[0]),
-    lat: Number.parseFloat(panzoom.value.center[1]),
-  })
-  map.setPitch(Number.parseFloat(panzoom.value.pitch))
-  map.setBearing(Number.parseFloat(panzoom.value.bearing))
+  map.setZoom(mapState.value.zoom)
+  map.setCenter(mapState.value.coords)
+  map.setPitch(mapState.value.pitch)
+  map.setBearing(mapState.value.bearing)
 
   map.on('dragstart', handleDragstart)
   map.on('dragend', handleDragend)

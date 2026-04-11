@@ -2,6 +2,9 @@
 import type { MapGeoJSONFeature } from 'maplibre-gl'
 import { useRoute, useRouter } from 'vue-router'
 
+import { MapState } from 'src/shared/lib/map-state-serialiser'
+import { getQueryParam } from 'src/shared/lib/urls'
+
 import GeolocateControlPlugin from 'src/shared/components/maplibre-gl/plugins/geolocate-control.vue'
 import GlobeControlPlugin from 'src/shared/components/maplibre-gl/plugins/globe-control.vue'
 import HoverTrackerPlugin from 'src/shared/components/maplibre-gl/plugins/hover-tracker.vue'
@@ -14,12 +17,18 @@ const route = useRoute()
 const handlePoiClick = (poi?: MapGeoJSONFeature) => {
   if (poi?.geometry.type !== 'Point') return
 
+  const oldMapState = MapState.fromString(getQueryParam(route.query.map))
+
   router.push({
     name: 'DetailsPage',
     query: {
-      lat: poi.geometry.coordinates[1],
-      lng: poi.geometry.coordinates[0],
-      ...route.query,
+      map: MapState.toString({
+        ...oldMapState,
+        coords: {
+          lat: poi.geometry.coordinates[1],
+          lng: poi.geometry.coordinates[0],
+        },
+      }),
     },
   })
 }
