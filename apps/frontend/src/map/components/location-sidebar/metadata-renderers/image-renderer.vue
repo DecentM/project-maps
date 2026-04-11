@@ -25,10 +25,6 @@ const firstImageUrl = computed(() => {
 
   return getImageUrl(firstItem.value.item.value.url, 'medium')
 })
-
-const imageCount = computed(() => {
-  return props.metadata.filter(({ item }) => item.case === 'image').length
-})
 </script>
 
 <template>
@@ -41,13 +37,6 @@ const imageCount = computed(() => {
     >
       <div v-if="firstItem?.attribution" class="absolute-bottom-right transparent">
         <attribution-notice :attribution="firstItem.attribution" />
-      </div>
-
-      <div v-if="imageCount > 1" class="absolute-bottom-left transparent no-pointer-events">
-        <q-chip class="q-ma-none">
-          <q-avatar icon="mdi-plus" color="secondary" text-color="white" />
-          Click for more images...
-        </q-chip>
       </div>
     </q-img>
   </div>

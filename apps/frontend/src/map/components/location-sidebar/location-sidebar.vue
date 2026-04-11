@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
 import type { MetadataItem } from '@project-maps/proto/metadata/web'
 
@@ -85,16 +84,6 @@ const hasNameOrDescription = computed(() => {
 const sortedMetadata = computed(() => {
   return sortMetadataItems(metadata.value as MetadataItem[])
 })
-
-const router = useRouter()
-const route = useRoute()
-
-const handleImageClick = () => {
-  router.push({
-    name: 'GalleryPage',
-    query: route.query,
-  })
-}
 </script>
 
 <style lang="scss" scoped>
@@ -110,9 +99,7 @@ const handleImageClick = () => {
 <template>
   <q-card class="fit column">
     <image-renderer
-      :metadata="sortedMetadata"
-      class="pointer"
-      @click="handleImageClick" />
+      :metadata="sortedMetadata" />
 
     <q-linear-progress v-if="loading" indeterminate />
 

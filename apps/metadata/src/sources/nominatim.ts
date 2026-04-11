@@ -269,7 +269,7 @@ export class NominatimSource extends MetadataSource {
         const reversed = await this.client.reverse({
           lat: String(data.coords.lat),
           lon: String(data.coords.lng),
-          zoom: Math.round(Math.min(Math.max(data.zoom, 3), 18)),
+          zoom: Math.round(Math.min(Math.max(data.zoom, 3), 18)) + 3,
           extratags: 1,
           addressdetails: 1,
           namedetails: 1,
