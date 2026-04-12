@@ -21,19 +21,6 @@ const router = useRouter()
 
 const mapState = computed(() => MapState.fromString(getQueryParam(route.query.map)))
 
-// const panzoom = computed<PanZoom>(() => {
-//   return {
-//     center: [
-//       (Array.isArray(route.query.lng) ? route.query.lng[0] : route.query.lng) || '0',
-//       (Array.isArray(route.query.lat) ? route.query.lat[0] : route.query.lat) || '0',
-//     ],
-//     zoom: (Array.isArray(route.query.zoom) ? route.query.zoom[0] : route.query.zoom) || '1',
-//     pitch: (Array.isArray(route.query.pitch) ? route.query.pitch[0] : route.query.pitch) || '0',
-//     bearing:
-//       (Array.isArray(route.query.bearing) ? route.query.bearing[0] : route.query.bearing) || '0',
-//   }
-// })
-
 const handleMapStateChange = async (newMapState: MapStateInput) => {
   if (props.readonly) return
 
